@@ -35,7 +35,7 @@ export default function HeroHome() {
             {/* Hero image */}
             {/* Hero image */}
             <Image
-            src="/images/dove-image.png"
+            src="/images/dove-picture.png"
             alt="Dove Picture"
              width={2000}
               height={1100}
