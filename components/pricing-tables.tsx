@@ -15,7 +15,7 @@ export default function PricingTables() {
             <div className="text-lg font-semibold text-slate-800 mb-1">Individual</div>
             <div className="inline-flex items-baseline mb-3">
               <span className="h3 font-medium text-slate-500">£</span>
-              <span className="h2 leading-7 font-playfair-display text-slate-800">99</span>
+              <span className="h2 leading-7 font-playfair-display text-slate-800">199</span>
             </div>
             <div className="text-slate-500">and £5 monthly after first year. Designed for an individual who wants to order for a loved one. </div>
           </div>
