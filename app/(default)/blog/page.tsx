@@ -22,9 +22,9 @@ export default function Blog() {
   
   // Slicing content for demo purposes
   const featuredPost = allBlogs[0]
-  const latestPosts = allBlogs.slice(1,4)
+  const latestPosts = allBlogs.slice(7,10)
   const popularPosts = allBlogs.slice(4, 7)
-  const productPosts = allBlogs.slice(7, 10)
+  const productPosts = allBlogs.slice(1, 10)
 
   return (
     <>
