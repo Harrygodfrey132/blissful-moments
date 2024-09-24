@@ -96,18 +96,6 @@ export default function Blog() {
               </div>
             </div>
 
-            {/* Popular */}
-            <div>
-              <h2 className="h3 font-playfair-display text-center md:text-left mb-8">Popular</h2>
-
-              {/* Articles container */}
-              <div className="max-w-sm mx-auto md:max-w-none grid gap-12 md:grid-cols-3 md:gap-x-6 md:gap-y-8 items-start">
-                {popularPosts.map((post, postIndex) => (
-                  <PostItem key={postIndex} {...post} />
-                ))}
-              </div>
-            </div>
-
 
             {/* See All Articles */}
             <div className="text-center">
