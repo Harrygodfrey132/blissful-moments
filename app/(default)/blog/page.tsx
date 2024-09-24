@@ -6,7 +6,7 @@ import PostItem from '@/components/post-item'
 
 export const metadata = {
   title: 'Blog - The Blissful Moments',
-  description: 'A resource that talks about the amazing work we do',
+  description: 'A resource that talks about the amazing work we do at The Blissful Moments',
 }
 
 import Hero from '@/components/hero-blog'
