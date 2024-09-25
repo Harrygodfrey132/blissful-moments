@@ -70,6 +70,9 @@ export default function MobileMenu() {
         >
           <ul className="px-5 py-2">
             <li>
+              <Link href="/" className="flex font-medium text-slate-800 hover:text-blue-600 py-2" onClick={() => setMobileNavOpen(false)}>Home</Link>
+            </li>
+            <li>
               <Link href="/pricing" className="flex font-medium text-slate-800 hover:text-blue-600 py-2" onClick={() => setMobileNavOpen(false)}>Pricing</Link>
             </li>
             <li>
