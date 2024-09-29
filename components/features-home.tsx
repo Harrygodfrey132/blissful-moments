@@ -49,7 +49,7 @@ export default function FeaturesHome() {
                       <path fillOpacity=".64" fill="#1E3A8A" d="M29 20h3v16h-3zM35 20h1v16h-1z" />
                     </svg>
                   </div>
-                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Attention to every detail </div>
+                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Personal Packaging </div>
                 </div>
               </button>
               <button
