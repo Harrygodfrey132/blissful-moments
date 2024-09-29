@@ -105,7 +105,7 @@ export default function FeaturesHome() {
 
                 <Transition
                   as="div"
-                  show={tab === 2}
+                  show={tab === 1}
                   className="w-full"
                   enter="transition ease-in-out duration-700 transform order-first"
                   enterFrom="opacity-0 -translate-y-16"
@@ -121,7 +121,7 @@ export default function FeaturesHome() {
                 {/* Item 2 */}
                 <Transition
   as="div"
-  show={tab === 1}
+  show={tab === 2}
   className="w-full"
   enter="transition ease-in-out duration-700 transform order-first"
   enterFrom="opacity-0 -translate-y-16"
