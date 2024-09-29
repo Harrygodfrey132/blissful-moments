@@ -49,7 +49,7 @@ export default function FeaturesHome() {
                       <path fillOpacity=".64" fill="#1E3A8A" d="M29 20h3v16h-3zM35 20h1v16h-1z" />
                     </svg>
                   </div>
-                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Personal Quote </div>
+                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Attention to every detail </div>
                 </div>
               </button>
               <button
@@ -103,19 +103,27 @@ export default function FeaturesHome() {
               <div className="relative flex flex-col" data-aos="fade-up" ref={tabs}>
                 {/* Item 1 */}
                 <Transition
-                  as="div"
-                  show={tab === 1}
-                  className="w-full"
-                  enter="transition ease-in-out duration-700 transform order-first"
-                  enterFrom="opacity-0 -translate-y-16"
-                  enterTo="opacity-100 translate-y-0"
-                  leave="transition ease-in-out duration-300 transform absolute"
-                  leaveFrom="opacity-100 translate-y-0"
-                  leaveTo="opacity-0 translate-y-16"
-                  beforeEnter={() => heightFix()}
-                >
-                  <Image className="mx-auto shadow-2xl" src={FeaturesImage} width={768} height={474} alt="Features home 01" />
-                </Transition>
+  as="div"
+  show={tab === 1}
+  className="w-full"
+  enter="transition ease-in-out duration-700 transform order-first"
+  enterFrom="opacity-0 -translate-y-16"
+  enterTo="opacity-100 translate-y-0"
+  leave="transition ease-in-out duration-1500 transform absolute"
+  leaveFrom="opacity-100 translate-y-0"
+  leaveTo="opacity-0 translate-y-16"
+  beforeEnter={() => heightFix()}
+>
+  <div className="relative w-full pb-[56.25%]"> {/* 16:9 Aspect Ratio */}
+    <iframe 
+      title="3D Packaging Model" 
+      allowFullScreen 
+      className="absolute top-0 left-0 w-full h-full mx-auto shadow-2xl" 
+      style={{ border: 'none' }} 
+      src="https://www.pacdora.com/share?filter_url=psy7ud7afl"
+    ></iframe>
+  </div>
+</Transition>
                 {/* Item 2 */}
                 <Transition
                   as="div"
