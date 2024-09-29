@@ -49,7 +49,7 @@ export default function FeaturesHome() {
                       <path fillOpacity=".64" fill="#1E3A8A" d="M29 20h3v16h-3zM35 20h1v16h-1z" />
                     </svg>
                   </div>
-                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Personal Packaging </div>
+                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Timeline </div>
                 </div>
               </button>
               <button
@@ -63,7 +63,7 @@ export default function FeaturesHome() {
                       <path fill="#1E3A8A" d="M20 25h11v11H20z" />
                     </svg>
                   </div>
-                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Timeline</div>
+                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Packaging</div>
                 </div>
               </button>
               <button
@@ -102,6 +102,23 @@ export default function FeaturesHome() {
             <div className="transition-all">
               <div className="relative flex flex-col" data-aos="fade-up" ref={tabs}>
                 {/* Item 1 */}
+
+                <Transition
+                  as="div"
+                  show={tab === 2}
+                  className="w-full"
+                  enter="transition ease-in-out duration-700 transform order-first"
+                  enterFrom="opacity-0 -translate-y-16"
+                  enterTo="opacity-100 translate-y-0"
+                  leave="transition ease-in-out duration-300 transform absolute"
+                  leaveFrom="opacity-100 translate-y-0"
+                  leaveTo="opacity-0 translate-y-16"
+                  beforeEnter={() => heightFix()}
+                >
+                  <Image className="mx-auto shadow-2xl" src={FeaturesImage} width={768} height={474} alt="Features home 02" />
+                </Transition>
+                
+                {/* Item 2 */}
                 <Transition
   as="div"
   show={tab === 1}
@@ -124,21 +141,6 @@ export default function FeaturesHome() {
     ></iframe>
   </div>
 </Transition>
-                {/* Item 2 */}
-                <Transition
-                  as="div"
-                  show={tab === 2}
-                  className="w-full"
-                  enter="transition ease-in-out duration-700 transform order-first"
-                  enterFrom="opacity-0 -translate-y-16"
-                  enterTo="opacity-100 translate-y-0"
-                  leave="transition ease-in-out duration-300 transform absolute"
-                  leaveFrom="opacity-100 translate-y-0"
-                  leaveTo="opacity-0 translate-y-16"
-                  beforeEnter={() => heightFix()}
-                >
-                  <Image className="mx-auto shadow-2xl" src={FeaturesImage} width={768} height={474} alt="Features home 02" />
-                </Transition>
                 {/* Item 3 */}
                 <Transition
                   as="div"
