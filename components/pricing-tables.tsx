@@ -17,7 +17,7 @@ export default function PricingTables() {
               <span className="h3 font-medium text-slate-500">£</span>
               <span className="h2 leading-7 font-playfair-display text-slate-800">199</span>
             </div>
-            <div className="text-slate-500">and £5 monthly after first year. Designed for an individual who wants to order for a loved one. </div>
+            <div className="text-slate-500">and then only £3 monthly after the first year. Designed for a loved one. </div>
           </div>
           <div className="font-medium mb-3">Features include:</div>
           <ul className="text-slate-500 space-y-3 grow mb-6">
