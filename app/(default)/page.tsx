@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Home- The Blissful Moments',
-  description: 'General Information on the company',
+  title: 'Home – The Blissful Moments: Honoring Legacies with QR Codes',
+  description: 'The Blissful Moments helps families preserve their loved ones’ legacies through personalized memorials with QR codes, keeping stories alive for generations.',
 }
 
 import Hero from '@/components/hero-home'
