@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Home- The Blissful Momemnts',
+  title: 'Home- The Blissful Moments',
   description: 'General Information on the company',
 }
 
