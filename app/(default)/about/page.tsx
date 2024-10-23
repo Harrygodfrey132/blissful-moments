@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'About - The BLissful Moments',
+  title: 'About - The Blissful Moments',
   description: 'Why I Set Up The Blissful Moments',
 }
 
