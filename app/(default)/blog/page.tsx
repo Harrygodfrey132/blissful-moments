@@ -5,8 +5,8 @@ import PostDate from '@/components/post-date'
 import PostItem from '@/components/post-item'
 
 export const metadata = {
-  title: 'Blog - The Blissful Moments',
-  description: 'A resource that talks about the amazing work we do at The Blissful Moments',
+  title: 'Blog – The Blissful Moments: Insights & Stories',
+  description: 'Explore stories and insights about legacy preservation through personalized memorials with The Blissful Moments.',
 }
 
 import Hero from '@/components/hero-blog'
