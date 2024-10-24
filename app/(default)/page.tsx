@@ -15,8 +15,8 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <FeaturesBlocks />
       <Features />
+      <FeaturesBlocks />
       <Features02 />
       <Features03 />
       <PricingSection />
