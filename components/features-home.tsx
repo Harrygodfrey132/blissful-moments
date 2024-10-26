@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Transition } from '@headlessui/react'
 import Image from 'next/image'
-import FeaturesImage from '@/public/images/features-home-01.jpg'
+import FeaturesImage from '@/public/images/Screenshot-Preview.jpg'
 
 export default function FeaturesHome() {
 
@@ -169,6 +169,7 @@ export default function FeaturesHome() {
                   beforeEnter={() => heightFix()}
                 >
                   <Image className="mx-auto shadow-2xl" src={FeaturesImage} width={768} height={474} alt="Features home 03" />
+                  <p className="mt-4 text-gray-700">A place to remember key details about their lives.</p>
                 </Transition>
 
                 {/* Item 4 - Packaging with 3D model */}
