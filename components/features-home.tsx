@@ -78,7 +78,7 @@ export default function FeaturesHome() {
                       <path fill="#1E3A8A" d="M27 36l-7-7v7z" />
                     </svg>
                   </div>
-                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Favourite Quotes</div>
+                  <div className="md:text-lg leading-tight font-semibold text-gray-700">Profile</div>
                 </div>
               </button>
               <button
@@ -169,7 +169,7 @@ export default function FeaturesHome() {
                   beforeEnter={() => heightFix()}
                 >
                   <Image className="mx-auto shadow-2xl" src={FeaturesImage} width={768} height={474} alt="Features home 03" />
-                  <p className="mt-4 text-gray-700">A place to remember key details about their lives.</p>
+                  <p className="mt-4 text-gray-700">The profile section offers a respectful, organised tribute, making it easy for visitors to look at information and connect emotionally.</p>
                 </Transition>
 
                 {/* Item 4 - Packaging with 3D model */}
