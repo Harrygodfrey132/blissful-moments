@@ -17,7 +17,6 @@ export default function Home() {
       <Hero />
       <Features />
       <FeaturesBlocks />
-      <Features02 />
       <Features03 />
       <PricingSection />
       <Cta />
