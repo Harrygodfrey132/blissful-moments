@@ -37,7 +37,7 @@ export default function FeaturesHome03() {
               <h3 className="h4 font-playfair-display mb-2">
                 <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Order a QR code/Webpage from us</a>
               </h3>
-              <p className="text-lg text-slate-500">We will send your order in a beautifully crafted, handmade box, directly to your address. Inside, you will find a personalized plaque with your unique QR code.</p>
+              <p className="text-lg text-slate-500">We will send your order in a beautifully crafted, handmade box, directly to your address. Inside, you will find a personalised plaque with your unique QR code and clear instructions.</p>
             </article>
 
             {/* 2nd article */}
