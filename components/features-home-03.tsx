@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import FeaturesImage01 from '@/public/images/features-home-3-01.jpg'
+import FeaturesImage01 from '@/public/images/QR-code-box.jpg'
 import FeaturesImage02 from '@/public/images/features-home-3-02.jpg'
 import FeaturesImage03 from '@/public/images/features-home-3-03.jpg'
 
