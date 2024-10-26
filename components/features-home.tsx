@@ -151,7 +151,7 @@ export default function FeaturesHome() {
                     ></iframe>
                   </div>
                   <a href="https://www.canva.com/design/DAGUq5ACIQE/hHJKlhEwQjqdqAZwR0QE5w/view?utm_content=DAGUq5ACIQE&utm_campaign=designshare&utm_medium=embeds&utm_source=link" target="_blank" rel="noopener noreferrer">
-                    Every memory shared here keeps their spirit alive in our hearts.
+                    Through these shared messages, you celebrate the impact of their life, creating a tribute that ensures their spirit lives on.
                   </a>
                 </Transition>
 
@@ -193,7 +193,7 @@ export default function FeaturesHome() {
                       src="https://www.pacdora.com/share?filter_url=psy7ud7afl"
                     ></iframe>
                   </div>
-                  <p className="mt-4 text-gray-700">We deliver straight to your door, including easy setup instructions, your personalized QR code, and a special note crafted just for you.</p>
+                  <p className="mt-4 text-gray-700">We deliver straight to your door, including easy setup instructions, your personalised QR code, and a special note crafted just for you.</p>
                 </Transition>
 
               </div>
