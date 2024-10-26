@@ -193,7 +193,7 @@ export default function FeaturesHome() {
                       src="https://www.pacdora.com/share?filter_url=psy7ud7afl"
                     ></iframe>
                   </div>
-                  <p className="mt-4 text-gray-700">We ship straight to your house in custom-made packaging.</p>
+                  <p className="mt-4 text-gray-700">We deliver straight to your door, including easy setup instructions, your personalized QR code, and a special note crafted just for you.</p>
                 </Transition>
 
               </div>
