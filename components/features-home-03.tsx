@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import FeaturesImage01 from '@/public/images/QR-code-box.jpg'
-import FeaturesImage02 from '@/public/images/features-home-3-02.jpg'
+import FeaturesImage02 from '@/public/images/Profile-Screenshot.jpg'
 import FeaturesImage03 from '@/public/images/Profile-Screenshot.jpg'
 
 export default function FeaturesHome03() {
