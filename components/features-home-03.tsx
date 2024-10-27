@@ -73,7 +73,7 @@ export default function FeaturesHome03() {
                 </div>
               </a>
               <h3 className="h4 font-playfair-display mb-2">
-                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Share Your Memorial Page/QR Code</a>
+                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Create a digital legacy by sharing the page</a>
               </h3>
               <p className="text-lg text-slate-500">Create a dedicated, secure space for loved ones to contribute. Your personalised memorial page will preserve memories for future generations.</p>
             </article>
