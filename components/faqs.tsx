@@ -19,7 +19,7 @@ const faqItems = [
   },
   {
     question: "How long will the memorial webpage last?",
-    answer: "Our memorial web pages are designed to last indefinitely, so future generations can access and celebrate the legacy of your loved one."
+    answer: "Our memorial web pages are designed to last indefinitely.The hosting that comes with purchase lasts one year, allowing you to fully try the product. As the pictures and text cost money to store on the page, we charge £3 a month past this point to keep the page running."
   },
   {
     question: "What if visitors do not have a smartphone to scan the QR code?",
