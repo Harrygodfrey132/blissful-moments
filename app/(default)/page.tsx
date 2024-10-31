@@ -10,6 +10,7 @@ import Features02 from '@/components/features-home-02'
 import Features03 from '@/components/features-home-03'
 import PricingSection from '@/components/pricing'
 import Cta from '@/components/cta'
+import FaQ from '@/components/faq'
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Features03 />
       <PricingSection />
       <Cta />
+      <FaQ />
     </>
   )
 }
