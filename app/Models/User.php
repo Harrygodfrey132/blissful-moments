@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    const ADMIN = 1;
+    const USER = 2;
+    const GUEST = 3;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -19,7 +23,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'role_id',
         'email',
+        'status',
         'password',
     ];
 
