@@ -18,10 +18,10 @@
 
 <body class="flex bg-gray-100 min-h-screen" x-data="{panel:false, menu:true}">
   @include('elements.partials.sidebar')
-  <div class="min-h-screen bg-gray-100">
+  <div class="min-h-screen bg-gray-100 w-full">
     @include('elements.partials.header')
     <!-- Page Content -->
-    <main>
+    <main class="p-6 sm:p-10 space-y-6">
       @yield('content')
     </main>
   </div>
