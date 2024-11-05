@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.iti {
+    width: 100% !important;
+    margin-top: 5px;
+}
+.cd-primary-nav,
+.cd-primary-nav ul {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 300px;
+    background: #fff;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 9999;
+    transition: transform 0.3s;
+    overflow: hidden;
+}
+
+.cd-primary-nav a,
+.cd-primary-nav ul a {
+    font-size: 14px;
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-bottom: 1px solid #ccc;
+    font-weight: 600;
+}

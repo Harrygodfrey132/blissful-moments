@@ -1,9 +1,50 @@
 <header class="flex items-center h-20 px-6 sm:px-10 bg-white">
-  <!-- <div class="mr-8 cursor-pointer" @click="menu = !menu" >
-        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-</svg>
-      </div> -->
+  <div x-data="{ open: false }">
+    <div class="mr-8 cursor-pointer md:hidden" @click="open = ! open">
+      <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </div>
+    <!--Mobile Menu-->
+    <div class="bg-white shadow sm:hidden  w-full" x-show="open" @click.away="open = false">
+
+      <ul id="cd-primary-nav" class="cd-primary-nav mb-0 align-self-center nav-is-visible shadow-lg">
+        <ul
+          class="cd-secondary-nav container-fluid pr-0 d-block d-md-block d-lg-block d-xl-none border-bottom is-hidden">
+          <li class="p-0 p-md-0 p-lg-0 p-xl-4">
+            <div class="d-flex flex-column">
+              <a href="#">
+                Dashboard
+              </a>
+            </div>
+          </li>
+          <li class="p-0 p-md-0 p-lg-0 p-xl-4">
+            <div class="d-flex flex-column">
+              <a href="#">
+                Users
+              </a>
+            </div>
+          </li>
+
+          <li class="p-0 p-md-0 p-lg-0 p-xl-4">
+            <div class="d-flex flex-column">
+              <a href="#">
+                Orders
+              </a>
+            </div>
+          </li>
+          <li class="p-0 p-md-0 p-lg-0 p-xl-4">
+            <div class="d-flex flex-column">
+              <a href="#">
+                Settings
+              </a>
+            </div>
+          </li>
+
+        </ul>
+      </ul>
+    </div>
+  </div>
   <!-- <div class="relative w-full max-w-md sm:-ml-2">
     <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" class="absolute h-6 w-6 mt-2.5 ml-2 text-gray-400">
       <path fill-rule="evenodd"
@@ -31,7 +72,7 @@
           clip-rule="evenodd" />
       </svg>
     </button>
-    <div class="absolute z-50 top-20 bg-white border rounded-md p-2 w-56" x-show="panel" style="display:none">
+    <div class="absolute z-50 top-20 bg-white border rounded-md p-2 md:w-56" x-show="panel" style="display:none">
       <div class="p-2 hover:bg-blue-100 cursor-pointer">Profile</div>
       <div class="p-2 hover:bg-blue-100 cursor-pointer">Logout</div>
     </div>
