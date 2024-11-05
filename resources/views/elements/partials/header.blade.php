@@ -73,8 +73,8 @@
       </svg>
     </button>
     <div class="absolute z-50 top-20 bg-white border rounded-md p-2 md:w-56" x-show="panel" style="display:none">
-      <div class="p-2 hover:bg-blue-100 cursor-pointer">Profile</div>
-      <div class="p-2 hover:bg-blue-100 cursor-pointer">Logout</div>
+      <div class="p-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center"><x-icon-profile /> Profile</div>
+      <div class="p-2 hover:bg-blue-100 text flex gap-2 cursor-pointer items-center"><x-icon-logout /> Logout</div>
     </div>
   </div>
 </header>
