@@ -70,10 +70,10 @@
                                         class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                                         <div class="flex gap-3">
                                             <a href="#" @click.prevent="openPanel = true; actionType = 'Edit'"
-                                                class="text-black">Edit</a>
+                                                class="text-black">  <x-icon-edit /></a>
                                             <div x-data="{ open: false }">
                                                 <a href="#" @click="open = true" class="text-red-500">
-                                                    Delete
+                                                <x-icon-delete />
                                                 </a>
                                                 <div @keydown.escape.window="open = false"
                                                     class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 transition-opacity"
@@ -160,10 +160,10 @@
                                         class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                                         <div class="flex gap-3">
                                             <a href="#" @click.prevent="openPanel = true; actionType = 'Edit'"
-                                                class="text-black">Edit</a>
+                                                class="text-black">  <x-icon-edit /></a>
                                             <div x-data="{ open: false }">
                                                 <a href="#" @click="open = true" class="text-red-500">
-                                                    Delete
+                                                <x-icon-delete />
                                                 </a>
                                                 <div @keydown.escape.window="open = false"
                                                     class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 transition-opacity"
