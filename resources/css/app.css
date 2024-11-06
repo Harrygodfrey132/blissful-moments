@@ -33,3 +33,4 @@
     border-bottom: 1px solid #ccc;
     font-weight: 600;
 }
+[x-cloak] { display: none !important; }

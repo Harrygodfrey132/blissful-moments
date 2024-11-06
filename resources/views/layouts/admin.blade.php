@@ -13,11 +13,11 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    <script src="{{ asset('js/flasher.min.js') }}"></script>
+    {{-- <script src="{{ asset('js/flasher.min.js') }}"></script> --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex bg-gray-100 min-h-screen" x-data="{ panel: false, menu: true }">
+<body class="flex bg-gray-100 min-h-screen" x-data="{ panel: false, menu: true , openPanel: false, actionType: '' }" x-cloak>
     @include('elements.partials.sidebar')
     <div class="min-h-screen bg-gray-100 w-full">
         @include('elements.partials.header')
@@ -29,8 +29,8 @@
 
     <!-- Modals -->
     <x-delete-confirmation />
+    <x-dynamic-panel />
     @stack('modals')
-
     <script>
         const setup = () => {
             function getSidebarStateFromLocalStorage() {
@@ -61,7 +61,7 @@
             }
         }
     </script>
-    <script>
+    {{-- <script>
         function toggleModal() {
             document.getElementById('deleteModal').classList.toggle('hidden');
         }
@@ -74,40 +74,7 @@
             form.action = url;
             toggleModal();
         }
-    </script>
-
-    <script>
-        function updateStatusHandler(status) {
-            const toggleButton = event.currentTarget;
-            const url = toggleButton.getAttribute('data-url');
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify({
-                        status: status
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.success) {
-                        alert('Failed to update status');
-                        toggleButton.dispatchEvent(new Event('click'));
-                    }
-                    flasher.success('Record status updated successfully')
-                })
-                .catch(error => {
-                    console.error('Error updating status:', error);
-                    alert('An error occurred. Please try again.');
-                    // Optionally revert toggle on failure
-                    toggleButton.dispatchEvent(new Event('click'));
-                });
-        }
-    </script>
+    </script> --}}
 
     @stack('scripts')
 </body>
