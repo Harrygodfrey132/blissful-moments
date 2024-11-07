@@ -24,8 +24,13 @@ Route::get('/dashboard', function () {
 Route::get('/users', function () {
     return view('pages/users');
 });
+
 Route::get('/orders', function () {
     return view('pages/orders');
+});
+
+Route::get('/orderdetails', function () {
+    return view('pages/order-details');
 });
 
 require __DIR__.'/auth.php';
