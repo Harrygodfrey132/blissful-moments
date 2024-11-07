@@ -8,7 +8,8 @@
         "php": "^8.2",
         "blade-ui-kit/blade-icons": "^1.7",
         "laravel/framework": "^11.9",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "php-flasher/flasher-laravel": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -25,6 +26,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
+        },
+        "autoload": {
+            "files": [
+                 "app/Helper/helpers.php"
+            ]
         }
     },
     "autoload-dev": {
