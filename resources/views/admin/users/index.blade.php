@@ -77,6 +77,8 @@
                                             <td
                                                 class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                                                 <div class="flex gap-3">
+                                                    <a href="#"><x-icon-qrcode /></a>
+
                                                     <a href="#" @click.prevent="openPanel = true; actionType = 'Edit'"
                                                         class="text-black"> <x-icon-edit />
                                                     </a>

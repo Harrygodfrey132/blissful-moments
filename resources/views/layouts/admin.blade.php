@@ -18,7 +18,10 @@
 </head>
 
 <body class="flex bg-gray-100 min-h-screen" x-data="{ panel: false, menu: true , openPanel: false, actionType: '' }" x-cloak>
-    @include('elements.partials.sidebar')
+    
+
+<x-success-notification />
+@include('elements.partials.sidebar')
     <div class="min-h-screen bg-gray-100 w-full">
         @include('elements.partials.header')
         <!-- Page Content -->

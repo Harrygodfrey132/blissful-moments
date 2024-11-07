@@ -34,3 +34,7 @@
     font-weight: 600;
 }
 [x-cloak] { display: none !important; }
+
+.hidden {
+    display: none;
+}
