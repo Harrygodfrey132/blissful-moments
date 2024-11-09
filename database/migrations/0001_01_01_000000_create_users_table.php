@@ -17,9 +17,11 @@ return new class extends Migration
             $table->integer('role_id')->comment("1 => Admin , 2 => User , 3 => Guest");
             $table->string('email')->unique();
             $table->boolean('status')->default(1);
+            $table->boolean('subscription_status')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 

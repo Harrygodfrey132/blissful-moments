@@ -14,16 +14,14 @@
 
             <!-- Panel Content Based on Action -->
             <div x-show="actionType === 'Edit'" class="text-gray-600  space-y-6">
-                <form action="" method="post">
-                    <div id="editForm">
-                        <!-- Your Edit Form -->
-                    </div>
-                    <div class="flex items-center justify-end mt-4 absolute right-0 left-0 m-auto bottom-10 w-[400px]">
-                        <x-primary-button>
-                            {{ __('Save') }}
-                        </x-primary-button>
-                    </div>
-                </form>
+                <div id="editForm">
+                    <!-- Your Edit Form -->
+                </div>
+                <div class="flex items-center justify-end mt-4 absolute right-0 left-0 m-auto bottom-10 w-[400px]">
+                    <x-primary-button @click.prevent="submitFormHandler">
+                        {{ __('Save') }}
+                    </x-primary-button>
+                </div>
             </div>
         </div>
     </div>

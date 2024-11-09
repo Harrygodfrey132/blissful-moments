@@ -13,15 +13,15 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    {{-- <script src="{{ asset('js/flasher.min.js') }}"></script> --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex bg-gray-100 min-h-screen" x-data="{ panel: false, menu: true , openPanel: false, actionType: '' }" x-cloak>
-    
+<body class="flex bg-gray-100 min-h-screen" x-data="commonData()" x-cloak>
+    <!-- Custom Notification -->
+    <x-success-notification />
+    <!-- End Custom Notification -->
 
-<x-success-notification />
-@include('elements.partials.sidebar')
+    @include('elements.partials.sidebar')
     <div class="min-h-screen bg-gray-100 w-full">
         @include('elements.partials.header')
         <!-- Page Content -->
@@ -33,16 +33,15 @@
     <!-- Modals -->
     <x-delete-confirmation />
     <x-dynamic-panel />
+    <!-- End Modals -->
+
     @stack('modals')
     <script>
         const setup = () => {
             function getSidebarStateFromLocalStorage() {
-                // if it already there, use it
                 if (window.localStorage.getItem('isSidebarOpen')) {
                     return JSON.parse(window.localStorage.getItem('isSidebarOpen'))
                 }
-
-                // else return the initial state you want
                 return (
                     false
                 )
@@ -64,22 +63,8 @@
             }
         }
     </script>
-    {{-- <script>
-        function toggleModal() {
-            document.getElementById('deleteModal').classList.toggle('hidden');
-        }
-
-        function deleteModalHandler(button) {
-            const url = button.getAttribute('data-url');
-            const modal = document.getElementById('deleteModal');
-            const form = document.getElementById('deleteModalForm');
-
-            form.action = url;
-            toggleModal();
-        }
-    </script> --}}
-
     @stack('scripts')
+    <script src="{{ asset('js/commonFunctions.js') }}"></script>
 </body>
 
 </html>

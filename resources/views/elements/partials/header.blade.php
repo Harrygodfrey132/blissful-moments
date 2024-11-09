@@ -1,8 +1,7 @@
 <header class="flex items-center h-20 px-6 sm:px-10 bg-white">
     <div x-data="{ open: false }">
         <div class="mr-8 cursor-pointer md:hidden" @click="open = ! open">
-            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
+            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </div>
@@ -100,14 +99,16 @@
                         class="h-full w-full object-cover">
                 </span>
                 <div>
-                    <p class="text-sm">Alex</p>
-                    <p class="truncate text-sm font-medium text-gray-900">tom@example.com</p>
+                    <p class="text-sm">{{ $authenticatedUser->name }}</p>
+                    <p class="truncate text-sm font-medium text-gray-900">{{ $authenticatedUser->email }}</p>
                 </div>
 
             </div>
-            <div class="p-2 py-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center">Profile</div>
-            <div class="p-2 py-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center border-b"> Change
-                Password</div>
+            <a href="{{ route('profile.edit') }}"
+                class="p-2 py-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center">Profile</a>
+            <a href="{{ route('profile.edit') }}"
+                class="p-2 py-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center border-b"> Change
+                Password</a>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit"

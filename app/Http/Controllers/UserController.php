@@ -10,8 +10,40 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::whereNot('id', Auth::id())->get();
+        $users = User::whereNot('id', Auth::id())->paginate(10);
         return view('admin.users.index', compact('users'));
+    }
+
+    public function edit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        // Validate the incoming data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        try {
+            // Update the user with the validated data
+            $user->update($validatedData);
+
+            // Return a success response
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated successfully!'
+            ]);
+        } catch (\Exception $e) {
+            // Catch any exception that occurs during the update
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function delete(User $user)

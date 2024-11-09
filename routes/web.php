@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return to_route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -19,6 +19,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/listing', [UserController::class, 'index'])->name('listing');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{user}/update', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}/delete', [UserController::class, 'delete'])->name('destroy');
         Route::post('/{user}/status', [UserController::class, 'updateStatus'])->name('update.status');
     });
@@ -40,5 +42,5 @@ Route::get('/orderdetails', function () {
     return view('pages/order-details');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 require __DIR__ . '/auth.php';

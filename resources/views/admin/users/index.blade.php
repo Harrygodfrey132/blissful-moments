@@ -2,20 +2,33 @@
 @section('content')
     <div class="flex-grow text-gray-800">
         <div>
+            <!-- Header and Search Block -->
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
                     <h1 class="text-xl font-semibold text-gray-900">Users</h1>
-                    <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name,
-                        , email and status etc.</p>
                 </div>
-                <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <div class="relative w-full max-w-md sm:-ml-2">
+                <div class="mt-4 sm:ml-16 sm:mt-0 flex gap-4">
+                    <div class="relative w-[400px]">
                         <x-icon-search />
-                        <input type="text" role="search" placeholder="Search..."
-                            class="py-2 pl-10 pr-4 w-full border border-gray-200 placeholder-gray-400 focus:bg-gray-50 rounded" />
+                        <input type="text" role="search" placeholder="Search by Order ID, Buyer Name, or Email ID..."
+                            class="py-2 text-sm pl-10 pr-4 w-full border border-gray-200 placeholder-gray-400 focus:bg-gray-50 rounded" />
                     </div>
+                    <!-- Multisearch Button -->
+                    <button @click="multiSearchOpen = !multiSearchOpen" class="btn bg-black text-white px-4 py-2 rounded">
+                        <x-icon-multisearch />
+                    </button>
+                    <!-- Delete Button -->
+                    <button id="deleteButton"
+                        class="block rounded bg-gray-300 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-not-allowed"
+                        disabled>
+                        <x-icon-trash />
+                    </button>
                 </div>
             </div>
+
+            <!-- Advance search block components -->
+
+            <x-advance-search />
             <div class="relative">
                 <!-- Table with Actions -->
                 <div class="mt-8 flow-root">
@@ -33,6 +46,9 @@
                                         <th scope="col"
                                             class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Status</th>
+                                        <th scope="col"
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Subscription</th>
                                         <th scope="col"
                                             class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Actions</th>
@@ -74,15 +90,18 @@
                                                     </p>
                                                 </div>
                                             </td>
+                                            <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                                                {{ formatDate($user->created_at) }}</td>
                                             <td
                                                 class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                                                 <div class="flex gap-3">
                                                     <a href="#"><x-icon-qrcode /></a>
 
-                                                    <a href="#" @click.prevent="openPanel = true; actionType = 'Edit'"
-                                                        class="text-black"> <x-icon-edit />
+                                                    <a href="javascript:void(0);"
+                                                        @click.prevent="openPanel = true; actionType = 'Edit'; loadEditForm('{{ route('users.edit', $user) }}')"
+                                                        class="text-black">
+                                                        <x-icon-edit />
                                                     </a>
-
                                                     <!-- Delete Confirmation -->
                                                     <a href="javascript:void(0);" data-userId="{{ encrypt($user->id) }}"
                                                         onclick="deleteModalHandler(this)"
@@ -95,6 +114,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="mt-2">
+                                {{ $users->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
