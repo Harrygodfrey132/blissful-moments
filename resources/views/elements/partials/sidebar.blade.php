@@ -10,7 +10,7 @@
                 <x-icon-dashboard />
                 <span class="ml-2 text-sm" x-show="menu">Dashboard</span>
             </a>
-            <a href="{{ route('users.listing') }}"
+            <a href="{{ route('users.index') }}"
                 class="inline-flex items-center py-3 focus:text-gray-400 focus:bg-gray-700 rounded-lg px-2 {{ request()->is('users*') ? 'text-black bg-white' : 'text-white hover:bg-gray-700' }}"
                 :class="{ 'justify-start': menu, 'justify-center': menu == false }">
                 <x-icon-user />

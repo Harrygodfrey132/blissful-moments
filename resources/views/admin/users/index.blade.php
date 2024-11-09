@@ -2,33 +2,9 @@
 @section('content')
     <div class="flex-grow text-gray-800">
         <div>
-            <!-- Header and Search Block -->
-            <div class="sm:flex sm:items-center">
-                <div class="sm:flex-auto">
-                    <h1 class="text-xl font-semibold text-gray-900">Users</h1>
-                </div>
-                <div class="mt-4 sm:ml-16 sm:mt-0 flex gap-4">
-                    <div class="relative w-[400px]">
-                        <x-icon-search />
-                        <input type="text" role="search" placeholder="Search by Order ID, Buyer Name, or Email ID..."
-                            class="py-2 text-sm pl-10 pr-4 w-full border border-gray-200 placeholder-gray-400 focus:bg-gray-50 rounded" />
-                    </div>
-                    <!-- Multisearch Button -->
-                    <button @click="multiSearchOpen = !multiSearchOpen" class="btn bg-black text-white px-4 py-2 rounded">
-                        <x-icon-multisearch />
-                    </button>
-                    <!-- Delete Button -->
-                    <button id="deleteButton"
-                        class="block rounded bg-gray-300 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-not-allowed"
-                        disabled>
-                        <x-icon-trash />
-                    </button>
-                </div>
-            </div>
-
             <!-- Advance search block components -->
+            <x-advance-search :route="route('users.index')" />
 
-            <x-advance-search />
             <div class="relative">
                 <!-- Table with Actions -->
                 <div class="mt-8 flow-root">
@@ -37,6 +13,10 @@
                             <table class="min-w-full divide-y divide-gray-300">
                                 <thead>
                                     <tr>
+                                        <th scope="col"
+                                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                                            <input type="checkbox" id="selectAll">
+                                        </th>
                                         <th scope="col"
                                             class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                                             Name</th>
@@ -54,9 +34,12 @@
                                             Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200 bg-white">
+                                <tbody id="listingTable" class="divide-y divide-gray-200 bg-white">
                                     @foreach ($users as $user)
                                         <tr>
+                                            <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm">
+                                                <input type="checkbox" class="rowCheckbox" data-index="0">
+                                            </td>
                                             <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm">
                                                 <div class="flex items-center">
                                                     <div class="h-11 w-11 flex-shrink-0">

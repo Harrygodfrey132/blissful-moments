@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('content')
 
-<div x-data="{ multiSearchOpen: false }" class="relative max-w-7xl mx-auto">
+<div class="relative max-w-7xl mx-auto">
 
     <!-- Header and Search Block -->
     <div class="sm:flex sm:items-center">

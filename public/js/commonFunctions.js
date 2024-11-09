@@ -1,3 +1,68 @@
+//Common Function for live search
+document.addEventListener("DOMContentLoaded", function () {
+    document
+        .querySelector('input[name="search"]')
+        .addEventListener("input", function (e) {
+            let searchTerm = e.target.value;
+            let url = e.target.getAttribute("data-url");
+
+            // Fetch new user data based on the search query
+            fetch(`${url}?search=${searchTerm}`, {
+                method: "GET",
+                headers: {
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+                .then((response) => response.text())
+                .then((html) => {
+                    // Replace the user table body with the updated HTML
+                    document.querySelector(`#listingTable`).innerHTML = html;
+                })
+                .catch((error) => console.error("Error:", error));
+        });
+});
+
+//Common Function for Multi Delete
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButton = document.querySelector("#deleteButton");
+    const selectAllCheckbox = document.querySelector("#selectAll");
+    const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+
+    // Select all checkboxes
+    selectAllCheckbox.addEventListener("change", function () {
+        rowCheckboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        toggleDeleteButton();
+    });
+
+    // Toggle individual checkbox and update Delete button state
+    rowCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", function () {
+            const allChecked = [...rowCheckboxes].every((cb) => cb.checked);
+            selectAllCheckbox.checked = allChecked;
+            toggleDeleteButton();
+        });
+    });
+
+    // Enable or disable the Delete button based on selected checkboxes
+    function toggleDeleteButton() {
+        const anyChecked = [...rowCheckboxes].some((cb) => cb.checked);
+        if (anyChecked) {
+            deleteButton.classList.remove("bg-gray-300", "cursor-not-allowed");
+            deleteButton.classList.add("bg-red-500");
+            deleteButton.disabled = false;
+        } else {
+            deleteButton.classList.add("bg-gray-300", "cursor-not-allowed");
+            deleteButton.classList.remove("bg-red-500");
+            deleteButton.disabled = true;
+        }
+    }
+});
+
 // Modal Toggle
 function toggleModal() {
     document.getElementById("deleteModal").classList.toggle("hidden");
@@ -80,7 +145,7 @@ function commonData() {
         panel: false,
         menu: true,
         openPanel: false,
-        multiSearchOpen: false ,
+        multiSearchOpen: false,
         actionType: "",
         errors: {},
         loadEditForm(url) {

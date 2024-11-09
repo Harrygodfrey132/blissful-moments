@@ -20,7 +20,6 @@
     <!-- Custom Notification -->
     <x-success-notification />
     <!-- End Custom Notification -->
-
     @include('elements.partials.sidebar')
     <div class="min-h-screen bg-gray-100 w-full">
         @include('elements.partials.header')

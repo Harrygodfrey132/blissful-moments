@@ -8,10 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function index()
+public function index(Request $request)
     {
-        $users = User::whereNot('id', Auth::id())->paginate(10);
-        return view('admin.users.index', compact('users'));
+        $search = $request->input('search', '');
+        // Fetch users based on the search query
+        $users = User::whereNot('id', Auth::id())
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            })
+            ->paginate(10);
+
+        if ($request->ajax()) {
+            // Return only the table rows
+            return view('admin.users.partials.user-table', compact('users', 'search'));
+        }
+
+        // Default response when not an AJAX request
+        return view('admin.users.index', compact('users', 'search'));
     }
 
     public function edit(User $user)
