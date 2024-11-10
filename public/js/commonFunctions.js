@@ -25,30 +25,58 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
+//Common function for advance search filter
+function advanceFormHandler() {
+    // Get the form element and its action URL
+    const form = document.getElementById("advanceSearchForm");
+    const url = form.action;
+
+    const formData = new URLSearchParams(new FormData(form));
+    const query = formData.toString();
+
+    // Fetch results based on the search query
+    fetch(`${url}?${query}`, {
+        method: "GET",
+        headers: {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+            "X-Requested-With": "XMLHttpRequest",
+        },
+    })
+        .then((response) => response.text())
+        .then((html) => {
+            // Inject the returned HTML into the listingTable element
+            document.querySelector("#listingTable").innerHTML = html;
+        })
+        .catch((error) => console.error("Error:", error));
+}
+
 //Common Function for Multi Delete
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButton = document.querySelector("#deleteButton");
     const selectAllCheckbox = document.querySelector("#selectAll");
     const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+    const multiDeleteRoute = deleteButton.getAttribute("data-multi-delete-url"); // Get the route from the button
 
-    // Select all checkboxes
-    selectAllCheckbox.addEventListener("change", function () {
+    // Handle select all checkboxes
+    selectAllCheckbox.addEventListener("change", () => {
         rowCheckboxes.forEach((checkbox) => {
             checkbox.checked = selectAllCheckbox.checked;
         });
-        toggleDeleteButton();
+        toggleDeleteButton(); // Toggle delete button based on checkboxes
     });
 
-    // Toggle individual checkbox and update Delete button state
+    // Handle individual checkbox change
     rowCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", function () {
+        checkbox.addEventListener("change", () => {
             const allChecked = [...rowCheckboxes].every((cb) => cb.checked);
-            selectAllCheckbox.checked = allChecked;
-            toggleDeleteButton();
+            selectAllCheckbox.checked = allChecked; // Update select all checkbox
+            toggleDeleteButton(); // Toggle delete button based on checkboxes
         });
     });
 
-    // Enable or disable the Delete button based on selected checkboxes
+    // Enable or disable the Delete button
     function toggleDeleteButton() {
         const anyChecked = [...rowCheckboxes].some((cb) => cb.checked);
         if (anyChecked) {
@@ -61,6 +89,54 @@ document.addEventListener("DOMContentLoaded", () => {
             deleteButton.disabled = true;
         }
     }
+
+    // Multi-delete function
+    deleteButton.addEventListener("click", function () {
+        const selectedIds = [...rowCheckboxes]
+            .filter((checkbox) => checkbox.checked)
+            .map((checkbox) => checkbox.dataset.id); // Collect the IDs of checked items
+
+        if (selectedIds.length === 0) return;
+
+        const confirmDelete = confirm(
+            "Are you sure you want to delete these items?"
+        );
+        if (confirmDelete) {
+            fetch(multiDeleteRoute, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: JSON.stringify({ ids: selectedIds }), // Send array of IDs
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        // Uncheck all items
+                        selectAllCheckbox.checked = false;
+                        rowCheckboxes.forEach((checkbox) => {
+                            checkbox.checked = false;
+                        });
+
+                        // Reset delete button state
+                        toggleDeleteButton();
+
+                        // Show success notification and reload
+                        showNotification("successNotification");
+                        location.reload(); // Refresh page to show updated table
+                    } else {
+                        showNotification(
+                            "errorNotification",
+                            "Error deleting items"
+                        );
+                    }
+                })
+                .catch((error) => console.error("Error:", error));
+        }
+    });
 });
 
 // Modal Toggle
@@ -161,9 +237,22 @@ function commonData() {
                     )
                 );
         },
-        submitFormHandler() {
+        loadCreateForm(url) {
+            fetch(url)
+                .then((response) => response.text())
+                .then((html) => {
+                    document.getElementById("editForm").innerHTML = html;
+                })
+                .catch((error) =>
+                    showNotification(
+                        "errorNotification",
+                        "Error loading edit form"
+                    )
+                );
+        },
+        submitFormHandler(formId) {
             // Get the form element
-            const form = document.getElementById("userEditForm");
+            const form = document.getElementById(formId);
             const formData = new FormData(form);
             this.errors = {};
             // Send the form data using Fetch API (AJAX)

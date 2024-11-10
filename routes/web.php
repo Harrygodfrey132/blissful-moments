@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,17 @@ Route::middleware('auth')->group(function () {
         Route::put('/{user}/update', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}/delete', [UserController::class, 'delete'])->name('destroy');
         Route::post('/{user}/status', [UserController::class, 'updateStatus'])->name('update.status');
+        Route::post('/multi-delete', [UserController::class, 'multiDelete'])->name('multiDelete');
+    });
+
+    Route::prefix('plans')->name('plans.')->group(function () {
+        Route::get('/listing', [PlanController::class, 'index'])->name('index');
+        Route::get('/create', [PlanController::class, 'create'])->name('create');
+        Route::post('/store', [PlanController::class, 'store'])->name('store');
+        Route::get('/{plan}/edit', [PlanController::class, 'edit'])->name('edit');
+        Route::put('/{plan}/update', [PlanController::class, 'update'])->name('update');
+        Route::delete('/{plan}/delete', [PlanController::class, 'delete'])->name('destroy');
+        Route::post('/{plan}/status', [PlanController::class, 'updateStatus'])->name('update.status');
     });
 });
 

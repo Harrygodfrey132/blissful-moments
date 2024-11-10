@@ -4,11 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -17,7 +19,7 @@ class User extends Authenticatable
     const GUEST = 3;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable , SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -75,5 +77,36 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn() => $this->subscription_status
         );
+    }
+
+    public function scopeUserSearchFilter(Builder $query, $data)
+    {
+        // Exclude the current logged-in user
+        $query->whereNot('id', Auth::id());
+
+        // Filter by search term if provided
+        if (!empty($data['search'])) {
+            $query->where(function ($subQuery) use ($data) {
+                $subQuery->where('name', 'like', '%' . $data['search'] . '%')
+                    ->orWhere('email', 'like', '%' . $data['search'] . '%');
+            });
+        }
+
+        // Filter by status if provided
+        if (isset($data['status']) && $data['status'] !== '') {
+            $query->where('status', $data['status']);
+        }
+
+        // Filter by start date if provided
+        if (!empty($data['start_date'])) {
+            $query->whereDate('created_at', '>=', $data['start_date']);
+        }
+
+        // Filter by end date if provided
+        if (!empty($data['end_date'])) {
+            $query->whereDate('created_at', '<=', $data['end_date']);
+        }
+
+        return $query;
     }
 }

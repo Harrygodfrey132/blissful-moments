@@ -3,29 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-public function index(Request $request)
+    public function index(Request $request)
     {
-        $search = $request->input('search', '');
-        // Fetch users based on the search query
-        $users = User::whereNot('id', Auth::id())
-            ->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            })
-            ->paginate(10);
+        $breadcrumbs = Breadcrumbs::generate('users.index');
+        // Retrieve all filter data from the request
+        $data = [
+            'search' => $request->input('search', ''),
+            'status' => $request->input('status', ''),
+            'start_date' => $request->input('start_date', ''),
+            'end_date' => $request->input('end_date', ''),
+        ];
 
+        $users = User::userSearchFilter($data)->paginate(10);
+
+        // Return AJAX response if the request is AJAX
         if ($request->ajax()) {
-            // Return only the table rows
-            return view('admin.users.partials.user-table', compact('users', 'search'));
+            return view('admin.users.partials.user-table', compact('users', 'data'));
         }
 
-        // Default response when not an AJAX request
-        return view('admin.users.index', compact('users', 'search'));
+        // Default response for non-AJAX requests
+        return view('admin.users.index', compact('users', 'data' , 'breadcrumbs'));
     }
 
     public function edit(User $user)
@@ -67,6 +70,27 @@ public function index(Request $request)
         }
         return back()->with('success', 'Record has been removed successfully!');
     }
+
+    public function multiDelete(Request $request)
+    {
+        $ids = $request->input('ids');  // Get the array of IDs
+
+        if (empty($ids)) {
+            return response()->json(['message' => 'No IDs provided'], 400);
+        }
+        // Decrypt the IDs
+        try {
+            $decryptedIds = array_map(function ($id) {
+                return decrypt($id);  // Decrypt each ID in the array
+            }, $ids);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return response()->json(['message' => 'Invalid encrypted IDs'], 400);
+        }
+        User::whereIn('id', $decryptedIds)->delete();
+        flash()->success('Users deleted successfully!');
+        return response()->json(['message' => 'Users deleted successfully']);
+    }
+
 
     public function updateStatus(Request $request, User $user)
     {
