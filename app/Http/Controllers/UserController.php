@@ -17,7 +17,7 @@ public function index(Request $request)
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('email', 'like', '%' . $search . '%');
             })
-            ->paginate(10);
+            ->paginate(5);
 
         if ($request->ajax()) {
             // Return only the table rows
