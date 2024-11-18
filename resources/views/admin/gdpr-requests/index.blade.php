@@ -42,7 +42,7 @@
                                             </td>
                                             <td class="whitespace-nowrap py-5 pr-3 text-sm">
                                                 <div class="flex items-center">
-                                                    <div >
+                                                    <div>
                                                         <div class="font-medium text-gray-900">{{ $plan->name }}</div>
                                                         <div class="mt-1 text-gray-500">{{ $plan->description }}</div>
                                                     </div>

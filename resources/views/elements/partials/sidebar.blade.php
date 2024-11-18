@@ -28,6 +28,12 @@
                 <x-icon-order />
                 <span class="ml-2 text-sm" x-show="menu">Orders</span>
             </a>
+            <a href="{{ route('gdpr.index') }}"
+                class="inline-flex items-center py-3 focus:text-gray-400 focus:bg-gray-700 rounded-lg px-2 {{ request()->is('gdpr*') ? 'text-black bg-white' : 'text-white hover:bg-gray-700' }}"
+                :class="{ 'justify-start': menu, 'justify-center': menu == false }">
+                <x-icon-user />
+                <span class="ml-2 text-sm" x-show="menu">GDPR Requests</span>
+            </a>
             <a href="#"
                 class="inline-flex items-center text-white py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg px-2"
                 :class="{ 'justify-start': menu, 'justify-center': menu == false }">

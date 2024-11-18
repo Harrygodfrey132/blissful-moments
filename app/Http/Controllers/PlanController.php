@@ -52,9 +52,24 @@ class PlanController extends Controller
         return to_route('plans.index')->with('success', 'Plan created successfully.');
     }
 
-    public function edit(Plan $user)
+    public function edit(Plan $plan)
     {
-        return view('admin.users.edit', compact('user'));
+        return view('admin.plans.edit', compact('plan'));
+    }
+
+    public function update(Request $request, Plan $plan)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'billing_cycle' => 'required|integer|in:30,180,365',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        if (!$plan->update($validated)) {
+            return back()->with('error', 'Unable to update record');
+        }
+        return back()->with('success', 'Record updated successfully!');
     }
 
     public function delete(Plan $plan)
