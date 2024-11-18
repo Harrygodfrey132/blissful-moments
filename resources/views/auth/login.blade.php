@@ -45,9 +45,9 @@
       </x-primary-button>
 
     </div>
-    <div class="font-body text-center text-primary mt-5">Don’t have an account?
+    {{-- <div class="font-body text-center text-primary mt-5">Don’t have an account?
       <a class="font-medium text-sm  " href="/register">Sign Up</a>
-    </div>
+    </div> --}}
 
   </form>
 </x-guest-layout>

@@ -13,3 +13,9 @@ function formatDate($date)
     // Return the formatted date
     return $dateObj->format('M j, Y');
 }
+
+function formatPrice($price)
+{
+    // Return the formatted date
+    return "$" . $price;
+}
