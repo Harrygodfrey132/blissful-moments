@@ -28,6 +28,12 @@
         $trail->push('Setup Plan', route('plans.create'));
     });
 
+    // Home > GDPR
+    Breadcrumbs::for('gdpr.index', function (BreadcrumbTrail $trail) {
+        $trail->parent('dashboard');
+        $trail->push('GDPR Requests', route('gdpr.index'));
+    });
+
     // // Home > Users > [User Name]
     // Breadcrumbs::for('users.show', function (BreadcrumbTrail $trail, $user) {
     //     $trail->parent('users.index');

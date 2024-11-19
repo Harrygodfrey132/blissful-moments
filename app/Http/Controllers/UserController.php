@@ -11,7 +11,6 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $breadcrumbs = Breadcrumbs::generate('users.index');
         // Retrieve all filter data from the request
         $data = [
             'search' => $request->input('search', ''),
@@ -28,7 +27,7 @@ class UserController extends Controller
         }
 
         // Default response for non-AJAX requests
-        return view('admin.users.index', compact('users', 'data' , 'breadcrumbs'));
+        return view('admin.users.index', compact('users', 'data'));
     }
 
     public function edit(User $user)

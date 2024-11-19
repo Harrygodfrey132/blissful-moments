@@ -16,7 +16,7 @@
                 <!-- Blade Component: Icon Search -->
                 <x-icon-search />
                 <input type="text" name="search" value="{{ $search }}" data-url="{{ $route }}"
-                    role="search" placeholder="Search by Order ID, Buyer Name, or Email ID..."
+                    role="search" placeholder="Search Here..."
                     class="py-2 text-sm pl-10 pr-4 w-full border border-gray-200 placeholder-gray-400 focus:bg-gray-50 rounded" />
             </div>
         </form>

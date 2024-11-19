@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('gdpr_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->string('comments')->nullable();
             $table->integer('status')->default(0)->comment('pending', 'approved', 'rejected');
             $table->timestamps();

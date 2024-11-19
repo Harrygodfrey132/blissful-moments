@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('gdpr')->name('gdpr.')->group(function () {
         Route::get('/requests/listing', [GDPRrequestController::class, 'index'])->name('index');
         Route::get('/requests/{gdpr}/show', [GDPRrequestController::class, 'show'])->name('show');
+        Route::get('/requests/{gdpr}/edit', [GDPRrequestController::class, 'edit'])->name('edit');
     });
 });
 
