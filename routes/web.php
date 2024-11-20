@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/requests/listing', [GDPRrequestController::class, 'index'])->name('index');
         Route::get('/requests/{gdpr}/show', [GDPRrequestController::class, 'show'])->name('show');
         Route::get('/requests/{gdpr}/edit', [GDPRrequestController::class, 'edit'])->name('edit');
+        Route::post('/requests/{gdpr}/update', [GDPRrequestController::class, 'update'])->name('update');
     });
 });
 

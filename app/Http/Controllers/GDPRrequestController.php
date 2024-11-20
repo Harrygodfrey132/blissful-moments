@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\AppConstant;
 use App\Models\GDPRRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GDPRrequestController extends Controller
 {
@@ -27,7 +29,34 @@ class GDPRrequestController extends Controller
       return view('admin.gdpr-requests.index', compact('requests', 'data'));
    }
 
-   public function edit(GDPRRequest $gdpr){
-      return view('admin.gdpr-requests.edit', compact('gdpr'));
+   public function edit(GDPRRequest $gdpr)
+   {
+      if (request()->ajax()) {
+         // Return data as JSON for AJAX request
+         return response()->json([
+            'id' => $gdpr->id,
+            'user_name' => $gdpr->user->name,
+            'user_email' => $gdpr->user->email,
+            'comments' => $gdpr->comments,
+         ], 200);
+      }
+
+      // Fallback for non-AJAX requests
+      abort(400, 'Invalid request');
+   }
+
+   public function update(Request $request, GDPRRequest $gdpr)
+   {
+      try {
+         DB::transaction(function () use ($gdpr, $request) {
+            $gdpr->update([
+               'status' => $request->status ? AppConstant::ACCEPTED : AppConstant::REJECTED
+            ]);
+            $gdpr->user->delete();
+         });
+         return back()->with('success', 'Record removed successfully');
+      } catch (\Throwable $th) {
+         return back()->with('erorr', 'Something went wrong. Unable to remove record');
+      }
    }
 }

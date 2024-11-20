@@ -6,10 +6,11 @@
     'createFormRoute' => '',
     'enableCreateButton' => false,
 ])
-<div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto">
+<div class="sm:flex-auto">
         <h1 class="text-xl font-semibold text-gray-900">{{ Breadcrumbs::render() }}</h1>
     </div>
+<div class="sm:flex sm:items-center justify-end">
+    
     <div class="mt-4 sm:ml-16 sm:mt-0 flex gap-4">
         <form id="formSearch" method="GET" action="{{ $route }}">
             <div class="relative w-[400px]">

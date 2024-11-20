@@ -24,7 +24,7 @@
     <div class="min-h-screen bg-gray-100 w-full">
         @include('elements.partials.header')
         <!-- Page Content -->
-        <main class="p-6 sm:p-10 space-y-6">
+        <main class="p-6 sm:p-6 space-y-6">
             @yield('content')
         </main>
     </div>
