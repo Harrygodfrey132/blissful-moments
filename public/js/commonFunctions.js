@@ -224,6 +224,7 @@ function commonData() {
         multiSearchOpen: false,
         actionType: "",
         errors: {},
+        dropdown: false,
         loadEditForm(url) {
             fetch(url)
                 .then((response) => response.text())

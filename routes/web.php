@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\GDPRrequestController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/requests/{gdpr}/show', [GDPRrequestController::class, 'show'])->name('show');
         Route::get('/requests/{gdpr}/edit', [GDPRrequestController::class, 'edit'])->name('edit');
         Route::post('/requests/{gdpr}/update', [GDPRrequestController::class, 'update'])->name('update');
+    });
+
+    Route::prefix('configuration')->name('configuration.')->group(function () {
+        Route::get('/settings', [ConfigurationController::class, 'index'])->name('index');
+        Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
     });
 });
 
