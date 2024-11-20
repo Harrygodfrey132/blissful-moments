@@ -35,3 +35,7 @@ yarn-error.log
 auth.json
 .phpactor.json
 /zed
+
+#next frontend
+/next-frontend/node_modules/
+/next-frontend/.next
