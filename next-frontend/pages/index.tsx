@@ -1,5 +1,3 @@
-import '../styles/globals.css';
-
 const Home = () => {
   return <div>Welcome to the Home Page!</div>;
 };

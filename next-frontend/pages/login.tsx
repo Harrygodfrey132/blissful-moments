@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import '../styles/globals.css';
 import { ROUTES } from '../utils/routes';
 import Link from 'next/link';
 
