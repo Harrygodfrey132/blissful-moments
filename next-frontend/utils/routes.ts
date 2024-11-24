@@ -1,10 +1,10 @@
 // utils/routes.ts
 
 export const ROUTES = {
-    HOME: "/",
-    REGISTER: "/register",
-    VERIFY_EMAIL: "/verify-email",
-    LOGIN: "/login",
+    Home: "/",
+    Register: "/register",
+    Verify_Email: "/verify-email",
+    Login: "/login",
     PROFILE: (id: string) => `/profile/${id}`,
-    DASHBOARD: "/dashboard",
+    Dashboard: "/dashboard",
 };

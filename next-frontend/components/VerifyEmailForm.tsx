@@ -1,4 +1,66 @@
+import { useState, useRef } from 'react';
+import { API } from '../utils/api';
+
 const VerifyEmailForm = () => {
+    const [code, setCode] = useState(["", "", "", ""]); // Array to store the 4-digit code
+    const inputsRef = useRef<HTMLInputElement[]>([]); // Refs for input elements
+
+    const handleChange = (value: string, index: number) => {
+        if (!/^\d*$/.test(value)) return; // Allow only numeric input
+
+        const updatedCode = [...code];
+        updatedCode[index] = value;
+        setCode(updatedCode);
+
+        // Move to the next input if value is entered
+        if (value && index < inputsRef.current.length - 1) {
+            inputsRef.current[index + 1]?.focus();
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+        if (e.key === "Backspace" && !code[index] && index > 0) {
+            // Move to the previous input if backspace is pressed and input is empty
+            inputsRef.current[index - 1]?.focus();
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Fetch the token from cookies
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("auth_token="))
+            ?.split("=")[1];
+
+        if (!token) {
+            alert("Token not found!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.VerifyEmail}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ code: code.join("") }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Verification successful!");
+            } else {
+                alert(data.message || "Verification failed!");
+            }
+        } catch (error) {
+            console.error("Error during verification:", error);
+        }
+    };
+
     return (
         <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
             <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
@@ -13,52 +75,44 @@ const VerifyEmailForm = () => {
                     </div>
 
                     <div>
-                        <form action="" method="post">
+                        <form onSubmit={handleSubmit} method="post">
                             <div className="flex flex-col space-y-16">
                                 <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
-                                    <div className="w-16 h-16">
-                                        <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                                            type="text"
-                                            name=""
-                                            id=""
-                                        />
-                                    </div>
-                                    <div className="w-16 h-16">
-                                        <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                                            type="text"
-                                            name=""
-                                            id=""
-                                        />
-                                    </div>
-                                    <div className="w-16 h-16">
-                                        <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                                            type="text"
-                                            name=""
-                                            id=""
-                                        />
-                                    </div>
-                                    <div className="w-16 h-16">
-                                        <input
-                                            className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                                            type="text"
-                                            name=""
-                                            id=""
-                                        />
-                                    </div>
+                                    {code.map((value, index) => (
+                                        <div className="w-16 h-16" key={index}>
+                                            <input
+                                                ref={(el) => (inputsRef.current[index] = el!)} // Store refs
+                                                className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                                type="text"
+                                                maxLength={1}
+                                                value={value}
+                                                onChange={(e) => handleChange(e.target.value, index)}
+                                                onKeyDown={(e) => handleKeyDown(e, index)}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="flex flex-col space-y-5">
                                     <div>
-                                        <button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+                                        <button
+                                            type="submit"
+                                            className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm"
+                                        >
                                             Verify Account
                                         </button>
                                     </div>
 
                                     <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                                        <p>Didn't recieve code?</p> <a className="flex flex-row items-center text-blue-600" href="http://" target="_blank" rel="noopener noreferrer">Resend</a>
+                                        <p>Didn't receive the code?</p>{" "}
+                                        <a
+                                            className="flex flex-row items-center text-blue-600"
+                                            href="http://"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Resend
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -68,6 +122,6 @@ const VerifyEmailForm = () => {
             </div>
         </div>
     );
-}
+};
 
 export default VerifyEmailForm;

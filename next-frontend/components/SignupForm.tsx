@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { validateSignup } from "../utils/validation";
 import { API } from "../utils/api";
+import { signIn } from "next-auth/react";
 
 type FormData = {
     firstName: string;
@@ -68,10 +69,21 @@ const SignupForm = () => {
                     return response.json();
                 }
             })
-            .then((responseData) => {
+            .then(async (responseData) => {
                 if (responseData) {
-                    localStorage.setItem('authToken', responseData.token);
-                    router.push(ROUTES.VERIFY_EMAIL);
+                    // Log the user in using next-auth
+                    const loginResult = await signIn("credentials", {
+                        redirect: false,
+                        email: data.email,
+                        password: data.password,
+                    });
+                    if (loginResult?.error) {
+                        console.error("Sign-in error:", loginResult.error);
+                    } else {
+                        const isValidated = await validateUserAfterRegistration(responseData.userId, responseData.accessToken);
+                        console.log("Login successful, redirecting...");
+                        router.push(ROUTES.Login);
+                    }
                 }
             })
             .catch(() => {
@@ -80,6 +92,27 @@ const SignupForm = () => {
             .finally(() => {
                 setLoading(false);
             });
+
+        const validateUserAfterRegistration = async (userId: string, accessToken: string) => {
+            try {
+                const response = await fetch(`${process.env.API_BASE_URL}/user-validation/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.isValidated; // Assuming the response has { isValidated: true/false }
+                }
+
+                console.error('Validation failed');
+                return false;
+            } catch (error) {
+                console.error("Error validating user:", error);
+                return false;
+            }
+        };
     }
     return (
         <div className="p-6 space-y-6">
@@ -233,7 +266,7 @@ const SignupForm = () => {
                 {/* Login Link */}
                 <p className="text-sm font-light text-gray-500">
                     Already have an account?{' '}
-                    <Link href={ROUTES.LOGIN}
+                    <Link href={ROUTES.Login}
                         className="font-medium text-primary-600 hover:underline dark:text-primary-500">
                         Login here
                     </Link>
