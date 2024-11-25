@@ -82,10 +82,7 @@ const SignupForm = () => {
             });
     }
     return (
-        <div className="p-6 space-y-6">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-                Create an account
-            </h1>
+        <div className="space-y-6">
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
 
                 {/* Name Field */}
@@ -102,7 +99,7 @@ const SignupForm = () => {
                             {...register('firstName', validateSignup.firstName)}
                             name="firstName"
                             id="firstName"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="John"
                         />
                         {/* Display first_name validation error */}
@@ -122,7 +119,7 @@ const SignupForm = () => {
                             {...register('lastName', validateSignup.lastName)}
                             name="lastName"
                             id="lastName"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Smith"
                         />
                         {/* Display email validation error */}
@@ -144,7 +141,7 @@ const SignupForm = () => {
                         {...register('email', validateSignup.email)}
                         name="email"
                         id="email"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="name@company.com"
                     />
                     {/* Display email validation error */}
@@ -167,7 +164,7 @@ const SignupForm = () => {
                         name="password"
                         id="password"
                         placeholder="••••••••"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     {/* Display password validation error */}
                     {errors.password && (
@@ -189,7 +186,7 @@ const SignupForm = () => {
                         name="confirmPassword"
                         id="confirm-password"
                         placeholder="••••••••"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     {/* Display confirm password validation error */}
                     {errors.confirmPassword && (
@@ -213,7 +210,7 @@ const SignupForm = () => {
                     >
                         I accept the{' '}
                         <Link href="/terms"
-                            className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                            className="font-medium text-blue-light-900 hover:underline dark:text-primary-500">
                             Terms and Conditions
                         </Link>
                     </label>
@@ -224,17 +221,17 @@ const SignupForm = () => {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="w-full text-white bg-black hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800"
+                    className="w-full text-white bg-blue-light-900  focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800"
                     disabled={loading}
                 >
                     {loading ? 'Submitting...' : 'Create an account'}
                 </button>
 
                 {/* Login Link */}
-                <p className="text-sm font-light text-gray-500">
+                <p className="text-sm font-light text-gray-500 text-center">
                     Already have an account?{' '}
                     <Link href={ROUTES.LOGIN}
-                        className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                        className="font-medium hover:underline text-blue-light-900">
                         Login here
                     </Link>
                 </p>
