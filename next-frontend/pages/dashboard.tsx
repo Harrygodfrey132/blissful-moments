@@ -1,32 +1,19 @@
-import { getSession } from "next-auth/react";
-import { ROUTES } from "../utils/routes";
+// pages/dashboard.tsx
+import DashboardLayout from '../components/DashboardLayout';
 
-const Dashboard = ({ user }) => {
-    return (
-        <div>
-            <h1>Welcome, {user?.name}!</h1>
-            <p>This is your secure dashboard.</p>
+const DashboardPage = () => {
+  return (
+    <DashboardLayout>
+        <div className='bg-white shadow-sm p-4 rounded'>
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p>Welcome to your dashboard.</p>
         </div>
-    );
+      
+    </DashboardLayout>
+  );
 };
 
-export async function getServerSideProps(context) {
-    const session = await getSession(context);
+// Add `noLayout` property to exclude global layout
+DashboardPage.noLayout = true;
 
-    if (!session) {
-        return {
-            redirect: {
-                destination: `${ROUTES.Login}`,
-                permanent: false,
-            },
-        };
-    }
-
-    return {
-        props: {
-            user: session.user, // Pass user data to the component
-        },
-    };
-}
-
-export default Dashboard;
+export default DashboardPage;

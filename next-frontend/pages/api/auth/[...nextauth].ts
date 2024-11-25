@@ -1,3 +1,4 @@
+// pages/api/auth/[...nextauth].ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { API } from "../../../utils/api";
@@ -14,6 +15,7 @@ export default NextAuth({
       },
       async authorize(credentials) {
         try {
+          // Step 1: Authenticate the user via your API
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}${API.Login}`,
             {
@@ -34,16 +36,30 @@ export default NextAuth({
           const user = responseData.user;
           const accessToken = responseData.token;
 
-          // Return user and accessToken as part of the response
-          return { ...user, accessToken };
+          // Step 2: Perform server-side validation of the user account
+          const validationResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}${API.CheckVerification}/${user.id}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+
+          const validationData = await validationResponse.json();
+          // Return user and token
+          return {
+            ...user,
+            accessToken,
+            isValidated: validationData.isValidated,
+          };
         } catch (error) {
           console.error("Authorization failed:", error.message);
-          return null;
+          throw new Error(error.message || "Authorization failed");
         }
       },
     }),
   ],
   callbacks: {
+    // Attach additional data to the JWT token
     async jwt({ token, user }) {
       if (user) {
         token = {
@@ -52,23 +68,26 @@ export default NextAuth({
           userId: user.id,
           email: user.email,
           name: user.name,
+          isValidated: user.isValidated, // Include validation status
         };
-        return token;
       }
       return token;
     },
+    // Attach additional data to the session object
     async session({ session, token }) {
       session.user = {
         id: token.userId,
         name: token.name,
         email: token.email,
         accessToken: token.accessToken,
+        isValidated: token.isValidated, // Include validation status
       };
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: ROUTES.Login,
+    signIn: ROUTES.Login, // Redirect to a custom login page
+    error: ROUTES.Login, // Redirect to login page on error
   },
 });

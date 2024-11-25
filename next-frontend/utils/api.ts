@@ -2,7 +2,7 @@ export const API = {
   Registration: "/register",
   Login: "/login",
   VerifyEmail: "/verify-email",
-  CheckVerification: "/check-verification",
+  CheckVerification: "/check-validation",
 };
 
 // export const fetchWithAuth = async (url, options = {}) => {
