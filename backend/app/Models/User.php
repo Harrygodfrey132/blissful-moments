@@ -60,13 +60,6 @@ class User extends Authenticatable
         ];
     }
 
-    protected function name(): Attribute
-    {
-        return Attribute::make(
-            set: fn ($value) => $this->firstName . ' ' . $this->lastName
-        );
-    }
-
     public function isAdmin(): Attribute
     {
         return Attribute::make(
@@ -84,7 +77,7 @@ class User extends Authenticatable
     public function subscriptionStatus(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->subscription_status
+            get: fn () => $this->attributes['subscription_status'] ?? 0
         );
     }
 

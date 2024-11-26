@@ -106,4 +106,18 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to update status.'], 500);
         }
     }
+
+    public function checkValidation($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Check if the user has validated their email
+        $isValidated = $user->email_verified_at !== null;
+
+        return response()->json(['isValidated' => $isValidated]);
+    }
 }
