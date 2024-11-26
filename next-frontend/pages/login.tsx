@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { ROUTES } from "../utils/routes";
 import Link from "next/link";
 import { validateLogin } from "../utils/validation";
@@ -22,7 +22,7 @@ const Login = () => {
   const [serverError, setServerError] = useState<string>("");
 
   const handleLogin = async (data: LoginFormInputs) => {
-    setServerError(""); // Clear any existing server errors
+    setServerError("");
 
     const res = await signIn("credentials", {
       redirect: false,
@@ -33,7 +33,13 @@ const Login = () => {
     if (!res || !res.ok) {
       setServerError(res?.error || "Failed to sign in. Please try again.");
     } else {
-      router.push(`${ROUTES.Dashboard}`);
+      const session = await getSession();
+
+      if (session?.user?.isValidated) {
+        router.push(`${ROUTES.Dashboard}`);
+      } else {
+        router.push(`${ROUTES.Verify_Email}`);
+      }
     }
   };
 

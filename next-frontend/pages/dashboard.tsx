@@ -1,14 +1,16 @@
 // pages/dashboard.tsx
 import DashboardLayout from '../components/DashboardLayout';
+import useAuthRedirect from '../hooks/useAuthRedirect';
 
 const DashboardPage = () => {
+  useAuthRedirect();
   return (
     <DashboardLayout>
-        <div className='bg-white shadow-sm p-4 rounded'>
+      <div className='bg-white shadow-sm p-4 rounded'>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p>Welcome to your dashboard.</p>
-        </div>
-      
+      </div>
+
     </DashboardLayout>
   );
 };

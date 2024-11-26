@@ -3,15 +3,5 @@ export const API = {
   Login: "/login",
   VerifyEmail: "/verify-email",
   CheckVerification: "/check-validation",
+  Logout: "/logout",
 };
-
-// export const fetchWithAuth = async (url, options = {}) => {
-//   const token = localStorage.getItem("authToken");
-//   return fetch(url, {
-//     ...options,
-//     headers: {
-//       ...options.headers,
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-// };

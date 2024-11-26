@@ -87,7 +87,7 @@ export default NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: ROUTES.Login, // Redirect to a custom login page
-    error: ROUTES.Login, // Redirect to login page on error
+    signIn: ROUTES.Login,
+    error: ROUTES.Login,
   },
 });
