@@ -9,7 +9,17 @@ class ConfigurationController extends Controller
 {
     public function index()
     {
-        return view('admin.settings.index');
+        return view('admin.configuration.index');
+    }
+
+    public function emailSettings()
+    {
+        return view('admin.configuration.email-setting');
+    }
+
+    public function smtpSettings()
+    {
+        return view('admin.configuration.smtp');
     }
 
     public function store(Request $request)
@@ -17,7 +27,7 @@ class ConfigurationController extends Controller
         try {
             $data = $request->all();
             foreach ($data as $key => $value) {
-                if (strpos($key, 'CONF_') === 0) {
+                if (strpos($key, 'conf_') === 0) {
                     Configuration::updateOrCreate(
                         ['conf_key' => $key],
                         ['conf_value' => $value]

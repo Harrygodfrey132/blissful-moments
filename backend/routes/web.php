@@ -49,7 +49,9 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::prefix('configuration')->name('configuration.')->group(function () {
-            Route::get('/settings', [ConfigurationController::class, 'index'])->name('index');
+            Route::get('/system-configuration', [ConfigurationController::class, 'index'])->name('index');
+            Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
+            Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
         });
 
@@ -61,12 +63,6 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/orderdetails', function () {
     return view('pages/order-details');
-});
-Route::get('/configuration', function () {
-    return view('pages/configuration');
-});
-Route::get('/EmailSettings', function () {
-    return view('pages/email-setting');
 });
 
 Route::get('/smpt', function () {
