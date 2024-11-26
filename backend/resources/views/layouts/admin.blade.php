@@ -8,6 +8,19 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
+    <!-- Optional PNG Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+
+    <!-- Manifest File (For Progressive Web Apps) -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -16,7 +29,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex bg-gray-100 min-h-screen" x-data="commonData()" x-cloak>
+<body class="flex bg-gray-100 min-h-screen" style="overflow-x:hidden" x-data="commonData()" x-cloak>
     <!-- Custom Notification -->
     <x-success-notification />
     <!-- End Custom Notification -->

@@ -62,5 +62,15 @@ Route::prefix('admin')->group(function () {
 Route::get('/orderdetails', function () {
     return view('pages/order-details');
 });
+Route::get('/configuration', function () {
+    return view('pages/configuration');
+});
+Route::get('/EmailSettings', function () {
+    return view('pages/email-setting');
+});
+
+Route::get('/smpt', function () {
+    return view('pages/smpt');
+});
 
 require __DIR__ . '/auth.php';

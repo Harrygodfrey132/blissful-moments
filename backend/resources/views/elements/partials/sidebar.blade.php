@@ -46,46 +46,8 @@
                             d="M3.5 2h-1v5h1V2zm6.1 5H6.4L6 6.45v-1L6.4 5h3.2l.4.5v1l-.4.5zm-5 3H1.4L1 9.5v-1l.4-.5h3.2l.4.5v1l-.4.5zm3.9-8h-1v2h1V2zm-1 6h1v6h-1V8zm-4 3h-1v3h1v-3zm7.9 0h3.19l.4-.5v-.95l-.4-.5H11.4l-.4.5v.95l.4.5zm2.1-9h-1v6h1V2zm-1 10h1v2h-1v-2z">
                         </path>
                     </svg>
-                    <span class="ml-2 text-sm">Settings</span>
-
-                    <!-- Dynamic Arrow -->
-                    <svg x-show="!dropdown" xmlns="http://www.w3.org/2000/svg" class="ml-auto w-5 h-5"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M5.293 9.707a1 1 0 010-1.414L10 3.586l4.707 4.707a1 1 0 01-1.414 1.414L10 6.414l-3.293 3.293a1 1 0 01-1.414 0z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <svg x-show="dropdown" xmlns="http://www.w3.org/2000/svg" class="ml-auto w-5 h-5"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M14.707 10.293a1 1 0 010 1.414L10 16.414l-4.707-4.707a1 1 0 011.414-1.414L10 14.586l3.293-3.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd" />
-                    </svg>
+                    <span class="ml-2 text-sm">Configurations</span>
                 </a>
-
-                <!-- Dropdown Menu -->
-                <div x-show="dropdown" @click.away="dropdown = false"
-                    x-transition:enter="transition ease-out duration-200 transform"
-                    x-transition:enter-start="opacity-0 -translate-y-2"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-150 transform"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 -translate-y-2"
-                    class="absolute left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-10" x-cloak>
-                    <ul class="py-2">
-                        <li>
-                            <a href="#profile" class="block px-4 py-2 text-sm text-white hover:bg-gray-700">
-                                System Configuration
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#profile" class="block px-4 py-2 text-sm text-white hover:bg-gray-700">
-                                System
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
             </div>
 
 

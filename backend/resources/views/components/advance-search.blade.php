@@ -7,36 +7,39 @@
     'enableCreateButton' => false,
 ])
 <div class="sm:flex-auto">
-        <h1 class="text-xl font-semibold text-gray-900">{{ Breadcrumbs::render() }}</h1>
-    </div>
+    <h1 class="text-xl font-semibold text-gray-900">{{ Breadcrumbs::render() }}</h1>
+</div>
 <div class="sm:flex sm:items-center justify-end">
-    
-    <div class="mt-4 sm:ml-16 sm:mt-0 flex gap-4">
+
+    <div class="mt-4 sm:ml-16 sm:mt-0 md:flex gap-4">
         <form id="formSearch" method="GET" action="{{ $route }}">
-            <div class="relative w-[400px]">
+            <div class="relative md:w-[400px]">
                 <!-- Blade Component: Icon Search -->
                 <x-icon-search />
-                <input type="text" name="search" value="{{ $search }}" data-url="{{ $route }}"
-                    role="search" placeholder="Search Here..."
+                <input type="text" name="search" value="{{ $search }}" data-url="{{ $route }}" role="search"
+                    placeholder="Search Here..."
                     class="py-2 text-sm pl-10 pr-4 w-full border border-gray-200 placeholder-gray-400 focus:bg-gray-50 rounded" />
             </div>
         </form>
-        <!-- Multisearch Button -->
-        <button @click="multiSearchOpen = !multiSearchOpen" class="btn bg-black text-white px-4 py-2 rounded">
-            <x-icon-multisearch />
-        </button>
-        <!-- Delete Button -->
-        <button id="deleteButton" data-multi-delete-url="{{ route('users.multiDelete') }}"
-            class="block rounded bg-gray-300 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-not-allowed"
-            disabled>
-            <x-icon-trash />
-        </button>
-        <!-- Create Button -->
-        <a href="javascript:void(0);" id="createNewButton" title="Add New"
-            @click.prevent="openPanel = true; actionType = 'Edit'; loadCreateForm('{{ $createFormRoute }}')"
-            class="{{ !$enableCreateButton ? 'hidden' : '' }} block rounded bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-pointer">
-            <x-icon-create class="w-5 h-5" />
-        </a>
+        <div class="flex gap-4 mt-4 md:mt-0">
+            <!-- Multisearch Button -->
+            <button @click="multiSearchOpen = !multiSearchOpen" class="btn bg-black text-white px-4 py-2 rounded">
+                <x-icon-multisearch />
+            </button>
+            <!-- Delete Button -->
+            <button id="deleteButton" data-multi-delete-url="{{ route('users.multiDelete') }}"
+                class="block rounded bg-gray-300 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-not-allowed"
+                disabled>
+                <x-icon-trash />
+            </button>
+            <!-- Create Button -->
+            <a href="javascript:void(0);" id="createNewButton" title="Add New"
+                @click.prevent="openPanel = true; actionType = 'Edit'; loadCreateForm('{{ $createFormRoute }}')"
+                class="{{ !$enableCreateButton ? 'hidden' : '' }} block rounded bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-pointer">
+                <x-icon-create class="w-5 h-5" />
+            </a>
+        </div>
+
 
     </div>
 </div>

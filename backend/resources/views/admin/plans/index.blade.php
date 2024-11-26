@@ -96,6 +96,8 @@
                             <div class="mt-2">
                                 {{ $plans->links() }}
                             </div>
+                            <!-- no record found -->
+                            <x-no-record-found />
                         </div>
                     </div>
                 </div>
