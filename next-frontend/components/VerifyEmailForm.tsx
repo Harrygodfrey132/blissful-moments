@@ -62,11 +62,11 @@ const VerifyEmailForm = () => {
     };
 
     return (
-        <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
-            <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+        <div className="relative flex mt-20 flex-col justify-center overflow-hidden bg-gray-50 py-12">
+            <div className="relative  px-6 pb-9 mx-auto w-full max-w-lg rounded-2xl">
                 <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
                     <div className="flex flex-col items-center justify-center text-center space-y-2">
-                        <div className="font-semibold text-3xl">
+                        <div className="font-semibold text-2xl">
                             <p>Email Verification</p>
                         </div>
                         <div className="flex flex-row text-sm font-medium text-gray-400">
@@ -82,7 +82,7 @@ const VerifyEmailForm = () => {
                                         <div className="w-16 h-16" key={index}>
                                             <input
                                                 ref={(el) => (inputsRef.current[index] = el!)} // Store refs
-                                                className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                                className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                                 type="text"
                                                 maxLength={1}
                                                 value={value}
@@ -97,7 +97,7 @@ const VerifyEmailForm = () => {
                                     <div>
                                         <button
                                             type="submit"
-                                            className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm"
+                                            className="w-full text-white bg-blue-light-900  focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800"
                                         >
                                             Verify Account
                                         </button>
@@ -106,7 +106,7 @@ const VerifyEmailForm = () => {
                                     <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
                                         <p>Didn't receive the code?</p>{" "}
                                         <a
-                                            className="flex flex-row items-center text-blue-600"
+                                            className="flex flex-row items-center text-blue-light-900"
                                             href="http://"
                                             target="_blank"
                                             rel="noopener noreferrer"

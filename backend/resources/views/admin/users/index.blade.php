@@ -98,7 +98,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="mt-2">
+                            <div class="mt-2 mb-5 px-4">
                                 {{ $users->links() }}
                             </div>
                         </div>
