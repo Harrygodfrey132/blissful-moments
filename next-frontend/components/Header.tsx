@@ -14,7 +14,8 @@ const Header = () => {
                 className="w-12 h-12 block transition duration-150 ease-in-out"
               />
             </Link> */}
-            Logo
+            <img className='w-16' src="/img/logo-black.png" alt="Logo" />
+
           </div>
           <nav className="hidden md:flex md:grow">
             <ul className="flex grow justify-start flex-wrap items-center">

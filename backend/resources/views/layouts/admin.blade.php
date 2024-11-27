@@ -22,14 +22,13 @@
     <link rel="manifest" href="{{ asset('manifest.json') }}">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex bg-gray-100 min-h-screen" style="overflow-x:hidden" x-data="commonData()" x-cloak>
+<body class="flex bg-[#F9F9F9] min-h-screen" style="overflow-x:hidden" x-data="commonData()" x-cloak>
     <!-- Custom Notification -->
     <x-success-notification />
     <!-- End Custom Notification -->
@@ -37,7 +36,7 @@
     <div class="min-h-screen bg-gray-100 w-full">
         @include('elements.partials.header')
         <!-- Page Content -->
-        <main class="p-6 sm:p-6 space-y-6">
+        <main class="p-4 sm:px-8 ml-[250px] space-y-6">
             @yield('content')
         </main>
     </div>
