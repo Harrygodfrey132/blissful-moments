@@ -2,10 +2,9 @@
 @section('content')
 
 <div class="flex-grow text-gray-800">
-  <main class="p-6 sm:p-10 space-y-6">
     <div class="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between">
-      <div class="mr-6">
-        <h1 class="text-2xl font-semibold mb-2">Dashboard</h1>
+      <div class="mr-6 mb-5 mt-4">
+        <h1 class="text-xl font-semibold mb-2">Dashboard</h1>
       </div>
     </div>
     <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -60,8 +59,6 @@
         </div>
       </div>
     </section>
-
-  </main>
 </div>
 
 @endsection

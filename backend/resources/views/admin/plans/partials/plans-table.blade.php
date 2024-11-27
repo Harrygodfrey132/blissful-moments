@@ -42,7 +42,7 @@
             <td class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                 <div class="flex gap-3">
                     <a href="javascript:void(0);"
-                        @click.prevent="openPanel = true; actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan->slug) }}')"
+                        @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan->slug) }}')"
                         class="text-black">
                         <x-icon-edit />
                     </a>

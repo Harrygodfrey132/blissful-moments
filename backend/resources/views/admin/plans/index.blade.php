@@ -11,7 +11,7 @@
                     <div class="-mx-2 -my-2 overflow-x-auto lg:-mx-8">
                         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                             <table class="min-w-full divide-y divide-gray-300">
-                                <thead>
+                                <thead class="bg-[#E5E7EB]">
                                     <tr>
                                         <th scope="col"
                                             class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 cursor-pointer">
@@ -77,7 +77,7 @@
                                                     <a href="{{ route('code.generate') }}"><x-icon-qrcode /></a>
 
                                                     <a href="javascript:void(0);"
-                                                        @click.prevent="openPanel = true; actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan) }}')"
+                                                        @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan) }}')"
                                                         class="text-black">
                                                         <x-icon-edit />
                                                     </a>

@@ -40,7 +40,7 @@
                 <div class="flex gap-3">
                     <a href="#"><x-icon-qrcode /></a>
                     <a href="javascript:void(0);"
-                        @click.prevent="openPanel = true; actionType = 'Edit'; loadEditForm('{{ route('users.edit', $user) }}')"
+                        @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('users.edit', $user) }}')"
                         class="text-black">
                         <x-icon-edit />
                     </a>

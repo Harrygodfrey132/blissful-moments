@@ -230,6 +230,7 @@ function commonData() {
                 .then((response) => response.text())
                 .then((html) => {
                     document.getElementById("editForm").innerHTML = html;
+                    this.openPanel = true;
                 })
                 .catch((error) =>
                     showNotification(
@@ -243,6 +244,7 @@ function commonData() {
                 .then((response) => response.text())
                 .then((html) => {
                     document.getElementById("editForm").innerHTML = html;
+                    this.openPanel = true;
                 })
                 .catch((error) =>
                     showNotification(

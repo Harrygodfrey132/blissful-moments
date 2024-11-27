@@ -10,7 +10,6 @@
     <h1 class="text-xl font-semibold text-gray-900">{{ Breadcrumbs::render() }}</h1>
 </div>
 <div class="sm:flex sm:items-center justify-end">
-
     <div class="mt-4 sm:ml-16 sm:mt-0 md:flex gap-4">
         <form id="formSearch" method="GET" action="{{ $route }}">
             <div class="relative md:w-[400px]">
@@ -34,7 +33,7 @@
             </button>
             <!-- Create Button -->
             <a href="javascript:void(0);" id="createNewButton" title="Add New"
-                @click.prevent="openPanel = true; actionType = 'Edit'; loadCreateForm('{{ $createFormRoute }}')"
+                @click.prevent="actionType = 'Edit'; loadCreateForm('{{ $createFormRoute }}')"
                 class="{{ !$enableCreateButton ? 'hidden' : '' }} block rounded bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm cursor-pointer">
                 <x-icon-create class="w-5 h-5" />
             </a>
