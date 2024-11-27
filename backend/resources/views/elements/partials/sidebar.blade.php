@@ -5,7 +5,7 @@
     <div class="flex-grow flex flex-col justify-between bg-gray-950">
         <nav class="flex flex-col mx-4 my-6 space-y-4">
             <a href="{{ route('dashboard') }}"
-                class="inline-flex items-center py-3 rounded px-2 {{ request()->is('dashboard') ? 'text-black bg-white' : 'text-white hover:bg-gray-700' }}"
+                class="inline-flex items-center py-3 rounded px-2 {{ request()->is('*dashboard*') ? 'text-black bg-white' : 'text-white hover:bg-gray-700' }}"
                 :class="{ 'justify-start': menu, 'justify-center': menu == false }">
                 <x-icon-dashboard />
                 <span class="ml-2 text-sm" x-show="menu">Dashboard</span>

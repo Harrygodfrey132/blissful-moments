@@ -11,5 +11,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/verify-email', [AuthController::class, 'validateOTP']);
     Route::get('/check-validation/{userId}', [UserController::class, 'checkValidation']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::get('/user', [AuthController::class, 'getUser'])->middleware('auth:sanctum');
