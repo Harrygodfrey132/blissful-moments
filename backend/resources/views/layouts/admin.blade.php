@@ -33,7 +33,7 @@
     <x-success-notification />
     <!-- End Custom Notification -->
     @include('elements.partials.sidebar')
-    <div class="min-h-screen bg-gray-100 w-full">
+    <div class="min-h-screen w-full">
         @include('elements.partials.header')
         <!-- Page Content -->
         <main class="p-4 sm:px-8 ml-[250px] space-y-6">

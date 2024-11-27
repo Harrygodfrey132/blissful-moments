@@ -1,4 +1,4 @@
-<header class="flex items-center h-20 px-6 sm:px-10 bg-white">
+<header class="flex items-center h-20 px-6 shadow-sm sm:px-10 bg-white">
     <div x-data="{ open: false }">
         <div class="mr-8 cursor-pointer md:hidden" @click="open = ! open">
             <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,14 +93,11 @@
         </button>
         <div class="absolute right-0 z-50 top-20 bg-white border rounded-md p-2 md:w-56" x-show="panel"
             style="display:none">
-            <div class="px-4 py-4 flex gap-4 mb-2 border-b">
-                <span class="h-10 w-10 bg-gray-100 rounded overflow-hidden">
-                    <img src="https://randomuser.me/api/portraits/men/68.jpg" alt="user profile photo"
-                        class="h-full w-full object-cover">
-                </span>
+            <div class="px-2 py-2 flex gap-4 mb-2 border-b">
+               
                 <div>
                     <p class="text-sm">{{ $authenticatedUser->name }}</p>
-                    <p class="truncate text-sm font-medium text-gray-900">{{ $authenticatedUser->email }}</p>
+                    <p class="truncate text-sm font-semibold text-gray-900">{{ $authenticatedUser->email }}</p>
                 </div>
 
             </div>
