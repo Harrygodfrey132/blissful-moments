@@ -20,4 +20,9 @@ class OTP extends Model
     {
         return !$this->is_used && Carbon::now()->lessThanOrEqualTo($this->expires_at);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

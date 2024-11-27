@@ -75,18 +75,6 @@ class AuthController extends Controller
         }
     }
 
-    public function verifyOTP(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'otp' => 'required|digits:6',
-        ]);
-
-        $result = $this->validateOTP($request->email, $request->otp);
-
-        return response()->json($result);
-    }
-
     private function generateAndSendOTP($email, $userId = null)
     {
         // Generate a random 4-digit OTP
@@ -113,10 +101,15 @@ class AuthController extends Controller
         return $otp;
     }
 
-    private function validateOTP($email, $otpInput)
+    public function validateOTP(Request $request)
     {
-        $otp = OTP::where('email', $email)
-            ->where('otp', $otpInput)
+        $validated = $request->validate([
+            'email' => 'required',
+            'code' => 'required'
+        ]);
+
+        $otp = OTP::where('email', $validated['email'])
+            ->where('otp', $validated['code'])
             ->first();
 
         if (!$otp) {
@@ -129,8 +122,13 @@ class AuthController extends Controller
 
         // Mark OTP as used
         $otp->update(['is_used' => true]);
+        $otp->user->update(['email_verfied_at' => now()]);
 
-        return ['status' => true, 'message' => 'OTP verified successfully.'];
+        return [
+            'status' => true,
+            'message' => 'OTP verified successfully.',
+            'isValidated' => true
+        ];
     }
 
     public function logout(Request $request)
