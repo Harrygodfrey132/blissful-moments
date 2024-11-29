@@ -1,18 +1,28 @@
-import Head from 'next/head';
+export const metadata = {
+  title: 'Home – The Blissful Moments: Honoring Legacies with QR Codes',
+  description: 'The Blissful Moments helps families preserve their loved ones’ legacies through personalized memorials with QR codes, keeping stories alive for generations.',
+}
 
-const HomePage = () => {
+import Hero from '../components/hero-home';
+import Features from '../components/features-home';
+import FeaturesBlocks from '../components/features-blocks';
+import Features03 from '../components/features-home-03';
+import PricingSection from '../components/pricing';
+import Cta from '../components/cta';
+import FaQ from '../components/faqs'
+// import FeaturesBlocks from '@/components/features-blocks'
+// import Features from '@/components/features-home'
+
+export default function Home() {
   return (
     <>
-      <Head>
-        <title>Home Page</title>
-        <meta name="description" content="Welcome to the homepage of MyWebsite" />
-      </Head>
-      <div className='mt-[100px]'>
-        <h1>Welcome to MyWebsite!</h1>
-        <p>This is the home page content.</p>
-      </div>
+      <Hero />
+      <Features />
+      <FeaturesBlocks />
+      <Features03 />
+      <PricingSection />
+      <Cta />
+      <FaQ />
     </>
-  );
-};
-
-export default HomePage;
+  )
+}

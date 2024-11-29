@@ -3,8 +3,15 @@ import Layout from '../components/Layout';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'sonner';
+import { useEffect } from 'react';
+import 'aos/dist/aos.css'; // Import AOS CSS
+import Aos from 'aos'; // Import AOS library
 
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps & { Component: { noLayout?: boolean } }) => {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & { Component: { noLayout?: boolean } }) {
+  useEffect(() => {
+    Aos.init({ duration: 1000 }); // Initialize AOS with custom settings (e.g., duration of 1000ms)
+  }, []);
+
   return (
     <>
       {/* Global Toaster for notifications */}
@@ -22,6 +29,6 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps & {
       </SessionProvider>
     </>
   );
-};
+}
 
 export default MyApp;
