@@ -116,8 +116,8 @@ class UserController extends Controller
         }
 
         // Check if the user has validated their email
-        $isValidated = $user->email_verified_at !== null;
+        $isVerified = $user->email_verified_at !== null;
 
-        return response()->json(['isValidated' => $isValidated]);
+        return response()->json(['isVerified' => $isVerified]);
     }
 }

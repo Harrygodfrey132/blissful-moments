@@ -7,4 +7,8 @@ export const ROUTES = {
     Login: "/login",
     PROFILE: (id: string) => `/profile/${id}`,
     Dashboard: "/dashboard",
+    About_Us: "/about",
+    Request_Demo: "/request-demo",
+    Pricing: "/pricing",
+    Blogs: "/blog",
 };

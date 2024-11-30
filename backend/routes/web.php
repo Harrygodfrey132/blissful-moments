@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\CmsController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\GDPRrequestController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +55,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
             Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
+        });
+
+        Route::prefix('cms')->name('cms.')->group(function () {
+            Route::controller(CmsController::class)->group(function () {
+                Route::get('/manage-cms', [CmsController::class, 'index'])->name('index');
+            });
+            Route::get('/email-templates', [TemplateController::class, 'email_templates'])->name('emails.index');
+            Route::get('/email-templates/{template}/edit', [TemplateController::class, 'edit'])->name('edit');
+            Route::get('/email-templates/{template}/update', [TemplateController::class, 'update'])->name('update');
         });
 
         Route::prefix('QrCode')->name('code.')->group(function () {

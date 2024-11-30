@@ -6,8 +6,6 @@ use App\Models\OTP;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -40,7 +38,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Registration successful',
                 'user' => $user,
-                'isValidated' => false,
+                'isVerified' => false,
                 'token' => $token->plainTextToken,
             ], 200);
         } catch (\Throwable $th) {
@@ -65,7 +63,8 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'Login successful',
                     'token' => $token,
-                    'user' => $user
+                    'user' => $user,
+                    'isVerified' => $user->is_verified
                 ], 200);
             } else {
                 return response()->json(['message' => 'Invalid credentials'], 401);
@@ -127,7 +126,7 @@ class AuthController extends Controller
         return [
             'status' => true,
             'message' => 'OTP verified successfully.',
-            'isValidated' => true
+            'isVerified' => $otp->user->is_verified
         ];
     }
 
@@ -136,5 +135,9 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully'], 200);
+    }
+
+    public function getUser(Request $request){
+        dd($request->all());
     }
 }

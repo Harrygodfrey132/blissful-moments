@@ -21,7 +21,7 @@ class User extends Authenticatable
     const GUEST = 3;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes , HasApiTokens;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -77,7 +77,14 @@ class User extends Authenticatable
     public function subscriptionStatus(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->attributes['subscription_status'] ?? 0
+            get: fn() => $this->attributes['subscription_status'] ?? 0
+        );
+    }
+
+    public function isVerified(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->email_verified_at !== null
         );
     }
 

@@ -15,27 +15,27 @@ const Footer = () => {
             </div>
           </div>
           <div className="sm:col-span-6 md:col-span-3 lg:col-span-2">
-            <h6 className="text-sm text-black font-semibold mb-2">How it works</h6>
+            <h6 className="text-base text-black font-semibold mb-2">How it works</h6>
             <ul className="text-sm font-medium space-y-2">
-              <li><a href="/" className="text-black font-normal font-normal transition duration-150 ease-in-out">Overview</a></li>
-              <li><a href="/pricing" className="text-black font-normal transition duration-150 ease-in-out">Pricing</a></li>
-              <li><a href="/pricing" className="text-black font-normal transition duration-150 ease-in-out">FAQ</a></li>
+              <li><a href="/" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Overview</a></li>
+              <li><a href="/pricing" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Pricing</a></li>
+              <li><a href="/pricing" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">FAQ</a></li>
             </ul>
           </div>
           <div className="sm:col-span-6 md:col-span-3 lg:col-span-2">
-            <h6 className="text-sm text-black font-semibold mb-2">Products</h6>
+            <h6 className="text-base text-black hover:text-blue-600 font-semibold mb-2">Products</h6>
             <ul className="text-sm font-medium space-y-2">
-              <li><a href="/pricing" className="text-black font-normal transition duration-150 ease-in-out">Indviduals</a></li>
-              <li><a href="/pricing" className="text-black font-normal transition duration-150 ease-in-out">Custom Projects</a></li>
-              <li><a href="/pricing/" className="text-black font-normal transition duration-150 ease-in-out">Funeral Directors</a></li>
+              <li><a href="/pricing" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Indviduals</a></li>
+              <li><a href="/pricing" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Custom Projects</a></li>
+              <li><a href="/pricing/" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Funeral Directors</a></li>
             </ul>
           </div>
           <div className="sm:col-span-6 md:col-span-3 lg:col-span-2">
-            <h6 className="text-sm text-black font-semibold mb-2">Company</h6>
+            <h6 className="text-base text-black hover:text-blue-600 font-semibold mb-2">Company</h6>
             <ul className="text-sm font-medium space-y-2">
-              <li><a href="#" className="text-black font-normal transition duration-150 ease-in-out">About Us</a></li>
-              <li><a href="#" className="text-black font-normal transition duration-150 ease-in-out">Careers</a></li>
-              <li><a href="#" className="text-black font-normal transition duration-150 ease-in-out">Terms of Use</a></li>
+              <li><a href="#" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">About Us</a></li>
+              <li><a href="#" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Careers</a></li>
+              <li><a href="#" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Terms of Use</a></li>
             </ul>
           </div>
         </div>
