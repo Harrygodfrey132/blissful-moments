@@ -4,4 +4,5 @@ export const API = {
   VerifyEmail: "/verify-email",
   CheckVerification: "/check-validation",
   Logout: "/logout",
+  getUser: "/getUser",
 };

@@ -1,6 +1,6 @@
-// pages/api/auth/[...nextauth].ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import axios from "axios";
 import { API } from "../../../utils/api";
 import { ROUTES } from "../../../utils/routes";
 
@@ -16,44 +16,41 @@ export default NextAuth({
       async authorize(credentials) {
         try {
           // Step 1: Authenticate the user via your API
-          const response = await fetch(
+          const { data: loginResponse } = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}${API.Login}`,
+            credentials,
             {
-              method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(credentials),
-              credentials: "include",
+              withCredentials: true,
             }
           );
 
-          const responseData = await response.json();
+          const { user, token } = loginResponse;
 
-          if (!response.ok) {
-            console.error("Login API error:", responseData);
-            throw new Error(responseData.message || "Invalid credentials");
+          if (!user || !token) {
+            throw new Error("Invalid credentials or missing response data.");
           }
 
-          const user = responseData.user;
-          const accessToken = responseData.token;
-
           // Step 2: Perform server-side validation of the user account
-          const validationResponse = await fetch(
+          const { data: validationResponse } = await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}${API.CheckVerification}/${user.id}`,
             {
-              headers: { Authorization: `Bearer ${accessToken}` },
+              headers: { Authorization: `Bearer ${token}` },
             }
           );
 
-          const validationData = await validationResponse.json();
-          // Return user and token
+          // Attach validation data to the user object
           return {
             ...user,
-            accessToken,
-            isValidated: validationData.isValidated,
+            accessToken: token,
+            isVerified: validationResponse?.isVerified,
           };
         } catch (error) {
-          console.error("Authorization failed:", error.message);
-          throw new Error(error.message || "Authorization failed");
+          console.error("Authorization failed:", error);
+          // Extract and re-throw error messages for better debugging
+          throw new Error(
+            error.response?.data?.message || error.message || "Authorization failed"
+          );
         }
       },
     }),
@@ -68,7 +65,7 @@ export default NextAuth({
           userId: user.id,
           email: user.email,
           name: user.name,
-          isValidated: user.isValidated, // Include validation status
+          isVerified: user.isVerified, // Include validation status
         };
       }
       return token;
@@ -80,7 +77,7 @@ export default NextAuth({
         name: token.name,
         email: token.email,
         accessToken: token.accessToken,
-        isValidated: token.isValidated, // Include validation status
+        isVerified: token.isVerified, // Include validation status
       };
       return session;
     },

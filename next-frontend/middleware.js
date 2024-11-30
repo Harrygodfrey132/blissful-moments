@@ -1,37 +1,43 @@
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(req) {
+export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
-  // Check if the user is authenticated by checking for the authToken
-  const authToken = req.cookies.get("authToken");
+  // Get the session token from cookies
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-  if (!authToken) {
-    // Redirect unauthenticated users to the login page if they try to access account-related routes
+  const redirectTo = (path) => NextResponse.redirect(new URL(path, req.url));
+
+  // If no token exists, handle unauthenticated access
+  if (!token) {
     if (pathname.startsWith("/account") || pathname.startsWith("/dashboard")) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return redirectTo("/login"); // Redirect unauthenticated users
     }
-  } else {
-    // Parse the authToken to get the user data
-    const user = JSON.parse(authToken);
-    const isValidated = user?.isValidated;
-
-    // Redirect already validated users trying to access the login page
-    if (pathname === "/login" && isValidated) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
-
-    // Redirect authenticated but unvalidated users to the verify-email page
-    if (!isValidated && pathname.startsWith("/account")) {
-      return NextResponse.redirect(new URL("/verify-email", req.url));
-    }
-
-    // Prevent access to verify-email page for already validated users
-    if (isValidated && pathname === "/verify-email") {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+    return NextResponse.next(); // Allow access to other public pages
   }
 
-  // Continue processing the request if no redirection is needed
-  return NextResponse.next();
+  // Token is present, check its validity
+  const currentTime = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+  if (token.exp && currentTime > token.exp) {
+    return redirectTo("/login"); // Token expired, redirect to login
+  }
+
+  // Token is valid, extract user state
+  const isVerified = token?.isVerified;
+
+  // Redirect authenticated users based on the path and validation status
+  if (pathname === "/login" && isVerified) {
+    return redirectTo("/dashboard"); // Prevent logged-in users from accessing login
+  }
+
+  if (!isVerified && pathname.startsWith("/account")) {
+    return redirectTo("/verify-email"); // Redirect unverified users
+  }
+
+  if (isVerified && pathname === "/verify-email") {
+    return redirectTo("/dashboard"); // Prevent verified users from accessing verify-email
+  }
+
+  return NextResponse.next(); // Continue processing the request for valid cases
 }

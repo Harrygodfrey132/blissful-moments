@@ -3,7 +3,8 @@ import DashboardLayout from '../components/DashboardLayout';
 import useAuthRedirect from '../hooks/useAuthRedirect';
 
 const DashboardPage = () => {
-  useAuthRedirect();
+  useAuthRedirect(true, true);
+
   return (
     <DashboardLayout>
       <div className='bg-white shadow-sm p-4 rounded'>

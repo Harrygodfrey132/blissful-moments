@@ -35,7 +35,7 @@ const Login = () => {
     } else {
       const session = await getSession();
 
-      if (session?.user?.isValidated) {
+      if (session?.user?.isVerified) {
         router.push(`${ROUTES.Dashboard}`);
       } else {
         router.push(`${ROUTES.Verify_Email}`);
