@@ -1,26 +1,41 @@
-import { getBlogPosts } from '../components/blog/utils'
-import Link from 'next/link'
-import Image from 'next/image'
-import PostDate from '../components/blog/post-date'
-import PostItem from '../components/blog/post-item'
+import { GetStaticProps } from 'next';
+import Link from 'next/link';
+import Image from 'next/image';
+import PostDate from '../components/blog/post-date';
+import PostItem from '../components/blog/post-item';
+import Hero from '../components/blog/hero-blog';
+import { getBlogPosts } from '../components/blog/utils';
 
-export const metadata = {
-  title: 'Blog – The Blissful Moments: Insights & Stories',
-  description: 'Explore stories and insights about legacy preservation through personalized memorials with The Blissful Moments.',
+// Define the type for a blog post
+interface Metadata {
+  title: string;
+  summary?: string;
+  publishedAt: string;
+  author?: string; // Allow `author` to be `string | undefined`
+  authorImg?: string;
+  image?: string;
 }
 
-import Hero from '../components/blog/hero-blog'
+interface BlogPost {
+  slug: string;
+  metadata: Metadata;
+}
+
+interface BlogProps {
+  featuredPost: BlogPost;
+  latestPosts: BlogPost[];
+  popularPosts: BlogPost[];
+  productPosts: BlogPost[];
+}
 
 // Fetch blog posts during build time
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps<BlogProps> = async () => {
   const allBlogs = getBlogPosts();
 
-  // Sort posts by date
   allBlogs.sort((a, b) => {
-    return (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) ? -1 : 1;
+    return new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt) ? -1 : 1;
   });
 
-  // Slicing content for demo purposes
   const featuredPost = allBlogs[0];
   const latestPosts = allBlogs.slice(1, 4);
   const popularPosts = allBlogs.slice(4, 7);
@@ -36,7 +51,7 @@ export const getStaticProps = async () => {
   };
 };
 
-const Blog = ({ featuredPost, latestPosts, popularPosts, productPosts }) => {
+const Blog: React.FC<BlogProps> = ({ featuredPost, latestPosts, popularPosts, productPosts }) => {
   return (
     <>
       <Hero />
@@ -48,7 +63,11 @@ const Blog = ({ featuredPost, latestPosts, popularPosts, productPosts }) => {
             <article className="max-w-sm mx-auto space-y-5 md:max-w-none md:flex md:items-center md:space-y-0 md:space-x-8 lg:space-x-16">
               {/* Image */}
               {featuredPost.metadata.image && (
-                <Link className="relative block group overflow-hidden md:w-1/2" href={`/blog/${featuredPost.slug}`} data-aos="fade-down">
+                <Link
+                  className="relative block group overflow-hidden md:w-1/2"
+                  href={`/blog/${featuredPost.slug}`}
+                  data-aos="fade-down"
+                >
                   <Image
                     className="w-full aspect-[16/9] md:aspect-[27/17] object-cover group-hover:scale-105 transition duration-700 ease-out"
                     src={featuredPost.metadata.image}
@@ -59,8 +78,17 @@ const Blog = ({ featuredPost, latestPosts, popularPosts, productPosts }) => {
                   />
                   <div className="absolute top-6 right-6">
                     <svg className="w-8 h-8" viewBox="0 0 32 32">
-                      <circle className="fill-slate-900" fillOpacity=".48" cx="16" cy="16" r="16" />
-                      <path className="fill-yellow-500" d="M21.954 14.29A.5.5 0 0 0 21.5 14h-5.36l.845-3.38a.5.5 0 0 0-.864-.446l-6 7A.5.5 0 0 0 10.5 18h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z" />
+                      <circle
+                        className="fill-slate-900"
+                        fillOpacity=".48"
+                        cx="16"
+                        cy="16"
+                        r="16"
+                      />
+                      <path
+                        className="fill-yellow-500"
+                        d="M21.954 14.29A.5.5 0 0 0 21.5 14h-5.36l.845-3.38a.5.5 0 0 0-.864-.446l-6 7A.5.5 0 0 0 10.5 18h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
+                      />
                     </svg>
                   </div>
                 </Link>
@@ -69,20 +97,40 @@ const Blog = ({ featuredPost, latestPosts, popularPosts, productPosts }) => {
               <div className="md:w-1/2" data-aos="fade-up">
                 <header>
                   <h2 className="h4 md:text-4xl lg:text-5xl font-playfair-display mb-3">
-                    <Link className="text-slate-800 hover:underline hover:decoration-blue-100" href={`/blog/${featuredPost.slug}`}>{featuredPost.metadata.title}</Link>
+                    <Link
+                      className="text-slate-800 hover:underline hover:decoration-blue-100"
+                      href={`/blog/${featuredPost.slug}`}
+                    >
+                      {featuredPost.metadata.title}
+                    </Link>
                   </h2>
                 </header>
-                <p className="text-lg text-slate-500 grow">{featuredPost.metadata.summary}</p>
+                <p className="text-lg text-slate-500 grow">
+                  {featuredPost.metadata.summary}
+                </p>
                 <footer className="flex items-center mt-4">
                   <a href="#0">
                     {featuredPost.metadata.authorImg && (
-                      <Image className="rounded-full shrink-0 mr-3" src={featuredPost.metadata.authorImg} width={32} height={32} alt={featuredPost.metadata.author || ''} />
+                      <Image
+                        className="rounded-full shrink-0 mr-3"
+                        src={featuredPost.metadata.authorImg}
+                        width={32}
+                        height={32}
+                        alt={featuredPost.metadata.author || ''}
+                      />
                     )}
                   </a>
                   <div>
-                    <a className="font-medium text-slate-800 hover:text-blue-600 transition duration-150 ease-in-out" href="#0">{featuredPost.metadata.author}</a>
+                    <a
+                      className="font-medium text-slate-800 hover:text-blue-600 transition duration-150 ease-in-out"
+                      href="#0"
+                    >
+                      {featuredPost.metadata.author}
+                    </a>
                     <span className="text-slate-300"> · </span>
-                    <span className="text-slate-500"><PostDate dateString={featuredPost.metadata.publishedAt} /></span>
+                    <span className="text-slate-500">
+                      <PostDate dateString={featuredPost.metadata.publishedAt} />
+                    </span>
                   </div>
                 </footer>
               </div>
@@ -108,7 +156,10 @@ const Blog = ({ featuredPost, latestPosts, popularPosts, productPosts }) => {
             {/* See All Articles */}
             <div className="text-center">
               <button className="btn text-white bg-blue-600 hover:bg-blue-700 group">
-                See All Articles <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
+                See All Articles{' '}
+                <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                  -&gt;
+                </span>
               </button>
             </div>
           </div>

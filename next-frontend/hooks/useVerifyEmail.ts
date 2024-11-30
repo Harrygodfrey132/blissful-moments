@@ -1,10 +1,15 @@
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { API } from "../utils/api";
 import { ROUTES } from "../utils/routes";
+
+// Define the expected structure of the error response
+interface ErrorResponse {
+  message: string;
+}
 
 const useVerifyEmail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,8 +58,11 @@ const useVerifyEmail = () => {
         toast.error(response.data.message || "Verification failed!");
       }
     } catch (error) {
+      // Cast the error to AxiosError to access response and data safely
+      const axiosError = error as AxiosError<ErrorResponse>; // Type cast here
+
       toast.error(
-        error.response?.data?.message || "Network error. Please try again."
+        axiosError.response?.data?.message || "Network error. Please try again."
       );
       console.error("Error during verification:", error);
     } finally {

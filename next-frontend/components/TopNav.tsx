@@ -28,19 +28,25 @@ export default function TopNav({ setSidebarOpen }: TopNavProps) {
   };
 
   const handleLogout = async () => {
-    // Sign out using next-auth
-    const { data: session } = useSession();
+    const { data: session } = useSession();  // Get the session data from the hook
+
     try {
-      const accessToken = session?.accessToken;
-      await signOut({ redirect: false });
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.Logout}`, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        credentials: "include",
-      });
-      router.push(ROUTES.Login);
+      // Check if session and accessToken are available
+      const accessToken = session?.user?.accessToken;
+
+      if (accessToken) {
+        await signOut({ redirect: false }); // Sign out using next-auth
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.Logout}`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          credentials: 'include',
+        });
+        router.push(ROUTES.Login); // Redirect to login page
+      } else {
+        toast.error('Access token is missing!');
+      }
     } catch (error) {
       toast.error('Something went wrong!');
     }

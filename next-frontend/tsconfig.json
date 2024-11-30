@@ -15,12 +15,17 @@
     "incremental": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": [
+      "next",
+      "next-auth"
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next-auth.d.ts" // Explicitly include the type definition
   ],
   "exclude": [
     "node_modules"

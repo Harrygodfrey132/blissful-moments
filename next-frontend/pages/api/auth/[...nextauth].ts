@@ -1,8 +1,14 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { API } from "../../../utils/api";
 import { ROUTES } from "../../../utils/routes";
+import { toast } from "sonner";
+import { JWT } from "next-auth/jwt";
+
+interface ErrorResponse {
+  message: string;
+}
 
 export default NextAuth({
   debug: true,
@@ -46,38 +52,36 @@ export default NextAuth({
             isVerified: validationResponse?.isVerified,
           };
         } catch (error) {
-          console.error("Authorization failed:", error);
+          const axiosError = error as AxiosError<ErrorResponse>;
+          toast.error("Authorization failed:");
           // Extract and re-throw error messages for better debugging
           throw new Error(
-            error.response?.data?.message || error.message || "Authorization failed"
+            axiosError.response?.data?.message ||
+              axiosError.message ||
+              "Authorization failed"
           );
         }
       },
     }),
   ],
   callbacks: {
-    // Attach additional data to the JWT token
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        token = {
-          ...token,
-          accessToken: user.accessToken,
-          userId: user.id,
-          email: user.email,
-          name: user.name,
-          isVerified: user.isVerified, // Include validation status
-        };
+        token.accessToken = user.accessToken;
+        token.userId = user.id || "";
+        token.email = user.email || "";
+        token.name = user.name || "";
+        token.isVerified = user.isVerified;
       }
       return token;
     },
-    // Attach additional data to the session object
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       session.user = {
-        id: token.userId,
-        name: token.name,
-        email: token.email,
-        accessToken: token.accessToken,
-        isVerified: token.isVerified, // Include validation status
+        id: token.userId || "",
+        name: token.name || "",
+        email: token.email || "",
+        accessToken: token.accessToken || "",
+        isVerified: token.isVerified || false,
       };
       return session;
     },
