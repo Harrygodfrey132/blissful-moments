@@ -25,20 +25,19 @@
                                     </tr>
                                 </thead>
                                 <tbody id="listingTable" class="divide-y divide-gray-200">
-                                    @foreach ($templates as $user)
+                                    @foreach ($templates as $template)
                                         <tr class="hover:bg-gray-50">
                                             <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
-                                                {{ $user->name }}
+                                                {{ $template->name }}
                                             </td>
                                             <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
-                                                {{ $user->subject }}
+                                                {{ $template->subject }}
                                             </td>
                                             <td
                                                 class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">
                                                 <div class="flex gap-3">
 
-                                                    <a href="javascript:void(0);"
-                                                        @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('cms.edit', $user) }}')"
+                                                    <a href="{{ route('cms.emails.edit', $template) }}"
                                                         class="text-gray-600 hover:text-black">
                                                         <x-icon-edit />
                                                     </a>

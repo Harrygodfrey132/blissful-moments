@@ -104,7 +104,7 @@
             </div>
             <a href="{{ route('profile.edit') }}"
                 class="p-2 py-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center">Profile</a>
-            <a href="{{ route('profile.edit') }}"
+            <a href="{{ route('profile.password.edit') }}"
                 class="p-2 py-2 hover:bg-blue-100 cursor-pointer text-sm flex gap-2 items-center border-b"> Change
                 Password</a>
             <form action="{{ route('logout') }}" method="POST">

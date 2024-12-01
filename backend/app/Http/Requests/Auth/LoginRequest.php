@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -49,8 +50,18 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Check if the authenticated user has role_id = 1
+        $user = Auth::user();
+        if ($user->role_id !== User::ADMIN) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => trans('auth.unauthorized'), // Add this translation in your `lang/auth.php`
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
+
 
     /**
      * Ensure the login request is not rate limited.
@@ -80,6 +91,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

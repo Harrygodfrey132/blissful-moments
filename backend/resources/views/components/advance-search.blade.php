@@ -15,8 +15,8 @@
             <div class="relative md:w-[400px]">
                 <!-- Blade Component: Icon Search -->
                 <x-icon-search />
-                <input type="text" name="search" value="{{ $search }}" data-url="{{ $route }}" role="search"
-                    placeholder="Search Here..."
+                <input type="text" name="search" value="{{ $search }}" data-url="{{ $route }}"
+                    role="search" placeholder="Search Here..."
                     class="py-2 text-sm pl-10 pr-4 w-full border border-gray-200 placeholder-gray-400 focus:bg-gray-50 rounded" />
             </div>
         </form>
@@ -75,7 +75,7 @@
         <div class="mt-6 flex justify-end gap-2">
             <button type="button"
                 class="py-2 px-4 text-sm font-medium text-gray-500 bg-white rounded border border-gray-300 hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                @click="multiSearchOpen = false">
+                onclick="clearFilters()">
                 Clear
             </button>
             <button type="button" onclick="advanceFormHandler(this)"
@@ -85,3 +85,12 @@
         </div>
     </div>
 </form>
+<script>
+    function clearFilters() {
+        const form = document.getElementById('advanceSearchForm');
+        form.reset();
+
+        // Submit the form to reload the complete list
+        form.submit();
+    }
+</script>

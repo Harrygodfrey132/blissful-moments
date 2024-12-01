@@ -21,6 +21,7 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::get('/profile/password', [ProfileController::class, 'passwordEdit'])->name('profile.password.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -62,8 +63,8 @@ Route::prefix('admin')->group(function () {
                 Route::get('/manage-cms', [CmsController::class, 'index'])->name('index');
             });
             Route::get('/email-templates', [TemplateController::class, 'email_templates'])->name('emails.index');
-            Route::get('/email-templates/{template}/edit', [TemplateController::class, 'edit'])->name('edit');
-            Route::get('/email-templates/{template}/update', [TemplateController::class, 'update'])->name('update');
+            Route::get('/email-templates/{template}/edit', [TemplateController::class, 'edit'])->name('emails.edit');
+            Route::get('/email-templates/{template}/update', [TemplateController::class, 'update'])->name('emails.update');
         });
 
         Route::prefix('QrCode')->name('code.')->group(function () {

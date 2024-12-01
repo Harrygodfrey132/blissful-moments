@@ -52,6 +52,32 @@ function advanceFormHandler() {
         .catch((error) => console.error("Error:", error));
 }
 
+function clearFilters() {
+    // Get the form element and its action URL
+    const form = document.getElementById("advanceSearchForm");
+    const url = form.action;
+
+    // Reset all form fields
+    form.reset();
+
+    // Fetch results without any query parameters to load the full list
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+            "X-Requested-With": "XMLHttpRequest",
+        },
+    })
+        .then((response) => response.text())
+        .then((html) => {
+            // Inject the returned HTML into the listingTable element
+            document.querySelector("#listingTable").innerHTML = html;
+        })
+        .catch((error) => console.error("Error:", error));
+}
+
 //Common Function for Multi Delete
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButton = document.querySelector("#deleteButton");
