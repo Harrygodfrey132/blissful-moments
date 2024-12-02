@@ -1,5 +1,5 @@
 <aside x-data="{ menu: false }" 
-       class="fixed left-0 top-0 z-50 flex flex-col w-20 h-screen bg-[#575757] transition-all duration-300" 
+       class="fixed left-0 top-0 z-50 flex flex-col w-20 h-screen bg-[#575757] overflow-hidden" 
        :class="menu ? 'w-64' : 'w-20'">
     <!-- Hamburger Menu -->
     <div class="flex items-center justify-between h-16 px-4 pl-[26px] bg-[#575757]">
@@ -9,7 +9,7 @@
                       d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
         </button>
-        <img x-show="menu" class="w-12" src="{{ asset('img/logo.png') }}" alt="Logo">
+        <img x-show="menu" class="w-12 transition-opacity duration-300" src="{{ asset('img/logo.png') }}" alt="Logo">
     </div>
 
     <!-- Sidebar Content -->
@@ -110,7 +110,7 @@
                 x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true"
                 @mouseleave="tooltip = false">
-                <svg style="width:28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                <svg style="width:25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M3.5 2h-1v5h1V2zm6.1 5H6.4L6 6.45v-1L6.4 5h3.2l.4.5v1l-.4.5zm-5 3H1.4L1 9.5v-1l.4-.5h3.2l.4.5v1l-.4.5zm3.9-8h-1v2h1V2zm-1 6h1v6h-1V8zm-4 3h-1v3h1v-3zm7.9 0h3.19l.4-.5v-.95l-.4-.5H11.4l-.4.5v.95l.4.5zm2.1-9h-1v6h1V2zm-1 10h1v2h-1v-2z">
                     </path>
