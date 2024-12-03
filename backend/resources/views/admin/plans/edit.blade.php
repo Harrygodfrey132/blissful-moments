@@ -1,12 +1,12 @@
 <div>
     <h2 class="text-xl font-semibold text-gray-700 mb-5">Edit Plan</h2>
 
-    <form action="{{ route('plans.update', $plan) }}" method="POST">
+    <form class="space-y-4" action="{{ route('plans.update', $plan) }}" method="POST">
         @method('PUT')
         @csrf
         <div class="relative">
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name') ?? $plan->name" required
+            <x-text-input id="name" class="block mt-1 pl-4 w-full" type="text" name="name" :value="old('name') ?? $plan->name" required
                 autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
@@ -26,9 +26,8 @@
         </div>
 
         <div class="relative">
-            <x-icon-name />
             <x-input-label for="price" :value="__('Price')" />
-            <x-text-input id="price" class="block mt-1 w-full" type="text" name="price" :value="old('price') ?? $plan->price"
+            <x-text-input id="price" class="block mt-1 pl-4 w-full" type="text" name="price" :value="old('price') ?? $plan->price"
                 required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('price')" class="mt-2" />
         </div>

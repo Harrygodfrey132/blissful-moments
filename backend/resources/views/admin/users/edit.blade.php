@@ -1,5 +1,5 @@
 <div>
-    <form id="userEditForm" action="{{ route('users.update', $user) }}" method="POST" @submit.prevent="submitFormHandler('userEditForm')">
+    <form class="space-y-4" id="userEditForm" action="{{ route('users.update', $user) }}" method="POST" @submit.prevent="submitFormHandler('userEditForm')">
         @csrf
         @method('PUT')
         <div class="relative">

@@ -37,7 +37,7 @@
     <div class="min-h-screen w-full">
         @include('elements.partials.header')
         <!-- Page Content -->
-        <main class="p-4 sm:px-8 ml-[250px] space-y-6">
+        <main class="p-4 sm:px-8 ml-[86px] space-y-6">
             @yield('content')
         </main>
     </div>
