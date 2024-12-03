@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { useSession } from "next-auth/react"; // Import the useSession hook
 import { API } from "../utils/api";
+import { toast } from "sonner";
 
-// Define the User interface
 interface User {
   isVerified: boolean;
-  // Add other properties for the User object as needed
+  id: string;
 }
 
-// Define the hook's return type
 interface UseAuthReturn {
   user: User | null;
   loading: boolean;
@@ -18,44 +18,55 @@ interface UseAuthReturn {
 }
 
 const useAuth = (): UseAuthReturn => {
-  const [user, setUser] = useState<User | null>(null);  // Use User type or null
-  const [loading, setLoading] = useState<boolean>(true);  // Loading state for API calls
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isRequesting, setIsRequesting] = useState<boolean>(false); // New state to track API requests
   const router = useRouter();
-
-  // Function to check session status and redirect if unauthenticated
-  const checkSession = (): string | null => {
-    const token = localStorage.getItem("token");  // Check if token exists
-    if (!token) {
-      router.push("/login");  // Redirect to login if no token found
-    }
-    return token;  // Return token (or null)
-  };
+  const { data: session, status } = useSession(); // Access the session
 
   const fetchUser = async () => {
-    setLoading(true);
-    try {
-      const token = checkSession();  // Check session on every fetch attempt
-      if (!token) return;  // Exit if there's no valid token
+    if (isRequesting) return; // Prevent multiple requests if one is already in progress
 
-      // Make API call to fetch user data if authenticated
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.getUser}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,  // Send token for authentication
-        },
-        withCredentials: true,  // Ensure credentials are sent with request
-      });
-      setUser(response.data);  // Set the user data in state
+    setIsRequesting(true); // Set requesting flag to true
+    setLoading(true);
+
+    try {
+      // Ensure the session is loaded and contains the token
+      if (status === "loading") return; // Wait for session to load
+      if (!session || !session.user || !session.user.accessToken) {
+        router.push("/login");
+        return;
+      }
+
+      const token = session.user.accessToken; // Retrieve the token from the session
+
+      // Make the API call to fetch the user data
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.getUser}`,
+        { email: session.user.email },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
+      setUser(response.data);
     } catch (error) {
-      console.error("Failed to fetch user data", error);
-      setUser(null);  // Set user to null in case of an error
+      setUser(null);
+      toast.error("Failed to fetch user data");
+    } finally {
+      setLoading(false);
+      setIsRequesting(false); // Reset the flag when the request is complete
     }
-    setLoading(false);  // Set loading to false after the API call finishes
   };
 
-  // Fetch user data on component mount
   useEffect(() => {
-    fetchUser();
-  }, []);  // Empty dependency array ensures this runs only once on mount
+    if (status !== "loading" && session) {
+      fetchUser();
+    }
+  }, [session, status]); // Re-fetch when session changes
+
+  useEffect(() => {
+  }, [user]);
 
   return { user, loading, setUser, fetchUser };
 };

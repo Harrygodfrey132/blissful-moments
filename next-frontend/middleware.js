@@ -26,17 +26,17 @@ export async function middleware(req) {
   // Token is valid, extract user state
   const isVerified = token?.isVerified;
 
-  // Redirect authenticated users based on the path and validation status
-  if (pathname === "/login" && isVerified) {
-    return redirectTo("/dashboard"); // Prevent logged-in users from accessing login
+  // Handle redirections for unverified users
+  if (!isVerified) {
+    if (pathname.startsWith("/dashboard") || pathname.startsWith("/account")) {
+      return redirectTo("/verify-email"); // Redirect unverified users to verify-email
+    }
+    return NextResponse.next(); // Allow access to public pages
   }
 
-  if (!isVerified && pathname.startsWith("/account")) {
-    return redirectTo("/verify-email"); // Redirect unverified users
-  }
-
-  if (isVerified && pathname === "/verify-email") {
-    return redirectTo("/dashboard"); // Prevent verified users from accessing verify-email
+  // Prevent verified users from accessing verify-email
+  if (pathname === "/verify-email" && isVerified) {
+    return redirectTo("/dashboard");
   }
 
   return NextResponse.next(); // Continue processing the request for valid cases

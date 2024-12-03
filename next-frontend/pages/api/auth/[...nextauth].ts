@@ -66,23 +66,32 @@ export default NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
+      // Check if there is a new user object (on login/registration)
       if (user) {
-        token.accessToken = user.accessToken;
-        token.userId = user.id || "";
-        token.email = user.email || "";
-        token.name = user.name || "";
-        token.isVerified = user.isVerified;
+        console.log("Updating token with user data:", user);
+        token.accessToken = user.accessToken || token.accessToken;
+        token.userId = user.id || token.userId;
+        token.email = user.email || token.email;
+        token.name = user.name || token.name;
+        token.isVerified = user.isVerified || token.isVerified;
       }
+      console.log("JWT Token after update:", token);
+      // Return the updated token object
       return token;
     },
+
     async session({ session, token }: { session: Session; token: JWT }) {
+      // Map the token properties to the session's user object
+      console.log("Token passed to session:", token); 
       session.user = {
         id: token.userId || "",
         name: token.name || "",
         email: token.email || "",
         accessToken: token.accessToken || "",
-        isVerified: token.isVerified || false,
+        isVerified: token.isVerified !== undefined ? token.isVerified : false, // Explicitly handle boolean values
       };
+      console.log("Session after update:", session);
+      // Return the updated session object
       return session;
     },
   },

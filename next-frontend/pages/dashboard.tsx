@@ -3,7 +3,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import useAuthRedirect from '../hooks/useAuthRedirect';
 
 const DashboardPage = () => {
-  useAuthRedirect(true, true);
+  // useAuthRedirect(true, true);
 
   return (
     <DashboardLayout>

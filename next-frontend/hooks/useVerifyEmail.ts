@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { useSession , getSession } from "next-auth/react";
 import { API } from "../utils/api";
 import { ROUTES } from "../utils/routes";
 
-// Define the expected structure of the error response
 interface ErrorResponse {
   message: string;
 }
@@ -17,10 +16,17 @@ const useVerifyEmail = () => {
   const router = useRouter();
 
   const verifyEmail = async (code: string) => {
-    const token = session?.user?.accessToken;
+    if (!session) {
+      toast.error("Authentication failed. Please try again.");
+      router.push(ROUTES.Login); // Redirect to login if session is not found
+      return;
+    }
+
+    const token = session.user?.accessToken;
 
     if (!token) {
       toast.error("Authentication failed. Please try again.");
+      router.push(ROUTES.Login);
       return;
     }
 
@@ -35,7 +41,7 @@ const useVerifyEmail = () => {
         `${process.env.NEXT_PUBLIC_API_URL}${API.VerifyEmail}`,
         {
           code,
-          email: session?.user?.email,
+          email: session.user?.email,
         },
         {
           headers: {
@@ -46,24 +52,37 @@ const useVerifyEmail = () => {
 
       if (response.status === 200) {
         toast.success("Verification successful!");
-        // Update session with isVerified = true after successful verification
-        await update({
-          user: {
-            ...session.user,
-            isVerified: true,
-          },
-        });
+        console.log('API Response' , response.data.isVerified);
+
+        const updatedUser = {
+          ...session.user,
+          isVerified: response.data.isVerified, // Use API value directly
+        };
+
+        console.log('Updated User' , updatedUser);
+        
+        await update({ user: updatedUser });
+        const reloadResponse = await getSession();
+        console.log("Reloaded session:", reloadResponse);
+
+        // Now, redirect to the dashboard
         router.push(ROUTES.Dashboard);
       } else {
         toast.error(response.data.message || "Verification failed!");
       }
     } catch (error) {
-      // Cast the error to AxiosError to access response and data safely
-      const axiosError = error as AxiosError<ErrorResponse>; // Type cast here
+      const axiosError = error as AxiosError<ErrorResponse>;
 
-      toast.error(
-        axiosError.response?.data?.message || "Network error. Please try again."
-      );
+      if (axiosError.response?.status === 401) {
+        toast.error("Invalid OTP or unauthorized request.");
+        router.push(ROUTES.Login); // Redirect to login if unauthorized
+      } else {
+        toast.error(
+          axiosError.response?.data?.message ||
+            "Network error. Please try again."
+        );
+      }
+
       console.error("Error during verification:", error);
     } finally {
       setIsSubmitting(false);
