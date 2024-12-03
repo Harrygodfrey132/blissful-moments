@@ -97,7 +97,7 @@ const Header = () => {
                   </li>
                   <li>
                     <button
-                      onClick={() => signOut()}
+                      onClick={() => signOut({ callbackUrl: ROUTES.Home })}
                       className="font-semibold text-gray-700 hover:text-red-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                     >
                       Sign out
@@ -202,7 +202,7 @@ const Header = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => signOut({ callbackUrl: ROUTES.Home })}
                     className="font-semibold text-gray-700 hover:text-red-600 py-2"
                   >
                     Sign out
