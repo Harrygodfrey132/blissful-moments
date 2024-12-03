@@ -1,98 +1,148 @@
-'use client'
+import { useState } from "react";
 
-import { HomeIcon, UsersIcon, FolderIcon, CalendarIcon, DocumentDuplicateIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+export default function Sidebar() {
+  const [openMenu, setOpenMenu] = useState<string>(""); // Track open dropdown
+  const [activeItem, setActiveItem] = useState<string>(""); // Track active item
 
-const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon },
-    { name: 'Orders', href: '#', icon: UsersIcon },
-    { name: 'My Page', href: '#', icon: FolderIcon },
-    { name: 'User Access', href: '#', icon: CalendarIcon },
-    { name: 'Payments', href: '#', icon: DocumentDuplicateIcon },
-];
+  const toggleMenu = (menu: string) => {
+    setOpenMenu(openMenu === menu ? "" : menu);
+  };
 
-interface SidebarProps {
-    sidebarOpen: boolean;
-    setSidebarOpen: (open: boolean) => void;
-}
+  const setActive = (item: string) => {
+    setActiveItem(item);
+  };
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
-    const [activeItem, setActiveItem] = useState<string>('Dashboard'); // State to track active menu item
+  return (
+    <div className="flex flex-col items-start">
+      {/* Profile Section */}
+      <div className="flex items-center w-[15rem] mb-4 p-4 rounded bg-white shadow">
+      <img
+          src="img/profile-img.png"
+          alt="Profile"
+          className="w-12 h-12 rounded-full object-cover"
+        />
+        <div className="ml-4">
+          <h3 className="text-lg font-semibold">John Doe</h3>
+          <p className="text-sm text-gray-500">monu@gmail.com</p>
+        </div>
+      </div>
 
-    // Handle menu item click
-    const handleItemClick = (itemName: string) => {
-        setActiveItem(itemName); // Set the clicked item as active
-    };
+      {/* Sidebar Navigation */}
+      <nav className="w-[15rem] shadow bg-white text-gray-800 rounded px-6 py-6">
+        <div className="flex flex-col space-y-4">
+          {/* Dashboard */}
+          <a
+            href="#"
+            onClick={() => setActive("dashboard")}
+            className={`flex items-center px-4 py-3 hover:bg-gray-300 rounded-md transition ${
+              activeItem === "dashboard" ? "bg-gray-300 text-black" : "text-gray-800"
+            }`}
+          >
+            <span className="material-icons-outlined">dashboard</span>
+            <span className="ml-3">Dashboard</span>
+          </a>
 
-    return (
-        <>
-            {/* Desktop Sidebar */}
-            <div className={`fixed inset-y-0 left-0 z-50 flex w-52 flex-col bg-gray-50 border-r border-gray-200 p-4 lg:flex ${sidebarOpen ? '' : 'hidden'}`}>
-                <div className="flex h-16 items-center p-4">
-                    <div className='text-black font-bold text-xl'>Logo</div>
-                </div>
-                <nav className="mt-8 flex-1 space-y-4">
-                    <ul role="list">
-                        {navigation.map((item) => (
-                            <li key={item.name}>
-                                <a
-                                    href={item.href}
-                                    onClick={() => handleItemClick(item.name)} // Set active item on click
-                                    className={`group flex items-center gap-x-3 rounded-md p-2 py-2.5 mb-2 text-sm font-semibold ${
-                                        activeItem === item.name
-                                            ? 'bg-indigo-600 text-white'
-                                            : 'text-black hover:bg-gray-200 hover:text-indigo-600'
-                                    }`}
-                                >
-                                    <item.icon
-                                        className={`h-6 w-6 ${
-                                            activeItem === item.name
-                                                ? 'text-white'
-                                                : 'text-black group-hover:text-indigo-600'
-                                        }`}
-                                    />
-                                    {item.name}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
-            </div>
-
-            {/* Mobile Sidebar */}
-            <div className={`fixed inset-0 z-50 bg-gray-900/50 transition-opacity lg:hidden ${sidebarOpen ? '' : 'hidden'}`} onClick={() => setSidebarOpen(false)} />
-            <div
-                className={`fixed inset-y-0 left-0 z-50 w-64 max-w-xs bg-white p-6 lg:hidden transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          {/* Orders */}
+          <div>
+            <button
+              onClick={() => toggleMenu("orders")}
+              aria-expanded={openMenu === "orders"}
+              className={`flex items-center justify-between px-4 py-3 w-full hover:bg-gray-300 rounded-md transition ${
+                activeItem === "orders" ? "bg-gray-300 text-black" : "text-gray-800"
+              }`}
             >
-                <button
-                    type="button"
-                    onClick={() => setSidebarOpen(false)}
-                    className="absolute top-0 left-0 m-4 p-2"
-                >
-                    <span className="sr-only">Close sidebar</span>
-                    <XMarkIcon className="h-6 w-6 text-gray-800" />
-                </button>
+              <div className="flex items-center">
+                <span className="material-icons-outlined">shopping_cart</span>
+                <span className="ml-3">Orders</span>
+              </div>
+              <span className="material-icons-outlined">
+                {openMenu === "orders" ? "expand_less" : "expand_more"}
+              </span>
+            </button>
+            {openMenu === "orders" && (
+              <div className="ml-8 mt-2 flex flex-col space-y-2">
+                {["New Orders", "Processed Orders", "Completed Orders"].map((label, index) => {
+                  const id = label.toLowerCase().replace(" ", "");
+                  return (
+                    <a
+                      key={index}
+                      href="#"
+                      onClick={() => setActive(id)}
+                      className={`text-gray-600 hover:text-gray-400 ${
+                        activeItem === id ? "text-blue-500" : ""
+                      }`}
+                    >
+                      {label}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-                {/* Sidebar content */}
-                <div className="flex flex-col gap-y-5">
-                    <nav className="flex flex-1 flex-col">
-                        {navigation.map((item) => (
-                            <a
-                                key={item.name}
-                                href={item.href}
-                                onClick={() => handleItemClick(item.name)} // Set active item on click
-                                className={`px-4 py-2 ${
-                                    activeItem === item.name
-                                        ? 'bg-indigo-600 text-white'
-                                        : 'text-black hover:bg-gray-50 hover:text-indigo-600'
-                                }`}
-                            >
-                                {item.name}
-                            </a>
-                        ))}
-                    </nav>
-                </div>
-            </div>
-        </>
-    );
+          {/* My Pages */}
+          <a
+            href="/my-page"
+            onClick={() => setActive("myPages")}
+            className={`flex items-center px-4 py-3 hover:bg-gray-300 rounded-md transition ${
+              activeItem === "myPages" ? "bg-gray-300 text-black" : "text-gray-800"
+            }`}
+          >
+            <span className="material-icons-outlined">pages</span>
+            <span className="ml-3">My Pages</span>
+          </a>
+
+          {/* User Access */}
+          <div>
+            <button
+              onClick={() => toggleMenu("userAccess")}
+              aria-expanded={openMenu === "userAccess"}
+              className={`flex items-center justify-between px-4 py-3 w-full hover:bg-gray-300 rounded-md transition ${
+                activeItem === "userAccess" ? "bg-gray-300 text-black" : "text-gray-800"
+              }`}
+            >
+              <div className="flex items-center">
+                <span className="material-icons-outlined">people</span>
+                <span className="ml-3">User Access</span>
+              </div>
+              <span className="material-icons-outlined">
+                {openMenu === "userAccess" ? "expand_less" : "expand_more"}
+              </span>
+            </button>
+            {openMenu === "userAccess" && (
+              <div className="ml-8 mt-2 flex flex-col space-y-2">
+                {["Admin", "Editor", "Viewer"].map((label, index) => {
+                  const id = label.toLowerCase();
+                  return (
+                    <a
+                      key={index}
+                      href="#"
+                      onClick={() => setActive(id)}
+                      className={`text-gray-600 hover:text-gray-400 ${
+                        activeItem === id ? "text-blue-500" : ""
+                      }`}
+                    >
+                      {label}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Payments */}
+          <a
+            href="#"
+            onClick={() => setActive("payments")}
+            className={`flex items-center px-4 py-3 hover:bg-gray-300 rounded-md transition ${
+              activeItem === "payments" ? "bg-gray-300 text-black" : "text-gray-800"
+            }`}
+          >
+            <span className="material-icons-outlined">payment</span>
+            <span className="ml-3">Payments</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  );
 }

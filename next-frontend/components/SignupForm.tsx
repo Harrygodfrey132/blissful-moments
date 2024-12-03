@@ -46,6 +46,8 @@ const SignupForm = () => {
         setLoading(true);
 
         try {
+            // Simulate API request delay
+            // await new Promise((resolve) => setTimeout(resolve, 12000)); // 12-second delay for testing
             const response = await registerUser(data);
 
             // Ensure the response contains expected fields
@@ -86,6 +88,13 @@ const SignupForm = () => {
 
     return (
         <div className="space-y-6">
+            {/* Loader Overlay */}
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="loader"></div>
+                </div>
+            )}
+
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div className='flex gap-4'>
                     <div>
