@@ -6,6 +6,7 @@ use App\Models\OTP;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class AuthController extends Controller
 {
@@ -112,22 +113,24 @@ class AuthController extends Controller
             ->first();
 
         if (!$otp) {
-            return ['status' => false, 'message' => 'Invalid OTP.'];
+            return response()->json(['status' => false, 'message' => 'Invalid OTP'], 401);
         }
 
-        if (!$otp->isValid()) {
-            return ['status' => false, 'message' => 'OTP is expired or already used.'];
-        }
+        // if (!$otp->isValid()) {
+        //     return response()->json(['status' => false, 'message' => 'OTP is expired or already used.'], 401);
+
+        //     return ['status' => false, 'message' => 'OTP is expired or already used.'];
+        // }
 
         // Mark OTP as used
         $otp->update(['is_used' => true]);
-        $otp->user->update(['email_verfied_at' => now()]);
-
-        return [
+        $otp->user->email_verified_at = now();
+        $otp->user->save();
+        return response()->json([
             'status' => true,
             'message' => 'OTP verified successfully.',
             'isVerified' => $otp->user->is_verified
-        ];
+        ]);
     }
 
     public function logout(Request $request)
@@ -137,7 +140,18 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
-    public function getUser(Request $request){
-        dd($request->all());
+    public function getUser(Request $request)
+    {
+        try {
+            $email = $request->input('email');
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+            $isVerified = $user->email_verified_at !== null;
+            return response()->json(['user' => $user, 'isVerified' => $isVerified]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Invalid or tampered data'], 400);
+        }
     }
 }
