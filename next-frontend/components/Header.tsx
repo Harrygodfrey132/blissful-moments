@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { ROUTES } from '../utils/routes';
 
 const Header = () => {
+  const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -61,22 +63,48 @@ const Header = () => {
               </li>
             </ul>
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li>
-                <Link href={ROUTES.Login} className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out">
-                  Sign in
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={ROUTES.Request_Demo}
-                  className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
-                >
-                  Request Demo
-                  <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                    &rarr;
-                  </span>
-                </Link>
-              </li>
+              {!session ? (
+                <>
+                  <li>
+                    <button
+                      onClick={() => signIn()}
+                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                    >
+                      Sign in
+                    </button>
+                  </li>
+                  <li>
+                    <Link
+                      href={ROUTES.Request_Demo}
+                      className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
+                    >
+                      Request Demo
+                      <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                        &rarr;
+                      </span>
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      href={ROUTES.Dashboard}
+                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => signOut()}
+                      className="font-semibold text-gray-700 hover:text-red-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                    >
+                      Sign out
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
 
@@ -140,23 +168,48 @@ const Header = () => {
                 Blog
               </Link>
             </li>
-
-            <li>
-              <Link href={ROUTES.Login} className="font-semibold text-gray-700 hover:text-gray-500 py-2">
-                Sign in
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/request-demo"
-                className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 flex items-center group"
-              >
-                Request Demo
-                <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                  &rarr;
-                </span>
-              </Link>
-            </li>
+            {!session ? (
+              <>
+                <li>
+                  <button
+                    onClick={() => signIn()}
+                    className="font-semibold text-gray-700 hover:text-gray-500 py-2"
+                  >
+                    Sign in
+                  </button>
+                </li>
+                <li>
+                  <Link
+                    href="/request-demo"
+                    className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 flex items-center group"
+                  >
+                    Request Demo
+                    <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                      &rarr;
+                    </span>
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    href={ROUTES.Dashboard}
+                    className="font-semibold text-gray-700 hover:text-blue-600 py-2"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={() => signOut()}
+                    className="font-semibold text-gray-700 hover:text-red-600 py-2"
+                  >
+                    Sign out
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

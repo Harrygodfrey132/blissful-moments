@@ -27,12 +27,12 @@ export async function middleware(req) {
   const isVerified = token?.isVerified;
 
   // Handle redirections for unverified users
-  if (!isVerified) {
-    if (pathname.startsWith("/dashboard") || pathname.startsWith("/account")) {
-      return redirectTo("/verify-email"); // Redirect unverified users to verify-email
-    }
-    return NextResponse.next(); // Allow access to public pages
-  }
+  // if (!isVerified) {
+  //   if (pathname.startsWith("/dashboard") || pathname.startsWith("/account")) {
+  //     return redirectTo("/verify-email"); // Redirect unverified users to verify-email
+  //   }
+  //   return NextResponse.next(); // Allow access to public pages
+  // }
 
   // Prevent verified users from accessing verify-email
   if (pathname === "/verify-email" && isVerified) {
