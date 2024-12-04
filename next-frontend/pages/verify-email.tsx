@@ -16,7 +16,7 @@ const VerifyEmailPage = () => {
       }
     };
     checkSession();
-  }, []);
+  }, []); // Empty dependency array to run only once when the component mounts
 
   return (
     <div className="flex bg-white min-h-full flex-1">
@@ -41,7 +41,7 @@ const VerifyEmailPage = () => {
       {/* Loader Overlay */}
       {loading && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="loader"></div> {/* Replace with your own loader component */}
+          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-16 h-16"></div>
         </div>
       )}
     </div>
