@@ -6,7 +6,6 @@ import Link from "next/link";
 import { validateLogin } from "../utils/validation";
 import { useRouter } from "next/router";
 
-
 interface LoginFormInputs {
   email: string;
   password: string;
@@ -14,6 +13,7 @@ interface LoginFormInputs {
 
 const Login = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false); // Loader state
   const {
     register,
     handleSubmit,
@@ -23,12 +23,15 @@ const Login = () => {
 
   const handleLogin = async (data: LoginFormInputs) => {
     setServerError("");
+    setLoading(true); // Start loader
 
     const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
       password: data.password,
     });
+
+    setLoading(false); // Stop loader
 
     if (!res || !res.ok) {
       setServerError(res?.error || "Failed to sign in. Please try again.");
@@ -115,8 +118,9 @@ const Login = () => {
                   <button
                     type="submit"
                     className="flex w-full justify-center rounded bg-blue-light-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    disabled={loading} // Disable button while loading
                   >
-                    Sign in
+                    {loading ? "Signing in..." : "Sign in"}
                   </button>
                 </div>
               </form>
@@ -138,6 +142,13 @@ const Login = () => {
           />
         </div>
       </div>
+
+      {/* Loader Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="loader"></div> {/* You can replace this with your own loader component */}
+        </div>
+      )}
     </>
   );
 };

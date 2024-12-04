@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
@@ -7,21 +7,42 @@ import { ROUTES } from '../utils/routes';
 const Header = () => {
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter();
+  const profileMenuRef = useRef<HTMLLIElement>(null); 
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsProfileMenuOpen(false); // Ensure profile menu is closed when opening mobile menu
   };
 
-  // Function to check if the link is active
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+    setIsMobileMenuOpen(false); // Ensure mobile menu is closed when opening profile menu
+  };
+
   const isActive = (path: string) => {
     return router.pathname === path ? 'text-blue-600' : 'text-gray-700';
   };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+      setIsProfileMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="absolute w-full py-1 z-30 bg-white shadow">
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
           <div className="shrink-0 mr-4">
             <img className="w-16" src="/img/logo-black.png" alt="Logo" />
           </div>
@@ -32,7 +53,9 @@ const Header = () => {
               <li>
                 <Link
                   href={ROUTES.Home}
-                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive('/')}`}
+                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive(
+                    '/'
+                  )}`}
                 >
                   Home
                 </Link>
@@ -40,7 +63,9 @@ const Header = () => {
               <li>
                 <Link
                   href={ROUTES.Pricing}
-                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive('/pricing')}`}
+                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive(
+                    '/pricing'
+                  )}`}
                 >
                   Pricing
                 </Link>
@@ -48,7 +73,9 @@ const Header = () => {
               <li>
                 <Link
                   href={ROUTES.About_Us}
-                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive('/about')}`}
+                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive(
+                    '/about'
+                  )}`}
                 >
                   About
                 </Link>
@@ -56,54 +83,71 @@ const Header = () => {
               <li>
                 <Link
                   href={ROUTES.Blogs}
-                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive('/blog')}`}
+                  className={`font-semibold hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out ${isActive(
+                    '/blog'
+                  )}`}
                 >
                   Blog
                 </Link>
               </li>
             </ul>
             <ul className="flex grow justify-end flex-wrap items-center">
+              <li>
+                <Link
+                  href={ROUTES.Request_Demo}
+                  className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
+                >
+                  Request Demo
+                  <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                    &rarr;
+                  </span>
+                </Link>
+              </li>
               {!session ? (
-                <>
-                  <li>
-                    <button
-                      onClick={() => signIn()}
-                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                    >
-                      Sign in
-                    </button>
-                  </li>
-                  <li>
-                    <Link
-                      href={ROUTES.Request_Demo}
-                      className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
-                    >
-                      Request Demo
-                      <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                        &rarr;
-                      </span>
-                    </Link>
-                  </li>
-                </>
+                <li>
+                  <button
+                    onClick={() => signIn()}
+                    className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                  >
+                    Sign in
+                  </button>
+                </li>
               ) : (
-                <>
-                  <li>
-                    <Link
-                      href={ROUTES.Dashboard}
-                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                    >
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => signOut({ callbackUrl: ROUTES.Home })}
-                      className="font-semibold text-gray-700 hover:text-red-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                    >
-                      Sign out
-                    </button>
-                  </li>
-                </>
+                <li className="relative ml-4" ref={profileMenuRef}>
+                  <button
+                    onClick={toggleProfileMenu}
+                    className="flex items-center text-gray-700 hover:text-blue-600 transition duration-150 ease-in-out"
+                  >
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={session.user?.image || '/img/profile-img.png'}
+                      alt={session.user?.name || 'User'}
+                    />
+                    <span className="ml-2 font-semibold hidden lg:block">
+                      {session.user?.name || 'Profile'}
+                    </span>
+                  </button>
+                  {isProfileMenuOpen && (
+                    <ul className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg">
+                      <li>
+                        <Link
+                          href={ROUTES.Dashboard}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => signOut({ callbackUrl: ROUTES.Home })}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Sign out
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </li>
               )}
             </ul>
           </nav>
@@ -138,58 +182,31 @@ const Header = () => {
           <ul className="flex flex-col space-y-4">
             <li>
               <Link
-                href="/"
-                className={`font-semibold py-2 transition duration-150 ease-in-out ${isActive('/')}`}
+                href={ROUTES.Home}
+                className={`font-semibold py-2 transition duration-150 ease-in-out ${isActive(
+                  '/'
+                )}`}
               >
                 Home
               </Link>
             </li>
             <li>
               <Link
-                href="/pricing"
-                className={`font-semibold py-2 transition duration-150 ease-in-out ${isActive('/pricing')}`}
+                href={ROUTES.Request_Demo}
+                className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 flex items-center"
               >
-                Pricing
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className={`font-semibold py-2 transition duration-150 ease-in-out ${isActive('/about')}`}
-              >
-                About
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/blog"
-                className={`font-semibold py-2 transition duration-150 ease-in-out ${isActive('/blog')}`}
-              >
-                Blog
+                Request Demo
               </Link>
             </li>
             {!session ? (
-              <>
-                <li>
-                  <button
-                    onClick={() => signIn()}
-                    className="font-semibold text-gray-700 hover:text-gray-500 py-2"
-                  >
-                    Sign in
-                  </button>
-                </li>
-                <li>
-                  <Link
-                    href="/request-demo"
-                    className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 flex items-center group"
-                  >
-                    Request Demo
-                    <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                      &rarr;
-                    </span>
-                  </Link>
-                </li>
-              </>
+              <li>
+                <button
+                  onClick={() => signIn()}
+                  className="font-semibold text-gray-700 hover:text-gray-500 py-2"
+                >
+                  Sign in
+                </button>
+              </li>
             ) : (
               <>
                 <li>

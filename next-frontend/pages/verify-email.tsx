@@ -1,11 +1,26 @@
+import { useState, useEffect } from "react";
 import VerifyEmailForm from "../components/VerifyEmailForm";
 import useAuthRedirect from "../hooks/useAuthRedirect";
+import { getSession } from "next-auth/react";
 
 const VerifyEmailPage = () => {
-  useAuthRedirect(true);
+  const [loading, setLoading] = useState(true); // Loader state for session check
+  useAuthRedirect(true); // Keep your redirection logic as it is
+
+  // Session check
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session) {
+        setLoading(false); // Hide loader once session is checked
+      }
+    };
+    checkSession();
+  }, []);
 
   return (
     <div className="flex bg-white min-h-full flex-1">
+      {/* Main content */}
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="mt-10">
@@ -13,6 +28,8 @@ const VerifyEmailPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* Background image */}
       <div className="relative hidden w-0 flex-1 lg:block">
         <img
           alt=""
@@ -20,6 +37,13 @@ const VerifyEmailPage = () => {
           className="absolute inset-0 size-full object-cover"
         />
       </div>
+
+      {/* Loader Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="loader"></div> {/* Replace with your own loader component */}
+        </div>
+      )}
     </div>
   );
 };
