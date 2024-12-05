@@ -28,7 +28,7 @@ const VerifyEmailPage = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Background image */}
       <div className="relative hidden w-0 flex-1 lg:block">
         <img
