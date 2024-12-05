@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { validateSignup } from "../utils/validation";
 import { signIn } from "next-auth/react";
-import { toast } from "sonner";
+import { ToastContainer, toast } from "react-toastify"; // Import Toastify
+import "react-toastify/dist/ReactToastify.css"; // Import Toast styles
 import { registerUser } from "../utils/registrationApiService";
 
 type SignupFormData = {
@@ -46,11 +47,8 @@ const SignupForm = () => {
         setLoading(true);
 
         try {
-            // Simulate API request delay
-            // await new Promise((resolve) => setTimeout(resolve, 12000)); // 12-second delay for testing
             const response = await registerUser(data);
 
-            // Ensure the response contains expected fields
             if (!response || !response.token) {
                 if (response.errors) {
                     Object.entries(response.errors).forEach(([field, messages]) => {
@@ -77,7 +75,6 @@ const SignupForm = () => {
                 throw new Error(loginResult?.error || "Login failed");
             }
 
-            // Redirect based on validation state
             router.push(ROUTES.Verify_Email);
         } catch (error: any) {
             toast.error(error.message || "An error occurred during registration.");
@@ -186,6 +183,9 @@ const SignupForm = () => {
                     <Link href={ROUTES.Login} className="font-medium hover:underline text-blue-light-900">Login here</Link>
                 </p>
             </form>
+
+            {/* Add ToastContainer for showing toast messages */}
+            <ToastContainer />
         </div>
     );
 };

@@ -1,13 +1,19 @@
+// components/Layout.tsx
 import Header from './Header';
 import Footer from './Footer';
 
+interface LayoutProps {
+  children: React.ReactNode;
+  noLayout?: boolean;  // Optional prop to conditionally hide Header and Footer
+}
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children, noLayout = false }: LayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {/* Conditionally render Header and Footer based on noLayout */}
+      {!noLayout && <Header />}
       <main className="flex-grow">{children}</main>
-      <Footer />
+      {!noLayout && <Footer />}
     </div>
   );
 };

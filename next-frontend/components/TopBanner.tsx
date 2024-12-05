@@ -4,7 +4,7 @@ export default function TopBanner() {
   const [isBannerEnabled, setIsBannerEnabled] = useState(true)
   return (
     <header
-      className="relative h-64 bg-cover bg-center mt-[89px]"
+      className="relative h-64 bg-cover bg-center"
       style={{ backgroundImage: `url('img/top-bg.jpg')` }}
     >
       <div className="absolute bottom-4 right-4">
@@ -15,23 +15,23 @@ export default function TopBanner() {
         </label>
       </div>
       {/* Toggle Switch */}
-      <div className="flex justify-end absolute bg-white p-1 left-2 rounded mb-4 mt-6">
-        <div className="flex items-center space-x-4">
-          <div className="relative inline-block w-14 mr-2 align-middle select-none transition-all duration-200 ease-in">
+      <div className="flex justify-end absolute p-1 left-2 rounded mb-4 mt-6">
+        <div className="flex items-center space-x-2">
+          <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
             <input
               type="checkbox"
               id="toggle-switch-feature"
               checked={isBannerEnabled}
               onChange={() => setIsBannerEnabled(!isBannerEnabled)} // Corrected here
-              className="toggle-checkbox absolute block w-8 h-8 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+              className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
             />
             <label
               htmlFor="toggle-switch-feature"
-              className={`toggle-label block overflow-hidden h-8 rounded-full cursor-pointer transition-all duration-200 ease-in-out 
-        ${isBannerEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
+              className={`toggle-label block overflow-hidden h-6 rounded-full cursor-pointer transition-all duration-200 ease-in-out 
+        ${isBannerEnabled ? 'bg-blue-light-900' : 'bg-gray-100'}`}
             ></label>
           </div>
-          <span className="text-xl text-blue-light-900">Edit</span>
+          <span className="text-lg font-semibold text-blue-light-900">Edit</span>
         </div>
       </div>
     </header>

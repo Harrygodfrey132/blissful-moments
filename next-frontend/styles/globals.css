@@ -36,19 +36,28 @@
 }
 
 
+/* Prevent body from scrolling when modal is open */
+.body-lock {
+  overflow: hidden;
+}
+
+/* Ensure modal overlay covers everything */
+.ReactModal__Overlay {
+  z-index: 50;
+}
+
+
+
 /* Custom switch styles */
 .toggle-checkbox:checked {
   transform: translateX(100%);
-  background-color: #0B4A6F; /* Green for enabled state */
+ 
 }
 
 .toggle-checkbox {
   transition: transform 0.3s ease-in-out;
 }
 
-.toggle-label {
-  background-color: #ccc; /* Grey background for inactive state */
-}
 
 
 
@@ -646,7 +655,9 @@ body{
             print-color-adjust: unset;
   }
   
-  [type='checkbox'],[type='radio'] {
+  [type='checkbox']
+  /* [type='radio']  */
+  {
     -webkit-appearance: none;
        -moz-appearance: none;
             appearance: none;
@@ -710,7 +721,7 @@ body{
     }
   }
   
-  [type='radio']:checked {
+  /* [type='radio']:checked {
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
   }
   
@@ -721,7 +732,7 @@ body{
          -moz-appearance: auto;
               appearance: auto;
     }
-  }
+  } */
   
   /* [type='checkbox']:checked:hover,[type='checkbox']:checked:focus,[type='radio']:checked:hover,[type='radio']:checked:focus {
     border-color: transparent;
@@ -2726,7 +2737,7 @@ body{
     border-color: rgb(255 255 255 / var(--tw-border-opacity));
   }
   .bg-black {
-    --tw-bg-opacity: 1;
+    /* --tw-bg-opacity: 1; */
     background-color: rgb(0 0 0 / var(--tw-bg-opacity));
   }
   .bg-blue-600 {

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
+import { toast } from "react-toastify"; // Import React Toastify
 import { useRouter } from "next/router";
 import { useSession, getSession } from "next-auth/react";
 import { API } from "../utils/api";
 import { ROUTES } from "../utils/routes";
+import "react-toastify/dist/ReactToastify.css"; // Import React Toastify's default styles
 
 interface ErrorResponse {
   message: string;
@@ -48,7 +49,7 @@ const useVerifyEmail = () => {
 
         // Update the session state (ensure token reflects the new verification status)
         if (session?.user) {
-          const updatedUser = { ...session.user, isVerified: true };// Set the verification flag
+          const updatedUser = { ...session.user, isVerified: true }; // Set the verification flag
           await update({ user: updatedUser }); // Update session client-side
         }
 
