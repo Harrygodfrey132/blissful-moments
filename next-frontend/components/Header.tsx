@@ -9,7 +9,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter();
-  const profileMenuRef = useRef<HTMLLIElement>(null); 
+  const profileMenuRef = useRef<HTMLLIElement>(null);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -105,12 +105,12 @@ const Header = () => {
               </li>
               {!session ? (
                 <li>
-                  <button
-                    onClick={() => signIn()}
+                  <Link
+                    href={ROUTES.Login}
                     className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                   >
                     Sign in
-                  </button>
+                  </Link>
                 </li>
               ) : (
                 <li className="relative ml-4" ref={profileMenuRef}>
@@ -140,7 +140,7 @@ const Header = () => {
                       <li>
                         <button
                           onClick={() => signOut({ callbackUrl: ROUTES.Home })}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="font-semibold text-gray-700 hover:text-red-600 py-2"
                         >
                           Sign out
                         </button>
@@ -200,12 +200,12 @@ const Header = () => {
             </li>
             {!session ? (
               <li>
-                <button
-                  onClick={() => signIn()}
+                <Link
+                  href={ROUTES.Login}
                   className="font-semibold text-gray-700 hover:text-gray-500 py-2"
                 >
                   Sign in
-                </button>
+                </Link>
               </li>
             ) : (
               <>

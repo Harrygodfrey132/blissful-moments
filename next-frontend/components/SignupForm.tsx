@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { validateSignup } from "../utils/validation";
-import { signIn } from "next-auth/react";
-import { ToastContainer, toast } from "react-toastify"; // Import Toastify
-import "react-toastify/dist/ReactToastify.css"; // Import Toast styles
+import { toast } from "react-toastify"; // Import Toastify
+
 import { registerUser } from "../utils/registrationApiService";
+import { useIsVerified } from "../context/IsUserVerifiedContext";
 
 type SignupFormData = {
     firstName: string;
@@ -20,6 +20,7 @@ type SignupFormData = {
 
 const SignupForm = () => {
     const router = useRouter();
+    const { setIsVerified } = useIsVerified();
     const {
         register,
         handleSubmit,
@@ -62,19 +63,8 @@ const SignupForm = () => {
                 }
                 return;
             }
-
+            setIsVerified(false);
             toast.success(response.message || "Registration successful!");
-
-            const loginResult = await signIn("credentials", {
-                redirect: false,
-                email: data.email,
-                password: data.password,
-            });
-
-            if (!loginResult || loginResult.error) {
-                throw new Error(loginResult?.error || "Login failed");
-            }
-
             router.push(ROUTES.Verify_Email);
         } catch (error: any) {
             toast.error(error.message || "An error occurred during registration.");
@@ -183,9 +173,6 @@ const SignupForm = () => {
                     <Link href={ROUTES.Login} className="font-medium hover:underline text-blue-light-900">Login here</Link>
                 </p>
             </form>
-
-            {/* Add ToastContainer for showing toast messages */}
-            <ToastContainer />
         </div>
     );
 };

@@ -5,6 +5,7 @@ import { ROUTES } from "../utils/routes";
 import Link from "next/link";
 import { validateLogin } from "../utils/validation";
 import { useRouter } from "next/router";
+import { useIsVerified } from "../context/IsUserVerifiedContext";
 
 interface LoginFormInputs {
   email: string;
@@ -14,6 +15,7 @@ interface LoginFormInputs {
 const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // Loader state
+  const { setIsVerified } = useIsVerified();
   const {
     register,
     handleSubmit,
@@ -39,8 +41,10 @@ const Login = () => {
       const session = await getSession();
 
       if (session?.user?.isVerified) {
+        setIsVerified(true);
         router.push(`${ROUTES.Dashboard}`);
       } else {
+        setIsVerified(false);
         router.push(`${ROUTES.Verify_Email}`);
       }
     }
@@ -117,7 +121,7 @@ const Login = () => {
                 <div>
                   <button
                     type="submit"
-                    className="flex w-full justify-center rounded bg-blue-light-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    className="flex w-full justify-center rounded bg-blue-light-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-900"
                     disabled={loading} // Disable button while loading
                   >
                     {loading ? "Signing in..." : "Sign in"}

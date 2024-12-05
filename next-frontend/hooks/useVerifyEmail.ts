@@ -6,6 +6,7 @@ import { useSession, getSession } from "next-auth/react";
 import { API } from "../utils/api";
 import { ROUTES } from "../utils/routes";
 import "react-toastify/dist/ReactToastify.css"; // Import React Toastify's default styles
+import { useIsVerified } from "../context/IsUserVerifiedContext";
 
 interface ErrorResponse {
   message: string;
@@ -15,10 +16,11 @@ const useVerifyEmail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session, update } = useSession();
   const router = useRouter();
-
+  const { setIsVerified } = useIsVerified();
   const verifyEmail = async (code: string) => {
     if (!session) {
       toast.error("Authentication failed. Please try again.");
+      setIsVerified(false);
       router.push(ROUTES.Login);
       return;
     }
@@ -55,7 +57,7 @@ const useVerifyEmail = () => {
 
         // Reload the session to confirm the changes
         await getSession();
-
+        setIsVerified(true);
         router.push(ROUTES.Dashboard);
       } else {
         toast.error(response.data.message || "Verification failed!");

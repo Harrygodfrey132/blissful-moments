@@ -5,6 +5,7 @@ import { API } from "../../../utils/api";
 import { toast } from "sonner";
 import { JWT } from "next-auth/jwt";
 import { ROUTES } from "../../../utils/routes";
+import { useIsVerified } from "../../../context/IsUserVerifiedContext";
 
 interface ErrorResponse {
   message: string;
@@ -43,6 +44,7 @@ export default NextAuth({
             accessToken: token,
             isVerified: validationResponse?.isVerified,
           };
+
         } catch (error) {
           const axiosError = error as AxiosError<ErrorResponse>;
           toast.error("Authorization failed:");
@@ -62,18 +64,16 @@ export default NextAuth({
         token.userId = user.id || token.userId;
         token.email = user.email || token.email;
         token.name = user.name || token.name;
-        token.isVerified = user.isVerified ?? token.isVerified;  // Ensure isVerified is properly set
       }
       return token;
     },
-  
+
     async session({ session, token }: { session: Session; token: JWT }) {
       session.user = {
         id: token.userId || "",
         name: token.name || "",
         email: token.email || "",
         accessToken: token.accessToken || "",
-        isVerified: token.isVerified || false,  // Use token's isVerified
       };
       return session;
     },
