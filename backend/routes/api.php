@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -13,5 +14,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/check-validation/{userId}', [UserController::class, 'checkValidation']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/getUser', [AuthController::class, 'getUser']);
+
+    Route::post('/save/page/settings', [PageController::class, 'storePageSettings']);
+    Route::post('/save/page/personal/details', [PageController::class, 'storePersonalInfo']);
+    Route::get('/check-existing-page', [PageController::class, 'checkPage'])->middleware('auth');
 });
 Route::get('/user', [AuthController::class, 'getUser'])->middleware('auth:sanctum');

@@ -120,7 +120,7 @@ const Header = () => {
                   >
                     <img
                       className="w-8 h-8 rounded-full"
-                      src={session.user?.image || '/img/profile-img.png'}
+                      src={'/img/profile-img.png'}
                       alt={session.user?.name || 'User'}
                     />
                     <span className="ml-2 font-semibold hidden lg:block">

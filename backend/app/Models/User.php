@@ -123,4 +123,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(GDPRRequest::class, 'user_id');
     }
+
+    public function page(): HasOne
+    {
+        return $this->hasOne(Page::class, 'user_id');
+    }
 }
