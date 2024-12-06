@@ -7,7 +7,7 @@ export default function TopBanner() {
       className="relative h-64 bg-cover bg-center"
       style={{ backgroundImage: `url('img/top-bg.jpg')` }}
     >
-      <div className="absolute bottom-4 right-4">
+      <div className="absolute top-5 md:top-auto md:bottom-4 right-4">
         <label className="bg-white px-4 py-2 border text-sm border-black pr-8 shadow cursor-pointer relative">
           Change Image
           <span className="material-icons-outlined absolute ml-1">photo_camera</span>

@@ -5,7 +5,7 @@ const PersonalQuote: React.FC = () => {
   const [isEnabled, setIsEnabled] = useState(true);
 
   return (
-    <div className="p-6">
+    <div>
       {/* Toggle switch */}
       <div className="flex justify-end mb-4">
         <div className="flex items-center space-x-4">

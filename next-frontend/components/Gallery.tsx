@@ -20,11 +20,11 @@ const Gallery: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <div className="p-6">
+    <div>
       <div className="flex justify-between">
-        <h1 className="text-3xl flex gap-4 font-medium mb-6 mt-4">
+        <h1 className="text-2xl flex gap-4 font-medium mb-6 mt-4">
           <span
-            className={`border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500 ${
+            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${
               isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
             }`}
             contentEditable={isGalleryEnabled} // Disable contentEditable when gallery is disabled

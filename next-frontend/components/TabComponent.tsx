@@ -1,7 +1,11 @@
+// StyledTabs.tsx
 import React, { useRef, useState } from "react";
 import TabNavigation from "../components/TabNavigation";
 import PersonalQuote from "../components/PersonalQuote";
 import Gallery from "../components/Gallery";
+import Obituary from "../components/obituary";
+import Timeline from "../components/Timeline";
+import SocialMedia from "../components/SocialMedia"; // Import SocialMedia component
 
 export default function StyledTabs() {
   const tab1Ref = useRef<HTMLDivElement>(null);
@@ -18,7 +22,7 @@ export default function StyledTabs() {
     { label: "Gallery", ref: tab2Ref },
     { label: "Obituary", ref: tab3Ref },
     { label: "Timeline", ref: tab4Ref },
-    { label: "Favourites", ref: tab5Ref },
+    { label: "Social Media", ref: tab5Ref },
     { label: "Contributions", ref: tab6Ref },
   ];
 
@@ -39,12 +43,27 @@ export default function StyledTabs() {
           <Gallery />
         </div>
 
+        {/* Obituary */}
+        <div ref={tab3Ref}>
+          <Obituary />
+        </div>
+
+        {/* Timeline */}
+        <div ref={tab4Ref}>
+          <Timeline />
+        </div>
+
+        {/* Social Media */}
+        <div ref={tab5Ref}>
+          <SocialMedia />
+        </div>
+
         {/* Other Tabs */}
-        {[tab3Ref, tab4Ref, tab5Ref, tab6Ref].map((ref, index) => (
+        {[tab6Ref].map((ref, index) => (
           <div key={index} ref={ref} className="p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-4">{tabs[index + 2].label}</h2>
+            <h2 className="text-2xl font-bold mb-4">{tabs[index + 5].label}</h2>
             <p className="text-gray-600">
-              This is the content displayed for the {tabs[index + 2].label} tab. Clicking on this tab will scroll here.
+              This is the content displayed for the {tabs[index + 5].label} tab. Clicking on this tab will scroll here.
             </p>
           </div>
         ))}

@@ -20,11 +20,11 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, setActiv
   };
 
   return (
-    <div className="flex sticky top-0 z-10 bg-gray-50">
+    <div className="md:flex sticky top-0 px-4 md:px-0  z-10 bg-gray-50">
       {tabs.map((tab, index) => (
         <button
           key={index}
-          className={`px-6 py-2 border text-lg font-medium transition-all ${
+          className={`px-6 py-2 border  w-full md:w-auto text-lg font-medium transition-all ${
             activeTab === index + 1 ? "bg-blue-light-900 text-white" : "bg-gray-100 text-blue-light-900"
           }`}
           onClick={() => scrollToTab(tab.ref, index + 1)}

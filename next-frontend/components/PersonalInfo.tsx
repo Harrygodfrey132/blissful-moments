@@ -102,16 +102,16 @@ export default function PersoanlInfo() {
   }, [deathDate]);
 
   return (
-    <section className="flex gap-12 px-12">
+    <section className="md:flex gap-12 md:px-12">
       {/* Profile Image Section */}
       <div className="mt-[-80px]">
         <div className="relative shadow p-2">
           <img
             src="img/profile-img.png"
             alt="Profile"
-            className="w-60 h-60 object-cover shadow"
+            className="w-60 h-60 m-auto object-cover shadow"
           />
-          <label className="absolute border border-black bottom-4 text-sm right-4 bg-white py-2 pr-8 px-4 cursor-pointer">
+          <label className="absolute border border-black bottom-4 text-sm md:right-4 right-20 bg-white py-2 pr-8 px-4 cursor-pointer">
             Change Image
             <span className="material-icons-outlined absolute ml-1">photo_camera</span>
             <input type="file" className="hidden" />
@@ -123,7 +123,7 @@ export default function PersoanlInfo() {
       <div>
         <div className="space-y-4 p-4">
           {/* Editable Name */}
-          <h1 className="text-4xl flex gap-4 font-medium mb-6 mt-4">
+          <h1 className="md:text-4xl text-2xl flex gap-4 font-medium mb-6 mt-4">
             <span
               className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
@@ -154,9 +154,9 @@ export default function PersoanlInfo() {
             </span>
           </h1>
 
-          <div className="flex justify-between items-center gap-5">
+          <div className="md:flex justify-between items-center gap-5">
             {/* Editable Date Fields for Date of Birth */}
-            <div className="flex items-center gap-4">
+            <div className="md:flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
                   className="p-2 w-24 border-2 h-12 bg-gray-50 border-gray-300 text-blue-900 font-medium"
@@ -247,7 +247,7 @@ export default function PersoanlInfo() {
               location_on
             </span>
             <span
-              className="border-2 p-3 border-gray-300 text-blue-900 pl-12 min-w-[690px] focus:outline-none focus:border-blue-600 focus:text-blue-600"
+              className="border-2 p-3 border-gray-300 text-blue-900 pl-12 w-full md:min-w-[690px] focus:outline-none focus:border-blue-600 focus:text-blue-600"
               contentEditable
               suppressContentEditableWarning
               aria-label="Location"
