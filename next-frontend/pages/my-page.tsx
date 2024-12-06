@@ -51,7 +51,6 @@ export default function Home() {
           }
         }
       } catch (error) {
-        toast.error("Error checking user page");
         setHasPage(false);
         setIsModalOpen(true);  // Open modal if there's an error
       } finally {

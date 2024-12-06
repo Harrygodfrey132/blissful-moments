@@ -22,6 +22,7 @@ export default function PersoanlInfo() {
   const token = session?.user?.accessToken;
 
   if (!token) {
+    return;
     toast.error('Something went wrong. Unable to save data');
   }
   // States for date of birth and death date
