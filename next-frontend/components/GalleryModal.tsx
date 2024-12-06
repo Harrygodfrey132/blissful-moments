@@ -45,7 +45,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
 
       {/* Uploaded Images Preview */}
       {uploadedImages.length > 0 && (
-        <div className="mt-4 grid grid-cols-3 gap-4">
+        <div className="mt-4 grid grid-cols-4 gap-4 overflow-y-auto h-[200px]">
           {uploadedImages.map((file, index) => (
             <div key={index} className="relative">
               <img
