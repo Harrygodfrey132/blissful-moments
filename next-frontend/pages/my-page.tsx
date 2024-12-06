@@ -46,6 +46,7 @@ export default function Home() {
             setHasPage(true);
             setIsModalOpen(false);  // Close modal if page exists
           } else {
+            toast.info("Welcome!, Configure Your Page Settings");
             setHasPage(false);
             setIsModalOpen(true);  // Open modal if no page exists
           }

@@ -57,15 +57,14 @@ class PageController extends Controller
     {
         $user = $request->user();
         $page = $user->page;
-
-        if ($page) {
+        if (!$page) {
             return response()->json([
-                'page' => $page,
-            ], 200);
+                'page' => null,
+            ]);
         }
 
         return response()->json([
-            'page' => null,
-        ], 404);
+            'page' => $page,
+        ], 200);
     }
 }

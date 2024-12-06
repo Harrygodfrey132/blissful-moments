@@ -95,9 +95,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         }
       );
       const { id } = response.data.page;
-      const { message } = response.data.message;
       setPageId(id);
-      toast.success(message);
+      toast.success(response.data.message);
       onClose();
 
     } catch (err: any) {
