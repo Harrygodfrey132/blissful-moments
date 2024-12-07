@@ -160,7 +160,7 @@ export default function PersoanlInfo() {
             <div className="md:flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
-                  className="p-2 w-24 border-2 h-12 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
                   value={dateOfBirth.day}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "day", e.target.value)}
                 >
@@ -172,7 +172,7 @@ export default function PersoanlInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 w-24 border-2 h-12 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
                   value={dateOfBirth.month}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "month", e.target.value)}
                 >
@@ -184,7 +184,7 @@ export default function PersoanlInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 border-2 h-12 bg-gray-50 border-gray-300 text-blue-900 font-medium w-[100px]"
+                  className="p-2 border-2 h-12  border-gray-300 text-blue-900 font-medium w-[100px]"
                   value={dateOfBirth.year}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "year", e.target.value)}
                 >
@@ -204,7 +204,7 @@ export default function PersoanlInfo() {
             <div className="flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
-                  className="p-2 w-24 border-2 h-12 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
                   value={deathDate.day}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "day", e.target.value)}
                 >
@@ -216,7 +216,7 @@ export default function PersoanlInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 w-24 border-2 h-12 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
                   value={deathDate.month}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "month", e.target.value)}
                 >
@@ -228,7 +228,7 @@ export default function PersoanlInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 h-12 bg-gray-50 border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
+                  className="p-2 h-12  border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
                   value={deathDate.year}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "year", e.target.value)}
                 >

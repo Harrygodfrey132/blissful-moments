@@ -83,7 +83,7 @@ export default function Home() {
 
         {/* Bottom Strip */}
         <div
-          className={`fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-2xl py-3 px-2 flex justify-center items-center z-50 ${
+          className={`fixed bottom-0 left-0 w-full bg-stone-100 border-t border-gray-200 shadow-2xl py-3 px-2 flex justify-center items-center z-50 ${
             isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""
           }`}
         >

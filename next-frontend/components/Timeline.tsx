@@ -102,7 +102,7 @@ export default function Timeline() {
                             <div className="timeline-date gap-2 items-center space-y-2">
                                 <div>
                                 <select
-                                    className="p-2 w-16 border-2 h-10 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                                    className="p-2 w-16 border-2 h-10 border-gray-300 text-blue-900 font-medium"
                                     value={event.day}
                                     onChange={(e) =>
                                         handleInputChange(index, "day", e.target.value)
@@ -117,7 +117,7 @@ export default function Timeline() {
                                 </div>
 
                                 <select
-                                    className="p-2 w-28 border-2 h-10 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                                    className="p-2 w-28 border-2 h-10 border-gray-300 text-blue-900 font-medium"
                                     value={event.month}
                                     onChange={(e) =>
                                         handleInputChange(index, "month", e.target.value)
@@ -138,7 +138,7 @@ export default function Timeline() {
                                 </select>
 
                                 <select
-                                    className="p-2 w-24 border-2 h-10 bg-gray-50 border-gray-300 text-blue-900 font-medium"
+                                    className="p-2 w-24 border-2 h-10 border-gray-300 text-blue-900 font-medium"
                                     value={event.year}
                                     onChange={(e) =>
                                         handleInputChange(index, "year", e.target.value)
