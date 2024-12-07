@@ -37,7 +37,7 @@ export default function HeroHome() {
             <Image
             src="/img/dove-picture.png"
             alt="Dove Picture"
-             width={700}
+             width={657}
               height={1100}
               className="responsive-image"
               />         

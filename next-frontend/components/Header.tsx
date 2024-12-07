@@ -92,18 +92,9 @@ const Header = () => {
               </li>
             </ul>
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li>
-                <Link
-                  href={ROUTES.Request_Demo}
-                  className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
-                >
-                  Request Demo
-                  <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                    &rarr;
-                  </span>
-                </Link>
-              </li>
+             
               {!session ? (
+                <>
                 <li>
                   <Link
                     href={ROUTES.Login}
@@ -112,6 +103,15 @@ const Header = () => {
                     Sign in
                   </Link>
                 </li>
+                 <li>
+                 <Link
+                   href={ROUTES.Register}
+                   className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                 >
+                   Sign Up
+                 </Link>
+               </li>
+               </>
               ) : (
                 <li className="relative ml-4" ref={profileMenuRef}>
                   <button
@@ -140,7 +140,7 @@ const Header = () => {
                       <li>
                         <button
                           onClick={() => signOut({ callbackUrl: ROUTES.Home })}
-                          className="font-semibold text-gray-700 hover:text-red-600 py-2"
+                          className="block px-4 py-2 text-sm text-start text-gray-700 hover:bg-gray-100 w-full"
                         >
                           Sign out
                         </button>
@@ -149,6 +149,17 @@ const Header = () => {
                   )}
                 </li>
               )}
+               <li className='ml-5'>
+                <Link
+                  href={ROUTES.Request_Demo}
+                  className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
+                >
+                  Request Demo
+                  <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                    &rarr;
+                  </span>
+                </Link>
+              </li>
             </ul>
           </nav>
 

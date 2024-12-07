@@ -658,9 +658,9 @@ body{
   [type='checkbox']
   /* [type='radio']  */
   {
-    -webkit-appearance: none;
+    /* -webkit-appearance: none;
        -moz-appearance: none;
-            appearance: none;
+            appearance: none; */
     padding: 0;
     -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
