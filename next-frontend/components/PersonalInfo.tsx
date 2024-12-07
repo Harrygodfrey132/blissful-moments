@@ -21,9 +21,6 @@ export default function PersoanlInfo() {
 
   const token = session?.user?.accessToken;
 
-  if (!token) {
-    toast.error('Something went wrong. Unable to save data');
-  }
   // States for date of birth and death date
   const [dateOfBirth, setDateOfBirth] = useState<DateState>({
     day: "Day",
@@ -101,6 +98,10 @@ export default function PersoanlInfo() {
     }
   }, [deathDate]);
 
+    // Render fallback if no token is available
+    if (!token) {
+      toast.error("Something went wrong. Unable to save data");
+    }
   return (
     <section className="md:flex gap-12 md:px-12">
       {/* Profile Image Section */}

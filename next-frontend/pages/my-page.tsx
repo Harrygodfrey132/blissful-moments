@@ -46,12 +46,12 @@ export default function Home() {
             setHasPage(true);
             setIsModalOpen(false);  // Close modal if page exists
           } else {
+            toast.info("Welcome!, Configure Your Page Settings");
             setHasPage(false);
             setIsModalOpen(true);  // Open modal if no page exists
           }
         }
       } catch (error) {
-        toast.error("Error checking user page");
         setHasPage(false);
         setIsModalOpen(true);  // Open modal if there's an error
       } finally {
