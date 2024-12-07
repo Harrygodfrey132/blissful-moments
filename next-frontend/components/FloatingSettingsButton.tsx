@@ -12,9 +12,9 @@ const FloatingSettingsButton: React.FC = () => {
       {/* Button */}
       <button
         onClick={togglePopover}
-        className="bg-gray-100 text-blue-light-900 font-medium flex items-center gap-1 border border-gray-300 text-sm py-2 px-2 rounded shadow-sm transition-all duration-300 transform focus:outline-none"
+        className="bg-gray-200 hover:bg-gray-300 text-blue-light-900 font-medium group flex items-center gap-1 border border-gray-300 text-sm py-2 px-2 rounded shadow-sm transition-all duration-300 transform focus:outline-none"
       >
-        <IoIosSettings className="text-lg" /> Page Settings
+        <IoIosSettings className="text-lg group-hover:translate-x-0.5 text-lg transition-transform duration-300 ease-in" /> Page Settings
       </button>
 
       {/* Popover */}
