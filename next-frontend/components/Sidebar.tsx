@@ -35,7 +35,7 @@ export default function Sidebar() {
           <a
             href="/dashboard"
             onClick={() => setActive("dashboard")}
-            className={`flex items-center px-4 py-3 hover:bg-gray-300 rounded-md transition ${activeItem === "dashboard" ? "bg-gray-300 text-black" : "text-gray-800"
+            className={`flex items-center px-4 py-3 text-sm hover:bg-gray-300 rounded-md transition ${activeItem === "dashboard" ? "bg-gray-300 text-black" : "text-gray-800"
               }`}
           >
             <span className="material-icons-outlined">dashboard</span>
@@ -52,7 +52,7 @@ export default function Sidebar() {
             >
               <div className="flex items-center">
                 <span className="material-icons-outlined">shopping_cart</span>
-                <span className="ml-3">Orders</span>
+                <span className="ml-3 text-sm ">Orders</span>
               </div>
               <span className="material-icons-outlined">
                 {openMenu === "orders" ? "expand_less" : "expand_more"}
@@ -86,7 +86,7 @@ export default function Sidebar() {
               }`}
           >
             <span className="material-icons-outlined">pages</span>
-            <span className="ml-3">My Pages</span>
+            <span className="ml-3 text-sm ">My Pages</span>
           </a>
 
           {/* User Access */}
@@ -99,7 +99,7 @@ export default function Sidebar() {
             >
               <div className="flex items-center">
                 <span className="material-icons-outlined">people</span>
-                <span className="ml-3">User Access</span>
+                <span className="ml-3 text-sm">User Access</span>
               </div>
               <span className="material-icons-outlined">
                 {openMenu === "userAccess" ? "expand_less" : "expand_more"}
@@ -133,7 +133,7 @@ export default function Sidebar() {
               }`}
           >
             <span className="material-icons-outlined">payment</span>
-            <span className="ml-3">Payments</span>
+            <span className="ml-3 text-sm">Payments</span>
           </a>
         </div>
       </nav>
