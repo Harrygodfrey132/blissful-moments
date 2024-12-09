@@ -1,9 +1,25 @@
 // pages/dashboard.tsx
 import Sidebar from '../components/Sidebar'
-import useAuthRedirect from '../hooks/useAuthRedirect';
+import { useEffect, useState } from 'react';
+import { LinkIcon, ClipboardDocumentIcon } from '@heroicons/react/24/solid'; // Importing Heroicons
+import { MdOutlineQrCodeScanner } from "react-icons/md";
+
 
 const DashboardPage = () => {
   // useAuthRedirect(true, true);
+  const [publicUrl, setPublicUrl] = useState('');
+  const [copied, setCopied] = useState(false); // Tracks whether the URL was copied
+  const handleCopy = () => {
+    navigator.clipboard.writeText(publicUrl); // Copying the URL to clipboard
+    setCopied(true); // Set "copied" state to true
+    setTimeout(() => setCopied(false), 3000); // Reset state after 3 seconds
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPublicUrl(window.location.href); // Set the current page URL
+    }
+  }, [])
 
   return (
     <div>
@@ -45,7 +61,36 @@ const DashboardPage = () => {
           <div>
             <h1 className='font-semibold text-xl mb-5'>Dashboard</h1>
             <section className='bg-white p-4 w-full shadow rounded'>
-              Dashbaord content here
+              <div className='flex gap-5 justify-between'>
+                <div className="flex items-center gap-4 text-sm text-gray-600">
+                  {/* Link Icon */}
+                  <div className="flex items-center gap-2">
+                    <LinkIcon className="w-5 h-5 text-blue-600" aria-hidden="true" />
+                    <span>Public URL:</span>
+                    <a
+                      href={publicUrl}
+                      className="text-blue-600 underline hover:text-blue-800"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {publicUrl}
+                    </a>
+                  </div>
+
+                  {/* Copy Button */}
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-sm font-medium text-gray-600 shadow hover:bg-gray-200 focus:ring-2 focus:ring-blue-500"
+                  >
+                    <ClipboardDocumentIcon className="w-4 h-4" aria-hidden="true" />
+                    {copied ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
+                <div>
+                  <MdOutlineQrCodeScanner className='text-5xl' />
+                  <a href='#' className='text-blue-600 underline hover:text-blue-80'>Download QR Code</a>
+                </div>
+              </div>
             </section>
           </div>
         </main>

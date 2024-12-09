@@ -11,4 +11,5 @@ export const ROUTES = {
     Request_Demo: "/request-demo",
     Pricing: "/pricing",
     Blogs: "/blog",
+    Profile: "/profile",
 };
