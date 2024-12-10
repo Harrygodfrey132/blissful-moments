@@ -59,8 +59,10 @@ const DashboardPage = () => {
         <Sidebar />
         <main className='w-full'>
           <div>
-            <h1 className='font-semibold text-xl mb-5'>Dashboard</h1>
-            <section className='bg-white p-4 w-full shadow rounded'>
+            <section className='bg-white p-5 w-full shadow rounded'>
+              <h1 className="text-lg font-semibold text-blue-light-900 mb-5 border-b-2 border-blue-600 inline-block">
+                Dashboard
+              </h1>
               <div className='flex gap-5 justify-between'>
                 <div className="flex items-center gap-4 text-sm text-gray-600">
                   {/* Link Icon */}
