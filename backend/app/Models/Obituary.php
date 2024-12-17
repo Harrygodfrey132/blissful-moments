@@ -9,6 +9,7 @@ class Obituary extends Model
     protected $fillable = [
         'page_id',
         'content',
+        'tagline',
     ];
 
     public function page()

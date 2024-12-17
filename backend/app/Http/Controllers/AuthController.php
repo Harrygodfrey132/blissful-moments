@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OTP;
 use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -30,6 +31,12 @@ class AuthController extends Controller
                 'role_id' => User::USER
             ]);
 
+            UserDetail::create([
+                'user_id' => $user->id,
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName']
+            ]);
+
             // Generate a token
             $token = $user->createToken($user->name);
 
@@ -39,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Registration successful',
                 'user' => $user,
-                'isVerified' => false,
+                'isVerified' => $user->is_verified,
                 'token' => $token->plainTextToken,
             ], 200);
         } catch (\Throwable $th) {

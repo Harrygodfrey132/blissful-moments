@@ -1,4 +1,4 @@
-export default function HeroBlog() {  
+export default function HeroBlog() {
   return (
     <section className="relative">
 

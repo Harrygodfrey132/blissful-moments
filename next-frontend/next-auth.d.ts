@@ -4,6 +4,17 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     accessToken?: string;
     isVerified?: boolean;
+    userDetails?: {
+      id: number;
+      first_name: string;
+      last_name: string;
+      country: string | null;
+      street_address: string | null;
+      city: string | null;
+      region: string | null;
+      postal_code: string | null;
+      profile_picture: string | null;
+    };
   }
 
   interface Session extends DefaultSession {
@@ -13,6 +24,17 @@ declare module "next-auth" {
       email: string;
       accessToken?: string;
       isVerified?: boolean;
+      userDetails?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        country: string | null;
+        street_address: string | null;
+        city: string | null;
+        region: string | null;
+        postal_code: string | null;
+        profile_picture: string | null;
+      };
     };
   }
 }
@@ -24,5 +46,16 @@ declare module "next-auth/jwt" {
     email?: string;
     name?: string;
     isVerified?: boolean;
+    userDetails?: {
+      id: number;
+      first_name: string;
+      last_name: string;
+      country: string | null;
+      street_address: string | null;
+      city: string | null;
+      region: string | null;
+      postal_code: string | null;
+      profile_picture: string | null;
+    };
   }
 }

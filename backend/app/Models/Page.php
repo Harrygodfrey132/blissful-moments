@@ -22,14 +22,21 @@ class Page extends Model
         'background_music',
     ];
 
+    protected $with = [
+        'personalQuote',
+        'galleries',
+        'obituaries',
+        'timeline'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function personalQuotes()
+    public function personalQuote()
     {
-        return $this->hasMany(PersonalQuote::class);
+        return $this->hasOne(PersonalQuote::class);
     }
 
     public function galleries()
@@ -39,6 +46,11 @@ class Page extends Model
 
     public function obituaries()
     {
-        return $this->hasMany(Obituary::class);
+        return $this->hasOne(Obituary::class);
+    }
+
+    public function timeline()
+    {
+        return $this->hasOne(Timeline::class);
     }
 }

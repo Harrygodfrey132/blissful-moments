@@ -5,7 +5,6 @@ import { API } from "../../../utils/api";
 import { toast } from "sonner";
 import { JWT } from "next-auth/jwt";
 import { ROUTES } from "../../../utils/routes";
-import { useIsVerified } from "../../../context/IsUserVerifiedContext";
 
 interface ErrorResponse {
   message: string;
@@ -34,17 +33,19 @@ export default NextAuth({
             throw new Error("Invalid credentials or missing response data.");
           }
 
-          const { data: validationResponse } = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}${API.CheckVerification}/${user.id}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+          // Check if userDetails is empty and don't pass it if it is
+          const userDetails =
+            user.user_details && Object.keys(user.user_details).length > 0
+              ? user.user_details
+              : undefined;
 
           return {
             ...user,
             accessToken: token,
-            isVerified: validationResponse?.isVerified,
+            isVerified: user.isVerified,
+            subscriptionStatus: user.subscription_status,
+            userDetails: userDetails,
           };
-
         } catch (error) {
           const axiosError = error as AxiosError<ErrorResponse>;
           toast.error("Authorization failed:");
@@ -64,6 +65,8 @@ export default NextAuth({
         token.userId = user.id || token.userId;
         token.email = user.email || token.email;
         token.name = user.name || token.name;
+        token.isVerified = user.isVerified || token.isVerified;
+        token.userDetails = user.userDetails || token.userDetails;
       }
       return token;
     },
@@ -74,6 +77,8 @@ export default NextAuth({
         name: token.name || "",
         email: token.email || "",
         accessToken: token.accessToken || "",
+        isVerified: token.isVerified || false,
+        userDetails: token.userDetails || undefined,
       };
       return session;
     },

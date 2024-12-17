@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
+import { usePageContext } from "../context/PageContext";
 
 interface DateState {
   day: string;
@@ -10,98 +11,156 @@ interface DateState {
   year: string;
 }
 
-
-export default function PersoanlInfo() {
-
-  const [firstName, setFirstName] = useState<string>("Patrick");
-  const [middleName, setMiddleName] = useState<string>("Bay");
-  const [lastName, setLastName] = useState<string>("Doyle");
-  const [location, setLocation] = useState<string>("Royston, Hertfordshire");
+export default function PersonalInfo() {
+  const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
+  console.log(pageData);
+
+  const [firstName, setFirstName] = useState<string>("");
+  const [middleName, setMiddleName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
 
   const token = session?.user?.accessToken;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-  // States for date of birth and death date
   const [dateOfBirth, setDateOfBirth] = useState<DateState>({
     day: "Day",
     month: "Month",
     year: "Year",
   });
+
   const [deathDate, setDeathDate] = useState<DateState>({
     day: "Day",
     month: "Month",
     year: "Year",
   });
 
+  // Debounce timer states
+  const [dobTimer, setDobTimer] = useState<NodeJS.Timeout | null>(null);
+  const [deathTimer, setDeathTimer] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (pageData) {
+      setFirstName(pageData.first_name || "");
+      setMiddleName(pageData.middle_name || "");
+      setLastName(pageData.last_name || "");
+      setLocation(pageData.address || "");
+
+      // Ensure date_of_birth and death_date are correctly formatted and handled
+      if (pageData.date_of_birth) {
+        const [year, month, day] = pageData.date_of_birth.split("-");
+        if (year && month && day) {
+          setDateOfBirth({ day, month: months[parseInt(month, 10) - 1], year });
+        } else {
+          toast.error("Invalid date_of_birth format", pageData.date_of_birth);
+        }
+      }
+
+      if (pageData.death_date) {
+        const [year, month, day] = pageData.death_date.split("-");
+        if (year && month && day) {
+          setDeathDate({ day, month: months[parseInt(month, 10) - 1], year });
+        } else {
+          toast.error("Invalid death_date format", pageData.death_date);
+        }
+      }
+    }
+  }, [pageData]);
+
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 80 }, (_, index) => currentYear - index);
   const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
-  const days = Array.from({ length: 31 }, (_, index) => index + 1);
+  const days = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
 
-  // Handle input changes for names
-  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
+  const getFormattedDate = (date: DateState) => {
+    const { day, month, year } = date;
+    const monthIndex = months.indexOf(month) + 1;
+    return `${year}-${monthIndex.toString().padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  const handleInputChange = (
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    value: string
+  ) => {
     setter(value);
   };
 
-  // Handle blur event for sending API request
-  const handleBlur = (field: string, value: string) => {
-    setTimeout(async () => {
-      try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.savePersonalDetails}`, { [field]: value }, {
+  const handleBlur = async (field: string, value: string) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}${API.savePersonalDetails}`,
+        { [field]: value },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-        });
-        if (response.status === 200) {
-          toast.success(`${field} updated successfully`);
-        } else {
-          toast.error(`Failed to update ${field}`);
         }
-      } catch (error) {
-        toast.error(`Error updating ${field}`);
+      );
+
+      if (response.status === 200 && response.data?.page_data) {
+        setPageData(response.data.page_data);
+      } else {
+        toast.error(`Failed to update data. Invalid response.`);
       }
-    }, 3000);
+    } catch (error) {
+      toast.error(`Error updating ${field}`);
+    }
   };
 
-  // Handle changes for date of birth and death date
   const handleDateChange = (
     type: "dob" | "death",
     field: "day" | "month" | "year",
     value: string
   ) => {
     if (type === "dob") {
-      setDateOfBirth({ ...dateOfBirth, [field]: value });
+      setDateOfBirth((prev) => ({ ...prev, [field]: value }));
+      if (dobTimer) clearTimeout(dobTimer); // Clear existing debounce timer
+      const timer = setTimeout(() => {
+        if (isCompleteDate(dateOfBirth)) {
+          const formattedDate = getFormattedDate(dateOfBirth);
+          handleBlur("date_of_birth", formattedDate);
+        }
+      }, 1000); // Debounce delay
+      setDobTimer(timer);
     } else {
-      setDeathDate({ ...deathDate, [field]: value });
+      setDeathDate((prev) => ({ ...prev, [field]: value }));
+      if (deathTimer) clearTimeout(deathTimer); // Clear existing debounce timer
+      const timer = setTimeout(() => {
+        if (isCompleteDate(deathDate)) {
+          const formattedDate = getFormattedDate(deathDate);
+          handleBlur("death_date", formattedDate);
+        }
+      }, 1000); // Debounce delay
+      setDeathTimer(timer);
     }
   };
 
-  // Function to handle the submission of the full date (day, month, year)
-  const getFormattedDate = (date: DateState) => {
-    const { day, month, year } = date;
-    return `${day}-${month}-${year}`; // Change this format as needed
+  const isCompleteDate = (date: DateState): boolean => {
+    return date.day !== "Day" && date.month !== "Month" && date.year !== "Year";
   };
 
-  useEffect(() => {
-    if (dateOfBirth.day !== "Day" && dateOfBirth.month !== "Month" && dateOfBirth.year !== "Year") {
-      handleBlur("dateOfBirth", getFormattedDate(dateOfBirth));
-    }
-  }, [dateOfBirth]);
-
-  useEffect(() => {
-    if (deathDate.day !== "Day" && deathDate.month !== "Month" && deathDate.year !== "Year") {
-      handleBlur("deathDate", getFormattedDate(deathDate));
-    }
-  }, [deathDate]);
-
-    // Render fallback if no token is available
-    if (!token) {
-      toast.error("Something went wrong. Unable to save data");
-    }
+  if (!token) {
+    toast.error("User is not authenticated.");
+    return <div>Loading...</div>;
+  }
   return (
     <section className="md:flex gap-12 md:px-12">
       {/* Profile Image Section */}
@@ -247,17 +306,15 @@ export default function PersoanlInfo() {
             <span className="material-icons-outlined absolute left-4 text-blue-900">
               location_on
             </span>
-            <span
+            <input
               className="border-2 p-3 border-gray-300 text-blue-900 pl-12 w-full md:min-w-[690px] focus:outline-none focus:border-blue-600 focus:text-blue-600"
-              contentEditable
-              suppressContentEditableWarning
+              value={location}
+              onChange={(e) => handleInputChange(setLocation, e.target.value)}
+              onBlur={(e) => handleBlur("location", e.target.value)}
               aria-label="Location"
-              onBlur={(e) => handleBlur("location", e.currentTarget.textContent || "")}
-              onInput={(e) => handleInputChange(setLocation, e.currentTarget.textContent || "")}
-            >
-              {location}
-            </span>
+            />
           </div>
+
         </div>
       </div>
     </section>

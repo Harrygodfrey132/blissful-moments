@@ -107,9 +107,9 @@ class UserController extends Controller
         }
     }
 
-    public function checkValidation($userId)
+    public function checkValidation(Request $request)
     {
-        $user = User::find($userId);
+        $user = $request->user();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);

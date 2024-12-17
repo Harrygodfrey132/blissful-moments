@@ -16,7 +16,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col items-start">
       {/* Profile Section */}
-      <div className="flex items-center md:w-[15rem] w-full mb-4 p-4 rounded bg-white shadow">
+      <div className="flex items-center md:w-[17rem] w-full mb-4 p-4 rounded bg-white shadow">
         <img
           src="img/profile-img.png"
           alt="Profile"
@@ -29,7 +29,7 @@ export default function Sidebar() {
       </div>
 
       {/* Sidebar Navigation */}
-      <nav className="md:w-[15rem] w-full shadow bg-white text-gray-800 rounded px-6 py-6">
+      <nav className="md:w-[17rem] w-full shadow bg-white text-gray-800 rounded px-6 py-6">
         <div className="flex flex-col space-y-4">
           {/* Dashboard */}
           <a
