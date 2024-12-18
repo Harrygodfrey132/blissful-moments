@@ -15,7 +15,7 @@ export default function Home() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // For the register page modal
   const [loading, setLoading] = useState(true);
   const [hasPage, setHasPage] = useState<boolean>(false);
-  const { setPageId } = usePageContext();
+  const { setPageId , setPageData } = usePageContext();
   const { data: session, status } = useSession();
 
   const openConfigModal = () => setIsModalOpen(true);
@@ -42,16 +42,16 @@ export default function Home() {
             },
           }
         );
-
         if (response.status === 200) {
           if (response.data.page) {
             setPageId(response.data.page.id);
+            setPageData(response.data.page);
             setHasPage(true);
-            setIsModalOpen(true); // Open configuration modal if page exists
+            setIsModalOpen(false);
           } else {
             toast.info("Welcome! Configure Your Page Settings");
             setHasPage(false);
-            setIsModalOpen(true); // Open configuration modal if no page exists
+            setIsModalOpen(true);
           }
         }
       } catch (error) {

@@ -5,7 +5,7 @@ import { getSession } from "next-auth/react";
 
 const VerifyEmailPage = () => {
   const [loading, setLoading] = useState(true); // Loader state for session check
-  useAuthRedirect(true); // Keep your redirection logic as it is
+  useAuthRedirect(true);
 
   // Session check
   useEffect(() => {

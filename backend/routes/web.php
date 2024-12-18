@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserDetailController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -70,6 +71,8 @@ Route::prefix('admin')->group(function () {
         Route::prefix('QrCode')->name('code.')->group(function () {
             Route::get('/generate', [QRCodeController::class, 'generateQRCode'])->name('generate');
         });
+
+        Route::post('/user/update-details', [UserDetailController::class, 'update']);
     });
 });
 

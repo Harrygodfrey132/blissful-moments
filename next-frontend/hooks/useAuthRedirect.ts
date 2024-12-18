@@ -13,7 +13,7 @@ const useAuthRedirect = (redirectIfLoggedOut = true, requireVerification = false
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return; // Prevent redirecting while loading
+    if (loading) return;
 
     // If the user is not logged in and we need to redirect, do so
     if (!user && redirectIfLoggedOut) {

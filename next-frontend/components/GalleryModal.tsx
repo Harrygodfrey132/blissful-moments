@@ -67,12 +67,11 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
         </button>
         <button
           onClick={() => {
-            console.log("Files to upload:", uploadedImages);
             onRequestClose();
           }}
           className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
         >
-          Upload
+          Add Photos
         </button>
       </div>
     </Modal>

@@ -1,10 +1,28 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
+import { API } from "../utils/api";
+import { useSession } from "next-auth/react";
+import { usePageContext } from "../context/PageContext";
+
+type TimelineEvent = {
+    day: string;
+    month: string;
+    year: string;
+    title: string;
+    description: string;
+    location: string;
+};
+
+type PageData = {
+    tagline: string;
+    events: TimelineEvent[];
+};
 
 export default function Timeline() {
     const [isTimelineEnabled, setIsTimelineEnabled] = useState(true);
-    // Initialize with one event by default
-    const [timelineEvents, setTimelineEvents] = useState<any[]>([
+    const [tagline, setTagline] = useState("A special memory for a special person");
+    const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([
         {
             day: "1",
             month: "1",
@@ -14,10 +32,12 @@ export default function Timeline() {
             location: "Default event location",
         },
     ]);
+    const { data: session } = useSession();
+    const token = session?.user?.accessToken;
 
-    // Function to handle adding a new timeline event
+    // Add a new timeline event
     const addTimelineEvent = () => {
-        const newEvent = {
+        const newEvent: TimelineEvent = {
             day: "1",
             month: "1",
             year: "2024",
@@ -28,17 +48,55 @@ export default function Timeline() {
         setTimelineEvents((prevEvents) => [...prevEvents, newEvent]);
     };
 
-    // Function to handle input changes (editable content)
-    const handleInputChange = (index: number, field: string, value: string) => {
+    // Handle input change for any field in the timeline event
+    const handleInputChange = (index: number, field: keyof TimelineEvent, value: string) => {
         const updatedEvents = [...timelineEvents];
         updatedEvents[index] = { ...updatedEvents[index], [field]: value };
         setTimelineEvents(updatedEvents);
     };
 
-    // Function to delete an event
+    // Delete a timeline event
     const deleteEvent = (index: number) => {
         const updatedEvents = timelineEvents.filter((_, i) => i !== index);
         setTimelineEvents(updatedEvents);
+    };
+
+    // Save data (tagline or full timeline)
+    const saveData = async (data: PageData | { tagline: string }) => {
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}${API.saveTimeline}`,
+                data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                console.log(`${data.hasOwnProperty("tagline") ? "Tagline" : "Timeline"} saved successfully`);
+            } else {
+                console.error("Error saving data:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error saving data:", error);
+        }
+    };
+
+    // Save tagline onBlur (when the user leaves the input)
+    const handleTaglineBlur = () => {
+        saveData({ tagline });
+    };
+
+    // Save the entire timeline (tagline + all events)
+    const saveTimeline = () => {
+        const payload: PageData = {
+            tagline,
+            events: timelineEvents,
+        };
+        saveData(payload);
     };
 
     return (
@@ -50,16 +108,13 @@ export default function Timeline() {
                             }`}
                         contentEditable={isTimelineEnabled}
                         suppressContentEditableWarning
-                        aria-label="Gallery Name"
-                        onInput={(e) =>
-                            console.log("Gallery name:", e.currentTarget.textContent)
-                        }
+                        aria-label="Tagline"
+                        onInput={(e) => setTagline(e.currentTarget.textContent || "")}
+                        onBlur={handleTaglineBlur} // Save tagline on blur
                     >
-                        A special memory for a special person
+                        {tagline}
                     </span>
                 </h1>
-
-                {/* Toggle Switch */}
                 <div className="flex justify-end mb-4">
                     <div className="flex items-center space-x-4">
                         <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
@@ -76,18 +131,13 @@ export default function Timeline() {
                                     }`}
                             ></label>
                         </div>
-                        <span className="text-xl font-semibold text-blue-light-900">
-                            Timeline
-                        </span>
+                        <span className="text-xl font-semibold text-blue-light-900">Timeline</span>
                     </div>
                 </div>
             </div>
 
-            {/* Editable Content */}
             {isTimelineEnabled && (
                 <div>
-                  
-
                     {/* Render Timeline Events */}
                     {timelineEvents.map((event, index) => (
                         <div key={index} className="timeline-event flex gap-4 relative mt-4">
@@ -97,63 +147,53 @@ export default function Timeline() {
                             >
                                 <AiFillDelete className="text-gray-400 cursor-pointer" />
                             </div>
-
-                            {/* Date Section */}
-                            <div className="timeline-date gap-2 items-center space-y-2">
+                            <div className="timeline-date flex flex-col gap-2 items-start space-y-2">
+                                {/* Date Selectors */}
                                 <div>
-                                <select
-                                    className="p-2 w-16 border-2 h-10 border-gray-300 text-blue-900 font-medium"
-                                    value={event.day}
-                                    onChange={(e) =>
-                                        handleInputChange(index, "day", e.target.value)
-                                    }
-                                >
-                                    {Array.from({ length: 31 }, (_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <select
+                                        className="p-2 w-16 border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                        value={event.day}
+                                        onChange={(e) => handleInputChange(index, "day", e.target.value)}
+                                    >
+                                        {Array.from({ length: 31 }, (_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-
-                                <select
-                                    className="p-2 w-28 border-2 h-10 border-gray-300 text-blue-900 font-medium"
-                                    value={event.month}
-                                    onChange={(e) =>
-                                        handleInputChange(index, "month", e.target.value)
-                                    }
-                                >
-                                    <option value="1">January</option>
-                                    <option value="2">February</option>
-                                    <option value="3">March</option>
-                                    <option value="4">April</option>
-                                    <option value="5">May</option>
-                                    <option value="6">June</option>
-                                    <option value="7">July</option>
-                                    <option value="8">August</option>
-                                    <option value="9">September</option>
-                                    <option value="10">October</option>
-                                    <option value="11">November</option>
-                                    <option value="12">December</option>
-                                </select>
-
-                                <select
-                                    className="p-2 w-24 border-2 h-10 border-gray-300 text-blue-900 font-medium"
-                                    value={event.year}
-                                    onChange={(e) =>
-                                        handleInputChange(index, "year", e.target.value)
-                                    }
-                                >
-                                    <option value="">Year</option>
-                                    {Array.from({ length: 100 }, (_, i) => (
-                                        <option key={i} value={2024 - i}>
-                                            {2024 - i}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div>
+                                    <select
+                                        className="p-2 w-28 border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                        value={event.month}
+                                        onChange={(e) => handleInputChange(index, "month", e.target.value)}
+                                    >
+                                        {[
+                                            "January", "February", "March", "April", "May", "June", "July",
+                                            "August", "September", "October", "November", "December",
+                                        ].map((month, idx) => (
+                                            <option key={idx} value={idx + 1}>
+                                                {month}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <select
+                                        className="p-2 w-24 border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                        value={event.year}
+                                        onChange={(e) => handleInputChange(index, "year", e.target.value)}
+                                    >
+                                        {Array.from({ length: 100 }, (_, i) => (
+                                            <option key={i} value={2024 - i}>
+                                                {2024 - i}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
 
-                            {/* Timeline Content Section */}
+                            {/* Event Description and Location */}
                             <div className="border border-dashed border-gray-300 w-full p-2">
                                 <h1 className="text-sm flex gap-4 font-medium mb-2">
                                     <span
@@ -197,13 +237,26 @@ export default function Timeline() {
                             </div>
                         </div>
                     ))}
-                      <button
-                        onClick={addTimelineEvent}
-                        className="px-4 py-2 bg-blue-light-900 mt-10 text-white rounded shadow"
-                    >
-                        Add a Timeline
-                    </button>
+
+                    {/* Buttons for Adding Event and Saving Timeline */}
+                    <div className="flex items-center gap-3 align-middle mt-4">
+                        <button
+                            onClick={addTimelineEvent} // Add a new event
+                            className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
+                        >
+                            Add a Timeline
+                        </button>
+
+                        {/* Save Timeline Button (Only One Save Timeline Button Here) */}
+                        <button
+                            onClick={saveTimeline}
+                            className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
+                        >
+                            Save Timeline
+                        </button>
+                    </div>
                 </div>
+
             )}
         </div>
     );

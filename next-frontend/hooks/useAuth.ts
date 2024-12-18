@@ -55,7 +55,7 @@ const useAuth = (): UseAuthReturn => {
       toast.error("Failed to fetch user data");
     } finally {
       setLoading(false);
-      setIsRequesting(false); // Reset the flag when the request is complete
+      setIsRequesting(false);
     }
   };
 
@@ -63,7 +63,7 @@ const useAuth = (): UseAuthReturn => {
     if (status !== "loading" && session) {
       fetchUser();
     }
-  }, [session, status]); // Re-fetch when session changes
+  }, [session, status]);
 
   useEffect(() => {
   }, [user]);

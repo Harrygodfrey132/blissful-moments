@@ -2,10 +2,26 @@ export const API = {
   Registration: "/register",
   Login: "/login",
   VerifyEmail: "/verify-email",
-  CheckVerification: "/check-validation",
+  CheckVerification: "/user/validation-status/",
   Logout: "/logout",
-  getUser: "/getUser",
-  savePageSettings: "/save/page/settings",
-  checkExistingPage: "/check-existing-page",
-  savePersonalDetails: "/save/page/personal/details",
+  getUser: "/user",
+  updateProfile: "/update-profile",
+
+  // Page management
+  savePageSettings: "/page/settings",
+  checkExistingPage: "/page/exists",
+  savePersonalDetails: "/page/personal-info",
+  checkDomainAvailability: "/page/name-availability",
+  uploadBackgroundImage: "/page/background-image",
+  saveQuote: "/page/quote",
+
+  // Gallery endpoints
+  updateGalleryName: "/gallery/name",
+  uploadGalleryImages: "/gallery/images",
+
+  // Obituary management
+  saveObituary: "/obituary",
+
+  // Timeline management
+  saveTimeline: "/timeline",
 };

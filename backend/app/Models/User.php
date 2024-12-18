@@ -37,6 +37,10 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $with = [
+        'userDetails',
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -127,5 +131,10 @@ class User extends Authenticatable
     public function page(): HasOne
     {
         return $this->hasOne(Page::class, 'user_id');
+    }
+
+    public function userDetails(): HasOne
+    {
+        return $this->hasOne(UserDetail::class, 'user_id');
     }
 }

@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from "react";
-import GalleryModal from "./GalleryModal"; // Import the GalleryModal component
+import GalleryModal from "./GalleryModal";
 import { IoCloseCircle } from "react-icons/io5";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { API } from "../utils/api";
+import { usePageContext } from "../context/PageContext";
+
+interface Image {
+  image_path: string;
+}
 
 const Gallery: React.FC = () => {
   const [isGalleryEnabled, setGalleryIsEnabled] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [galleryName, setCurrentGalleryName] = useState<string>("");
+  const [galleryId, setCurrentGalleryId] = useState<number | null>(null);
+  const { setPageData, pageData } = usePageContext();
+  const { data: session } = useSession();
+  const token = session?.user?.accessToken;
 
   // Prevent body scrolling when modal is open
   useEffect(() => {
@@ -19,20 +33,126 @@ const Gallery: React.FC = () => {
     };
   }, [isModalOpen]);
 
+  useEffect(() => {
+    if (pageData?.galleries?.length > 0) {
+      // Load the first gallery as default
+      setCurrentGalleryName(pageData.galleries[0].gallery_name);
+      setCurrentGalleryId(pageData.galleries[0].id);
+    }
+  }, [pageData]);
+
+  // Function to handle gallery name update
+  const handleGalleryNameBlur = async () => {
+    if (!galleryName.trim()) {
+      toast.error("Gallery name cannot be empty.");
+      return;
+    }
+
+    try {
+      if (!token) {
+        toast.error("You must be logged in to update the gallery.");
+        return;
+      }
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryName}`,
+        { gallery_name: galleryName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setPageData(response.data.page_data);
+        return response.data;
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating gallery name:", error);
+      toast.error("There was an error updating the gallery name.");
+    }
+  };
+
+
+  // Function to handle image upload
+  const handleImageChange = async () => {
+    if (!uploadedImages.length) {
+      toast.error("Please select images to upload.");
+      return;
+    }
+
+    if (!galleryId) {
+      toast.error("Gallery ID is missing. Please select a gallery.");
+      return;
+    }
+
+    try {
+      if (!token) {
+        toast.error("You must be logged in to upload images.");
+        return;
+      }
+
+      const formData = new FormData();
+      uploadedImages.forEach((file) => formData.append("images[]", file));
+      formData.append("gallery_id", String(galleryId));
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.uploadGalleryImages}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Images uploaded successfully!");
+        setUploadedImages([]);
+        setPageData(response.data.page_data);
+      } else {
+        toast.error(response.data.message || "Failed to upload images.");
+      }
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        const { errors, message } = error.response.data;
+        toast.error(message || "There was an error uploading the images.");
+
+        // Optionally display field-specific errors
+        if (errors) {
+          Object.entries(errors).forEach(([field, messages]) => {
+            (messages as string[]).forEach((errorMsg) =>
+              toast.error(`${field}: ${errorMsg}`)
+            );
+          });
+        }
+      } else {
+        console.error("Error uploading images:", error);
+        toast.error("There was an error uploading the images.");
+      }
+    }
+  };
+
+
   return (
     <div>
       <div className="flex justify-between">
         <h1 className="text-2xl flex gap-4 font-medium mb-6 mt-4">
           <span
-            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${
-              isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
-            }`}
-            contentEditable={isGalleryEnabled} // Disable contentEditable when gallery is disabled
+            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
+              }`}
+            contentEditable={isGalleryEnabled}
             suppressContentEditableWarning
             aria-label="Gallery Name"
-            onInput={(e) => console.log("Gallery name:", e.currentTarget.textContent)}
+            onBlur={handleGalleryNameBlur}
+            onInput={(e) => setCurrentGalleryName(e.currentTarget.textContent || "")}
           >
-            Gallery
+            {galleryName}
           </span>
         </h1>
 
@@ -49,9 +169,8 @@ const Gallery: React.FC = () => {
               />
               <label
                 htmlFor="gallery-toggle"
-                className={`toggle-label block overflow-hidden h-6 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
-                  isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
-                }`}
+                className={`toggle-label block overflow-hidden h-6 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                  }`}
               />
             </div>
             <span className="text-xl font-semibold text-blue-light-900">Gallery</span>
@@ -83,6 +202,19 @@ const Gallery: React.FC = () => {
             ))}
           </div>
 
+          {/* Display uploaded images */}
+          <div className="grid grid-cols-3 gap-4 mt-6">
+            {pageData?.galleries?.[0]?.images?.map((image: Image, index: number) => (
+              <div key={index} className="relative">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/${image.image_path}`}
+                  alt={`Image ${index + 1}`}
+                  className="w-full h-32 object-cover rounded shadow"
+                />
+              </div>
+            ))}
+          </div>
+
           {/* Add photo button */}
           <button
             onClick={() => setModalOpen(true)}
@@ -98,6 +230,16 @@ const Gallery: React.FC = () => {
             uploadedImages={uploadedImages}
             setUploadedImages={setUploadedImages}
           />
+
+          {/* Submit Button */}
+          <div className="flex justify-center mt-5">
+            <button
+              onClick={handleImageChange}
+              className="text-base font-medium px-4 py-2 bg-blue-light-900 text-white rounded shadow"
+            >
+              Upload Images
+            </button>
+          </div>
         </>
       )}
     </div>

@@ -1,8 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { API } from "../utils/api";
+import { useSession } from "next-auth/react";
+import { usePageContext } from "../context/PageContext";
 
 const PersonalQuote: React.FC = () => {
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [isEnabled, setIsEnabled] = useState<boolean>(true);
+  const [quote, setQuote] = useState<string>("");
+  const { pageData, setPageData } = usePageContext();
+  const { data: session } = useSession();
+  const token = session?.user?.accessToken;
+
+  useEffect(() => {
+    if (pageData && pageData.personal_quote?.quote) {
+      setQuote(pageData.personal_quote.quote);
+    }
+  }, [pageData]);
+
+  // Function to save the quote to the backend
+  const saveQuote = async () => {
+    if (!token) {
+      toast.error("You must be logged in to save a quote.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.saveQuote}`,
+        { quote: quote },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setPageData(response.data.page_data);
+      } else {
+        toast.error("Failed to save the quote.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while saving the quote.");
+    }
+  };
+
+  // Trigger save when focus is lost (onBlur)
+  const handleBlur = () => {
+    saveQuote();
+  };
 
   return (
     <div>
@@ -19,9 +68,8 @@ const PersonalQuote: React.FC = () => {
             />
             <label
               htmlFor="toggle-switch"
-              className={`toggle-label block overflow-hidden h-6 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
-                isEnabled ? "bg-blue-light-900" : "bg-gray-300"
-              }`}
+              className={`toggle-label block overflow-hidden h-6 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                }`}
             ></label>
           </div>
           <span className="text-xl font-semibold text-blue-light-900">Intro</span>
@@ -38,9 +86,10 @@ const PersonalQuote: React.FC = () => {
               contentEditable
               suppressContentEditableWarning
               aria-label="quote"
-              onInput={(e) => console.log("Quote content:", e.currentTarget.textContent)}
+              onInput={(e) => setQuote(e.currentTarget.textContent || '')}
+              onBlur={handleBlur}
             >
-              The song is ended but the melody lingers on
+              {quote}
             </div>
             <RiDoubleQuotesR className="text-blue-light-900 absolute top-2 right-1" />
           </h2>
