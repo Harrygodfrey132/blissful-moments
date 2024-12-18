@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -8,16 +8,31 @@ import { usePageContext } from "../context/PageContext";
 
 const PersonalQuote: React.FC = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(true);
-  const [quote, setQuote] = useState<string>("");
+  const [quote, setQuote] = useState<string>("Share your best quote here");
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
+  const [keyword, setKeyword] = useState('');
+  // Ref for the contentEditable div
+  const quoteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (pageData && pageData.personal_quote?.quote) {
       setQuote(pageData.personal_quote.quote);
     }
   }, [pageData]);
+
+  //API for suggestions
+  const generateQuote = async () => {
+    if (!keyword) return;
+
+    try {
+      const response = await axios.get(`http://api.quotable.io/random?tags=${keyword}`);
+      setQuote(response.data.content);
+    } catch (error) {
+      console.error('Error fetching quote:', error);
+    }
+  };
 
   // Function to save the quote to the backend
   const saveQuote = async () => {
@@ -50,7 +65,11 @@ const PersonalQuote: React.FC = () => {
 
   // Trigger save when focus is lost (onBlur)
   const handleBlur = () => {
-    saveQuote();
+    if (quoteRef.current) {
+      const updatedQuote = quoteRef.current.textContent || '';
+      setQuote(updatedQuote);
+      saveQuote();
+    }
   };
 
   return (
@@ -86,7 +105,7 @@ const PersonalQuote: React.FC = () => {
               contentEditable
               suppressContentEditableWarning
               aria-label="quote"
-              onInput={(e) => setQuote(e.currentTarget.textContent || '')}
+              ref={quoteRef}
               onBlur={handleBlur}
             >
               {quote}
@@ -95,7 +114,13 @@ const PersonalQuote: React.FC = () => {
           </h2>
 
           <div className="flex justify-center mt-5">
-            <button className="text-base font-medium px-4 py-2 bg-[#F3EAEACC] text-blue-light-900 shadow-md rounded">
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="Enter keyword"
+            />
+            <button onClick={generateQuote} className="text-base font-medium px-4 py-2 bg-[#F3EAEACC] text-blue-light-900 shadow-md rounded">
               Suggest Quote
             </button>
           </div>

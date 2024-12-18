@@ -48,43 +48,47 @@ class PageController extends Controller
         $user = $request->user();
         $page = $user->page;
 
+        // Ensure consistent key names between frontend and validation
         $validated = $request->validate([
             'firstName' => 'nullable|string|max:255',
             'middleName' => 'nullable|string|max:255',
             'lastName' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
-            'dateOfBirth' => 'nullable|date_format:Y-m-d',
-            'deathDate' => 'nullable|date_format:Y-m-d',
-            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date_of_birth' => 'nullable|date_format:Y-m-d',
+            'death_date' => 'nullable|date_format:Y-m-d',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Collecting data for update
         $updateData = collect([
             'first_name' => $validated['firstName'] ?? null,
             'middle_name' => $validated['middleName'] ?? null,
             'last_name' => $validated['lastName'] ?? null,
             'address' => $validated['location'] ?? null,
-            'date_of_birth' => $validated['dateOfBirth'] ?? null,
-            'death_date' => $validated['deathDate'] ?? null,
+            'date_of_birth' => $validated['date_of_birth'] ?? null,
+            'death_date' => $validated['death_date'] ?? null,
         ])->filter()->toArray();
 
-        if ($request->hasFile('profilePicture')) {
-            $file = $request->file('profilePicture');
+        // Handling profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('profile_pictures', $fileName, 'public');
             $fileUrl = url(Storage::url($path));
             $updateData['profile_picture'] = $fileUrl;
         }
 
-        if (!empty($updateData)) {
-            $page->update($updateData);
-        }
+        // Update page information if any data has changed
+        $page->update($updateData);
 
+        // Return response
         return response()->json([
             'status' => 'success',
             'message' => 'Personal information updated successfully.',
             'page_data' => $page->refresh(),
         ]);
     }
+
 
     /**
      * Check if a user has a page.
@@ -133,7 +137,7 @@ class PageController extends Controller
             $file = $request->file('background_image');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('images', $fileName, 'public');
-            $fileUrl = Storage::url($path);
+            $fileUrl = url(Storage::url($path));
 
             $page->update(['background_image' => $fileUrl]);
 

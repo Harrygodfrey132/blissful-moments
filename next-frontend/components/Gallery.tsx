@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import GalleryModal from "./GalleryModal";
 import { IoCloseCircle } from "react-icons/io5";
 import { useSession } from "next-auth/react";
@@ -20,6 +20,7 @@ const Gallery: React.FC = () => {
   const { setPageData, pageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
+  const galleryTaglineRef = useRef<HTMLDivElement>(null);
 
   // Prevent body scrolling when modal is open
   useEffect(() => {
@@ -35,14 +36,12 @@ const Gallery: React.FC = () => {
 
   useEffect(() => {
     if (pageData?.galleries?.length > 0) {
-      // Load the first gallery as default
-      setCurrentGalleryName(pageData.galleries[0].gallery_name);
+      setCurrentGalleryName(pageData.galleries[0].gallery_name || "Gallery");
       setCurrentGalleryId(pageData.galleries[0].id);
     }
   }, [pageData]);
 
-  // Function to handle gallery name update
-  const handleGalleryNameBlur = async () => {
+  const saveGalleryName = async () => {
     if (!galleryName.trim()) {
       toast.error("Gallery name cannot be empty.");
       return;
@@ -74,6 +73,13 @@ const Gallery: React.FC = () => {
     } catch (error) {
       console.error("Error updating gallery name:", error);
       toast.error("There was an error updating the gallery name.");
+    }
+  }
+  // Function to handle gallery name update
+  const handleGalleryNameBlur = () => {
+    if (galleryTaglineRef.current) {
+      setCurrentGalleryName(galleryTaglineRef.current.textContent || "Gallery");
+      saveGalleryName();
     }
   };
 
@@ -150,7 +156,7 @@ const Gallery: React.FC = () => {
             suppressContentEditableWarning
             aria-label="Gallery Name"
             onBlur={handleGalleryNameBlur}
-            onInput={(e) => setCurrentGalleryName(e.currentTarget.textContent || "")}
+            ref={galleryTaglineRef}
           >
             {galleryName}
           </span>

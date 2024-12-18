@@ -10,7 +10,7 @@ export default function TopBanner() {
   const [backgroundImage, setBackgroundImage] = useState<string>('img/top-bg.jpg');
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const { setPageId , setPageData , pageData } = usePageContext();
+  const { setPageData , pageData } = usePageContext();
 
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
@@ -69,7 +69,7 @@ export default function TopBanner() {
         </label>
       </div>
       {/* Toggle Switch */}
-      <div className="flex justify-end absolute p-1 left-2 rounded mb-4 mt-6">
+      {/* <div className="flex justify-end absolute p-1 left-2 rounded mb-4 mt-6">
         <div className="flex items-center space-x-2">
           <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
             <input
@@ -87,7 +87,7 @@ export default function TopBanner() {
           </div>
           <span className="text-lg font-semibold text-blue-light-900">Edit</span>
         </div>
-      </div>
+      </div> */}
       {/* Error Message */}
       {uploadError && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-red-500">
