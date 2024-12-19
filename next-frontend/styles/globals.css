@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Playfair Display font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@media (max-width: 768px) {
+  section {
+    flex-direction: column;
+  }
+
+  .mt-[-80px] {
+    margin-top: 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 
 /* Add this to your global CSS */
 .loader-overlay {

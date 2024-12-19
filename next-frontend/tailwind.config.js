@@ -13,6 +13,10 @@ module.exports = {
         'light-gray' : '#F3EAEA', // Add your custom color here
       },
 
+      fontFamily: {
+        'playfair': ['Playfair Display', 'serif'],
+      },
+
     },
   },
   plugins: [],

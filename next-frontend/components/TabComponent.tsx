@@ -27,7 +27,7 @@ export default function StyledTabs() {
   ];
 
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center mt-5 pt-10 border-t-4">
+    <div className=" min-h-screen flex flex-col items-center mt-5 pt-10 border-t-4">
       {/* Tab Navigation */}
       <TabNavigation tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 

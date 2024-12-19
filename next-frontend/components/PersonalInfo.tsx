@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
+import Cropper from "react-easy-crop";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
 import { format, parse, isValid } from "date-fns";
+import ImageCropperModal from "../components/ImageCropperModal";
 
 interface DateState {
   day: string;
@@ -12,13 +14,16 @@ interface DateState {
   year: string;
 }
 
+
+
+
 export default function PersonalInfo() {
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
 
-  const [firstName, setFirstName] = useState<string>("John");
+  const [firstName, setFirstName] = useState<string>("First Name");
   const [middleName, setMiddleName] = useState<string>("Smith");
-  const [lastName, setLastName] = useState<string>("Doe");
+  const [lastName, setLastName] = useState<string>("Last Name");
   const [location, setLocation] = useState<string>("New York, USA");
 
   const token = session?.user?.accessToken;
@@ -46,9 +51,9 @@ export default function PersonalInfo() {
 
   useEffect(() => {
     if (pageData) {
-      setFirstName(pageData.first_name || "John");
+      setFirstName(pageData.first_name || "First Name");
       setMiddleName(pageData.middle_name || "Smith");
-      setLastName(pageData.last_name || "Doe");
+      setLastName(pageData.last_name || "Last Name");
       setLocation(pageData.address || "New York, USA");
 
       if (pageData.date_of_birth) {
@@ -224,37 +229,25 @@ export default function PersonalInfo() {
   }
 
   return (
-    <section className="md:flex gap-12 md:px-12">
-      <div className="mt-[-80px]">
-        <div className="relative shadow p-2">
+    <section className="flex flex-col md:flex-row  px-4 md:px-12">
+      <div className="mt-[-50px] mx-auto md:mx-0">
+        <div className="relative bg-[#EAEAEA] p-2 w-[352px]">
           <img
-            src={pageData?.profile_picture || "img/profile-img.png"}
+            src={pageData?.profile_picture || "/img/profile-img.png"}
             alt="Profile"
-            className="w-60 h-60 m-auto object-cover shadow"
+            className="w-full h-auto object-cover"
           />
-          <label className="absolute border border-black bottom-4 text-sm md:right-4 right-20 bg-white py-2 pr-8 px-4 cursor-pointer">
-            Change Image
-            <span className="material-icons-outlined absolute ml-1">photo_camera</span>
-            <input
-              type="file"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  handleBlur("profile_picture", file);
-                }
-              }}
-            />
-          </label>
+          <ImageCropperModal
+            onSave={(file) => handleBlur("profile_picture", file.name)}
+          />
         </div>
       </div>
-
-      <div>
+      <div className="flex-1">
         <div className="space-y-4 p-4">
-          <h1 className="md:text-4xl text-2xl flex gap-4 font-medium mb-6 mt-4">
+          <h1 className="text-3xl md:text-5xl  font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
             <div
               ref={dobRef}
-              className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -266,7 +259,7 @@ export default function PersonalInfo() {
             </div>
             <div
               ref={middleNameRef}
-              className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -278,7 +271,7 @@ export default function PersonalInfo() {
             </div>
             <div
               ref={lastNameRef}
-              className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -289,53 +282,53 @@ export default function PersonalInfo() {
               {lastName}
             </div>
           </h1>
-          <div className="md:flex justify-between items-center gap-5">
+          <div className="flex flex-wrap  items-center  font-playfair gap-5">
             {/* Editable Date Fields for Date of Birth */}
-            <div className="md:flex items-center gap-4">
-              <div className="flex items-center space-x-4">
-                <select
-                  className="p-2 w-24 border-2 h-12 border-gray-300 text-blue-900 font-medium"
-                  value={dateOfBirth.day}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "day", e.target.value)}
-                >
-                  <option value="">Day</option>
-                  {days.map((day) => (
-                    <option key={day} value={day}>
-                      {day}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  className="p-2 w-32 border-2 h-12 border-gray-300 text-blue-900 font-medium"
-                  value={dateOfBirth.month}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "month", e.target.value)}
-                >
-                  <option value="">Month</option>
-                  {months.map((month, index) => (
-                    <option key={index} value={month}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  className="p-2 h-12 border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
-                  value={dateOfBirth.year}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "year", e.target.value)}
-                >
-                  <option value="">Year</option>
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="flex flex-wrap gap-4  font-playfair">
+
+              <select
+                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
+                value={dateOfBirth.day}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "day", e.target.value)}
+              >
+                <option value="">Day</option>
+                {days.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="p-2 md:w-36 w-32 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                value={dateOfBirth.month}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "month", e.target.value)}
+              >
+                <option value="">Month</option>
+                {months.map((month, index) => (
+                  <option key={index} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="p-2 h-12 border-2 text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
+                value={dateOfBirth.year}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "year", e.target.value)}
+              >
+                <option value="">Year</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
             </div>
+
 
             {/* Divider Icon */}
             <div>
               <svg
-                className="w-6 h-6 text-blue-900"
+                className="w-6 h-6 text-blue-light-900"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -348,7 +341,7 @@ export default function PersonalInfo() {
             <div className="flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
-                  className="p-2 w-24 border-2 h-12 border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
                   value={deathDate.day}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "day", e.target.value)}
                 >
@@ -360,7 +353,7 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 w-32 border-2 h-12 border-gray-300 text-blue-900 font-medium"
+                  className="p-2 md:w-36 w-32 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
                   value={deathDate.month}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "month", e.target.value)}
                 >
@@ -372,7 +365,7 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 h-12 border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
+                  className="p-2 h-12 border-2 text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
                   value={deathDate.year}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "year", e.target.value)}
                 >
@@ -389,12 +382,12 @@ export default function PersonalInfo() {
 
           {/* Editable Location */}
           <div className="flex items-center relative">
-            <span className="material-icons-outlined absolute left-4 text-blue-900">
+            <span className="material-icons-outlined absolute left-4 text-blue-light-900">
               location_on
             </span>
             <div
               ref={locationRef}
-              className="border-2 p-3 border-gray-300 text-blue-900 pl-12 w-full md:min-w-[690px] focus:outline-none focus:border-blue-600 focus:text-blue-600"
+              className="border-2 p-3 text-xl border-gray-300 text-blue-light-900 pl-12 w-[93%]  focus:outline-none focus:border-blue-600 focus:text-blue-600"
               contentEditable
               suppressContentEditableWarning
               aria-label="Location"

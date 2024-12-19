@@ -6,7 +6,7 @@ import FloatingSettingsButton from "../components/FloatingSettingsButton";
 
 export default function MyPage() {
   return (
-    <div className="!bg-white min-h-screen relative">
+    <div className="bg-[#fafafa] min-h-screen relative">
       {/* Top Banner */}
       <TopBanner />
       
