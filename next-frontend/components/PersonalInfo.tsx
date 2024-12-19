@@ -1,9 +1,10 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect, useRef, ChangeEvent } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
+import { format, parse, isValid } from "date-fns";
 
 interface DateState {
   day: string;
@@ -14,12 +15,11 @@ interface DateState {
 export default function PersonalInfo() {
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
-  console.log(pageData);
 
-  const [firstName, setFirstName] = useState<string>("");
-  const [middleName, setMiddleName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("John");
+  const [middleName, setMiddleName] = useState<string>("Smith");
+  const [lastName, setLastName] = useState<string>("Doe");
+  const [location, setLocation] = useState<string>("New York, USA");
 
   const token = session?.user?.accessToken;
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
@@ -36,31 +36,42 @@ export default function PersonalInfo() {
     year: "Year",
   });
 
-  // Debounce timer states
+  const dobRef = useRef<HTMLDivElement | null>(null);
+  const middleNameRef = useRef<HTMLDivElement | null>(null);
+  const lastNameRef = useRef<HTMLDivElement | null>(null);
+  const locationRef = useRef<HTMLDivElement | null>(null);
+
   const [dobTimer, setDobTimer] = useState<NodeJS.Timeout | null>(null);
   const [deathTimer, setDeathTimer] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (pageData) {
-      setFirstName(pageData.first_name || "");
-      setMiddleName(pageData.middle_name || "");
-      setLastName(pageData.last_name || "");
-      setLocation(pageData.address || "");
+      setFirstName(pageData.first_name || "John");
+      setMiddleName(pageData.middle_name || "Smith");
+      setLastName(pageData.last_name || "Doe");
+      setLocation(pageData.address || "New York, USA");
 
-      // Ensure date_of_birth and death_date are correctly formatted and handled
       if (pageData.date_of_birth) {
-        const [year, month, day] = pageData.date_of_birth.split("-");
-        if (year && month && day) {
-          setDateOfBirth({ day, month: months[parseInt(month, 10) - 1], year });
+        const parsedDate = parse(pageData.date_of_birth, "yyyy-MM-dd", new Date());
+        if (isValid(parsedDate)) {
+          setDateOfBirth({
+            day: format(parsedDate, "dd"),
+            month: format(parsedDate, "MMMM"),
+            year: format(parsedDate, "yyyy"),
+          });
         } else {
           toast.error("Invalid date_of_birth format", pageData.date_of_birth);
         }
       }
 
       if (pageData.death_date) {
-        const [year, month, day] = pageData.death_date.split("-");
-        if (year && month && day) {
-          setDeathDate({ day, month: months[parseInt(month, 10) - 1], year });
+        const parsedDate = parse(pageData.death_date, "yyyy-MM-dd", new Date());
+        if (isValid(parsedDate)) {
+          setDeathDate({
+            day: format(parsedDate, "dd"),
+            month: format(parsedDate, "MMMM"),
+            year: format(parsedDate, "yyyy"),
+          });
         } else {
           toast.error("Invalid death_date format", pageData.death_date);
         }
@@ -95,21 +106,23 @@ export default function PersonalInfo() {
     )}`;
   };
 
-  const handleInputChange = (
-    setter: React.Dispatch<React.SetStateAction<string>>,
-    value: string
-  ) => {
-    setter(value);
-  };
-
-  const handleBlur = async (field: string, value: string) => {
+  const handleBlur = async (field: string, value: string | File) => {
     try {
+      const formData = new FormData();
+
+      if (field === "profile_picture" && value instanceof File) {
+        formData.append("profile_picture", value);
+      } else {
+        formData.append(field, value as string);
+      }
+
+      // Send the request
       const response = await axios.post(
         `${API_URL}${API.savePersonalDetails}`,
-        { [field]: value },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -125,31 +138,49 @@ export default function PersonalInfo() {
     }
   };
 
+
   const handleDateChange = (
     type: "dob" | "death",
     field: "day" | "month" | "year",
     value: string
   ) => {
+    // Update state immediately
     if (type === "dob") {
-      setDateOfBirth((prev) => ({ ...prev, [field]: value }));
-      if (dobTimer) clearTimeout(dobTimer); // Clear existing debounce timer
-      const timer = setTimeout(() => {
-        if (isCompleteDate(dateOfBirth)) {
-          const formattedDate = getFormattedDate(dateOfBirth);
-          handleBlur("date_of_birth", formattedDate);
-        }
-      }, 1000); // Debounce delay
-      setDobTimer(timer);
+      setDateOfBirth((prev) => {
+        const newDate = { ...prev, [field]: value };
+
+        // Clear the previous timer and set a new one
+        if (dobTimer) clearTimeout(dobTimer);
+
+        const timer = setTimeout(() => {
+          // Check if the date is complete and then format it
+          if (isCompleteDate(newDate)) {
+            const formattedDate = getFormattedDate(newDate);
+            handleBlur("date_of_birth", formattedDate); // Send formatted date
+          }
+        }, 1000);
+
+        setDobTimer(timer); // Store the new timer
+        return newDate; // Update the state with the new date
+      });
     } else {
-      setDeathDate((prev) => ({ ...prev, [field]: value }));
-      if (deathTimer) clearTimeout(deathTimer); // Clear existing debounce timer
-      const timer = setTimeout(() => {
-        if (isCompleteDate(deathDate)) {
-          const formattedDate = getFormattedDate(deathDate);
-          handleBlur("death_date", formattedDate);
-        }
-      }, 1000); // Debounce delay
-      setDeathTimer(timer);
+      setDeathDate((prev) => {
+        const newDate = { ...prev, [field]: value };
+
+        // Clear the previous timer and set a new one
+        if (deathTimer) clearTimeout(deathTimer);
+
+        const timer = setTimeout(() => {
+          // Check if the date is complete and then format it
+          if (isCompleteDate(newDate)) {
+            const formattedDate = getFormattedDate(newDate);
+            handleBlur("death_date", formattedDate); // Send formatted date
+          }
+        }, 1000);
+
+        setDeathTimer(timer);
+        return newDate;
+      });
     }
   };
 
@@ -157,73 +188,117 @@ export default function PersonalInfo() {
     return date.day !== "Day" && date.month !== "Month" && date.year !== "Year";
   };
 
+
+  const handleContentEditableChange = (
+    ref: React.RefObject<HTMLDivElement>,
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    value: string
+  ) => {
+    setter(value);
+    if (ref.current) {
+      const selection = window.getSelection();
+      if (selection && ref.current.firstChild) {
+        const range = selection.getRangeAt(0);
+        const cursorPos = range.startOffset;
+
+        setTimeout(() => {
+          if (ref.current) {
+            const el = ref.current;
+            const cursorRange = document.createRange();
+
+            // Only apply cursor position if the first child exists
+            if (el.firstChild) {
+              cursorRange.setStart(el.firstChild, cursorPos); // Reapply cursor position
+              selection.removeAllRanges();
+              selection.addRange(cursorRange);
+            }
+          }
+        }, 0);
+      }
+    }
+  };
+
   if (!token) {
     toast.error("User is not authenticated.");
     return <div>Loading...</div>;
   }
+
   return (
     <section className="md:flex gap-12 md:px-12">
-      {/* Profile Image Section */}
       <div className="mt-[-80px]">
         <div className="relative shadow p-2">
           <img
-            src="img/profile-img.png"
+            src={pageData?.profile_picture || "img/profile-img.png"}
             alt="Profile"
             className="w-60 h-60 m-auto object-cover shadow"
           />
           <label className="absolute border border-black bottom-4 text-sm md:right-4 right-20 bg-white py-2 pr-8 px-4 cursor-pointer">
             Change Image
             <span className="material-icons-outlined absolute ml-1">photo_camera</span>
-            <input type="file" className="hidden" />
+            <input
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  handleBlur("profile_picture", file);
+                }
+              }}
+            />
           </label>
         </div>
       </div>
 
-      {/* Editable Content Section */}
       <div>
         <div className="space-y-4 p-4">
-          {/* Editable Name */}
           <h1 className="md:text-4xl text-2xl flex gap-4 font-medium mb-6 mt-4">
-            <span
+            <div
+              ref={dobRef}
               className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
-              aria-label="First Name"
+              onInput={(e) =>
+                handleContentEditableChange(dobRef, setFirstName, e.currentTarget.textContent || "")
+              }
               onBlur={(e) => handleBlur("firstName", e.currentTarget.textContent || "")}
-              onInput={(e) => handleInputChange(setFirstName, e.currentTarget.textContent || "")}
             >
               {firstName}
-            </span>
-            <span
+            </div>
+            <div
+              ref={middleNameRef}
               className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
-              aria-label="Middle Name"
+              onInput={(e) =>
+                handleContentEditableChange(middleNameRef, setMiddleName, e.currentTarget.textContent || "")
+              }
               onBlur={(e) => handleBlur("middleName", e.currentTarget.textContent || "")}
-              onInput={(e) => handleInputChange(setMiddleName, e.currentTarget.textContent || "")}
-            >{middleName}</span>
-            <span
+            >
+              {middleName}
+            </div>
+            <div
+              ref={lastNameRef}
               className="border border-dashed text-blue-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
-              aria-label="Last Name"
+              onInput={(e) =>
+                handleContentEditableChange(lastNameRef, setLastName, e.currentTarget.textContent || "")
+              }
               onBlur={(e) => handleBlur("lastName", e.currentTarget.textContent || "")}
-              onInput={(e) => handleInputChange(setLastName, e.currentTarget.textContent || "")}
             >
               {lastName}
-            </span>
+            </div>
           </h1>
-
           <div className="md:flex justify-between items-center gap-5">
             {/* Editable Date Fields for Date of Birth */}
             <div className="md:flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
-                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 h-12 border-gray-300 text-blue-900 font-medium"
                   value={dateOfBirth.day}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "day", e.target.value)}
                 >
-                  <option>Day</option>
+                  <option value="">Day</option>
                   {days.map((day) => (
                     <option key={day} value={day}>
                       {day}
@@ -231,11 +306,11 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-32 border-2 h-12 border-gray-300 text-blue-900 font-medium"
                   value={dateOfBirth.month}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "month", e.target.value)}
                 >
-                  <option>Month</option>
+                  <option value="">Month</option>
                   {months.map((month, index) => (
                     <option key={index} value={month}>
                       {month}
@@ -243,11 +318,11 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 border-2 h-12  border-gray-300 text-blue-900 font-medium w-[100px]"
+                  className="p-2 h-12 border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
                   value={dateOfBirth.year}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "year", e.target.value)}
                 >
-                  <option>Year</option>
+                  <option value="">Year</option>
                   {years.map((year) => (
                     <option key={year} value={year}>
                       {year}
@@ -256,18 +331,28 @@ export default function PersonalInfo() {
                 </select>
               </div>
             </div>
+
+            {/* Divider Icon */}
             <div>
-              <svg className="w-6 h-6 text-blue-900" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"></path></svg>
+              <svg
+                className="w-6 h-6 text-blue-900"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
+                <path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"></path>
+              </svg>
             </div>
+
             {/* Editable Date Fields for Death Date */}
             <div className="flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
-                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-24 border-2 h-12 border-gray-300 text-blue-900 font-medium"
                   value={deathDate.day}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "day", e.target.value)}
                 >
-                  <option>Day</option>
+                  <option value="">Day</option>
                   {days.map((day) => (
                     <option key={day} value={day}>
                       {day}
@@ -275,11 +360,11 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 w-24 border-2 h-12  border-gray-300 text-blue-900 font-medium"
+                  className="p-2 w-32 border-2 h-12 border-gray-300 text-blue-900 font-medium"
                   value={deathDate.month}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "month", e.target.value)}
                 >
-                  <option>Month</option>
+                  <option value="">Month</option>
                   {months.map((month, index) => (
                     <option key={index} value={month}>
                       {month}
@@ -287,11 +372,11 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 h-12  border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
+                  className="p-2 h-12 border-2 border-gray-300 text-blue-900 font-medium w-[100px]"
                   value={deathDate.year}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "year", e.target.value)}
                 >
-                  <option>Year</option>
+                  <option value="">Year</option>
                   {years.map((year) => (
                     <option key={year} value={year}>
                       {year}
@@ -301,20 +386,24 @@ export default function PersonalInfo() {
               </div>
             </div>
           </div>
+
           {/* Editable Location */}
           <div className="flex items-center relative">
             <span className="material-icons-outlined absolute left-4 text-blue-900">
               location_on
             </span>
-            <input
+            <div
+              ref={locationRef}
               className="border-2 p-3 border-gray-300 text-blue-900 pl-12 w-full md:min-w-[690px] focus:outline-none focus:border-blue-600 focus:text-blue-600"
-              value={location}
-              onChange={(e) => handleInputChange(setLocation, e.target.value)}
-              onBlur={(e) => handleBlur("location", e.target.value)}
+              contentEditable
+              suppressContentEditableWarning
               aria-label="Location"
-            />
+              onBlur={(e) => handleBlur("location", e.currentTarget.textContent || "")}
+              onInput={(e) => handleContentEditableChange(locationRef, setLocation, e.currentTarget.textContent || "")}
+            >
+              {location}
+            </div>
           </div>
-
         </div>
       </div>
     </section>
