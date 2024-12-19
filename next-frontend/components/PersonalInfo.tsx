@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
-import Cropper from "react-easy-crop";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
@@ -14,17 +13,14 @@ interface DateState {
   year: string;
 }
 
-
-
-
 export default function PersonalInfo() {
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
 
   const [firstName, setFirstName] = useState<string>("First Name");
-  const [middleName, setMiddleName] = useState<string>("Smith");
+  const [middleName, setMiddleName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("Last Name");
-  const [location, setLocation] = useState<string>("New York, USA");
+  const [location, setLocation] = useState<string>("Location");
 
   const token = session?.user?.accessToken;
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
@@ -49,15 +45,113 @@ export default function PersonalInfo() {
   const [dobTimer, setDobTimer] = useState<NodeJS.Timeout | null>(null);
   const [deathTimer, setDeathTimer] = useState<NodeJS.Timeout | null>(null);
 
+  // Extracted common logic into reusable function for clarity
+  const handleDateChange = (
+    type: "dob" | "death",
+    field: "day" | "month" | "year",
+    value: string
+  ) => {
+    const isDob = type === "dob";
+    const dateState = isDob ? dateOfBirth : deathDate;
+    const setDateState = isDob ? setDateOfBirth : setDeathDate;
+
+    const newDate = { ...dateState, [field]: value };
+
+    const timer = setTimeout(() => {
+      if (isCompleteDate(newDate)) {
+        const formattedDate = getFormattedDate(newDate);
+        handleBlur(isDob ? "date_of_birth" : "death_date", formattedDate);
+      }
+    }, 1000);
+
+    isDob ? setDobTimer(timer) : setDeathTimer(timer);
+    setDateState(newDate);
+  };
+
+  const isCompleteDate = (date: DateState): boolean => {
+    return date.day !== "Day" && date.month !== "Month" && date.year !== "Year";
+  };
+
+  const getFormattedDate = (date: DateState) => {
+    const { day, month, year } = date;
+    const monthIndex = months.indexOf(month) + 1;
+    return `${year}-${monthIndex.toString().padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  // Handle Blur Event
+  const handleBlur = async (field: string, value: string | File) => {
+    try {
+      const formData = new FormData();
+      formData.append(field, value as string);
+
+      const response = await axios.post(
+        `${API_URL}${API.savePersonalDetails}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200 && response.data?.page_data) {
+        setPageData(response.data.page_data);
+      } else {
+        toast.error(`Failed to update data. Invalid response.`);
+      }
+    } catch (error) {
+      toast.error(`Error updating ${field}`);
+    }
+  };
+
+  // Handle contentEditable change
+  const handleContentEditableChange = (
+    ref: React.RefObject<HTMLDivElement>,
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    value: string
+  ) => {
+    setter(value);
+
+    if (ref.current) {
+      const selection = window.getSelection();
+      const cursorPos = selection?.getRangeAt(0)?.startOffset || 0;
+
+      // Preserve cursor position
+      setTimeout(() => {
+        if (ref.current && ref.current.firstChild) {
+          const el = ref.current;
+          const cursorRange = document.createRange();
+          const firstChild = el.firstChild;
+
+          // Ensure that firstChild is a Node before using it
+          if (firstChild instanceof Node) {
+            cursorRange.setStart(firstChild, cursorPos);
+            selection?.removeAllRanges();
+            selection?.addRange(cursorRange);
+          }
+        }
+      }, 0);
+
+    }
+  };
+
   useEffect(() => {
     if (pageData) {
-      setFirstName(pageData.first_name || "First Name");
-      setMiddleName(pageData.middle_name || "Smith");
+      setFirstName(pageData.first_name || "");
+      setMiddleName(pageData.middle_name || "");
       setLastName(pageData.last_name || "Last Name");
-      setLocation(pageData.address || "New York, USA");
+      setLocation(pageData.address || "");
 
       if (pageData.date_of_birth) {
-        const parsedDate = parse(pageData.date_of_birth, "yyyy-MM-dd", new Date());
+        const parsedDate = parse(
+          pageData.date_of_birth,
+          "yyyy-MM-dd",
+          new Date()
+        );
         if (isValid(parsedDate)) {
           setDateOfBirth({
             day: format(parsedDate, "dd"),
@@ -102,134 +196,9 @@ export default function PersonalInfo() {
   ];
   const days = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
 
-  const getFormattedDate = (date: DateState) => {
-    const { day, month, year } = date;
-    const monthIndex = months.indexOf(month) + 1;
-    return `${year}-${monthIndex.toString().padStart(2, "0")}-${day.padStart(
-      2,
-      "0"
-    )}`;
-  };
-
-  const handleBlur = async (field: string, value: string | File) => {
-    try {
-      const formData = new FormData();
-
-      if (field === "profile_picture" && value instanceof File) {
-        formData.append("profile_picture", value);
-      } else {
-        formData.append(field, value as string);
-      }
-
-      // Send the request
-      const response = await axios.post(
-        `${API_URL}${API.savePersonalDetails}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200 && response.data?.page_data) {
-        setPageData(response.data.page_data);
-      } else {
-        toast.error(`Failed to update data. Invalid response.`);
-      }
-    } catch (error) {
-      toast.error(`Error updating ${field}`);
-    }
-  };
-
-
-  const handleDateChange = (
-    type: "dob" | "death",
-    field: "day" | "month" | "year",
-    value: string
-  ) => {
-    // Update state immediately
-    if (type === "dob") {
-      setDateOfBirth((prev) => {
-        const newDate = { ...prev, [field]: value };
-
-        // Clear the previous timer and set a new one
-        if (dobTimer) clearTimeout(dobTimer);
-
-        const timer = setTimeout(() => {
-          // Check if the date is complete and then format it
-          if (isCompleteDate(newDate)) {
-            const formattedDate = getFormattedDate(newDate);
-            handleBlur("date_of_birth", formattedDate); // Send formatted date
-          }
-        }, 1000);
-
-        setDobTimer(timer); // Store the new timer
-        return newDate; // Update the state with the new date
-      });
-    } else {
-      setDeathDate((prev) => {
-        const newDate = { ...prev, [field]: value };
-
-        // Clear the previous timer and set a new one
-        if (deathTimer) clearTimeout(deathTimer);
-
-        const timer = setTimeout(() => {
-          // Check if the date is complete and then format it
-          if (isCompleteDate(newDate)) {
-            const formattedDate = getFormattedDate(newDate);
-            handleBlur("death_date", formattedDate); // Send formatted date
-          }
-        }, 1000);
-
-        setDeathTimer(timer);
-        return newDate;
-      });
-    }
-  };
-
-  const isCompleteDate = (date: DateState): boolean => {
-    return date.day !== "Day" && date.month !== "Month" && date.year !== "Year";
-  };
-
-
-  const handleContentEditableChange = (
-    ref: React.RefObject<HTMLDivElement>,
-    setter: React.Dispatch<React.SetStateAction<string>>,
-    value: string
-  ) => {
-    setter(value);
-    if (ref.current) {
-      const selection = window.getSelection();
-      if (selection && ref.current.firstChild) {
-        const range = selection.getRangeAt(0);
-        const cursorPos = range.startOffset;
-
-        setTimeout(() => {
-          if (ref.current) {
-            const el = ref.current;
-            const cursorRange = document.createRange();
-
-            // Only apply cursor position if the first child exists
-            if (el.firstChild) {
-              cursorRange.setStart(el.firstChild, cursorPos); // Reapply cursor position
-              selection.removeAllRanges();
-              selection.addRange(cursorRange);
-            }
-          }
-        }, 0);
-      }
-    }
-  };
-
-  if (!token) {
-    toast.error("User is not authenticated.");
-    return <div>Loading...</div>;
-  }
-
   return (
-    <section className="flex flex-col md:flex-row  px-4 md:px-12">
+    <section className="flex flex-col md:flex-row px-4 md:px-12">
+      {/* Profile Picture */}
       <div className="mt-[-50px] mx-auto md:mx-0">
         <div className="relative bg-[#EAEAEA] p-2 w-[352px]">
           <img
@@ -242,18 +211,27 @@ export default function PersonalInfo() {
           />
         </div>
       </div>
+
+      {/* Editable Form Fields */}
       <div className="flex-1">
         <div className="space-y-4 p-4">
-          <h1 className="text-3xl md:text-5xl  font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
+          <h1 className="text-3xl md:text-5xl font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
+            {/* Editable Fields for Name */}
             <div
               ref={dobRef}
               className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
-                handleContentEditableChange(dobRef, setFirstName, e.currentTarget.textContent || "")
+                handleContentEditableChange(
+                  dobRef,
+                  setFirstName,
+                  e.currentTarget.textContent || ""
+                )
               }
-              onBlur={(e) => handleBlur("firstName", e.currentTarget.textContent || "")}
+              onBlur={(e) =>
+                handleBlur("firstName", e.currentTarget.textContent || "")
+              }
             >
               {firstName}
             </div>
@@ -263,9 +241,15 @@ export default function PersonalInfo() {
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
-                handleContentEditableChange(middleNameRef, setMiddleName, e.currentTarget.textContent || "")
+                handleContentEditableChange(
+                  middleNameRef,
+                  setMiddleName,
+                  e.currentTarget.textContent || ""
+                )
               }
-              onBlur={(e) => handleBlur("middleName", e.currentTarget.textContent || "")}
+              onBlur={(e) =>
+                handleBlur("middleName", e.currentTarget.textContent || "")
+              }
             >
               {middleName}
             </div>
@@ -275,23 +259,32 @@ export default function PersonalInfo() {
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
-                handleContentEditableChange(lastNameRef, setLastName, e.currentTarget.textContent || "")
+                handleContentEditableChange(
+                  lastNameRef,
+                  setLastName,
+                  e.currentTarget.textContent || ""
+                )
               }
-              onBlur={(e) => handleBlur("lastName", e.currentTarget.textContent || "")}
+              onBlur={(e) =>
+                handleBlur("lastName", e.currentTarget.textContent || "")
+              }
             >
               {lastName}
             </div>
           </h1>
-          <div className="flex flex-wrap  items-center  font-playfair gap-5">
-            {/* Editable Date Fields for Date of Birth */}
-            <div className="flex flex-wrap gap-4  font-playfair">
 
+          {/* Date of Birth and Death Date Selectors */}
+          <div className="flex flex-wrap items-center gap-5">
+            {/* Editable Date Fields for Date of Birth */}
+            <div className="flex flex-wrap gap-4 font-playfair">
               <select
                 className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
                 value={dateOfBirth.day}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "day", e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleDateChange("dob", "day", e.target.value)
+                }
               >
-                <option value="">Day</option>
+                <option value="Day">Day</option>
                 {days.map((day) => (
                   <option key={day} value={day}>
                     {day}
@@ -299,11 +292,13 @@ export default function PersonalInfo() {
                 ))}
               </select>
               <select
-                className="p-2 md:w-36 w-32 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                className="p-2 w-32 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
                 value={dateOfBirth.month}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "month", e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleDateChange("dob", "month", e.target.value)
+                }
               >
-                <option value="">Month</option>
+                <option value="Month">Month</option>
                 {months.map((month, index) => (
                   <option key={index} value={month}>
                     {month}
@@ -311,11 +306,13 @@ export default function PersonalInfo() {
                 ))}
               </select>
               <select
-                className="p-2 h-12 border-2 text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
+                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
                 value={dateOfBirth.year}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "year", e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleDateChange("dob", "year", e.target.value)
+                }
               >
-                <option value="">Year</option>
+                <option value="Year">Year</option>
                 {years.map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -323,7 +320,6 @@ export default function PersonalInfo() {
                 ))}
               </select>
             </div>
-
 
             {/* Divider Icon */}
             <div>
@@ -338,48 +334,51 @@ export default function PersonalInfo() {
             </div>
 
             {/* Editable Date Fields for Death Date */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center space-x-4">
-                <select
-                  className="p-2 w-24 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
-                  value={deathDate.day}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "day", e.target.value)}
-                >
-                  <option value="">Day</option>
-                  {days.map((day) => (
-                    <option key={day} value={day}>
-                      {day}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  className="p-2 md:w-36 w-32 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
-                  value={deathDate.month}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "month", e.target.value)}
-                >
-                  <option value="">Month</option>
-                  {months.map((month, index) => (
-                    <option key={index} value={month}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  className="p-2 h-12 border-2 text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
-                  value={deathDate.year}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "year", e.target.value)}
-                >
-                  <option value="">Year</option>
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="flex flex-wrap gap-4 font-playfair">
+              <select
+                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
+                value={deathDate.day}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleDateChange("death", "day", e.target.value)
+                }
+              >
+                <option value="Day">Day</option>
+                {days.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="p-2 w-32 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
+                value={deathDate.month}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleDateChange("death", "month", e.target.value)
+                }
+              >
+                <option value="Month">Month</option>
+                {months.map((month, index) => (
+                  <option key={index} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
+                value={deathDate.year}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleDateChange("death", "year", e.target.value)
+                }
+              >
+                <option value="Year">Year</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-
           {/* Editable Location */}
           <div className="flex items-center relative">
             <span className="material-icons-outlined absolute left-4 text-blue-light-900">
@@ -391,8 +390,16 @@ export default function PersonalInfo() {
               contentEditable
               suppressContentEditableWarning
               aria-label="Location"
-              onBlur={(e) => handleBlur("location", e.currentTarget.textContent || "")}
-              onInput={(e) => handleContentEditableChange(locationRef, setLocation, e.currentTarget.textContent || "")}
+              onBlur={(e) =>
+                handleBlur("location", e.currentTarget.textContent || "")
+              }
+              onInput={(e) =>
+                handleContentEditableChange(
+                  locationRef,
+                  setLocation,
+                  e.currentTarget.textContent || ""
+                )
+              }
             >
               {location}
             </div>

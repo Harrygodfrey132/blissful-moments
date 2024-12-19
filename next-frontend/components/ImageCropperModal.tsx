@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
 import Cropper from "react-easy-crop";
 import { toast } from "react-toastify";
+import { getCroppedImg } from "../utils/cropImage";
+import axios from "axios";
+import { API } from "../utils/api";
+import { usePageContext } from "../context/PageContext";
+import { useSession } from "next-auth/react";
 
 // ImageCropperModal Component
 function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
@@ -9,6 +14,10 @@ function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+  const { pageData, setPageData } = usePageContext();
+  const { data: session } = useSession();
+  const token = session?.user?.accessToken;
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -20,14 +29,44 @@ function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
     }
   };
 
-  const handleSave = () => {
-    // Logic to crop image
+  const handleSave = async () => {
     if (image && croppedAreaPixels) {
-      // Convert cropped image to a file (implement this if necessary)
-      toast.success("Cropped image saved!");
-      setIsModalOpen(false);
+      try {
+        // Get the cropped image as a Blob or File
+        const croppedImage = await getCroppedImg(image, croppedAreaPixels);
+
+        // Create FormData and append the cropped image
+        const formData = new FormData();
+        formData.append("profile_picture", croppedImage);
+
+        // Send the request to save the profile picture
+        const response = await axios.post(
+          `${API_URL}${API.savePersonalDetails}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200 && response.data?.page_data) {
+          setPageData(response.data.page_data);
+          toast.success("Profile picture saved!");
+        } else {
+          toast.error("Failed to save profile picture.");
+        }
+      } catch (error) {
+        toast.error("Error updating profile picture.");
+      } finally {
+        setIsModalOpen(false);
+      }
+    } else {
+      toast.error("Please crop an image before saving.");
     }
   };
+
 
   const handleClose = () => {
     setImage(null);
