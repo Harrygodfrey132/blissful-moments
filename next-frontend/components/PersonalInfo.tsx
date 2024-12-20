@@ -247,7 +247,7 @@ export default function PersonalInfo() {
           <h1 className="text-3xl md:text-5xl  font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
             <div
               ref={dobRef}
-              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -259,7 +259,7 @@ export default function PersonalInfo() {
             </div>
             <div
               ref={middleNameRef}
-              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -271,7 +271,7 @@ export default function PersonalInfo() {
             </div>
             <div
               ref={lastNameRef}
-              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -287,7 +287,7 @@ export default function PersonalInfo() {
             <div className="flex flex-wrap gap-4  font-playfair">
 
               <select
-                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
+                className="p-2 w-24 border-2 bg-[#f8f8f8] h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
                 value={dateOfBirth.day}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "day", e.target.value)}
               >
@@ -299,7 +299,7 @@ export default function PersonalInfo() {
                 ))}
               </select>
               <select
-                className="p-2 md:w-36 w-32 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                className="p-2 md:w-36 w-32 bg-[#f8f8f8] border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
                 value={dateOfBirth.month}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "month", e.target.value)}
               >
@@ -311,7 +311,7 @@ export default function PersonalInfo() {
                 ))}
               </select>
               <select
-                className="p-2 h-12 border-2 text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
+                className="p-2 h-12 border-2 bg-[#f8f8f8] text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
                 value={dateOfBirth.year}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("dob", "year", e.target.value)}
               >
@@ -341,7 +341,7 @@ export default function PersonalInfo() {
             <div className="flex items-center gap-4">
               <div className="flex items-center space-x-4">
                 <select
-                  className="p-2 w-24 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                  className="p-2 w-24 border-2 bg-[#f8f8f8] text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
                   value={deathDate.day}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "day", e.target.value)}
                 >
@@ -353,7 +353,7 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 md:w-36 w-32 border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                  className="p-2 md:w-36 w-32 border-2 bg-[#f8f8f8] text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
                   value={deathDate.month}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "month", e.target.value)}
                 >
@@ -365,7 +365,7 @@ export default function PersonalInfo() {
                   ))}
                 </select>
                 <select
-                  className="p-2 h-12 border-2 text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
+                  className="p-2 h-12 border-2 bg-[#f8f8f8] text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
                   value={deathDate.year}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "year", e.target.value)}
                 >
@@ -387,7 +387,7 @@ export default function PersonalInfo() {
             </span>
             <div
               ref={locationRef}
-              className="border-2 p-3 text-xl border-gray-300 text-blue-light-900 pl-12 w-[93%]  focus:outline-none focus:border-blue-600 focus:text-blue-600"
+              className="border-2 p-3 text-xl border-gray-300 bg-[#f8f8f8] text-blue-light-900 pl-12 w-[93%]  focus:outline-none focus:border-blue-600 focus:text-blue-600"
               contentEditable
               suppressContentEditableWarning
               aria-label="Location"

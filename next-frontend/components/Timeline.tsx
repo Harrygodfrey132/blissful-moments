@@ -102,9 +102,9 @@ export default function Timeline() {
     return (
         <div>
             <div className="flex gap-5 justify-between">
-                <h1 className="text-2xl flex gap-4 font-medium mb-6 mt-4">
+                <h1 className="text-3xl flex gap-4 font-medium mb-6 mt-4">
                     <span
-                        className={`border border-dashed text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
+                        className={`border border-dashed font-playfair bg-[#f8f8f8]  text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
                             }`}
                         contentEditable={isTimelineEnabled}
                         suppressContentEditableWarning
@@ -116,22 +116,22 @@ export default function Timeline() {
                     </span>
                 </h1>
                 <div className="flex justify-end mb-4">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center gap-2 space-x-4">
                         <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
                             <input
                                 type="checkbox"
                                 id="toggle-timeline"
                                 checked={isTimelineEnabled}
                                 onChange={() => setIsTimelineEnabled(!isTimelineEnabled)}
-                                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+                                className="toggle-checkbox absolute block w-8 h-8 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
                             />
                             <label
                                 htmlFor="toggle-timeline"
-                                className={`toggle-label block overflow-hidden h-6 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isTimelineEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                                className={`toggle-label block overflow-hidden h-8 !w-16 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isTimelineEnabled ? "bg-blue-light-900" : "bg-gray-300"
                                     }`}
                             ></label>
                         </div>
-                        <span className="text-xl font-semibold text-blue-light-900">Timeline</span>
+                        <span className="text-3xl font-playfair font-medium text-blue-light-900">Timeline</span>
                     </div>
                 </div>
             </div>
@@ -140,7 +140,7 @@ export default function Timeline() {
                 <div>
                     {/* Render Timeline Events */}
                     {timelineEvents.map((event, index) => (
-                        <div key={index} className="timeline-event flex gap-4 relative mt-4">
+                        <div key={index} className="timeline-event font-playfair flex gap-4 relative mt-4">
                             <div
                                 className="absolute shadow p-1 bg-white rounded right-2 top-2"
                                 onClick={() => deleteEvent(index)}
@@ -151,7 +151,7 @@ export default function Timeline() {
                                 {/* Date Selectors */}
                                 <div>
                                     <select
-                                        className="p-2 w-16 border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                        className="p-2 w-16 border-2 bg-[#f8f8f8]  h-10 border-gray-300 text-blue-900 font-medium"
                                         value={event.day}
                                         onChange={(e) => handleInputChange(index, "day", e.target.value)}
                                     >
@@ -164,7 +164,7 @@ export default function Timeline() {
                                 </div>
                                 <div>
                                     <select
-                                        className="p-2 w-28 border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                        className="p-2 w-28 border-2 bg-[#f8f8f8]  h-10 border-gray-300 text-blue-900 font-medium"
                                         value={event.month}
                                         onChange={(e) => handleInputChange(index, "month", e.target.value)}
                                     >
@@ -180,7 +180,7 @@ export default function Timeline() {
                                 </div>
                                 <div>
                                     <select
-                                        className="p-2 w-24 border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                        className="p-2 w-24 bg-[#f8f8f8]  border-2 h-10 border-gray-300 text-blue-900 font-medium"
                                         value={event.year}
                                         onChange={(e) => handleInputChange(index, "year", e.target.value)}
                                     >
@@ -194,7 +194,7 @@ export default function Timeline() {
                             </div>
 
                             {/* Event Description and Location */}
-                            <div className="border border-dashed border-gray-300 w-full p-2">
+                            <div className="border border-dashed bg-[#f8f8f8]  border-gray-300 w-full p-2">
                                 <h1 className="text-sm flex gap-4 font-medium mb-2">
                                     <span
                                         className="border border-dashed text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
@@ -239,7 +239,7 @@ export default function Timeline() {
                     ))}
 
                     {/* Buttons for Adding Event and Saving Timeline */}
-                    <div className="flex items-center gap-3 align-middle mt-4">
+                    <div className="flex items-center gap-3 font-playfair align-middle mt-4">
                         <button
                             onClick={addTimelineEvent} // Add a new event
                             className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"

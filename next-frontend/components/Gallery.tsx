@@ -1,161 +1,94 @@
 import React, { useState, useEffect, useRef } from "react";
 import GalleryModal from "./GalleryModal";
-import { IoCloseCircle } from "react-icons/io5";
+import { IoCloseCircle, IoEllipsisVertical } from "react-icons/io5";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { API } from "../utils/api";
 import { usePageContext } from "../context/PageContext";
+import FolderManager from "../components/FolderManager";
+import { AiFillDelete } from "react-icons/ai";
 
 interface Image {
   image_path: string;
+}
+
+interface Folder {
+  id: number;
+  name: string;
 }
 
 const Gallery: React.FC = () => {
   const [isGalleryEnabled, setGalleryIsEnabled] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
-  const [galleryName, setCurrentGalleryName] = useState<string>("");
+  const [galleryName, setCurrentGalleryName] = useState<string>("Gallery");
   const [galleryId, setCurrentGalleryId] = useState<number | null>(null);
+  const [folders, setFolders] = useState<Folder[]>([]);
   const { setPageData, pageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
   const galleryTaglineRef = useRef<HTMLDivElement>(null);
+  const [popoverImageIndex, setPopoverImageIndex] = useState<number | null>(null);
+  const [assignFolderPopoverIndex, setAssignFolderPopoverIndex] = useState<number | null>(null);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
 
-  // Prevent body scrolling when modal is open
   useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add("body-lock");
-    } else {
-      document.body.classList.remove("body-lock");
-    }
-    return () => {
-      document.body.classList.remove("body-lock");
+    const fetchFolders = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/folders`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setFolders(response.data.folders || []);
+      } catch (error) {
+        console.error("Error fetching folders:", error);
+        setFolders([]);
+      }
     };
-  }, [isModalOpen]);
+    fetchFolders();
+  }, [token]);
 
   useEffect(() => {
-    if (pageData?.galleries?.length > 0) {
-      setCurrentGalleryName(pageData.galleries[0].gallery_name || "Gallery");
-      setCurrentGalleryId(pageData.galleries[0].id);
-    }
-  }, [pageData]);
-
-  const saveGalleryName = async () => {
-    if (!galleryName.trim()) {
-      toast.error("Gallery name cannot be empty.");
-      return;
-    }
-
-    try {
-      if (!token) {
-        toast.error("You must be logged in to update the gallery.");
-        return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node) &&
+        assignFolderPopoverIndex !== null
+      ) {
+        setAssignFolderPopoverIndex(null);
       }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [assignFolderPopoverIndex]);
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryName}`,
-        { gallery_name: galleryName },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.success) {
-        setPageData(response.data.page_data);
-        return response.data;
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error updating gallery name:", error);
-      toast.error("There was an error updating the gallery name.");
-    }
-  }
-  // Function to handle gallery name update
-  const handleGalleryNameBlur = () => {
-    if (galleryTaglineRef.current) {
-      setCurrentGalleryName(galleryTaglineRef.current.textContent || "Gallery");
-      saveGalleryName();
-    }
+  const deleteImage = (index: number) => {
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+    setPopoverImageIndex(null);
+    toast.success("Image deleted successfully!");
   };
 
-
-  // Function to handle image upload
-  const handleImageChange = async () => {
-    if (!uploadedImages.length) {
-      toast.error("Please select images to upload.");
-      return;
-    }
-
-    if (!galleryId) {
-      toast.error("Gallery ID is missing. Please select a gallery.");
-      return;
-    }
-
-    try {
-      if (!token) {
-        toast.error("You must be logged in to upload images.");
-        return;
-      }
-
-      const formData = new FormData();
-      uploadedImages.forEach((file) => formData.append("images[]", file));
-      formData.append("gallery_id", String(galleryId));
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.uploadGalleryImages}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.success) {
-        toast.success("Images uploaded successfully!");
-        setUploadedImages([]);
-        setPageData(response.data.page_data);
-      } else {
-        toast.error(response.data.message || "Failed to upload images.");
-      }
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        const { errors, message } = error.response.data;
-        toast.error(message || "There was an error uploading the images.");
-
-        // Optionally display field-specific errors
-        if (errors) {
-          Object.entries(errors).forEach(([field, messages]) => {
-            (messages as string[]).forEach((errorMsg) =>
-              toast.error(`${field}: ${errorMsg}`)
-            );
-          });
-        }
-      } else {
-        console.error("Error uploading images:", error);
-        toast.error("There was an error uploading the images.");
-      }
-    }
+  const handleFolderAssignment = (folderId: number) => {
+    toast.success(`Assigned to folder ID: ${folderId}`);
+    setAssignFolderPopoverIndex(null);
   };
-
 
   return (
     <div className="font-playfair">
       <div className="flex justify-between">
         <h1 className="text-2xl flex gap-4 font-medium mb-6 mt-4">
           <span
-            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
-              }`}
+            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${
+              isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
+            }`}
             contentEditable={isGalleryEnabled}
             suppressContentEditableWarning
             aria-label="Gallery Name"
-            onBlur={handleGalleryNameBlur}
+            onBlur={() => setCurrentGalleryName(galleryTaglineRef.current?.textContent || "Gallery")}
             ref={galleryTaglineRef}
           >
             {galleryName}
@@ -175,77 +108,105 @@ const Gallery: React.FC = () => {
               />
               <label
                 htmlFor="gallery-toggle"
-                className={`toggle-label block overflow-hidden h-8 !w-16 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
-                  }`}
+                className={`toggle-label block overflow-hidden h-8 !w-16 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
+                  isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                }`}
               />
             </div>
             <span className="text-3xl font-medium font-playfair text-blue-light-900">Gallery</span>
           </div>
         </div>
       </div>
+      <FolderManager />
 
-      {/* Gallery Content */}
       {isGalleryEnabled && (
         <>
-          {/* Display uploaded images */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-5 mt-6 relative">
             {uploadedImages.map((file, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative group">
                 <img
                   src={URL.createObjectURL(file)}
                   alt={file.name}
-                  className="w-full h-32 object-cover rounded shadow"
+                  className="w-full h-72 object-cover rounded shadow"
                 />
                 <button
-                  onClick={() =>
-                    setUploadedImages((prev) => prev.filter((_, i) => i !== index))
-                  }
-                  className="absolute text-red-500 top-1 right-1 text-2xl"
+                  className="absolute bg-white rounded top-2 p-1 right-2 text-2xl text-gray-500 hover:text-gray-700 focus:outline-none"
+                  onClick={() => setPopoverImageIndex(popoverImageIndex === index ? null : index)}
                 >
-                  <IoCloseCircle />
+                  <IoEllipsisVertical />
                 </button>
+
+                {popoverImageIndex === index && (
+                  <div className="absolute top-12 flex right-2 bg-white shadow-lg rounded p-2 z-10">
+                    <button
+                      onClick={() => deleteImage(index)}
+                      className="flex items-center px-2 py-1 hover:bg-gray-100 w-full"
+                    >
+                      <AiFillDelete className="text-gray-400 cursor-pointer" />
+                   
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPopoverImageIndex(null);
+                        setAssignFolderPopoverIndex(
+                          assignFolderPopoverIndex === index ? null : index
+                        );
+                      }}
+                      className="flex items-center px-2 py-1 hover:bg-gray-100 w-full"
+                    >
+                      <span className="mr-2">📂</span>
+                      {/* <span className="text-sm">Assign Folder</span> */}
+                    </button>
+                  </div>
+                )}
+
+                {assignFolderPopoverIndex === index && (
+                  <div
+                    ref={popoverRef}
+                    className="absolute top-12 right-2 bg-white shadow-lg rounded p-3 z-20 "
+                  >
+                    <div className="text-sm mb-1">Choose folder(s)</div>
+                    <ul>
+                      <li className="flex items-center mb-2">
+                        <input type="checkbox" className="mr-2" />
+                        <label className="text-sm">test1</label>
+                      </li>
+                    </ul>
+
+                    {/* <ul>
+                      {folders.map((folder) => (
+                        <li key={folder.id} className="flex items-center mb-2">
+                          <input
+                            type="checkbox"
+                            id={`folder-${folder.id}`}
+                            className="mr-2"
+                            onChange={() => handleFolderAssignment(folder.id)}
+                          />
+                          <label htmlFor={`folder-${folder.id}`} className="text-sm">
+                            {folder.name}
+                          </label>
+                        </li>
+                      ))}
+                    </ul> */}
+                  </div>
+                )}
               </div>
             ))}
           </div>
 
-          {/* Display uploaded images */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            {pageData?.galleries?.[0]?.images?.map((image: Image, index: number) => (
-              <div key={index} className="relative">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}/${image.image_path}`}
-                  alt={`Image ${index + 1}`}
-                  className="w-full h-32 object-cover rounded shadow"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Add photo button */}
           <button
             onClick={() => setModalOpen(true)}
             className="px-4 py-2 bg-blue-light-900 mt-10 text-lg text-white rounded shadow"
           >
-            Add photo
+            Add a photo
           </button>
 
-          {/* Modal */}
           <GalleryModal
             isOpen={isModalOpen}
             onRequestClose={() => setModalOpen(false)}
             uploadedImages={uploadedImages}
             setUploadedImages={setUploadedImages}
           />
-
-          {/* Submit Button */}
-          <div className="flex justify-center mt-5">
-            <button
-              onClick={handleImageChange}
-              className="text-base font-medium px-4 py-2 bg-blue-light-900 text-white rounded shadow"
-            >
-              Upload Images
-            </button>
-          </div>
         </>
       )}
     </div>

@@ -101,7 +101,7 @@ const PersonalQuote: React.FC = () => {
           <h2 className="text-4xl text-center font-medium font-playfair mb-4 relative">
             <RiDoubleQuotesL className="text-blue-light-900 absolute top-2 left-1" />
             <div
-              className="border w-full border-dashed text-blue-900 px-6 py-5 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border w-full border-dashed bg-[#f8f8f8] text-blue-900 px-6 py-5 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               aria-label="quote"
@@ -116,6 +116,7 @@ const PersonalQuote: React.FC = () => {
           <div className="flex justify-center font-playfair mt-5">
             <input
               type="text"
+              className="border-dashed bg-gray-100 border-gray-300 text-base"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="Enter keyword"
