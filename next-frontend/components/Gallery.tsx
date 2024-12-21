@@ -97,23 +97,23 @@ const Gallery: React.FC = () => {
 
         {/* Toggle switch */}
         <div className="flex justify-end mb-4">
-          <div className="flex items-center gap-2 space-x-4">
+          <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
             <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
               <input
                 type="checkbox"
                 id="gallery-toggle"
                 checked={isGalleryEnabled}
                 onChange={() => setGalleryIsEnabled(!isGalleryEnabled)}
-                className="toggle-checkbox absolute block w-8 h-8 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+                className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label
                 htmlFor="gallery-toggle"
-                className={`toggle-label block overflow-hidden h-8 !w-16 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
+                className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
                   isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
                 }`}
               />
             </div>
-            <span className="text-3xl font-medium font-playfair text-blue-light-900">Gallery</span>
+            <span className="md:text-3xl text-xl font-medium font-playfair text-blue-light-900">Gallery</span>
           </div>
         </div>
       </div>

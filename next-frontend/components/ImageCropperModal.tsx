@@ -37,7 +37,7 @@ function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
   return (
     <div>
       <button
-        className="absolute border font-playfair border-black bottom-4 text-sm md:right-4 right-20 bg-white py-2 pr-8 px-4 cursor-pointer"
+        className="absolute border font-playfair border-black bottom-4 text-sm md:right-4 right-4 bg-white py-2 pr-8 px-4 cursor-pointer"
         onClick={() => document.getElementById("fileInput")?.click()}
       >
         Change Picture

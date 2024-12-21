@@ -230,7 +230,7 @@ export default function PersonalInfo() {
 
   return (
     <section className="flex flex-col md:flex-row  px-4 md:px-12">
-      <div className="mt-[-50px] mx-auto md:mx-0">
+      <div className="mt-[-50px] mx-auto md:mx-0 profile-thumb">
         <div className="relative bg-[#EAEAEA] p-2 w-[352px]">
           <img
             src={pageData?.profile_picture || "/img/profile-img.png"}

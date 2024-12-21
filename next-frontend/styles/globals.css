@@ -9,15 +9,63 @@
     flex-direction: column;
   }
 
-  .mt-[-80px] {
-    margin-top: 0;
+  .profile-thumb{
+    margin-top: -160px;
   }
+
 
   img {
     max-width: 100%;
     height: auto;
   }
+
+  
 }
+
+
+
+/* Ensure the container allows horizontal scrolling */
+.tabs-wrapper {
+  display: flex;
+  overflow-x: auto;  /* Allows horizontal scrolling */
+  -webkit-overflow-scrolling: touch;  /* Smooth scrolling on iOS */
+  padding-bottom: 10px; /* Optional padding for spacing */
+  margin-left: 0; /* Ensure no margin causing the first tab to be hidden */
+ 
+  scrollbar-width: none;  /* Hide scrollbar in Firefox */
+  width: 100%; /* Ensure the container takes full width */
+}
+
+/* Hide scrollbars */
+.tabs-wrapper::-webkit-scrollbar {
+  display: none;  /* Hide scrollbar in WebKit browsers */
+}
+
+/* Style for each tab */
+.tab-button {
+  flex-shrink: 0;  /* Prevent tab from shrinking */
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Active tab style */
+.tab-button.active {
+  background-color: #1d4ed8;
+  color: white;
+}
+
+
+/* Mobile responsive styles */
+@media (max-width: 767px) {
+  .tabs-wrapper {
+    flex-wrap: nowrap;  /* Ensures all tabs stay in a single line */
+  }
+}
+
 
 
 /* Add this to your global CSS */
