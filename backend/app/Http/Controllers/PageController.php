@@ -48,7 +48,7 @@ class PageController extends Controller
         $user = $request->user();
         $page = $user->page;
 
-        // Ensure consistent key names between frontend and validation
+        // Validate the incoming data
         $validated = $request->validate([
             'firstName' => 'nullable|string|max:255',
             'middleName' => 'nullable|string|max:255',
@@ -59,29 +59,35 @@ class PageController extends Controller
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Collecting data for update
-        $updateData = collect([
-            'first_name' => $validated['firstName'] ?? null,
-            'middle_name' => $validated['middleName'] ?? null,
-            'last_name' => $validated['lastName'] ?? null,
-            'address' => $validated['location'] ?? null,
-            'date_of_birth' => $validated['date_of_birth'] ?? null,
-            'death_date' => $validated['death_date'] ?? null,
-        ])->filter()->toArray();
+        // Collect the data to be updated
+        $updateData = [];
 
-        // Handling profile picture upload
-        if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('profile_pictures', $fileName, 'public');
-            $fileUrl = url(Storage::url($path));
-            $updateData['profile_picture'] = $fileUrl;
+        // Dynamically map the validated fields to the model attributes
+        $fieldsMap = [
+            'firstName' => 'first_name',
+            'middleName' => 'middle_name',
+            'lastName' => 'last_name',
+            'location' => 'address',
+            'date_of_birth' => 'date_of_birth',
+            'death_date' => 'death_date',
+        ];
+
+        foreach ($fieldsMap as $requestField => $modelField) {
+            // If the field is set in the validated data, assign it (check if it's an empty string)
+            if (array_key_exists($requestField, $validated)) {
+                $updateData[$modelField] = $validated[$requestField] === '' ? '' : $validated[$requestField];
+            }
         }
 
-        // Update page information if any data has changed
+        // Handling profile picture upload if provided
+        if ($request->hasFile('profile_picture')) {
+            $updateData['profile_picture'] = $this->handleProfilePictureUpload($request);
+        }
+
+        // Update page information with the data that has changed
         $page->update($updateData);
 
-        // Return response
+        // Return response with updated data
         return response()->json([
             'status' => 'success',
             'message' => 'Personal information updated successfully.',
@@ -89,6 +95,14 @@ class PageController extends Controller
         ]);
     }
 
+    // Helper method for handling profile picture upload
+    private function handleProfilePictureUpload(Request $request)
+    {
+        $file = $request->file('profile_picture');
+        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('profile_pictures', $fileName, 'public');
+        return url(Storage::url($path));
+    }
 
     /**
      * Check if a user has a page.
