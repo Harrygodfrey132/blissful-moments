@@ -67,41 +67,46 @@ const Obituary = () => {
 
     return (
         <div>
-            <div className="flex gap-4 justify-between">
-                <h1 className="text-3xl flex gap-4 font-playfair font-medium mb-6 mt-4">
-                    <span
-                        className={`border border-dashed bg-[#f8f8f8]  text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isObituaryEnabled ? "" : "text-gray-500 cursor-not-allowed"}`}
-                        contentEditable={isObituaryEnabled}
-                        suppressContentEditableWarning
-                        aria-label="Obituary Name"
-                        ref={taglineRef}
-                        onBlur={handleTaglineBlur}
-                    >
-                        {tagline}
-                    </span>
-                </h1>
+            <div className="md:flex gap-4 justify-between">
+  {/* Toggle Switch */}
+  <div className="flex md:order-2 order-1 justify-end mb-4">
+    <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
+      <div className="relative inline-block w-12 font-playfair align-middle select-none transition-all duration-200 ease-in">
+        <input
+          type="checkbox"
+          id="toggle-obituary"
+          checked={isObituaryEnabled}
+          onChange={() => setIsObituaryEnabled(!isObituaryEnabled)}
+          className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+        />
+        <label
+          htmlFor="toggle-obituary"
+          className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
+            isObituaryEnabled ? "bg-blue-light-900" : "bg-gray-300"
+          }`}
+        ></label>
+      </div>
+      <span className="md:text-3xl text-xl font-playfair font-medium text-blue-light-900">Obituary</span>
+    </div>
+  </div>
 
-                {/* Toggle Switch */}
-                <div className="flex justify-end mb-4">
-                    <div className="flex items-center gap-2 space-x-4">
-                        <div className="relative inline-block w-12 font-playfair align-middle select-none transition-all duration-200 ease-in">
-                            <input
-                                type="checkbox"
-                                id="toggle-obituary"
-                                checked={isObituaryEnabled}
-                                onChange={() => setIsObituaryEnabled(!isObituaryEnabled)}
-                                className="toggle-checkbox absolute block w-8 h-8 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
-                            />
-                            <label
-                                htmlFor="toggle-obituary"
-                                className={`toggle-label block overflow-hidden h-8 !w-16 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isObituaryEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
-                            >
-                            </label>
-                        </div>
-                        <span className="text-3xl font-playfair font-medium text-blue-light-900">Obituary</span>
-                    </div>
-                </div>
-            </div>
+  {/* Heading */}
+  <h1 className="md:text-3xl md:order-1 order-2 text-2xl flex gap-4 font-playfair font-medium mb-6 mt-4">
+    <span
+      className={`border border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${
+        isObituaryEnabled ? "" : "text-gray-500 cursor-not-allowed"
+      }`}
+      contentEditable={isObituaryEnabled}
+      suppressContentEditableWarning
+      aria-label="Obituary Name"
+      ref={taglineRef}
+      onBlur={handleTaglineBlur}
+    >
+      {tagline}
+    </span>
+  </h1>
+</div>
+
 
             {/* Content (Only visible when enabled) */}
             {isObituaryEnabled && (

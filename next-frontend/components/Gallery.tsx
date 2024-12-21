@@ -117,17 +117,19 @@ const Gallery: React.FC = () => {
           </div>
         </div>
       </div>
-      <FolderManager />
+      
 
       {isGalleryEnabled && (
+        
         <>
-          <div className="grid grid-cols-3 gap-5 mt-6 relative">
+        <FolderManager />
+          <div className="grid md:grid-cols-3 grid-cols-2 gap-5 mt-6 relative">
             {uploadedImages.map((file, index) => (
               <div key={index} className="relative group">
                 <img
                   src={URL.createObjectURL(file)}
                   alt={file.name}
-                  className="w-full h-72 object-cover rounded shadow"
+                  className="w-full md:h-72 h-32 object-cover rounded shadow"
                 />
                 <button
                   className="absolute bg-white rounded top-2 p-1 right-2 text-2xl text-gray-500 hover:text-gray-700 focus:outline-none"

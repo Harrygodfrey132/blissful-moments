@@ -101,40 +101,46 @@ export default function Timeline() {
 
     return (
         <div>
-            <div className="flex gap-5 justify-between">
-                <h1 className="text-3xl flex gap-4 font-medium mb-6 mt-4">
-                    <span
-                        className={`border border-dashed font-playfair bg-[#f8f8f8]  text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
-                            }`}
-                        contentEditable={isTimelineEnabled}
-                        suppressContentEditableWarning
-                        aria-label="Tagline"
-                        onInput={(e) => setTagline(e.currentTarget.textContent || "")}
-                        onBlur={handleTaglineBlur} // Save tagline on blur
-                    >
-                        {tagline}
-                    </span>
-                </h1>
-                <div className="flex justify-end mb-4">
-                    <div className="flex items-center gap-2 space-x-4">
-                        <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
-                            <input
-                                type="checkbox"
-                                id="toggle-timeline"
-                                checked={isTimelineEnabled}
-                                onChange={() => setIsTimelineEnabled(!isTimelineEnabled)}
-                                className="toggle-checkbox absolute block w-8 h-8 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
-                            />
-                            <label
-                                htmlFor="toggle-timeline"
-                                className={`toggle-label block overflow-hidden h-8 !w-16 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isTimelineEnabled ? "bg-blue-light-900" : "bg-gray-300"
-                                    }`}
-                            ></label>
-                        </div>
-                        <span className="text-3xl font-playfair font-medium text-blue-light-900">Timeline</span>
-                    </div>
-                </div>
-            </div>
+            <div className="md:flex gap-5 justify-between">
+  {/* Toggle Switch */}
+  <div className="flex md:order-2 order-1 justify-end mb-4">
+    <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
+      <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
+        <input
+          type="checkbox"
+          id="toggle-timeline"
+          checked={isTimelineEnabled}
+          onChange={() => setIsTimelineEnabled(!isTimelineEnabled)}
+          className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+        />
+        <label
+          htmlFor="toggle-timeline"
+          className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
+            isTimelineEnabled ? "bg-blue-light-900" : "bg-gray-300"
+          }`}
+        ></label>
+      </div>
+      <span className="md:text-3xl text-xl font-playfair font-medium text-blue-light-900">Timeline</span>
+    </div>
+  </div>
+
+  {/* Heading */}
+  <h1 className="md:text-3xl md:order-1 order-2 text-2xl flex gap-4 font-medium mb-6 mt-4">
+    <span
+      className={`border border-dashed font-playfair bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${
+        isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
+      }`}
+      contentEditable={isTimelineEnabled}
+      suppressContentEditableWarning
+      aria-label="Tagline"
+      onInput={(e) => setTagline(e.currentTarget.textContent || "")}
+      onBlur={handleTaglineBlur} // Save tagline on blur
+    >
+      {tagline}
+    </span>
+  </h1>
+</div>
+
 
             {isTimelineEnabled && (
                 <div>

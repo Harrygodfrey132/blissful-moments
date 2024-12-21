@@ -34,6 +34,8 @@ const FolderManager: React.FC = () => {
   };
 
   return (
+
+    
     <div className="font-playfair mb-5">
 
       {/* List of Folders */}

@@ -25,8 +25,8 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      className="bg-white p-8 rounded shadow-lg w-3/6 max-w-5xl mx-auto mt-20"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      className="bg-white p-8 rounded shadow-lg md:w-3/6 max-w-5xl mx-auto"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 m-4 flex items-center justify-center"
     >
       <h2 className="text-xl font-bold mb-4">Upload Images</h2>
       <div
@@ -45,13 +45,13 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
 
       {/* Uploaded Images Preview */}
       {uploadedImages.length > 0 && (
-        <div className="mt-4 grid grid-cols-4 gap-4 overflow-y-auto h-[200px]">
+        <div className="mt-4 grid grid-cols-4 gap-4 overflow-y-auto md:h-[200px]">
           {uploadedImages.map((file, index) => (
             <div key={index} className="relative">
               <img
                 src={URL.createObjectURL(file)}
                 alt={file.name}
-                className="w-full h-32 object-cover rounded shadow"
+                className="w-full md:h-32 h-16 object-cover rounded shadow"
               />
             </div>
           ))}
