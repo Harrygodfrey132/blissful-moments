@@ -197,9 +197,8 @@ export default function PersonalInfo() {
   const days = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
 
   return (
-    <section className="flex flex-col md:flex-row px-4 md:px-12">
-      {/* Profile Picture */}
-      <div className="mt-[-50px] mx-auto md:mx-0">
+    <section className="flex flex-col md:flex-row  px-4 md:px-12 personal-info">
+      <div className="mt-[-50px] mx-auto md:mx-0 profile-thumb">
         <div className="relative bg-[#EAEAEA] p-2 w-[352px]">
           <img
             src={pageData?.profile_picture || "/img/profile-img.png"}
@@ -214,12 +213,11 @@ export default function PersonalInfo() {
 
       {/* Editable Form Fields */}
       <div className="flex-1">
-        <div className="space-y-4 p-4">
-          <h1 className="text-3xl md:text-5xl font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
-            {/* Editable Fields for Name */}
+        <div className="space-y-4 md:p-4 p-0">
+          <h1 className="text-3xl md:text-5xl  font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
             <div
               ref={dobRef}
-              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -237,7 +235,7 @@ export default function PersonalInfo() {
             </div>
             <div
               ref={middleNameRef}
-              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -255,7 +253,7 @@ export default function PersonalInfo() {
             </div>
             <div
               ref={lastNameRef}
-              className="border border-dashed text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+              className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>
@@ -272,136 +270,137 @@ export default function PersonalInfo() {
               {lastName}
             </div>
           </h1>
-
-          {/* Date of Birth and Death Date Selectors */}
-          <div className="flex flex-wrap items-center gap-5">
+          <div className="flex flex-wrap  items-center  font-playfair gap-2">
             {/* Editable Date Fields for Date of Birth */}
-            <div className="flex flex-wrap gap-4 font-playfair">
-              <select
-                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
-                value={dateOfBirth.day}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  handleDateChange("dob", "day", e.target.value)
-                }
-              >
-                <option value="Day">Day</option>
-                {days.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="p-2 w-32 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
-                value={dateOfBirth.month}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  handleDateChange("dob", "month", e.target.value)
-                }
-              >
-                <option value="Month">Month</option>
-                {months.map((month, index) => (
-                  <option key={index} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
-                value={dateOfBirth.year}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  handleDateChange("dob", "year", e.target.value)
-                }
-              >
-                <option value="Year">Year</option>
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="flex flex-wrap gap-2 font-playfair">
 
-            {/* Divider Icon */}
-            <div>
-              <svg
-                className="w-6 h-6 text-blue-light-900"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"></path>
-              </svg>
-            </div>
+              {/* Date of Birth and Death Date Selectors */}
+              <div className="flex flex-wrap items-center gap-5">
+                {/* Editable Date Fields for Date of Birth */}
+                <div className="flex flex-wrap gap-4 font-playfair">
+                  <select
+                    className="p-2 border-2 w-24 bg-[#f8f8f8] h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
+                    value={dateOfBirth.day}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                      handleDateChange("dob", "day", e.target.value)
+                    }
+                  >
+                    <option value="Day">Day</option>
+                    {days.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="p-2 w-36 bg-[#f8f8f8] border-2 text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                    value={dateOfBirth.month}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                      handleDateChange("dob", "month", e.target.value)
+                    }
+                  >
+                    <option value="Month">Month</option>
+                    {months.map((month, index) => (
+                      <option key={index} value={month}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="p-2 w-24 h-12 border-2 bg-[#f8f8f8] text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
+                    value={dateOfBirth.year}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                      handleDateChange("dob", "year", e.target.value)
+                    }
+                  >
+                    <option value="Year">Year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            {/* Editable Date Fields for Death Date */}
-            <div className="flex flex-wrap gap-4 font-playfair">
-              <select
-                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
-                value={deathDate.day}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  handleDateChange("death", "day", e.target.value)
-                }
-              >
-                <option value="Day">Day</option>
-                {days.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="p-2 w-32 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
-                value={deathDate.month}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  handleDateChange("death", "month", e.target.value)
-                }
-              >
-                <option value="Month">Month</option>
-                {months.map((month, index) => (
-                  <option key={index} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="p-2 w-24 border-2 h-12 text-xl border-gray-300 text-blue-light-900 font-medium"
-                value={deathDate.year}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  handleDateChange("death", "year", e.target.value)
-                }
-              >
-                <option value="Year">Year</option>
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          {/* Editable Location */}
-          <div className="flex items-center relative">
-            <span className="material-icons-outlined absolute left-4 text-blue-light-900">
-              location_on
-            </span>
-            <div
-              ref={locationRef}
-              className="border-2 p-3 text-xl border-gray-300 text-blue-light-900 pl-12 w-[93%]  focus:outline-none focus:border-blue-600 focus:text-blue-600"
-              contentEditable
-              suppressContentEditableWarning
-              aria-label="Location"
-              onBlur={(e) =>
-                handleBlur("location", e.currentTarget.textContent || "")
-              }
-              onInput={(e) =>
-                handleContentEditableChange(
-                  locationRef,
-                  setLocation,
-                  e.currentTarget.textContent || ""
-                )
-              }
-            >
-              {location}
+                {/* Divider Icon */}
+                <div>
+                  <svg
+                    className="w-6 h-6 text-blue-light-900"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                  >
+                    <path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"></path>
+                  </svg>
+                </div>
+
+                {/* Editable Date Fields for Death Date */}
+
+                <div className="flex gap-2 items-center">
+                  <select
+                    className="p-2 w-24 border-2 bg-[#f8f8f8] text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                    value={deathDate.day}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "day", e.target.value)}
+                  >
+                    <option value="">Day</option>
+                    {days.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="p-2 w-36 border-2 bg-[#f8f8f8] text-xl h-12 border-gray-300 text-blue-light-900 font-medium"
+                    value={deathDate.month}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "month", e.target.value)}
+                  >
+                    <option value="">Month</option>
+                    {months.map((month, index) => (
+                      <option key={index} value={month}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="p-2 w-24 h-12 border-2 bg-[#f8f8f8] text-xl border-gray-300 text-blue-light-900 font-medium w-[100px]"
+                    value={deathDate.year}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => handleDateChange("death", "year", e.target.value)}
+                  >
+                    <option value="">Year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+              </div>
+              {/* Editable Location */}
+              <div className="flex items-center relative">
+                <span className="material-icons-outlined absolute left-4 text-blue-light-900">
+                  location_on
+                </span>
+                <div
+                  ref={locationRef}
+                  className="border-2 p-3 text-xl md:w-[87%] w-full border-gray-300 bg-[#f8f8f8] text-blue-light-900 pl-12   focus:outline-none focus:border-blue-600 focus:text-blue-600"
+                  contentEditable
+                  suppressContentEditableWarning
+                  aria-label="Location"
+                  onBlur={(e) =>
+                    handleBlur("location", e.currentTarget.textContent || "")
+                  }
+                  onInput={(e) =>
+                    handleContentEditableChange(
+                      locationRef,
+                      setLocation,
+                      e.currentTarget.textContent || ""
+                    )
+                  }
+                >
+                  {location}
+                </div>
+              </div>
             </div>
           </div>
         </div>

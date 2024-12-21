@@ -14,20 +14,28 @@ interface TabNavigationProps {
 const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, setActiveTab }) => {
   const scrollToTab = (tabRef: React.RefObject<HTMLDivElement>, tabIndex: number) => {
     if (tabRef.current) {
-      tabRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      setActiveTab(tabIndex); // Update active tab
+      const offset = 80; 
+      const elementPosition = tabRef.current.getBoundingClientRect().top + window.scrollY;
+      const finalPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: finalPosition,
+        behavior: "smooth", 
+      });
+
+      setActiveTab(tabIndex); 
     }
   };
 
   return (
-    <div className="md:flex sticky top-0 px-4 md:px-0  z-10 bg-gray-50">
+    <div className="tabs-wrapper md:justify-center sticky top-0 md:px-0 z-10 bg-gray-50 sticky">
       {tabs.map((tab, index) => (
         <button
           key={index}
-          className={`px-6 py-2 border  w-full md:w-auto text-2xl font-playfair font-medium transition-all ${
-            activeTab === index + 1 ? "bg-blue-light-900 text-white" : "bg-[#F5F5F5] text-blue-light-900"
+          className={`tab-button px-6 py-2 border md:w-auto md:text-2xl text-xl font-playfair font-medium transition-all ${
+            activeTab === index ? "bg-blue-light-900 text-white" : "bg-[#F5F5F5] text-blue-light-900"
           }`}
-          onClick={() => scrollToTab(tab.ref, index + 1)}
+          onClick={() => scrollToTab(tab.ref, index)}
         >
           {tab.label}
         </button>
