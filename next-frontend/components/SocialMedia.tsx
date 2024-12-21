@@ -15,7 +15,7 @@ const SocialMedia: React.FC = () => {
               id="social-media-toggle"
               checked={isSocialMediaEnabled}
               onChange={() => setIsSocialMediaEnabled(!isSocialMediaEnabled)}
-              className="toggle-checkbox absolute block md:w-8 w-6 w:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+              className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
             />
             <label
               htmlFor="social-media-toggle"
