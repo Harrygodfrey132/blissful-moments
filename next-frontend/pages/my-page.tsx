@@ -9,6 +9,7 @@ import { API } from "../utils/api";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { IoMdArrowBack } from "react-icons/io";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // For the configuration modal
@@ -83,18 +84,24 @@ export default function Home() {
 
         {/* Bottom Strip */}
         <div
-          className={`fixed bottom-0 left-0 w-full bg-stone-100 border-t border-gray-200 shadow-2xl py-3 px-2 flex justify-center items-center z-50 ${
-            isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""
-          }`}
-        >
-          <button
-            onClick={openRegisterModal}
-            className="bg-gray-200 hover:bg-gray-300 text-blue-light-900 border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded"
-          >
-            Register page{" "}
-            <IoIosArrowRoundForward className="group-hover:translate-x-0.5 text-lg transition-transform duration-150 ease-in-out" />
-          </button>
-        </div>
+  className={`fixed bottom-0 left-0 w-full bg-stone-100 border-t border-gray-200 shadow-2xl py-3 px-2 flex justify-between items-center z-50 ${
+    isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""
+  }`}
+>
+  {/* Back to Home aligned to the left */}
+  <button className="text-blue-light-900 font-semibold underline flex gap-2 items-center group">
+  <IoMdArrowBack className="tracking-normal text-light-blue-900 font-medium group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" /> Back to home</button>
+
+  {/* Register button centered */}
+  <button
+    onClick={openRegisterModal}
+    className="bg-gray-200 hover:bg-gray-300 text-blue-light-900 border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded mx-auto"
+  >
+    Register page{" "}
+    <IoIosArrowRoundForward className="group-hover:translate-x-0.5 text-lg transition-transform duration-150 ease-in-out" />
+  </button>
+</div>
+
       </div>
     </Layout>
   );
