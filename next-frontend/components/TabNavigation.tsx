@@ -14,16 +14,16 @@ interface TabNavigationProps {
 const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, setActiveTab }) => {
   const scrollToTab = (tabRef: React.RefObject<HTMLDivElement>, tabIndex: number) => {
     if (tabRef.current) {
-      const offset = 80; 
+      const offset = 80;
       const elementPosition = tabRef.current.getBoundingClientRect().top + window.scrollY;
       const finalPosition = elementPosition - offset;
 
       window.scrollTo({
         top: finalPosition,
-        behavior: "smooth", 
+        behavior: "smooth",
       });
 
-      setActiveTab(tabIndex); 
+      setActiveTab(tabIndex);
     }
   };
 
@@ -32,9 +32,8 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, setActiv
       {tabs.map((tab, index) => (
         <button
           key={index}
-          className={`tab-button px-6 py-2 border md:w-auto md:text-2xl text-xl font-playfair font-medium transition-all ${
-            activeTab === index ? "bg-blue-light-900 text-white" : "bg-[#F5F5F5] text-blue-light-900"
-          }`}
+          className={`tab-button px-6 py-2 border md:w-auto md:text-2xl text-xl font-playfair font-medium transition-all ${activeTab === index ? "bg-blue-light-900 text-white" : "bg-[#F5F5F5] text-blue-light-900"
+            }`}
           onClick={() => scrollToTab(tab.ref, index)}
         >
           {tab.label}

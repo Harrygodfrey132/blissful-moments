@@ -15,7 +15,7 @@ export default function StyledTabs() {
   const tab5Ref = useRef<HTMLDivElement>(null);
   // const tab6Ref = useRef<HTMLDivElement>(null);
 
-  const [activeTab, setActiveTab] = useState<number>(1);
+  const [activeTab, setActiveTab] = useState<number>(0);
 
   const tabs = [
     { label: "Personal Quote", ref: tab1Ref },
@@ -49,14 +49,14 @@ export default function StyledTabs() {
         </div>
 
         {/* Timeline */}
-        <div ref={tab4Ref}>
+        {/* <div ref={tab4Ref}>
           <Timeline />
-        </div>
+        </div> */}
 
         {/* Social Media */}
-        <div ref={tab5Ref}>
+        {/* <div ref={tab5Ref}>
           <SocialMedia />
-        </div>
+        </div> */}
 
         {/* Other Tabs */}
         {/* {[tab6Ref].map((ref, index) => (

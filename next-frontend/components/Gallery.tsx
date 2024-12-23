@@ -33,10 +33,12 @@ const Gallery: React.FC = () => {
   const [assignFolderPopoverIndex, setAssignFolderPopoverIndex] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
 
+  console.log(pageData);
+  
   useEffect(() => {
     const fetchFolders = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/folders`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.folders}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -77,18 +79,43 @@ const Gallery: React.FC = () => {
     setAssignFolderPopoverIndex(null);
   };
 
+  const saveGalleryName = async (galleryTagline: string) => {
+    setCurrentGalleryName(galleryTagline);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryName}`,
+        { gallery_name: galleryTagline },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (response.status === 200) {
+        toast.success("Gallery name saved successfully!");
+        setPageData(response.data?.page_data);
+      } else {
+        throw new Error("Failed to save gallery name.");
+      }
+    } catch (error) {
+      console.error("Error saving gallery name:", error);
+      toast.error("An error occurred while saving the gallery name.");
+    }
+  }
+
   return (
     <div className="font-playfair">
       <div className="flex justify-between">
         <h1 className="text-2xl flex gap-4 font-medium mb-6 mt-4">
           <span
-            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${
-              isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
-            }`}
+            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
+              }`}
             contentEditable={isGalleryEnabled}
             suppressContentEditableWarning
             aria-label="Gallery Name"
-            onBlur={() => setCurrentGalleryName(galleryTaglineRef.current?.textContent || "Gallery")}
+            onBlur={() => saveGalleryName(galleryTaglineRef.current?.textContent || "Gallery")}
             ref={galleryTaglineRef}
           >
             {galleryName}
@@ -108,21 +135,20 @@ const Gallery: React.FC = () => {
               />
               <label
                 htmlFor="gallery-toggle"
-                className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${
-                  isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
-                }`}
+                className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                  }`}
               />
             </div>
             <span className="md:text-3xl text-xl font-medium font-playfair text-blue-light-900">Gallery</span>
           </div>
         </div>
       </div>
-      
+
 
       {isGalleryEnabled && (
-        
+
         <>
-        <FolderManager />
+          <FolderManager />
           <div className="grid md:grid-cols-3 grid-cols-2 gap-5 mt-6 relative">
             {uploadedImages.map((file, index) => (
               <div key={index} className="relative group">
@@ -145,7 +171,7 @@ const Gallery: React.FC = () => {
                       className="flex items-center px-2 py-1 hover:bg-gray-100 w-full"
                     >
                       <AiFillDelete className="text-gray-400 cursor-pointer" />
-                   
+
                     </button>
                     <button
                       onClick={() => {
@@ -157,7 +183,6 @@ const Gallery: React.FC = () => {
                       className="flex items-center px-2 py-1 hover:bg-gray-100 w-full"
                     >
                       <span className="mr-2">📂</span>
-                      {/* <span className="text-sm">Assign Folder</span> */}
                     </button>
                   </div>
                 )}
@@ -174,22 +199,6 @@ const Gallery: React.FC = () => {
                         <label className="text-sm">test1</label>
                       </li>
                     </ul>
-
-                    {/* <ul>
-                      {folders.map((folder) => (
-                        <li key={folder.id} className="flex items-center mb-2">
-                          <input
-                            type="checkbox"
-                            id={`folder-${folder.id}`}
-                            className="mr-2"
-                            onChange={() => handleFolderAssignment(folder.id)}
-                          />
-                          <label htmlFor={`folder-${folder.id}`} className="text-sm">
-                            {folder.name}
-                          </label>
-                        </li>
-                      ))}
-                    </ul> */}
                   </div>
                 )}
               </div>

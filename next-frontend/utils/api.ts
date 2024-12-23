@@ -24,4 +24,12 @@ export const API = {
 
   // Timeline management
   saveTimeline: "/timeline",
+
+  // Gallery Management
+  folders: "/folders",
+  createFolder : "/gallery/folders/save",
+  deleteFolder: "/gallery/folder/delete",
+
+  //Payment Management
+  createPaymentIntent : "/create-payment-intent"
 };

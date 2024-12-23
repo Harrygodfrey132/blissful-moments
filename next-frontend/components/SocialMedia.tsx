@@ -47,7 +47,7 @@ const SocialMedia: React.FC = () => {
 
       <button
 
-        className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
+        className="px-4 py-2 bg-blue-light-900 text-white rounded shadow mb-32"
       >
         Copy link
       </button>
