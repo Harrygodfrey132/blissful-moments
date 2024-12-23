@@ -4,7 +4,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 
 // Public Routes
@@ -26,17 +28,29 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/name-availability', [PageController::class, 'checkPageNameAvailability']);
         Route::post('/background-image', [PageController::class, 'uploadBackgroundImage']);
         Route::post('/quote', [PageController::class, 'saveQuote']);
+        Route::post('/uploadBackgroundMusic', [PageController::class, 'uploadBackgroundMusic']);
     });
 
     // Gallery endpoints
     Route::prefix('gallery')->group(function () {
-        Route::post('/name', [PageController::class, 'saveGalleryName']);
-        Route::post('/images', [PageController::class, 'uploadGalleryImages']);
+        Route::post('/name', [GalleryController::class, 'saveGalleryName']);
+        Route::post('/images', [GalleryController::class, 'uploadGalleryImages']);
+        Route::post('/folders/save', [GalleryController::class, 'updateCreateFolderName']);
+        Route::delete('/folder/delete/{id}', [GalleryController::class, 'destroyFolder']);
+        Route::patch('/images/{id}/assign-folder', [GalleryController::class, 'assignFolder']);
+        Route::get('/galleries/{id}/unassigned-images', [GalleryController::class, 'unassignedImages']);
     });
 
     // Obituary management
     Route::post('/obituary', [PageController::class, 'saveObituary']);
 
-    //Timeline Event Management
+    // Timeline Event Management
     Route::post('/timeline', [PageController::class, 'saveTimeline']);
+
+    // Gallery Management
+
+    //Payment Management
+
 });
+Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+Route::get('/folders', [GalleryController::class, 'folders']);

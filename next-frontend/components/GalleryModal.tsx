@@ -1,6 +1,11 @@
 import React from "react";
 import Modal from "react-modal";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import { usePageContext } from "../context/PageContext";
+import { API } from "../utils/api";
 
 interface GalleryModalProps {
   isOpen: boolean;
@@ -21,6 +26,34 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
     },
   });
 
+  const { data: session } = useSession();
+  const {pageData , setPageData} = usePageContext();
+  const galleryId = pageData.gallery?.id || '';
+  const uploadImages = async () => {
+    const formData = new FormData();
+    uploadedImages.forEach((file) => formData.append('images[]', file));
+
+    // Add gallery and folder info if available
+    formData.append('gallery_id', String(galleryId));
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.uploadGalleryImages}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success('Images uploaded successfully!');
+        onRequestClose();
+      }
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      toast.error('An error occurred while uploading images.');
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -31,9 +64,8 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
       <h2 className="text-xl font-bold mb-4">Upload Images</h2>
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded p-6 text-center ${
-          isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-300 bg-gray-50"
-        }`}
+        className={`border-2 border-dashed rounded p-6 text-center ${isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-300 bg-gray-50"
+          }`}
       >
         <input {...getInputProps()} />
         {isDragActive ? (
@@ -66,9 +98,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
           Cancel
         </button>
         <button
-          onClick={() => {
-            onRequestClose();
-          }}
+          onClick={uploadImages}
           className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
         >
           Add Photos

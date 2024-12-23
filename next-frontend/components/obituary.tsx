@@ -57,7 +57,7 @@ const Obituary = () => {
   };
 
   return (
-    <div>
+    <div className="mb-32">
       <div className="md:flex gap-4 justify-between">
         <div className="flex md:order-2 order-1 justify-end mb-4">
           <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
@@ -98,7 +98,7 @@ const Obituary = () => {
 
       {isObituaryEnabled && (
         <textarea
-          rows={10}
+          rows={5}
           className="text-gray-600 font-playfair text-lg w-full mb-4 border border-gray-300 border-dashed p-2 focus:outline-none focus:border-gray-500"
           value={content}
           onChange={(e) => setContent(e.target.value)}

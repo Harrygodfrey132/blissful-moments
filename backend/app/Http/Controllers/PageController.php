@@ -173,67 +173,22 @@ class PageController extends Controller
      */
     public function saveQuote(Request $request)
     {
-        $validated = $request->validate([
-            'quote' => 'required|string|max:255',
-        ]);
-
-        $page = $request->user()->page;
-        $page->personalQuote()->updateOrCreate([], ['quote' => $validated['quote']]);
-
-        return response()->json([
-            'message' => 'Quote saved successfully.',
-            'page_data' => $page,
-        ]);
-    }
-
-    /**
-     * Save or update gallery name for the user's page.
-     */
-    public function saveGalleryName(Request $request)
-    {
-        $validated = $request->validate([
-            'gallery_name' => 'required|string|max:255',
-        ]);
-
-        $page = $request->user()->page;
-        $gallery = $page->galleries()->firstOrCreate([], ['gallery_name' => $validated['gallery_name']]);
-
-        $gallery->update(['gallery_name' => $validated['gallery_name']]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Gallery name updated successfully.',
-            'page_data' => $page,
-        ]);
-    }
-
-    /**
-     * Upload images to the user's gallery.
-     */
-    public function uploadGalleryImages(Request $request)
-    {
-        $validated = $request->validate([
-            'images.*' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'gallery_id' => 'required|integer|exists:galleries,id',
-        ]);
-
-        $uploadedImages = collect($request->file('images'))->map(function ($image) use ($validated) {
-            $fileName = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('gallery', $fileName, 'public');
-            $fileUrl = Storage::url($path);
-
-            return GalleryImage::create([
-                'gallery_id' => $validated['gallery_id'],
-                'image_path' => $fileUrl,
-                'caption' => null,
+        try {
+            $validated = $request->validate([
+                'quote' => 'required|string|max:255',
             ]);
-        });
+            $page = $request->user()->page;
+            $page->personalQuote()->updateOrCreate([], ['quote' => $validated['quote']]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Images uploaded successfully.',
-            'uploaded_images' => $uploadedImages,
-        ], 200);
+            return response()->json([
+                'message' => 'Quote saved successfully.',
+                'page_data' => $page->refresh(),
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -329,15 +284,48 @@ class PageController extends Controller
                 }
 
                 DB::commit();  // Commit transaction
-                return response()->json(['message' => 'Timeline created successfully', 'timeline' => $timeline], 200);
+                return response()->json([
+                    'message' => 'Timeline created successfully',
+                    'timeline' => $timeline,
+                    'page_data' => $page->refresh()
+                ], 200);
             }
         } catch (\Exception $e) {
-            DB::rollBack();  // Rollback transaction on error
+            DB::rollBack();
             Log::error('Error occurred while saving timeline: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error occurred while saving timeline',
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function uploadBackgroundMusic(Request $request)
+    {
+        $validatedData = $request->validate([
+            'background_music' => 'required|file|mimes:mp3,wav,ogg|max:10240',
+        ]);
+
+        $user = $request->user();
+        $page = $user->page;
+
+        if ($request->hasFile('background_music')) {
+            $file = $request->file('background_music');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('background_music', $fileName, 'public');
+            $fileUrl = url(Storage::url($path));
+
+            $page->update(['background_music' => $fileUrl]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Background image uploaded successfully.',
+                'page_data' => $page->refresh(),
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No file uploaded.',
+        ], 400);
     }
 }

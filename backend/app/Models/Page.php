@@ -24,7 +24,7 @@ class Page extends Model
 
     protected $with = [
         'personalQuote',
-        'galleries',
+        'gallery',
         'obituaries',
         'timeline'
     ];
@@ -39,9 +39,9 @@ class Page extends Model
         return $this->hasOne(PersonalQuote::class);
     }
 
-    public function galleries()
+    public function gallery()
     {
-        return $this->hasMany(Gallery::class);
+        return $this->hasOne(Gallery::class);
     }
 
     public function obituaries()

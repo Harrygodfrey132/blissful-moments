@@ -14,6 +14,7 @@ export const API = {
   checkDomainAvailability: "/page/name-availability",
   uploadBackgroundImage: "/page/background-image",
   saveQuote: "/page/quote",
+  uploadBackgroundMusic: "/page/uploadBackgroundMusic",
 
   // Gallery endpoints
   updateGalleryName: "/gallery/name",
@@ -32,4 +33,5 @@ export const API = {
 
   //Payment Management
   createPaymentIntent : "/create-payment-intent"
+
 };

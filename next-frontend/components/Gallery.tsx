@@ -34,23 +34,6 @@ const Gallery: React.FC = () => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
 
   console.log(pageData);
-  
-  useEffect(() => {
-    const fetchFolders = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.folders}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setFolders(response.data.folders || []);
-      } catch (error) {
-        console.error("Error fetching folders:", error);
-        setFolders([]);
-      }
-    };
-    fetchFolders();
-  }, [token]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -190,14 +173,16 @@ const Gallery: React.FC = () => {
                 {assignFolderPopoverIndex === index && (
                   <div
                     ref={popoverRef}
-                    className="absolute top-12 right-2 bg-white shadow-lg rounded p-3 z-20 "
+                    className="absolute top-12 right-2 bg-white shadow-lg rounded p-3 z-20"
                   >
                     <div className="text-sm mb-1">Choose folder(s)</div>
                     <ul>
-                      <li className="flex items-center mb-2">
-                        <input type="checkbox" className="mr-2" />
-                        <label className="text-sm">test1</label>
-                      </li>
+                      {pageData.gallery.folders.map((folder: Folder, folderIndex: number) => (
+                        <li key={folderIndex} className="flex items-center mb-2">
+                          <input type="checkbox" className="mr-2" />
+                          <label className="text-sm">{folder.name}</label>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 )}

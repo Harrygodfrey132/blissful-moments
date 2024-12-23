@@ -11,6 +11,7 @@ class GalleryImage extends Model
 
     protected $fillable = [
         'gallery_id',
+        'folder_id',
         'image_path',
         'caption'
     ];
@@ -18,5 +19,10 @@ class GalleryImage extends Model
     public function gallery(): BelongsTo
     {
         return $this->belongsTo(Gallery::class);
+    }
+
+    public function folder()
+    {
+        return $this->belongsTo(GalleryFolder::class);
     }
 }

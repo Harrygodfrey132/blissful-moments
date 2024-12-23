@@ -12,7 +12,8 @@ class Gallery extends Model
     ];
 
     protected $with = [
-        'images'
+        'images',
+        'folders'
     ];
 
     public function page()
@@ -23,5 +24,10 @@ class Gallery extends Model
     public function images()
     {
         return $this->hasMany(GalleryImage::class, 'gallery_id');
+    }
+
+    public function folders()
+    {
+        return $this->hasMany(GalleryFolder::class);
     }
 }
