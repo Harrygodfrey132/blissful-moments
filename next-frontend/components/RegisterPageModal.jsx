@@ -5,15 +5,10 @@ import { API } from "../utils/api";
 import { usePageContext } from "../context/PageContext";
 import { useSession } from "next-auth/react";
 
-interface RegisterPageModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const RegisterPageModal: React.FC<RegisterPageModalProps> = ({ isOpen, onClose }) => {
+const RegisterPageModal = ({ isOpen, onClose }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState(null);
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
@@ -46,7 +41,7 @@ const RegisterPageModal: React.FC<RegisterPageModalProps> = ({ isOpen, onClose }
     }
   }, [stripe, elements, token]);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!stripe || !elements || !clientSecret) {
@@ -64,19 +59,23 @@ const RegisterPageModal: React.FC<RegisterPageModalProps> = ({ isOpen, onClose }
         },
       });
 
-      // Check if there is an error
-      if (response.error) {
-        console.error(response.error.message);
-        alert("Payment failed: " + response.error.message);
-      }
-      // Check if paymentIntent is available and successful
-      else if (response.paymentIntent?.status === "succeeded") {
+      if (isPaymentError(response)) {
+        // Handle error response
+        console.error(response.error?.message);
+        alert("Payment failed: " + (response.error?.message ?? "Unknown error"));
+      } else if (response.paymentIntent?.status === "succeeded") {
+        // Handle successful payment
         alert("Payment successful!");
       }
     } catch (error) {
       console.error("Error confirming payment:", error);
       alert("There was an issue processing your payment. Please try again.");
     }
+  };
+
+  // Check if the response contains an error
+  const isPaymentError = (response) => {
+    return 'error' in response;
   };
 
   if (!isOpen || !clientSecret) return null;
