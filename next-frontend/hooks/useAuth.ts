@@ -25,22 +25,19 @@ const useAuth = (): UseAuthReturn => {
   const { data: session, status } = useSession(); // Access session state
 
   const fetchUser = async () => {
-    if (isRequesting || !session) return; // Prevent multiple requests if one is in progress and session exists
+    if (isRequesting || !session || status !== "authenticated") return; // Ensure no concurrent requests and session is authenticated
 
     setIsRequesting(true);
     setLoading(true);
 
     try {
-      // Ensure session is fully loaded
-      if (status === "loading") return;
+      const token = session.user?.accessToken;
 
-      // Check if session contains valid user data
-      if (!session?.user || !session.user.accessToken) {
+      // Ensure token exists before proceeding
+      if (!token) {
         router.push("/login");
         return;
       }
-
-      const token = session.user.accessToken;
 
       // Fetch user data from API
       const response = await axios.post(
@@ -61,22 +58,19 @@ const useAuth = (): UseAuthReturn => {
     }
   };
 
-  // Fetch user data only if it's not already loaded and session is available
   useEffect(() => {
-    if (status === "loading") return; // Wait for session to load
-
-    // Proceed if authenticated and user data is not already available
+    // Wait for the session status to resolve
     if (status === "authenticated" && !user) {
       fetchUser();
     }
-  }, [session, status, user]); // Re-fetch user data if session changes and user data is not already loaded
+  }, [session, status, user]);
 
-  // Reset user data when the session is not available or session is expired
   useEffect(() => {
-    if (status === "unauthenticated" || !session) {
-      setUser(null); // Clear user data on session logout or unauthenticated state
+    // Clear user state when the session is unauthenticated
+    if (status === "unauthenticated") {
+      setUser(null);
     }
-  }, [session, status]);
+  }, [status]);
 
   return { user, loading, setUser, fetchUser };
 };
