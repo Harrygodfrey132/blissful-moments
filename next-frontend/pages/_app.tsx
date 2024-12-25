@@ -12,7 +12,7 @@ import { PageProvider } from '../context/PageContext';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & { Component: { noLayout?: boolean } }) {
   useEffect(() => {
-    Aos.init({ duration: 1000 }); // Initialize AOS with custom settings (e.g., duration of 1000ms)
+    Aos.init({ duration: 1000 });
   }, []);
 
   return (

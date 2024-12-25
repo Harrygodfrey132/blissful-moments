@@ -3,29 +3,37 @@ import { useRouter } from "next/router";
 import useAuth from "./useAuth";
 import { ROUTES } from "../utils/routes";
 
-// Define the User interface
-interface User {
-  isVerified: boolean;
-}
-
-const useAuthRedirect = (redirectIfLoggedOut = true, requireVerification = false) => {
+const useAuthRedirect = (
+  redirectIfLoggedOut = true,
+  requireVerification = false
+) => {
   const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
+    // Don't do anything if session is loading
     if (loading) return;
-
-    // If the user is not logged in and we need to redirect, do so
-    if (!user && redirectIfLoggedOut) {
-      router.push(ROUTES.Login);
+    console.log(user);
+    
+    // Prevent unnecessary redirects or re-fetching if already verified
+    if (user?.isVerified) {
+      // If the user is verified and trying to access /verify-email, redirect to dashboard
+      if (router.pathname === ROUTES.Verify_Email) {
+        router.push(ROUTES.Dashboard); // Redirect to dashboard or another page for verified users
+      }
       return;
     }
 
-    // If the user is not verified and we require verification, do so
+    // If user is not verified, redirect to email verification page
     if (user && !user.isVerified && requireVerification) {
       router.push(ROUTES.Verify_Email);
     }
-  }, [user, loading, router, redirectIfLoggedOut, requireVerification]); // Add dependencies for accurate effect triggers
+
+    // If user is logged out, redirect to login page
+    if (!user && redirectIfLoggedOut) {
+      router.push(ROUTES.Login);
+    }
+  }, [user, loading, router, redirectIfLoggedOut, requireVerification]);
 };
 
 export default useAuthRedirect;

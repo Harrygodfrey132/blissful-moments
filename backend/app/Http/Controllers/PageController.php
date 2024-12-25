@@ -113,7 +113,7 @@ class PageController extends Controller
 
         return response()->json([
             'page' => $page,
-        ], $page ? 200 : 404);
+        ],200);
     }
 
     /**
@@ -212,97 +212,9 @@ class PageController extends Controller
         ], 200);
     }
 
-    /**
-     * Save or update timeline event details for the user's page.
-     */
-    public function saveTimeline(Request $request)
-    {
-        try {
-            DB::beginTransaction();  // Start transaction
-
-            $validatedData = $request->validate([
-                'tagline' => 'nullable|string|max:255',
-                'events' => 'required|array',
-                'events.*.day' => 'required|integer|min:1|max:31',
-                'events.*.month' => 'required|integer|min:1|max:12',
-                'events.*.year' => 'required|integer',
-                'events.*.title' => 'required|string|max:255',
-                'events.*.description' => 'required|string',
-                'events.*.location' => 'required|string|max:255',
-            ]);
-
-            $user = $request->user();
-            $page = $user->page;
-
-            // Check if the page already has a timeline
-            $timeline = $page->timeline()->first();
-
-            if ($timeline) {
-                // If timeline exists, update the existing timeline's tagline
-                $timeline->update([
-                    'tagline' => $validatedData['tagline'],
-                ]);
-
-                // Delete old events for this timeline
-                $timeline->events()->delete();
-
-                // Create new events
-                foreach ($validatedData['events'] as $eventData) {
-                    // Combine day, month, and year into a single date (event_date)
-                    $eventDate = sprintf('%04d-%02d-%02d', $eventData['year'], $eventData['month'], $eventData['day']);
-
-                    // Create new event under this timeline
-                    $timeline->events()->create([
-                        'event_date' => $eventDate,
-                        'title' => $eventData['title'],
-                        'description' => $eventData['description'],
-                        'location' => $eventData['location'],
-                    ]);
-                }
-
-                DB::commit();  // Commit transaction
-                return response()->json(['message' => 'Timeline updated successfully', 'timeline' => $timeline], 200);
-            } else {
-                // If no timeline exists, create a new timeline for the page
-                $timeline = Timeline::create([
-                    'page_id' => $page->id,
-                    'tagline' => $validatedData['tagline'],
-                ]);
-
-                // Create new events under this new timeline
-                foreach ($validatedData['events'] as $eventData) {
-                    // Combine day, month, and year into a single date (event_date)
-                    $eventDate = sprintf('%04d-%02d-%02d', $eventData['year'], $eventData['month'], $eventData['day']);
-
-                    // Create new event under this timeline
-                    $timeline->events()->create([
-                        'event_date' => $eventDate,
-                        'title' => $eventData['title'],
-                        'description' => $eventData['description'],
-                        'location' => $eventData['location'],
-                    ]);
-                }
-
-                DB::commit();  // Commit transaction
-                return response()->json([
-                    'message' => 'Timeline created successfully',
-                    'timeline' => $timeline,
-                    'page_data' => $page->refresh()
-                ], 200);
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error occurred while saving timeline: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Error occurred while saving timeline',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
     public function uploadBackgroundMusic(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'background_music' => 'required|file|mimes:mp3,wav,ogg|max:10240',
         ]);
 

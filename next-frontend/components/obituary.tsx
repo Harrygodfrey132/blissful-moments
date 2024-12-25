@@ -57,7 +57,7 @@ const Obituary = () => {
   };
 
   return (
-    <div className="mb-32">
+    <div>
       <div className="md:flex gap-4 justify-between">
         <div className="flex md:order-2 order-1 justify-end mb-4">
           <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">

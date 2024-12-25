@@ -155,7 +155,7 @@ const Gallery: React.FC = () => {
       name: file.name,
       isUploaded: true,
     })),
-    ...(pageData.gallery?.images || []).map((image: GalleryImage) => ({
+    ...(pageData?.gallery?.images || []).map((image: GalleryImage) => ({
       id: image.id,
       src: image.image_path,
       name: `Image ${image.id}`,

@@ -49,14 +49,14 @@ export default function StyledTabs() {
         </div>
 
         {/* Timeline */}
-        {/* <div ref={tab4Ref}>
+        <div ref={tab4Ref}>
           <Timeline />
-        </div> */}
+        </div>
 
         {/* Social Media */}
-        {/* <div ref={tab5Ref}>
+        <div ref={tab5Ref}>
           <SocialMedia />
-        </div> */}
+        </div>
 
         {/* Other Tabs */}
         {/* {[tab6Ref].map((ref, index) => (

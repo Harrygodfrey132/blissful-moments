@@ -2,21 +2,20 @@ import { useState, useEffect } from "react";
 import VerifyEmailForm from "../components/VerifyEmailForm";
 import useAuthRedirect from "../hooks/useAuthRedirect";
 import { getSession } from "next-auth/react";
+import useAuth from "../hooks/useAuth";
 
 const VerifyEmailPage = () => {
-  const [loading, setLoading] = useState(true); // Loader state for session check
+  const [loading, setLoading] = useState(true);
   useAuthRedirect(true);
 
   // Session check
+  const { user, loading: userLoading } = useAuth();
+
   useEffect(() => {
-    const checkSession = async () => {
-      const session = await getSession();
-      if (session) {
-        setLoading(false); // Hide loader once session is checked
-      }
-    };
-    checkSession();
-  }, []); // Empty dependency array to run only once when the component mounts
+    if (!userLoading) {
+      setLoading(false); // Hide loader once session is checked
+    }
+  }, [user, userLoading]);
 
   return (
     <div className="flex bg-white min-h-full flex-1">

@@ -28,7 +28,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
 
   const { data: session } = useSession();
   const {pageData , setPageData} = usePageContext();
-  const galleryId = pageData.gallery?.id || '';
+  const galleryId = pageData?.gallery?.id || '';
   const uploadImages = async () => {
     const formData = new FormData();
     uploadedImages.forEach((file) => formData.append('images[]', file));
@@ -46,6 +46,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
 
       if (response.status === 200) {
         toast.success('Images uploaded successfully!');
+        setPageData(response.data.page_data);
         onRequestClose();
       }
     } catch (error) {

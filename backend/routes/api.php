@@ -7,7 +7,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserProfileController;
 
 // Public Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -17,9 +19,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     // Auth-related endpoints
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/user', [AuthController::class, 'getUser']);
+    Route::post('/user', [AuthController::class, 'getUser']);
     Route::post('/verify-email', [AuthController::class, 'validateOTP']);
     Route::post('/user/validation-status', [UserController::class, 'checkValidation']);
+    Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
+
+
     // Page settings and management
     Route::prefix('page')->group(function () {
         Route::post('/settings', [PageController::class, 'storePageSettings']);
@@ -47,7 +52,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/obituary', [PageController::class, 'saveObituary']);
 
     // Timeline Event Management
-    Route::post('/timeline', [PageController::class, 'saveTimeline']);
+    Route::post('/timeline', [TimelineController::class, 'saveTimeline']);
+    Route::delete('/delete/timeline/event', [TimelineController::class, 'deleteTimeline']);
 
     // Gallery Management
 

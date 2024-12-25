@@ -33,18 +33,18 @@ export default NextAuth({
             throw new Error("Invalid credentials or missing response data.");
           }
 
-          // Check if userDetails is empty and don't pass it if it is
+          // Ensure userDetails is either undefined or a valid object
           const userDetails =
             user.user_details && Object.keys(user.user_details).length > 0
               ? user.user_details
-              : undefined;
+              : undefined; // Set to undefined instead of null
 
           return {
             ...user,
             accessToken: token,
             isVerified: user.isVerified,
             subscriptionStatus: user.subscription_status,
-            userDetails: userDetails,
+            userDetails: userDetails, // userDetails will now be undefined if not available
           };
         } catch (error) {
           const axiosError = error as AxiosError<ErrorResponse>;
@@ -78,7 +78,7 @@ export default NextAuth({
         email: token.email || "",
         accessToken: token.accessToken || "",
         isVerified: token.isVerified || false,
-        userDetails: token.userDetails || undefined,
+        userDetails: token.userDetails || undefined, // Ensure it's either undefined or a valid object
       };
       return session;
     },

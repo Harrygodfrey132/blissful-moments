@@ -25,6 +25,7 @@ export const API = {
 
   // Timeline management
   saveTimeline: "/timeline",
+  deleteTimelineEvent : "/delete/timeline/event",
 
   // Gallery Management
   folders: "/folders",

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { useSession } from "next-auth/react"; // Import the useSession hook
+import { useSession } from "next-auth/react";
 import { API } from "../utils/api";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 interface User {
   isVerified: boolean;
@@ -20,27 +20,29 @@ interface UseAuthReturn {
 const useAuth = (): UseAuthReturn => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isRequesting, setIsRequesting] = useState<boolean>(false); // New state to track API requests
+  const [isRequesting, setIsRequesting] = useState<boolean>(false); // Track API requests
   const router = useRouter();
-  const { data: session, status } = useSession(); // Access the session
+  const { data: session, status } = useSession(); // Access session state
 
   const fetchUser = async () => {
-    if (isRequesting) return; // Prevent multiple requests if one is already in progress
+    if (isRequesting || !session) return; // Prevent multiple requests if one is in progress and session exists
 
-    setIsRequesting(true); // Set requesting flag to true
+    setIsRequesting(true);
     setLoading(true);
 
     try {
-      // Ensure the session is loaded and contains the token
-      if (status === "loading") return; // Wait for session to load
-      if (!session || !session.user || !session.user.accessToken) {
+      // Ensure session is fully loaded
+      if (status === "loading") return;
+
+      // Check if session contains valid user data
+      if (!session?.user || !session.user.accessToken) {
         router.push("/login");
         return;
       }
 
-      const token = session.user.accessToken; // Retrieve the token from the session
+      const token = session.user.accessToken;
 
-      // Make the API call to fetch the user data
+      // Fetch user data from API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.getUser}`,
         { email: session.user.email },
@@ -59,14 +61,22 @@ const useAuth = (): UseAuthReturn => {
     }
   };
 
+  // Fetch user data only if it's not already loaded and session is available
   useEffect(() => {
-    if (status !== "loading" && session) {
+    if (status === "loading") return; // Wait for session to load
+
+    // Proceed if authenticated and user data is not already available
+    if (status === "authenticated" && !user) {
       fetchUser();
     }
-  }, [session, status]);
+  }, [session, status, user]); // Re-fetch user data if session changes and user data is not already loaded
 
+  // Reset user data when the session is not available or session is expired
   useEffect(() => {
-  }, [user]);
+    if (status === "unauthenticated" || !session) {
+      setUser(null); // Clear user data on session logout or unauthenticated state
+    }
+  }, [session, status]);
 
   return { user, loading, setUser, fetchUser };
 };

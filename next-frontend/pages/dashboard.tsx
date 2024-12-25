@@ -3,10 +3,11 @@ import Sidebar from '../components/Sidebar'
 import { useEffect, useState } from 'react';
 import { LinkIcon, ClipboardDocumentIcon } from '@heroicons/react/24/solid'; // Importing Heroicons
 import { MdOutlineQrCodeScanner } from "react-icons/md";
+import useAuthRedirect from '../hooks/useAuthRedirect';
 
 
 const DashboardPage = () => {
-  // useAuthRedirect(true, true);
+  useAuthRedirect(true, true);
   const [publicUrl, setPublicUrl] = useState('');
   const [copied, setCopied] = useState(false); // Tracks whether the URL was copied
   const handleCopy = () => {

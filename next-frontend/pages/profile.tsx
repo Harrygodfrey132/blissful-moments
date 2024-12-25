@@ -9,6 +9,8 @@ import axios from 'axios';
 import { API } from '../utils/api';
 import Link from 'next/link';
 import { ROUTES } from '../utils/routes';
+import { toast } from 'react-toastify';
+import { usePageContext } from '../context/PageContext';
 
 
 interface Country {
@@ -23,15 +25,30 @@ const ProfilePage = () => {
     const { data: session } = useSession();
     const token = session?.user?.accessToken;
     const [countries, setCountries] = useState<Country[]>([]);
-
+    const { pageData, setPageData } = usePageContext();
     useEffect(() => {
         const fetchCountries = async () => {
-            try {
-                const response = await fetch("https://restcountries.com/v3.1/all");
-                const data = await response.json();
-                setCountries(data);
-            } catch (error) {
-                console.error("Error fetching countries:", error);
+            const MAX_RETRIES = 3;
+            let attempt = 0;
+            let success = false;
+
+            while (attempt < MAX_RETRIES && !success) {
+                try {
+                    const response = await fetch("https://restcountries.com/v3.1/all");
+                    if (!response.ok) {
+                        throw new Error(`Error fetching countries: ${response.statusText}`);
+                    }
+                    const data = await response.json();
+                    setCountries(data);
+                    success = true;
+                } catch (error) {
+                    attempt++;
+                    console.error(`Attempt ${attempt} failed:`, error);
+                    if (attempt === MAX_RETRIES) {
+                        setCountries([]);
+                        console.error("Failed to fetch countries after 3 attempts.");
+                    }
+                }
             }
         };
         fetchCountries();
@@ -72,18 +89,23 @@ const ProfilePage = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.updateProfile}`, {
-            formData: formData,
+
+        if (!token) {
+            toast.error("You are not authenticated.");
+            return;
+        }
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.updateProfile}`, formData, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
         });
 
         if (response.status === 200) {
-            alert("Profile updated successfully!");
+            toast.success("Profile updated successfully!");
+            setPageData(response.data.user_data)
         } else {
-            alert("Failed to update profile.");
+            toast.error("Failed to update profile.");
         }
     };
     return (

@@ -33,7 +33,7 @@ const SocialMedia: React.FC = () => {
           <span
             className={`border border-dashed bg-[#f8f8f8] font-playfair  w-full text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isSocialMediaEnabled ? "" : "text-gray-500 cursor-not-allowed"
               }`}
-            contentEditable={isSocialMediaEnabled} // Disable contentEditable when timeline is disabled
+            contentEditable={isSocialMediaEnabled}
             suppressContentEditableWarning
             aria-label="Gallery Name"
             onInput={(e) =>

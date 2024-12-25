@@ -22,6 +22,7 @@ class AuthController extends Controller
                 'confirmPassword' => 'required|same:password',
                 'termsAndCondition' => 'required',
             ]);
+
             $name = $data['firstName'] . ' ' . $data['lastName'];
 
             $user = User::create([
