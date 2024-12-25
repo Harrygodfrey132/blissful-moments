@@ -57,6 +57,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
+      ariaHideApp={false}
       onRequestClose={onRequestClose}
       className="bg-white p-8 rounded shadow-lg md:w-3/6 max-w-5xl mx-auto"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 m-4 flex items-center justify-center"

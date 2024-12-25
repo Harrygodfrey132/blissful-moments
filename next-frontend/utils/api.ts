@@ -28,10 +28,10 @@ export const API = {
 
   // Gallery Management
   folders: "/folders",
-  createFolder : "/gallery/folders/save",
+  createFolder: "/gallery/folders/save",
   deleteFolder: "/gallery/folder/delete",
+  deleteImage: "/gallery/delete/image",
 
   //Payment Management
-  createPaymentIntent : "/create-payment-intent"
-
+  createPaymentIntent: "/create-payment-intent",
 };

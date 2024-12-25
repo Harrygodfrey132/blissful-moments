@@ -38,7 +38,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/folders/save', [GalleryController::class, 'updateCreateFolderName']);
         Route::delete('/folder/delete/{id}', [GalleryController::class, 'destroyFolder']);
         Route::patch('/images/{id}/assign-folder', [GalleryController::class, 'assignFolder']);
+        Route::patch('/images/{id}/unassign-folder', [GalleryController::class, 'unassignFolder']);
         Route::get('/galleries/{id}/unassigned-images', [GalleryController::class, 'unassignedImages']);
+        Route::delete('/delete/image', [GalleryController::class, 'destroyImage']);
     });
 
     // Obituary management

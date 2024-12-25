@@ -72,9 +72,6 @@ const ProfilePage = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Submitted Data:", formData);
-
-        // Add your API call here, for example:
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.updateProfile}`, {
             formData: formData,
             headers: {
