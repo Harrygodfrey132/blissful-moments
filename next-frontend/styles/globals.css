@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.edit-profile button {
+  margin: 0 auto;
+  right: 14px;
+  bottom: 16px;
+  height: 43px;
+  width: 150px
+}
+
 /* Import Playfair Display font */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 @media (max-width: 768px) {

@@ -56,7 +56,7 @@ const DashboardPage = () => {
       </nav>
 
 
-      <div className='md:flex gap-10 px-16 w-full  mb-10'>
+      <div className='md:flex gap-10 md:px-16 px-4 w-full  mb-10'>
         <Sidebar />
         <main className='w-full'>
           <div>
@@ -64,12 +64,25 @@ const DashboardPage = () => {
               <h1 className="text-lg font-semibold text-blue-light-900 mb-5 border-b-2 border-blue-600 inline-block">
                 Dashboard
               </h1>
-              <div className='flex gap-5 justify-between'>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className='bg-gray-50 shadow p-4 rounded mt-5 mb-5'>
+                <div className='md:flex justify-between'>
+                <div>
+                <div className='font-semibold'>Current Subscription Plan  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Active</span></div>
+                <div className='text-blue-600 font-bold'>Yearly</div>
+                </div>
+                <div className='md:text-right mt-5 md:mt-0'>
+                <div className='text-yellow-500'>Subscription expierd on 5th Feb 2025</div>
+                <button className='bg-blue-600 text-white text-center p-1.5 text-xs px-2 rounded'>Upgrade</button>
+                </div>
+                </div>
+              </div>
+              <div className='bg-gray-50 shadow p-4 rounded  mb-10'>
+              <div className='md:flex gap-5 justify-between'>
+                <div className="md:flex items-center gap-4 text-sm text-gray-600">
                   {/* Link Icon */}
-                  <div className="flex items-center gap-2">
+                  <div className="md:flex items-center gap-2">
                     <LinkIcon className="w-5 h-5 text-blue-600" aria-hidden="true" />
-                    <span>Public URL:</span>
+                    <span className='font-semibold'>Public URL:</span>
                     <a
                       href={publicUrl}
                       className="text-blue-600 underline hover:text-blue-800"
@@ -89,11 +102,14 @@ const DashboardPage = () => {
                     {copied ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
-                <div>
-                  <MdOutlineQrCodeScanner className='text-5xl' />
+                <div className='mt-5 md:mt-0'>
+                  <MdOutlineQrCodeScanner className='text-7xl' />
                   <a href='#' className='text-blue-600 underline hover:text-blue-80'>Download QR Code</a>
                 </div>
               </div>
+              </div>
+
+             
             </section>
           </div>
         </main>

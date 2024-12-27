@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { ROUTES } from '../utils/routes';
 import { toast } from 'react-toastify';
 import { usePageContext } from '../context/PageContext';
+import ImageCropperModal from "../components/ImageCropperModal";
+import { UserIcon } from '@heroicons/react/24/outline';
 
 
 interface Country {
@@ -156,19 +158,23 @@ const ProfilePage = () => {
                                             </p>
                                         </div>
                                         <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                                            <div className="col-span-full">
+                                            <div className="col-span-full w-[350px] relative">
                                                 <label htmlFor="photo" className="block text-sm/6 font-medium text-gray-900">
                                                     Photo
                                                 </label>
-                                                <div className="mt-2 flex items-center gap-x-3">
-                                                    <UserCircleIcon aria-hidden="true" className="size-24 text-gray-300" />
-                                                    <label
-                                                        htmlFor="file-upload"
-                                                        className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                                                    >
-                                                        <span>Change</span>
-                                                        <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                                                    </label>
+                                                <div className="mt-2 relative  items-center gap-x-3 edit-profile">
+                                                    <div className='shadow bg-gray-50 p-2 w-[350px]'>
+                                                        <img className='w-[350px]' src='img/profile-img.png'></img>
+                                                    </div>
+
+
+
+
+
+                                                    <ImageCropperModal
+                                                        onSave={(file) => handleBlur("profile_picture", file.name)}
+                                                    />
+
                                                 </div>
                                             </div>
                                         </div>

@@ -204,9 +204,12 @@ const Header = () => {
             <li>
               <Link
                 href={ROUTES.Request_Demo}
-                className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 flex items-center"
+                className="font-semibold text-white bg-blue-600 group hover:bg-blue-700 py-2 px-2 w-[150px] md:w-auto flex items-center"
               >
                 Request Demo
+                <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                    &rarr;
+                  </span>
               </Link>
             </li>
             {!session ? (
