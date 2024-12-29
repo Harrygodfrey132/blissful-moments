@@ -1,61 +1,26 @@
-// pages/profile.tsx
-import Sidebar from '../components/Sidebar'
-import useAuthRedirect from '../hooks/useAuthRedirect';
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import Sidebar from '../components/Sidebar';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { API } from '../utils/api';
-import Link from 'next/link';
-import { ROUTES } from '../utils/routes';
 import { toast } from 'react-toastify';
 import { usePageContext } from '../context/PageContext';
 import ImageCropperModal from "../components/ImageCropperModal";
-import { UserIcon } from '@heroicons/react/24/outline';
-
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
+import { ROUTES } from '../utils/routes';
 
 interface Country {
-    cca3: string;
-    cca2: string;
-    name: {
-        common: string; // Country name
-    };
+    name: string;
+    code: string;
 }
+
 const ProfilePage = () => {
-    // useAuthRedirect(true, true);
     const { data: session } = useSession();
     const token = session?.user?.accessToken;
+    const { setPageData } = usePageContext();
     const [countries, setCountries] = useState<Country[]>([]);
-    const { pageData, setPageData } = usePageContext();
-    useEffect(() => {
-        const fetchCountries = async () => {
-            const MAX_RETRIES = 3;
-            let attempt = 0;
-            let success = false;
-
-            while (attempt < MAX_RETRIES && !success) {
-                try {
-                    const response = await fetch("https://restcountries.com/v3.1/all");
-                    if (!response.ok) {
-                        throw new Error(`Error fetching countries: ${response.statusText}`);
-                    }
-                    const data = await response.json();
-                    setCountries(data);
-                    success = true;
-                } catch (error) {
-                    attempt++;
-                    console.error(`Attempt ${attempt} failed:`, error);
-                    if (attempt === MAX_RETRIES) {
-                        setCountries([]);
-                        console.error("Failed to fetch countries after 3 attempts.");
-                    }
-                }
-            }
-        };
-        fetchCountries();
-    }, []);
-
+    const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -65,12 +30,38 @@ const ProfilePage = () => {
         streetAddress: "",
         city: "",
         region: "",
-        postalCode: ""
-
+        postalCode: "",
     });
 
+    // Fetch countries with retry mechanism
+    const fetchCountries = useCallback(async () => {
+        const MAX_RETRIES = 3;
+        let attempt = 0;
+        let success = false;
+
+        while (attempt < MAX_RETRIES && !success) {
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.fetchCountries}`);
+                if (response.status === 200) {
+                    setCountries(response.data.countries);
+                    success = true;
+                } else {
+                    throw new Error(`Error fetching countries: ${response.statusText}`);
+                }
+            } catch (error) {
+                attempt++;
+                console.error(`Attempt ${attempt} failed:`, error);
+                if (attempt === MAX_RETRIES) {
+                    setCountries([]);
+                    console.error("Failed to fetch countries after 3 attempts.");
+                }
+            }
+        }
+    }, []);
+
+    // Set initial form data based on session
     useEffect(() => {
-        if (session && session.user) {
+        if (session?.user) {
             setFormData({
                 firstName: session.user.userDetails?.first_name || "",
                 lastName: session.user.userDetails?.last_name || "",
@@ -79,14 +70,19 @@ const ProfilePage = () => {
                 streetAddress: session.user.userDetails?.street_address || "",
                 city: session.user.userDetails?.city || "",
                 region: session.user.userDetails?.region || "",
-                postalCode: session.user.userDetails?.postal_code || ""
+                postalCode: session.user.userDetails?.postal_code || "",
             });
         }
     }, [session]);
 
+    // Fetch countries on mount
+    useEffect(() => {
+        fetchCountries();
+    }, [fetchCountries]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -96,18 +92,37 @@ const ProfilePage = () => {
             toast.error("You are not authenticated.");
             return;
         }
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.updateProfile}`, formData, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
 
-        if (response.status === 200) {
-            toast.success("Profile updated successfully!");
-            setPageData(response.data.user_data)
-        } else {
-            toast.error("Failed to update profile.");
+        try {
+            const formDataToSubmit = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                formDataToSubmit.append(key, value);
+            });
+
+            if (profilePicture) {
+                formDataToSubmit.append("profile_picture", profilePicture);
+            }
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}${API.updateProfile}`,
+                formDataToSubmit,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                toast.success("Profile updated successfully!");
+                setPageData(response.data.page_data); // Update page data if necessary
+            } else {
+                toast.error("Failed to update profile.");
+            }
+        } catch (error) {
+            toast.error("Error updating profile.");
+            console.error(error);
         }
     };
     return (
@@ -167,12 +182,8 @@ const ProfilePage = () => {
                                                         <img className='w-[350px]' src='img/profile-img.png'></img>
                                                     </div>
 
-
-
-
-
                                                     <ImageCropperModal
-                                                        onSave={(file) => handleBlur("profile_picture", file.name)}
+                                                        onSave={(file) => setProfilePicture(file)}
                                                     />
 
                                                 </div>
@@ -246,8 +257,8 @@ const ProfilePage = () => {
                                                         className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                                     >
                                                         {countries.map((country) => (
-                                                            <option key={country.cca3} value={country.cca2}>
-                                                                {country.name.common}
+                                                            <option key={country.code} value={country.code}>
+                                                                {country.name}
                                                             </option>
                                                         ))}
                                                     </select>

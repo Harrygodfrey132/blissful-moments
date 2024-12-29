@@ -1,17 +1,16 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/my-page',
-  //       destination: '/account/my-page',
-  //       permanent: true, // Set to `true` for a 301 redirect (permanent)
-  //     },
-  //   ];
-  // },
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      config.watchOptions = {
+        poll: 1000, // Check for file changes every second
+        aggregateTimeout: 300,
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;

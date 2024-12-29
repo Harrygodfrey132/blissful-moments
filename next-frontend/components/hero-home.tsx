@@ -35,12 +35,12 @@ export default function HeroHome() {
             {/* Hero image */}
             {/* Hero image */}
             <Image
-            src="/img/dove-picture.png"
-            alt="Dove Picture"
-             width={657}
+              src="/img/dove-picture.png"
+              alt="Dove Picture"
+              width={657}
               height={1100}
               className="responsive-image"
-              />         
+            />
 
           </div>
 

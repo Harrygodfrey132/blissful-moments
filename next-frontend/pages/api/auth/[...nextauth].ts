@@ -82,6 +82,13 @@ export default NextAuth({
       };
       return session;
     },
+
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      return ROUTES.Home;
+    },
   },
 
   secret: process.env.NEXTAUTH_SECRET,

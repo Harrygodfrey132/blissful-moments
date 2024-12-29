@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            CountrySeeder::class,
+            EmailTemplateSeeder::class
         ]);
 
         User::factory(20)->create();

@@ -25,7 +25,7 @@ export const API = {
 
   // Timeline management
   saveTimeline: "/timeline",
-  deleteTimelineEvent : "/delete/timeline/event",
+  deleteTimelineEvent: "/delete/timeline/event",
 
   // Gallery Management
   folders: "/folders",
@@ -35,4 +35,7 @@ export const API = {
 
   //Payment Management
   createPaymentIntent: "/create-payment-intent",
+
+  // Fetch Countries
+  fetchCountries: "/countries",
 };

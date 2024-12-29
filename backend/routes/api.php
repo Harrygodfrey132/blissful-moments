@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
@@ -62,3 +63,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 Route::get('/folders', [GalleryController::class, 'folders']);
+Route::get('/countries', [CountryController::class, 'fetchCountries']);

@@ -10,6 +10,7 @@ const Header = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter();
   const profileMenuRef = useRef<HTMLLIElement>(null);
+  console.log("NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -92,26 +93,26 @@ const Header = () => {
               </li>
             </ul>
             <ul className="flex grow justify-end flex-wrap items-center">
-             
+
               {!session ? (
                 <>
-                <li>
-                  <Link
-                    href={ROUTES.Login}
-                    className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                  >
-                    Sign in
-                  </Link>
-                </li>
-                 <li>
-                 <Link
-                   href={ROUTES.Register}
-                   className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                 >
-                   Sign Up
-                 </Link>
-               </li>
-               </>
+                  <li>
+                    <Link
+                      href={ROUTES.Login}
+                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                    >
+                      Sign in
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={ROUTES.Register}
+                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
               ) : (
                 <li className="relative ml-4" ref={profileMenuRef}>
                   <button
@@ -139,7 +140,7 @@ const Header = () => {
                       </li>
                       <li>
                         <button
-                          onClick={() => signOut({ callbackUrl: ROUTES.Home })}
+                          onClick={() => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}` })}
                           className="block px-4 py-2 text-sm text-start text-gray-700 hover:bg-gray-100 w-full"
                         >
                           Sign out
@@ -149,7 +150,7 @@ const Header = () => {
                   )}
                 </li>
               )}
-               <li className='ml-5'>
+              <li className='ml-5'>
                 <Link
                   href={ROUTES.Request_Demo}
                   className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
@@ -208,8 +209,8 @@ const Header = () => {
               >
                 Request Demo
                 <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                    &rarr;
-                  </span>
+                  &rarr;
+                </span>
               </Link>
             </li>
             {!session ? (

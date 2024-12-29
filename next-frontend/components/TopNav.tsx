@@ -35,7 +35,7 @@ export default function TopNav({ setSidebarOpen }: TopNavProps) {
       const accessToken = session?.user?.accessToken;
 
       if (accessToken) {
-        await signOut({ redirect: false }); // Sign out using next-auth
+        await signOut({ redirect: false });
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.Logout}`, {
           method: 'POST',
           headers: {
@@ -43,7 +43,7 @@ export default function TopNav({ setSidebarOpen }: TopNavProps) {
           },
           credentials: 'include',
         });
-        router.push(ROUTES.Login); // Redirect to login page
+        router.push(ROUTES.Login);
       } else {
         toast.error('Access token is missing!');
       }

@@ -20,6 +20,7 @@ return [
     'allowed_origins' => [
         'http://admin.blissful-moments.app.local',
         'http://blissful-moments.app.local',
+        'http://blissful-moments.app.local:3000',
         'http://localhost',
         'http://localhost:3000',
         'http://admin.theblissfulmoments.com',
