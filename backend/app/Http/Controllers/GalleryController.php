@@ -101,7 +101,11 @@ class GalleryController extends Controller
 
         GalleryFolder::updateOrCreate(
             ['id' => $request->input('folder_id')],
-            ['name' => $validated['name'], 'gallery_id' => $validated['gallery_id']]
+            [
+                'name' => $validated['name'],
+                'gallery_id' => $validated['gallery_id'],
+                'user_id' => $request->user()->id
+            ]
         );
 
 

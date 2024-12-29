@@ -8,6 +8,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PersonalQuoteController;
 use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -33,7 +34,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/exists', [PageController::class, 'checkPage']);
         Route::get('/name-availability', [PageController::class, 'checkPageNameAvailability']);
         Route::post('/background-image', [PageController::class, 'uploadBackgroundImage']);
-        Route::post('/quote', [PageController::class, 'saveQuote']);
         Route::post('/uploadBackgroundMusic', [PageController::class, 'uploadBackgroundMusic']);
     });
 
@@ -55,6 +55,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Timeline Event Management
     Route::post('/timeline', [TimelineController::class, 'saveTimeline']);
     Route::delete('/delete/timeline/event', [TimelineController::class, 'deleteTimeline']);
+
+    // Personal Quote Managment
+    Route::post('/quote', [PersonalQuoteController::class, 'saveQuote']);
+    Route::put('/quote/update-status', [PersonalQuoteController::class, 'saveQuote']);
 
     // Gallery Management
 

@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -35,6 +36,7 @@ class User extends Authenticatable
         'status',
         'subscription_status',
         'password',
+        'gallerFolders'
     ];
 
     protected $with = [
@@ -136,5 +138,10 @@ class User extends Authenticatable
     public function userDetails(): HasOne
     {
         return $this->hasOne(UserDetail::class, 'user_id');
+    }
+
+    public function gallerFolders(): HasMany
+    {
+        return $this->hasMany(GalleryFolder::class, 'user_id');
     }
 }

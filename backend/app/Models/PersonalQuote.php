@@ -9,6 +9,7 @@ class PersonalQuote extends Model
     protected $fillable = [
         'page_id',
         'quote',
+        'status'
     ];
 
     public function page()

@@ -34,6 +34,8 @@ class PageController extends Controller
             'password' => $validated['is_private'] ? bcrypt($validated['password']) : null,
         ]);
 
+        $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
+
         return response()->json([
             'message' => 'Page created successfully.',
             'page' => $page,
@@ -113,7 +115,7 @@ class PageController extends Controller
 
         return response()->json([
             'page' => $page,
-        ],200);
+        ], 200);
     }
 
     /**
@@ -168,28 +170,7 @@ class PageController extends Controller
         ], 400);
     }
 
-    /**
-     * Save or update the user's personal quote.
-     */
-    public function saveQuote(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-                'quote' => 'required|string|max:255',
-            ]);
-            $page = $request->user()->page;
-            $page->personalQuote()->updateOrCreate([], ['quote' => $validated['quote']]);
 
-            return response()->json([
-                'message' => 'Quote saved successfully.',
-                'page_data' => $page->refresh(),
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage(),
-            ]);
-        }
-    }
 
     /**
      * Save or update obituary details for the user's page.
