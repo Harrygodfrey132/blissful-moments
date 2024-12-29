@@ -127,7 +127,7 @@ export default function PersonalInfo() {
 
   useEffect(() => {
     if (pageData) {
-      setFirstName(pageData.first_name || "");
+      setFirstName(pageData.first_name || "First Name ");
       setMiddleName(pageData.middle_name || "");
       setLastName(pageData.last_name || "Last Name");
       setLocation(pageData.address || "");

@@ -5,10 +5,11 @@ import { toast } from "react-toastify";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
+import { debounce } from "lodash";
 
 const PersonalQuote: React.FC = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(true);
-  const [quote, setQuote] = useState<string>("Share Something special for loved one");  // Initialize with an empty string
+  const [quote, setQuote] = useState<string>("Share Something special for loved one");
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
@@ -26,24 +27,16 @@ const PersonalQuote: React.FC = () => {
 
   // API for generating a random quote
   const generateQuote = async () => {
-    if (!keyword) return;
-
     try {
-      const response = await axios.get(`http://api.quotable.io/random?tags=${keyword}`);
-
-      if (response.data.content) {
-        setQuote(response.data.content);
+      const response = await axios.get('/api/quote');
+      if (response.data && response.data.length > 0) {
+        setQuote(response.data[0].q);
       } else {
-        toast.info("Nothing found for this keyword, please try changing the keyword.");
+        toast.info("No quote found, please try again.");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching quote:', error);
-
-      if (error.response) {
-        toast.error(`Error: ${error.response.status} - ${error.response.data.message || 'An error occurred'}`);
-      } else {
-        toast.error("An error occurred while fetching the quote. Please try again.");
-      }
+      toast.error("An error occurred while fetching the quote. Please try again.");
     }
   };
 
@@ -77,17 +70,21 @@ const PersonalQuote: React.FC = () => {
         toast.error("Failed to save the quote.");
       }
     } catch (error) {
-      console.error(error);
       toast.error("An error occurred while saving the quote.");
     }
   };
 
+  // Debounced version of saveQuote to avoid frequent calls
+  const debouncedSaveQuote = useRef(debounce((updatedQuote: string) => {
+    saveQuote(updatedQuote);
+  }, 500)).current; // Delay of 500ms after user stops typing
+
   // Trigger save when focus is lost (onBlur)
   const handleBlur = () => {
     if (quoteRef.current) {
-      const updatedQuote = quoteRef.current.textContent?.trim() || '';  // Get trimmed text
-      setQuote(updatedQuote); // Immediately update the state with the new content
-      saveQuote(updatedQuote);  // Save the updated quote to the backend
+      const updatedQuote = quoteRef.current.textContent?.trim() || '';
+      setQuote(updatedQuote); // Update the quote state for the saved quote
+      debouncedSaveQuote(updatedQuote); // Trigger debounced save
     }
   };
 
@@ -130,17 +127,6 @@ const PersonalQuote: React.FC = () => {
             </div>
             <RiDoubleQuotesR className="text-blue-light-900 absolute top-2 right-1" />
           </h2>
-
-          {/* Input for keyword */}
-          <div className="w-1/2 mb-4 m-auto text-center mt-5">
-            <input
-              type="text"
-              className="border-dashed md:w-1/2 m-auto bg-gray-100 border-gray-300 text-base"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              placeholder="Enter keyword"
-            />
-          </div>
 
           {/* Button to suggest quote */}
           <div className="w-full mb-4 m-auto text-center">
