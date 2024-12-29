@@ -1,14 +1,16 @@
 import Sidebar from '../components/Sidebar';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { API } from '../utils/api';
 import { toast } from 'react-toastify';
-import { usePageContext } from '../context/PageContext';
 import ImageCropperModal from "../components/ImageCropperModal";
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { ROUTES } from '../utils/routes';
+import { useUserContext } from '../context/UserContext';
+import Image from 'next/image';
 
 interface Country {
     name: string;
@@ -18,9 +20,10 @@ interface Country {
 const ProfilePage = () => {
     const { data: session } = useSession();
     const token = session?.user?.accessToken;
-    const { setPageData } = usePageContext();
+    const { userData, setUserData } = useUserContext();
     const [countries, setCountries] = useState<Country[]>([]);
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -32,6 +35,8 @@ const ProfilePage = () => {
         region: "",
         postalCode: "",
     });
+
+    const [localUserData, setLocalUserData] = useState<{ email?: string; password?: string }>({});
 
     // Fetch countries with retry mechanism
     const fetchCountries = useCallback(async () => {
@@ -72,13 +77,25 @@ const ProfilePage = () => {
                 region: session.user.userDetails?.region || "",
                 postalCode: session.user.userDetails?.postal_code || "",
             });
+            // Set the initial profile picture based on the session
+            if (session?.user?.userDetails?.profile_picture) {
+                setPreviewImage(session?.user?.userDetails?.profile_picture);
+            }
         }
     }, [session]);
 
     // Fetch countries on mount
     useEffect(() => {
         fetchCountries();
-    }, [fetchCountries]);
+    }, [fetchCountries, userData]);
+
+    // Retrieve from localStorage on mount
+    useEffect(() => {
+        const storedUserData = localStorage.getItem("userData");
+        if (storedUserData) {
+            setLocalUserData(JSON.parse(storedUserData));
+        }
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -115,8 +132,18 @@ const ProfilePage = () => {
             );
 
             if (response.status === 200) {
+                const updatedUserData = response.data.updatedUserDetails;
+
+                if (updatedUserData) {
+                    setUserData(updatedUserData);
+
+                    await signIn('credentials', {
+                        email: localUserData.email,
+                        password: localUserData.password,
+                        redirect: false,
+                    });
+                }
                 toast.success("Profile updated successfully!");
-                setPageData(response.data.page_data); // Update page data if necessary
             } else {
                 toast.error("Failed to update profile.");
             }
@@ -179,11 +206,24 @@ const ProfilePage = () => {
                                                 </label>
                                                 <div className="mt-2 relative  items-center gap-x-3 edit-profile">
                                                     <div className='shadow bg-gray-50 p-2 w-[350px]'>
-                                                        <img className='w-[350px]' src='img/profile-img.png'></img>
+                                                        <Image
+                                                            src={previewImage || '/img/profile-img.png'}
+                                                            alt="Profile Picture"
+                                                            width={350}
+                                                            height={350}
+                                                            className="transition-opacity duration-500"
+                                                        />
                                                     </div>
 
                                                     <ImageCropperModal
-                                                        onSave={(file) => setProfilePicture(file)}
+                                                        onSave={(file) => {
+                                                            setProfilePicture(file);
+                                                            const reader = new FileReader();
+                                                            reader.onloadend = () => {
+                                                                setPreviewImage(reader.result as string); // Set preview image
+                                                            };
+                                                            reader.readAsDataURL(file);
+                                                        }}
                                                     />
 
                                                 </div>

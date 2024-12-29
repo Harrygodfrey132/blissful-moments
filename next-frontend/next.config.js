@@ -1,15 +1,15 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-
-  webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      config.watchOptions = {
-        poll: 1000, // Check for file changes every second
-        aggregateTimeout: 300,
-      };
-    }
-    return config;
+  images: {
+    domains: [
+      "admin.blissful-moments.app.local",
+      "admin.theblissfulmoments.com",
+      "blissful-moments.app.local",
+      "blissful-moments.app.local:3000",
+      "localhost",
+      "localhost:3000",
+    ],
   },
 };
 

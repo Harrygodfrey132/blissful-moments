@@ -1,17 +1,13 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { API } from "../../../utils/api";
 import { toast } from "sonner";
 import { JWT } from "next-auth/jwt";
 import { ROUTES } from "../../../utils/routes";
 
-interface ErrorResponse {
-  message: string;
-}
-
-export default NextAuth({
-  debug: true,
+const authOptions: NextAuthOptions = {
+  debug: process.env.NODE_ENV === "development",
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -21,79 +17,69 @@ export default NextAuth({
       },
       async authorize(credentials) {
         try {
-          const { data: loginResponse } = await axios.post(
+          const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}${API.Login}`,
             credentials,
             { headers: { "Content-Type": "application/json" } }
           );
 
-          const { user, token } = loginResponse;
+          const { user, token } = response.data;
 
           if (!user || !token) {
             throw new Error("Invalid credentials or missing response data.");
           }
 
-          // Ensure userDetails is either undefined or a valid object
-          const userDetails =
-            user.user_details && Object.keys(user.user_details).length > 0
-              ? user.user_details
-              : undefined; // Set to undefined instead of null
-
           return {
             ...user,
             accessToken: token,
-            isVerified: user.isVerified,
-            subscriptionStatus: user.subscription_status,
-            userDetails: userDetails, // userDetails will now be undefined if not available
+            userDetails: user.user_details || undefined,
           };
-        } catch (error) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          toast.error("Authorization failed:");
-          throw new Error(
-            axiosError.response?.data?.message ||
-              axiosError.message ||
-              "Authorization failed"
-          );
+        } catch (error: any) {
+          const message =
+            error.response?.data?.message || "Authorization failed.";
+          toast.error(message);
+          throw new Error(message);
         }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken || token.accessToken;
-        token.userId = user.id || token.userId;
-        token.email = user.email || token.email;
-        token.name = user.name || token.name;
-        token.isVerified = user.isVerified || token.isVerified;
-        token.userDetails = user.userDetails || token.userDetails;
+        return {
+          ...token,
+          accessToken: user.accessToken,
+          userId: user.id || "",
+          email: user.email || null,
+          name: user.name || null,
+          isVerified: user.isVerified || false,
+          userDetails: user.userDetails || undefined,
+        } as JWT; // Explicitly cast to JWT
       }
       return token;
     },
-
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }) {
       session.user = {
         id: token.userId || "",
         name: token.name || "",
         email: token.email || "",
         accessToken: token.accessToken || "",
         isVerified: token.isVerified || false,
-        userDetails: token.userDetails || undefined, // Ensure it's either undefined or a valid object
+        userDetails: token.userDetails || undefined,
       };
       return session;
     },
-
     async redirect({ url, baseUrl }) {
-      if (url.startsWith(baseUrl)) {
-        return url;
-      }
-      return ROUTES.Home;
+      return url.startsWith(baseUrl)
+        ? url
+        : `${process.env.NEXT_PUBLIC_BASE_URL}`;
     },
   },
-
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: ROUTES.Login,
     error: ROUTES.Login,
   },
-});
+};
+
+export default NextAuth(authOptions);

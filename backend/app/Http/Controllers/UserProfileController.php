@@ -21,6 +21,7 @@ class UserProfileController extends Controller
             'city' => 'nullable|string|max:255',
             'region' => 'nullable|string|max:255',
             'postalCode' => 'nullable|string|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate image
         ]);
 
         // Concatenate first and last names to set the 'name' field
@@ -33,12 +34,15 @@ class UserProfileController extends Controller
                 'email' => $data['email'],
             ]);
 
-            // Access the related userDetail
-            $userDetail = $user->userDetails; // Fetch the related UserDetail model
+            // Handle profile picture upload if it exists
+            if ($request->hasFile('profile_picture')) {
+                $profilePicture = $request->file('profile_picture');
+                $filePath = $profilePicture->store('profile_pictures', 'public'); // Store file in 'public/profile_pictures' directory
+                $profilePictureUrl = asset('storage/' . $filePath);
 
-            // Update the userDetails if it exists
-            if ($userDetail) {
-                $userDetail->update([
+                // Update the userDetails with the profile picture URL
+                $user->userDetails->update([
+                    'profile_picture' => $profilePictureUrl, // Store the URL in database
                     'first_name' => $data['firstName'],
                     'last_name' => $data['lastName'],
                     'country' => $data['country'],
@@ -48,8 +52,8 @@ class UserProfileController extends Controller
                     'postal_code' => $data['postalCode'] ?? null,
                 ]);
             } else {
-                // If no userDetail exists, create one
-                $user->userDetails()->create([
+                // Update userDetails without changing the profile_picture field
+                $user->userDetails->update([
                     'first_name' => $data['firstName'],
                     'last_name' => $data['lastName'],
                     'country' => $data['country'],
@@ -60,7 +64,7 @@ class UserProfileController extends Controller
                 ]);
             }
 
-            return response()->json(['message' => 'Profile updated successfully.', 'user_data' => $user]);
+            return response()->json(['message' => 'Profile updated successfully.', 'updatedUserDetails' => $user]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to update profile. Please try again.'], 500);
         }

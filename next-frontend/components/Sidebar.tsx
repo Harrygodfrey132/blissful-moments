@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function Sidebar() {
   const [openMenu, setOpenMenu] = useState<string>(""); // Track open dropdown
@@ -17,9 +18,11 @@ export default function Sidebar() {
     <div className="flex flex-col items-start">
       {/* Profile Section */}
       <div className="flex items-center md:w-[17rem] w-full mb-4 p-4 rounded bg-white shadow">
-        <img
-          src="img/profile-img.png"
+        <Image
+          src={session?.user?.userDetails?.profile_picture || "/img/dummmy.png"}
           alt="Profile"
+          width={300}
+          height={300}
           className="w-12 h-12 rounded-full object-cover"
         />
         <div className="ml-4">
@@ -65,7 +68,7 @@ export default function Sidebar() {
           </a>
 
           {/* User Access */}
-          <div>
+          {/* <div>
             <button
               onClick={() => toggleMenu("userAccess")}
               aria-expanded={openMenu === "userAccess"}
@@ -94,7 +97,7 @@ export default function Sidebar() {
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Payments */}
           <a

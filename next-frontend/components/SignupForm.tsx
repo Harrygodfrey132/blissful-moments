@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { validateSignup } from "../utils/validation";
 import { signIn } from "next-auth/react";
-import {  toast } from "react-toastify"; // Import Toastify
+import { toast } from "react-toastify"; // Import Toastify
 
 import { registerUser } from "../utils/registrationApiService";
 import { useIsVerified } from "../context/IsUserVerifiedContext";
+import { useUserContext } from "../context/UserContext";
 
 type SignupFormData = {
     firstName: string;
@@ -22,7 +23,7 @@ type SignupFormData = {
 const SignupForm = () => {
     const router = useRouter();
     const { setIsVerified } = useIsVerified();
-
+    const { setUserData } = useUserContext();
     const {
         register,
         handleSubmit,
@@ -78,6 +79,8 @@ const SignupForm = () => {
                 throw new Error(loginResult?.error || "Login failed");
             }
             setIsVerified(false);
+            setUserData(response.user);
+            localStorage.setItem('userData', JSON.stringify(data));
             router.push(ROUTES.Verify_Email);
         } catch (error: any) {
             toast.error(error.message || "An error occurred during registration.");

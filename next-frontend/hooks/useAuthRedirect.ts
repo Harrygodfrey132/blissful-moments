@@ -11,15 +11,10 @@ const useAuthRedirect = (
   const router = useRouter();
 
   useEffect(() => {
-    // Don't do anything if session is loading
     if (loading) return;
-    console.log(user);
-    
-    // Prevent unnecessary redirects or re-fetching if already verified
     if (user?.isVerified) {
-      // If the user is verified and trying to access /verify-email, redirect to dashboard
       if (router.pathname === ROUTES.Verify_Email) {
-        router.push(ROUTES.Dashboard); // Redirect to dashboard or another page for verified users
+        router.push(ROUTES.Dashboard);
       }
       return;
     }

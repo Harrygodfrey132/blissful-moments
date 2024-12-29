@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { API } from "../utils/api";
 import { toast } from "react-toastify";
+import { useUserContext } from "../context/UserContext";
 
 interface User {
   isVerified: boolean;
@@ -23,7 +24,7 @@ const useAuth = (): UseAuthReturn => {
   const [isRequesting, setIsRequesting] = useState<boolean>(false); // Track API requests
   const router = useRouter();
   const { data: session, status } = useSession(); // Access session state
-
+  const { setUserData } = useUserContext();
   const fetchUser = async () => {
     if (isRequesting || !session || status !== "authenticated") return; // Ensure no concurrent requests and session is authenticated
 
@@ -49,6 +50,7 @@ const useAuth = (): UseAuthReturn => {
         }
       );
       setUser(response.data);
+      setUserData(response.data.user);
     } catch (error) {
       setUser(null);
       toast.error("Failed to fetch user data");

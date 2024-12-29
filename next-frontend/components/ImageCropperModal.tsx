@@ -1,81 +1,64 @@
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import Cropper from "react-easy-crop";
 import { toast } from "react-toastify";
 import { getCroppedImg } from "../utils/cropImage";
-import axios from "axios";
-import { API } from "../utils/api";
-import { usePageContext } from "../context/PageContext";
 import { useSession } from "next-auth/react";
 
-// ImageCropperModal Component
-function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
+interface ImageCropperModalProps {
+  onSave: (file: File) => void;
+}
+
+function ImageCropperModal({ onSave }: ImageCropperModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-  const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
 
+  // Handle file selection and open modal
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => setImage(reader.result as string);
       reader.readAsDataURL(file);
-      setIsModalOpen(true);
+      setIsModalOpen(true); // Open modal after file selection
     }
   };
 
+  // Handle save action after cropping
   const handleSave = async () => {
     if (image && croppedAreaPixels) {
       try {
-        // Get the cropped image as a Blob or File
-        const croppedImage = await getCroppedImg(image, croppedAreaPixels);
+        // Get the cropped image as a Blob
+        const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels);
 
-        // Create FormData and append the cropped image
-        const formData = new FormData();
-        formData.append("profile_picture", croppedImage);
+        // Convert Blob to File
+        const file = new File([croppedImageBlob], "profile_picture.jpg", { type: "image/jpeg" });
 
-        // Send the request to save the profile picture
-        const response = await axios.post(
-          `${API_URL}${API.savePersonalDetails}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        // Send the cropped image as a File to the parent component via onSave
+        onSave(file);
 
-        if (response.status === 200 && response.data?.page_data) {
-          setPageData(response.data.page_data);
-          toast.success("Profile picture saved!");
-        } else {
-          toast.error("Failed to save profile picture.");
-        }
-      } catch (error) {
-        toast.error("Error updating profile picture.");
-      } finally {
+        // Optionally close the modal
         setIsModalOpen(false);
+      } catch (error) {
+        toast.error("Error processing the image.");
       }
     } else {
       toast.error("Please crop an image before saving.");
     }
   };
 
-
   const handleClose = () => {
     setImage(null);
-    setIsModalOpen(false);
+    setIsModalOpen(false); // Close modal without saving
   };
 
   return (
     <div>
-      <button
+      <button type="button"
         className="absolute border font-playfair border-black bottom-4 text-sm md:right-4 right-4 bg-white py-2 pr-8 px-4 cursor-pointer"
         onClick={() => document.getElementById("fileInput")?.click()}
       >
@@ -115,7 +98,7 @@ function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
               >
                 Cancel
               </button>
-              <button
+              <button type="button"
                 className="px-4 py-2 bg-blue-light-900 text-white rounded"
                 onClick={handleSave}
               >
@@ -128,4 +111,5 @@ function ImageCropperModal({ onSave }: { onSave: (file: File) => void }) {
     </div>
   );
 }
+
 export default ImageCropperModal;

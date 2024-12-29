@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { ROUTES } from '../utils/routes';
+import Image from 'next/image';
 
 const Header = () => {
   const { data: session } = useSession();
@@ -10,7 +11,6 @@ const Header = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter();
   const profileMenuRef = useRef<HTMLLIElement>(null);
-  console.log("NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -119,9 +119,11 @@ const Header = () => {
                     onClick={toggleProfileMenu}
                     className="flex items-center text-gray-700 hover:text-blue-600 transition duration-150 ease-in-out"
                   >
-                    <img
+                    <Image
                       className="w-8 h-8 rounded-full"
-                      src={'/img/profile-img.png'}
+                      src={session.user?.userDetails?.profile_picture || '/img/dummy.png'}
+                      width={150}
+                      height={150}
                       alt={session.user?.name || 'User'}
                     />
                     <span className="ml-2 font-semibold hidden lg:block">
