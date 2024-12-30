@@ -24,7 +24,7 @@ export default function Home() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Register page modal state
   const [loading, setLoading] = useState(true);
   const [hasPage, setHasPage] = useState(false); // Track if user already has a page
-  const { setPageId, setPageData } = usePageContext();
+  const { pageData, setPageId, setPageData } = usePageContext();
   const { data: session, status } = useSession();
 
   const openModal = (modalType: "config" | "register") => {
@@ -108,20 +108,20 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Center-aligned Register page button */}
-          <div className="flex-grow flex justify-center">
-            <button
-              onClick={() => openModal("register")}
-              className="bg-gray-200 hover:bg-gray-300 text-blue-light-900 border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded"
-            >
-              Register page{" "}
-              <IoIosArrowRoundForward className="group-hover:translate-x-0.5 text-lg transition-transform duration-150 ease-in-out" />
-            </button>
-          </div>
+          {!pageData?.is_registered && (
+            // Center-aligned Register page button
+            <div className="flex-grow flex justify-center">
+              <button
+                onClick={() => openModal("register")}
+                className="bg-gray-200 hover:bg-gray-300 text-blue-light-900 border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded"
+              >
+                Register page{" "}
+                <IoIosArrowRoundForward className="group-hover:translate-x-0.5 text-lg transition-transform duration-150 ease-in-out" />
+              </button>
+            </div>
+          )}
+
         </div>
-
-
-
       </div>
     </Layout>
   );

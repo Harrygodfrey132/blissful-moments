@@ -9,10 +9,10 @@ class TimelineEvent extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['page_id', 'timeline_id', 'event_date', 'title', 'description', 'location'];
+    protected $fillable = ['timeline_id', 'event_date', 'title', 'description', 'location'];
 
-    public function page()
+    public function timeline()
     {
-        return $this->belongsTo(Page::class);
+        return $this->belongsTo(Timeline::class);
     }
 }

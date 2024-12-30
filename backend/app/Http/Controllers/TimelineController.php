@@ -6,6 +6,7 @@ use App\Models\Timeline;
 use App\Models\TimelineEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TimelineController extends Controller
 {
@@ -16,15 +17,12 @@ class TimelineController extends Controller
     {
         try {
             DB::beginTransaction();  // Start transaction
-
-            // Validate incoming data
-            $validatedData = $request->validate([
-                'tagline' => 'nullable|string|max:255',
-                'events' => 'nullable|array',
-            ]);
-
             $user = $request->user();
             $page = $user->page;
+
+            // Extract timeline data from the request
+            $timelineData = $request->input('timeline', []);
+
 
             // Check if the page already has a timeline
             $timeline = $page->timeline()->first();
@@ -33,31 +31,28 @@ class TimelineController extends Controller
             if (!$timeline) {
                 $timeline = Timeline::create([
                     'page_id' => $page->id,
-                    'tagline' => $validatedData['tagline'] ?? null,  // Save tagline if provided
+                    'tagline' => $timelineData['tagline'] ?? null,
                 ]);
             }
 
-            // Save tagline if provided
-            if (isset($validatedData['tagline'])) {
+            // Save or update tagline if provided
+            if (isset($timelineData['tagline'])) {
                 $timeline->update([
-                    'tagline' => $validatedData['tagline'],
+                    'tagline' => $timelineData['tagline'],
                 ]);
             }
 
             // Save events if provided
-            if (isset($validatedData['events'])) {
+            if (isset($timelineData['events']) && is_array($timelineData['events'])) {
+
                 // Delete old events before creating new ones
                 $timeline->events()->delete();
 
                 // Create new events
-                foreach ($validatedData['events'] as $eventData) {
-                    // Combine day, month, and year into a single date (event_date)
-                    $eventDate = sprintf('%04d-%02d-%02d', $eventData['year'], $eventData['month'], $eventData['day']);
-                    return response()->json($eventDate);
-
-                    // Create new event under this timeline
+                foreach ($timelineData['events'] as $eventData) {
                     $timeline->events()->create([
-                        'event_date' => $eventDate,
+                        'timeline_id' => $timeline->id,
+                        'event_date' => $eventData['event_date'],
                         'title' => $eventData['title'],
                         'description' => $eventData['description'],
                         'location' => $eventData['location'],
@@ -80,9 +75,9 @@ class TimelineController extends Controller
         }
     }
 
-
     public function deleteTimeline(Request $request)
     {
+
         // Validate the incoming request to ensure event_id is present
         $validated = $request->validate([
             'event_id' => 'required|exists:timeline_events,id', // Validates event_id exists in timeline_events table
@@ -101,7 +96,7 @@ class TimelineController extends Controller
             $event->delete();
 
             // Return a success response
-            return response()->json(['message' => 'Event deleted successfully' , 'page_data' => $request->user()->page], 200);
+            return response()->json(['message' => 'Event deleted successfully', 'page_data' => $request->user()->page], 200);
         } catch (\Exception $e) {
             // Return a 500 server error
             return response()->json(['message' => 'An error occurred while deleting the event'], 500);

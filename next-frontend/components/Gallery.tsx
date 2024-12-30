@@ -27,6 +27,14 @@ interface GalleryImage {
   caption: string | null;
 }
 
+interface AllImage {
+  id: string | number;
+  src: string;
+  name: string;
+  isUploaded: boolean;
+  folder_id?: number | null;
+};
+
 const Gallery: React.FC = () => {
   const [isGalleryEnabled, setGalleryIsEnabled] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -82,6 +90,73 @@ const Gallery: React.FC = () => {
     };
   }, [uploadedImages]);
 
+
+  const handleStatus = async (status: boolean) => {
+    setGalleryIsEnabled(status);
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryStatus}`,
+      {
+        gallery_id: pageData?.gallery.id,
+        status: status,
+
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    if (response.status === 200) {
+      console.log("Response Data", response.data.page_data);
+
+      setPageData(response.data.page_data);
+
+    } else {
+      toast.error('Something went wrong');
+      setGalleryIsEnabled(!status);
+    }
+  }
+
+  const saveGalleryName = async (galleryTagline: string) => {
+    setCurrentGalleryName(galleryTagline);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryName}`,
+        { gallery_name: galleryTagline },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Gallery name saved successfully!");
+        setPageData(response.data?.page_data);
+      } else {
+        throw new Error("Failed to save gallery name.");
+      }
+    } catch (error) {
+      console.error("Error saving gallery name:", error);
+      toast.error("An error occurred while saving the gallery name.");
+    }
+  };
+
+  const allImages: AllImage[] = showLocalImages
+    ? uploadedImages.map((file, index) => ({
+      id: -index, // Always ensure ID is numeric (negative for local images)
+      src: blobUrls[`uploaded-${index}`],
+      name: file.name,
+      isUploaded: true,
+    }))
+    : (pageData?.gallery?.images || []).map((image: GalleryImage) => ({
+      id: image.id, // Server ID should be numeric
+      src: image.image_path,
+      name: `Image ${image.id}`,
+      isUploaded: false,
+      folder_id: image.folder_id,
+    }));
+
+  // Handling deletion with image.id
   const deleteImage = async (index: number, isUploaded: boolean, imageId?: number) => {
     if (isUploaded) {
       setUploadedImages((prev) => prev.filter((_, i) => i !== index));
@@ -99,7 +174,6 @@ const Gallery: React.FC = () => {
         );
 
         if (response.status === 200) {
-          // Update page data to reflect the change
           setPageData(response.data.page_data);
           toast.success("Image deleted successfully!");
         } else {
@@ -114,6 +188,7 @@ const Gallery: React.FC = () => {
     setPopoverImageIndex(null);
   };
 
+  // Handling folder assignment with image.id
   const handleFolderAssignment = async (folderId: number, imageId: number, isChecked: boolean) => {
     try {
       const apiUrl = isChecked
@@ -143,77 +218,7 @@ const Gallery: React.FC = () => {
     }
   };
 
-  const saveGalleryName = async (galleryTagline: string) => {
-    setCurrentGalleryName(galleryTagline);
-
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryName}`,
-        { gallery_name: galleryTagline },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success("Gallery name saved successfully!");
-        setPageData(response.data?.page_data);
-      } else {
-        throw new Error("Failed to save gallery name.");
-      }
-    } catch (error) {
-      console.error("Error saving gallery name:", error);
-      toast.error("An error occurred while saving the gallery name.");
-    }
-  };
-
-  const allImages = showLocalImages
-    ? uploadedImages.map((file, index) => ({
-      id: `uploaded-${index}`,
-      src: blobUrls[`uploaded-${index}`],
-      name: file.name,
-      isUploaded: true,
-    }))
-    : (pageData?.gallery?.images || []).map((image: GalleryImage) => ({
-      id: image.id,
-      src: image.image_path,
-      name: `Image ${image.id}`,
-      isUploaded: false,
-    }));
-
-  useEffect(() => {
-    // Switch to server images on page refresh
-    if (pageData?.gallery?.images?.length > 0) {
-      setShowLocalImages(false);
-    }
-  }, [pageData]);
-
-
-  const handleStatus = async (status: boolean) => {
-    setGalleryIsEnabled(status);
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryStatus}`,
-      {
-        gallery_id: pageData?.gallery.id,
-        status: status,
-
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    if (response.status === 200) {
-      console.log("Response Data", response.data.page_data);
-
-      setPageData(response.data.page_data);
-
-    } else {
-      toast.error('Something went wrong');
-      setGalleryIsEnabled(!status);
-    }
-  }
+  // Rendering the images
   return (
     <div className="font-playfair">
       <div className="flex justify-between">
@@ -230,7 +235,6 @@ const Gallery: React.FC = () => {
             {galleryName}
           </span>
         </h1>
-
         {/* Toggle switch */}
         <div className="flex justify-end mb-4">
           <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
@@ -253,13 +257,11 @@ const Gallery: React.FC = () => {
         </div>
       </div>
 
-
       {isGalleryEnabled && (
-
         <>
           <FolderManager />
           <div className="grid md:grid-cols-3 grid-cols-2 gap-5 mt-6 relative">
-            {allImages.map((image, index) => (
+            {allImages.map((image: AllImage, index: number) => (
               <div key={image.id} className="relative group">
                 <Image
                   src={image.src}
@@ -278,7 +280,7 @@ const Gallery: React.FC = () => {
                 {popoverImageIndex === index && (
                   <div className="absolute top-12 flex right-2 bg-white shadow-lg rounded p-2 z-10">
                     <button
-                      onClick={() => deleteImage(index, image.isUploaded, image.id)}
+                      onClick={() => deleteImage(index, image.isUploaded, typeof image.id === "number" ? image.id : undefined)}
                       className="flex items-center px-2 py-1 hover:bg-gray-100 w-full"
                     >
                       <AiFillDelete className="text-gray-400 cursor-pointer" />
@@ -286,9 +288,7 @@ const Gallery: React.FC = () => {
                     <button
                       onClick={() => {
                         setPopoverImageIndex(null);
-                        setAssignFolderPopoverIndex(
-                          assignFolderPopoverIndex === index ? null : index
-                        );
+                        setAssignFolderPopoverIndex(assignFolderPopoverIndex === index ? null : index);
                       }}
                       className="flex items-center px-2 py-1 hover:bg-gray-100 w-full"
                     >
@@ -298,10 +298,7 @@ const Gallery: React.FC = () => {
                 )}
 
                 {assignFolderPopoverIndex === index && (
-                  <div
-                    ref={popoverRef}
-                    className="absolute top-12 right-2 bg-white shadow-lg rounded p-3 z-20"
-                  >
+                  <div ref={popoverRef} className="absolute top-12 right-2 bg-white shadow-lg rounded p-3 z-20">
                     <div className="text-sm mb-1">Choose folder(s)</div>
                     <ul>
                       {pageData.gallery?.folders?.map((folder: Folder, folderIndex: number) => {
@@ -312,7 +309,7 @@ const Gallery: React.FC = () => {
                               type="checkbox"
                               className="mr-2"
                               checked={isAssigned}
-                              onChange={(e) => handleFolderAssignment(folder.id, image.id, e.target.checked)}
+                              onChange={(e) => handleFolderAssignment(folder.id, typeof image.id === "number" ? image.id : -1, e.target.checked)} // Pass a numeric value for image.id
                             />
                             <label className="text-sm">{folder.name}</label>
                           </li>

@@ -20,49 +20,59 @@ class PageController extends Controller
      */
     public function storePageSettings(Request $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|integer',
-            'name' => 'required|string|unique:pages',
-            'is_private' => 'required|boolean',
-            'password' => 'nullable|string|required_if:is_private,true',
-        ]);
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|integer',
+                'name' => 'required|string|unique:pages',
+                'is_private' => 'required|boolean',
+                'password' => 'nullable|string|required_if:is_private,true',
+            ]);
 
-        $page = Page::create([
-            'user_id' => $validated['user_id'],
-            'name' => $validated['name'],
-            'is_private' => $validated['is_private'],
-            'password' => $validated['is_private'] ? bcrypt($validated['password']) : null,
-        ]);
+            // Initialize the page variable outside the transaction
+            $page = null;
 
-        $page->gallery()->create([
-            'gallery_name' => "Gallery",
-            'user_id' => $validated['user_id']
-        ]);
+            DB::transaction(function () use ($validated, &$page) {
+                $page = Page::create([
+                    'user_id' => $validated['user_id'],
+                    'name' => $validated['name'],
+                    'is_private' => $validated['is_private'],
+                    'password' => $validated['is_private'] ? bcrypt($validated['password']) : null,
+                ]);
 
-        $page->obituaries()->create([
-            'tagline' => "Enter a memorable tagline here.",
-            'content' => "Add a heartfelt message about your loved one.",
-            'page_id' => $page->id,
-        ]);
+                $page->gallery()->create([
+                    'gallery_name' => "Gallery",
+                    'user_id' => $validated['user_id']
+                ]);
 
-        $timeline = $page->timeline()->create([
-            'tagline' => "Your Timeline Goes Here",
-            'page_id' => $page->id
-        ]);
+                $page->obituaries()->create([
+                    'tagline' => "Enter a memorable tagline here.",
+                    'content' => "Add a heartfelt message about your loved one.",
+                    'page_id' => $page->id,
+                ]);
 
-        $timeline->events()->create([
-            'page_id' => $page->id,
-            'timeline_id' => $timeline->id,
-            'event_date' => now(),
-            'title' => "New Event",
-            'description' => "Event description",
-            'location' => "Event location"
-        ]);
+                $timeline = $page->timeline()->create([
+                    'tagline' => "Your Timeline Goes Here",
+                    'page_id' => $page->id
+                ]);
 
-        return response()->json([
-            'message' => 'Page created successfully.',
-            'page' => $page,
-        ], 201);
+                $timeline->events()->create([
+                    'timeline_id' => $timeline->id,
+                    'event_date' => now(),
+                    'title' => "New Event",
+                    'description' => "Event description",
+                    'location' => "Event location"
+                ]);
+            });
+
+            return response()->json([
+                'message' => 'Page created successfully.',
+                'page' => $page,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Unable to create page: ' . $th->getMessage(),
+            ]);
+        }
     }
 
     /**

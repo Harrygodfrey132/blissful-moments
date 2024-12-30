@@ -63,12 +63,16 @@ export default function Timeline() {
 
     // Function to extract day, month, and year from event_date
     const getDateParts = (event_date: string) => {
-        const date = new Date(event_date);
+        const date = new Date(event_date); // Parse the date string
         return {
-            day: date.getDate().toString(),
-            month: (date.getMonth() + 1).toString(), // getMonth() returns 0-indexed month
-            year: date.getFullYear().toString(),
+            day: date.getDate().toString(), // Get day of the month
+            month: (date.getMonth() + 1).toString(), // Get month (0-indexed, so add 1)
+            year: date.getFullYear().toString(), // Get full year
         };
+    };
+
+    const updatePageData = (updatedData: any) => {
+        setPageData(updatedData);
     };
 
     const handleEventChange = (index: number, field: keyof TimelineEvent, value: string) => {
@@ -95,25 +99,28 @@ export default function Timeline() {
         setTimelineEvents((prevEvents) => [...prevEvents, newEvent]);
     };
 
+    // Updated deleteEvent function
     const deleteEvent = async (index: number) => {
         const eventToDelete = timelineEvents[index];
-        if (eventToDelete.id < 1) {
-            return;
-        }
-        // Create the payload to send in the API request
-        const data = {
-            event_id: eventToDelete.id, // Assuming each event has an 'id' field
-        };
 
-        const updatedEvents = timelineEvents.filter((_, i) => i !== index); // Remove event from local state
+        // Create the payload to send in the API request
+        const data = { event_id: eventToDelete.id };
+
+        // Remove event from local state immediately for instant UI update
+        const updatedEvents = timelineEvents.filter((_, i) => i !== index);
 
         try {
+            if (!eventToDelete.id) {
+                setTimelineEvents(updatedEvents);
+                return;
+            }
+            // Send the DELETE request to the API
             const response = await axios.delete(
-                `${process.env.NEXT_PUBLIC_API_URL}${API.deleteTimelineEvent}`, // Adjust API URL if needed
+                `${process.env.NEXT_PUBLIC_API_URL}${API.deleteTimelineEvent}`,
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`, // Pass the token for authorization
+                        Authorization: `Bearer ${token}`,
                     },
                     data, // Send event ID to be deleted
                 }
@@ -121,16 +128,35 @@ export default function Timeline() {
 
             if (response.status === 200) {
                 toast.success("Timeline Event Deleted Successfully");
-                setTimelineEvents(updatedEvents); // Update state after successful deletion
+
+                // Update the local state with the filtered events
+                setTimelineEvents(updatedEvents);
+
+                // If pageData is available, update it as well
+                if (pageData?.timeline?.events) {
+                    // Filter out the deleted event from pageData.timeline.events
+                    const updatedPageData = {
+                        ...pageData,
+                        timeline: {
+                            ...pageData.timeline,
+                            events: pageData.timeline.events.filter(
+                                (event: TimelineEvent) => event.id !== eventToDelete.id
+                            ),
+                        },
+                    };
+
+                    // Call the callback to update the parent pageData state
+                    updatePageData(updatedPageData);
+                }
             } else {
                 console.error("Error deleting event:", response.statusText);
+                toast.error("Failed to delete event");
             }
         } catch (error) {
             console.error("Error deleting event:", error);
             toast.error("An error occurred while deleting the event.");
         }
     };
-
 
     const saveData = async (data: PageData | { tagline: string }) => {
         try {
@@ -240,10 +266,10 @@ export default function Timeline() {
                                 </div>
 
                                 <div className="timeline-date flex flex-col gap-2 items-start space-y-2">
-                                    {/* Date Selectors */}
+                                    {/* Day Selector */}
                                     <div>
                                         <select
-                                            className="p-2 w-16 border-2 bg-[#f8f8f8]  h-10 border-gray-300 text-blue-900 font-medium"
+                                            className="p-2 w-16 border-2 bg-[#f8f8f8] h-10 border-gray-300 text-blue-900 font-medium"
                                             value={day}
                                             onChange={(e) => handleEventChange(index, "day", e.target.value)}
                                         >
@@ -254,25 +280,29 @@ export default function Timeline() {
                                             ))}
                                         </select>
                                     </div>
+
+                                    {/* Month Selector */}
                                     <div>
                                         <select
-                                            className="p-2 w-28 border-2 bg-[#f8f8f8]  h-10 border-gray-300 text-blue-900 font-medium"
+                                            className="p-2 w-28 border-2 bg-[#f8f8f8] h-10 border-gray-300 text-blue-900 font-medium"
                                             value={month}
                                             onChange={(e) => handleEventChange(index, "month", e.target.value)}
                                         >
                                             {[
                                                 "January", "February", "March", "April", "May", "June", "July",
                                                 "August", "September", "October", "November", "December",
-                                            ].map((month, idx) => (
+                                            ].map((monthName, idx) => (
                                                 <option key={idx} value={idx + 1}>
-                                                    {month}
+                                                    {monthName}
                                                 </option>
                                             ))}
                                         </select>
                                     </div>
+
+                                    {/* Year Selector */}
                                     <div>
                                         <select
-                                            className="p-2 w-24 bg-[#f8f8f8]  border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                                            className="p-2 w-24 bg-[#f8f8f8] border-2 h-10 border-gray-300 text-blue-900 font-medium"
                                             value={year}
                                             onChange={(e) => handleEventChange(index, "year", e.target.value)}
                                         >
@@ -330,6 +360,7 @@ export default function Timeline() {
                             </div>
                         );
                     })}
+
 
                     {/* Buttons for Adding Event and Saving Timeline */}
                     <div className="flex items-center gap-3 font-playfair align-middle mt-4">
