@@ -34,7 +34,30 @@ class PageController extends Controller
             'password' => $validated['is_private'] ? bcrypt($validated['password']) : null,
         ]);
 
-        $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
+        $page->gallery()->create([
+            'gallery_name' => "Gallery",
+            'user_id' => $validated['user_id']
+        ]);
+
+        $page->obituaries()->create([
+            'tagline' => "Enter a memorable tagline here.",
+            'content' => "Add a heartfelt message about your loved one.",
+            'page_id' => $page->id,
+        ]);
+
+        $timeline = $page->timeline()->create([
+            'tagline' => "Your Timeline Goes Here",
+            'page_id' => $page->id
+        ]);
+
+        $timeline->events()->create([
+            'page_id' => $page->id,
+            'timeline_id' => $timeline->id,
+            'event_date' => now(),
+            'title' => "New Event",
+            'description' => "Event description",
+            'location' => "Event location"
+        ]);
 
         return response()->json([
             'message' => 'Page created successfully.',
@@ -171,27 +194,6 @@ class PageController extends Controller
     }
 
 
-
-    /**
-     * Save or update obituary details for the user's page.
-     */
-    public function saveObituary(Request $request)
-    {
-        $validated = $request->validate([
-            'tagline' => 'nullable|string',
-            'content' => 'nullable|string',
-        ]);
-
-        $page = $request->user()->page;
-        $obituary = $page->obituaries()->firstOrNew();
-
-        $obituary->fill($validated);
-        $obituary->save();
-
-        return response()->json([
-            'message' => 'Obituary updated successfully.',
-        ], 200);
-    }
 
     public function uploadBackgroundMusic(Request $request)
     {

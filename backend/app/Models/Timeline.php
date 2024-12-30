@@ -9,7 +9,7 @@ class Timeline extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['page_id', 'tagline'];
+    protected $fillable = ['page_id', 'tagline' , 'status'];
 
     protected $with = [
         'events'

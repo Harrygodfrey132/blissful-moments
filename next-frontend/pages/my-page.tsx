@@ -15,6 +15,10 @@ import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 
+const stripePromise = process.env.NODE_ENV === "production"
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
+  : null;
+
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Register page modal state
@@ -22,7 +26,6 @@ export default function Home() {
   const [hasPage, setHasPage] = useState(false); // Track if user already has a page
   const { setPageId, setPageData } = usePageContext();
   const { data: session, status } = useSession();
-  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
   const openModal = (modalType: "config" | "register") => {
     if (modalType === "config") setIsModalOpen(true);

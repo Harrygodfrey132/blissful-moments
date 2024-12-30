@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gallery;
 use App\Models\GalleryFolder;
 use App\Models\GalleryImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
@@ -52,28 +54,34 @@ class GalleryController extends Controller
         try {
             DB::beginTransaction();
 
-            collect($request->file('images'))->map(function ($image) use ($validated) {
+            $imageUrls = [];
+            foreach ($request->file('images') as $image) {
                 $fileName = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
-                $path = $image->storeAs('public/gallery', $fileName);
+                $path = $image->storeAs('gallery', $fileName, 'public');
                 $fileUrl = url(Storage::url($path));
 
-                return GalleryImage::create([
+                // Save the image record in the database
+                GalleryImage::create([
                     'gallery_id' => $validated['gallery_id'],
                     'folder_id' => $validated['folder_id'] ?? null,
                     'image_path' => $fileUrl,
                     'caption' => null,
                 ]);
-            });
+
+                // Collect the file URL for the response
+                $imageUrls[] = $fileUrl;
+            }
 
             DB::commit();
 
-            // Return response
+            // Refresh the user's page data
             $page = $request->user()->page;
 
             return response()->json([
                 'success' => true,
                 'message' => 'Images uploaded successfully.',
                 'page_data' => $page->refresh(),
+                'image_urls' => $imageUrls,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -81,9 +89,10 @@ class GalleryController extends Controller
                 'success' => false,
                 'message' => 'Error uploading images.',
                 'error' => $e->getMessage(),
-            ], 500);
+            ]);
         }
     }
+
 
 
 
@@ -112,7 +121,7 @@ class GalleryController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Folder created/updated successfully.',
-            'folder' => $page->refresh(),
+            'page_data' => $page->refresh(),
         ]);
     }
 
@@ -208,8 +217,40 @@ class GalleryController extends Controller
         }
     }
 
-    public function folders()
+    public function updateStatus(Request $request)
     {
-        return response()->json("here");
+        try {
+            // Validate the incoming request
+            $validated = $request->validate([
+                'gallery_id' => 'required|integer|exists:galleries,id',
+                'status' => 'required|boolean',
+            ]);
+
+            // Retrieve the gallery and user
+            $galleryId = $validated['gallery_id'];
+            $status = $validated['status'];
+            $user = $request->user();
+
+            // Find the gallery by ID
+            $gallery = Gallery::findOrFail($galleryId);
+
+            // Update the gallery status
+            if ($gallery->update(['status' => $status])) {
+                return response()->json([
+                    'message' => 'Gallery status updated successfully',
+                    'page_data' => $user->page->refresh(),
+                ], 200);
+            }
+
+            // Handle unexpected failure during update
+            return response()->json([
+                'message' => 'Failed to update gallery status',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An unexpected error occurred',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

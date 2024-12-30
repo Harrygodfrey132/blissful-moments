@@ -9,12 +9,20 @@ class Gallery extends Model
     protected $fillable = [
         'page_id',
         'gallery_name',
+        'status'
     ];
 
     protected $with = [
         'images',
         'folders'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => 'boolean',
+        ];
+    }
 
     public function page()
     {

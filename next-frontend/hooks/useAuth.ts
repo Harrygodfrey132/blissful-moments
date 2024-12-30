@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -7,8 +7,9 @@ import { toast } from "react-toastify";
 import { useUserContext } from "../context/UserContext";
 
 interface User {
-  isVerified: boolean;
   id: string;
+  email: string;
+  isVerified: boolean;
 }
 
 interface UseAuthReturn {
@@ -21,26 +22,25 @@ interface UseAuthReturn {
 const useAuth = (): UseAuthReturn => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isRequesting, setIsRequesting] = useState<boolean>(false); // Track API requests
   const router = useRouter();
-  const { data: session, status } = useSession(); // Access session state
+  const { data: session, status } = useSession();
   const { setUserData } = useUserContext();
-  const fetchUser = async () => {
-    if (isRequesting || !session || status !== "authenticated") return; // Ensure no concurrent requests and session is authenticated
+  const isRequestingRef = useRef<boolean>(false); // Track ongoing requests
 
-    setIsRequesting(true);
+  const fetchUser = async () => {
+    if (isRequestingRef.current || !session || status !== "authenticated")
+      return;
+
+    isRequestingRef.current = true;
     setLoading(true);
 
     try {
       const token = session.user?.accessToken;
-
-      // Ensure token exists before proceeding
       if (!token) {
         router.push("/login");
         return;
       }
 
-      // Fetch user data from API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.getUser}`,
         { email: session.user.email },
@@ -49,28 +49,28 @@ const useAuth = (): UseAuthReturn => {
           withCredentials: true,
         }
       );
+
       setUser(response.data);
       setUserData(response.data.user);
     } catch (error) {
+      console.error("Failed to fetch user data:", error);
       setUser(null);
       toast.error("Failed to fetch user data");
     } finally {
       setLoading(false);
-      setIsRequesting(false);
+      isRequestingRef.current = false;
     }
   };
 
   useEffect(() => {
-    // Wait for the session status to resolve
-    if (status === "authenticated" && !user) {
-      fetchUser();
+    if (status === "authenticated" && !user && !isRequestingRef.current) {
+      fetchUser(); // Only fetch if authenticated and user is not set yet
     }
-  }, [session, status, user]);
+  }, [status, session]);
 
   useEffect(() => {
-    // Clear user state when the session is unauthenticated
     if (status === "unauthenticated") {
-      setUser(null);
+      setUser(null); // Clear user data when unauthenticated
     }
   }, [status]);
 

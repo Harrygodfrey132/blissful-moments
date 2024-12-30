@@ -6,9 +6,7 @@ const nextConfig = {
       "admin.blissful-moments.app.local",
       "admin.theblissfulmoments.com",
       "blissful-moments.app.local",
-      "blissful-moments.app.local:3000",
       "localhost",
-      "localhost:3000",
     ],
   },
 };

@@ -5,15 +5,14 @@ import { toast } from "react-toastify";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
-import { debounce } from "lodash";
 
 const PersonalQuote: React.FC = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(true);
+  const [quoteRequested, isQuoteRequested] = useState<boolean>(false);
   const [quote, setQuote] = useState<string>("Share Something special for loved one");
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
-  const [keyword, setKeyword] = useState('');
 
   // Ref for the contentEditable div
   const quoteRef = useRef<HTMLDivElement>(null);
@@ -22,15 +21,20 @@ const PersonalQuote: React.FC = () => {
   useEffect(() => {
     if (pageData && pageData.personal_quote?.quote) {
       setQuote(pageData.personal_quote.quote);
+      setIsEnabled(Boolean(pageData.personal_quote.status));
     }
   }, [pageData]);
 
   // API for generating a random quote
   const generateQuote = async () => {
     try {
+      isQuoteRequested(true);
       const response = await axios.get('/api/quote');
       if (response.data && response.data.length > 0) {
         setQuote(response.data[0].q);
+        saveQuote(response.data[0].q, isEnabled);
+        isQuoteRequested(false);
+
       } else {
         toast.info("No quote found, please try again.");
       }
@@ -41,7 +45,7 @@ const PersonalQuote: React.FC = () => {
   };
 
   // Function to save the quote to the backend
-  const saveQuote = async (updatedQuote: string) => {
+  const saveQuote = async (updatedQuote: string, isDisabled: boolean) => {
     if (!token) {
       toast.error("You must be logged in to save a quote.");
       return;
@@ -56,7 +60,7 @@ const PersonalQuote: React.FC = () => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.saveQuote}`,
-        { quote: updatedQuote },
+        { quote: updatedQuote, status: isDisabled },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,23 +74,24 @@ const PersonalQuote: React.FC = () => {
         toast.error("Failed to save the quote.");
       }
     } catch (error) {
+      console.error(error);
       toast.error("An error occurred while saving the quote.");
     }
   };
 
-  // Debounced version of saveQuote to avoid frequent calls
-  const debouncedSaveQuote = useRef(debounce((updatedQuote: string) => {
-    saveQuote(updatedQuote);
-  }, 500)).current; // Delay of 500ms after user stops typing
-
   // Trigger save when focus is lost (onBlur)
   const handleBlur = () => {
     if (quoteRef.current) {
-      const updatedQuote = quoteRef.current.textContent?.trim() || '';
-      setQuote(updatedQuote); // Update the quote state for the saved quote
-      debouncedSaveQuote(updatedQuote); // Trigger debounced save
+      const updatedQuote = quoteRef.current.textContent?.trim() || '';  // Get trimmed text
+      setQuote(updatedQuote);
+      saveQuote(updatedQuote, isEnabled);
     }
   };
+
+  const handleStatus = (status: boolean) => {
+    setIsEnabled(status);
+    saveQuote(quote, status);
+  }
 
   return (
     <div>
@@ -98,7 +103,7 @@ const PersonalQuote: React.FC = () => {
               type="checkbox"
               id="toggle-switch"
               checked={isEnabled}
-              onChange={() => setIsEnabled(!isEnabled)}
+              onChange={() => handleStatus(!isEnabled)}
               className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
             />
             <label
@@ -110,8 +115,9 @@ const PersonalQuote: React.FC = () => {
         </div>
       </div>
 
+
       {/* Quote content */}
-      {isEnabled && (
+      {(isEnabled) && (
         <div>
           <h2 className="md:text-4xl text-2xl text-center font-medium font-playfair mb-4 relative">
             <RiDoubleQuotesL className="text-blue-light-900 absolute top-2 left-1" />
@@ -131,7 +137,7 @@ const PersonalQuote: React.FC = () => {
           {/* Button to suggest quote */}
           <div className="w-full mb-4 m-auto text-center">
             <button onClick={generateQuote} className="md:text-2xl text-lg font-playfair border border-gray-300 font-medium px-4 py-2 bg-[#F3EAEACC] text-blue-light-900 shadow-md rounded-lg">
-              Suggest Quote
+              {quoteRequested ? "Fetching Quote..." : "Suggest Quote"}
             </button>
           </div>
         </div>

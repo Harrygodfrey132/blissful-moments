@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import VerifyEmailForm from "../components/VerifyEmailForm";
-import useAuthRedirect from "../hooks/useAuthRedirect";
-import { getSession } from "next-auth/react";
-import useAuth from "../hooks/useAuth";
+import { useAuthContext } from "../context/AuthProvider";
 
 const VerifyEmailPage = () => {
   const [loading, setLoading] = useState(true);
-  useAuthRedirect(true);
-
-  // Session check
-  const { user, loading: userLoading } = useAuth();
+  const { user, loading: userLoading } = useAuthContext();
 
   useEffect(() => {
     if (!userLoading) {

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ObituaryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PersonalQuoteController;
@@ -47,10 +48,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::patch('/images/{id}/unassign-folder', [GalleryController::class, 'unassignFolder']);
         Route::get('/galleries/{id}/unassigned-images', [GalleryController::class, 'unassignedImages']);
         Route::delete('/delete/image', [GalleryController::class, 'destroyImage']);
+        Route::put('/update-status', [GalleryController::class, 'updateStatus']);
     });
 
     // Obituary management
-    Route::post('/obituary', [PageController::class, 'saveObituary']);
+    Route::post('/obituary', [ObituaryController::class, 'saveObituary']);
+    Route::put('/obituary/update-status', [ObituaryController::class, 'updateStatus']);
 
     // Timeline Event Management
     Route::post('/timeline', [TimelineController::class, 'saveTimeline']);
@@ -66,5 +69,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-Route::get('/folders', [GalleryController::class, 'folders']);
 Route::get('/countries', [CountryController::class, 'fetchCountries']);

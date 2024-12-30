@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css"; // Import Toast styles
 import { IsVerifiedProvider } from '../context/IsUserVerifiedContext';
 import { PageProvider } from '../context/PageContext';
 import { UserProvider } from '../context/UserContext';
+import { AuthProvider } from '../context/AuthProvider';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & { Component: { noLayout?: boolean } }) {
   useEffect(() => {
@@ -21,19 +22,23 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & {
 
       <UserProvider>
         <SessionProvider session={session}>
-          <PageProvider>
-            <IsVerifiedProvider>
-              <ToastContainer />
-              {/* Render without Layout if `noLayout` is set */}
-              {Component.noLayout ? (
-                <Component {...pageProps} />
-              ) : (
-                <Layout>
+          <AuthProvider>
+
+            <PageProvider>
+              <IsVerifiedProvider>
+                <ToastContainer />
+                {/* Render without Layout if `noLayout` is set */}
+                {Component.noLayout ? (
                   <Component {...pageProps} />
-                </Layout>
-              )}
-            </IsVerifiedProvider>
-          </PageProvider>
+                ) : (
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
+                )}
+              </IsVerifiedProvider>
+            </PageProvider>
+          </AuthProvider>
+
         </SessionProvider>
       </UserProvider>
     </>

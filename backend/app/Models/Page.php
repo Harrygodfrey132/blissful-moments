@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
+    use Sluggable;
+
     protected $fillable = [
         'user_id',
         'name',
@@ -20,6 +23,7 @@ class Page extends Model
         'death_date',
         'address',
         'background_music',
+        'is_registered'
     ];
 
     protected $with = [
@@ -28,6 +32,20 @@ class Page extends Model
         'obituaries',
         'timeline'
     ];
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 
     public function user()
     {

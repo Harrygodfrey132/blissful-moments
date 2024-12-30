@@ -19,7 +19,7 @@ export default function Sidebar() {
       {/* Profile Section */}
       <div className="flex items-center md:w-[17rem] w-full mb-4 p-4 rounded bg-white shadow">
         <Image
-          src={session?.user?.userDetails?.profile_picture || "/img/dummmy.png"}
+          src={session?.user?.userDetails?.profile_picture || '/img/dummy.png'}
           alt="Profile"
           width={300}
           height={300}

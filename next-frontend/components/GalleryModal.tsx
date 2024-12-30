@@ -12,6 +12,7 @@ interface GalleryModalProps {
   onRequestClose: () => void;
   uploadedImages: File[];
   setUploadedImages: React.Dispatch<React.SetStateAction<File[]>>;
+  blobUrls: Record<string, string>;
 }
 
 const GalleryModal: React.FC<GalleryModalProps> = ({
@@ -19,6 +20,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
   onRequestClose,
   uploadedImages,
   setUploadedImages,
+  blobUrls
 }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
@@ -27,7 +29,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
   });
 
   const { data: session } = useSession();
-  const {pageData , setPageData} = usePageContext();
+  const { pageData, setPageData } = usePageContext();
   const galleryId = pageData?.gallery?.id || '';
   const uploadImages = async () => {
     const formData = new FormData();
@@ -45,6 +47,8 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
       });
 
       if (response.status === 200) {
+        console.log("response" , response.data);
+
         toast.success('Images uploaded successfully!');
         setPageData(response.data.page_data);
         onRequestClose();
@@ -83,7 +87,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
           {uploadedImages.map((file, index) => (
             <div key={index} className="relative">
               <img
-                src={URL.createObjectURL(file)}
+                src={blobUrls[`uploaded-${index}`]} // Use memoized blob URL
                 alt={file.name}
                 className="w-full md:h-32 h-16 object-cover rounded shadow"
               />
@@ -91,6 +95,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
           ))}
         </div>
       )}
+
 
       <div className="mt-6 flex justify-end space-x-4">
         <button

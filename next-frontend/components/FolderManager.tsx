@@ -26,6 +26,12 @@ const FolderManager: React.FC = () => {
 
   // Function to add a new folder
   const addFolder = async () => {
+
+    if (!pageData?.gallery?.id) {
+      toast.error("Gallery ID is missing. Cannot create folder.");
+      return;
+    }
+
     const newFolder: Folder = { id: Date.now(), name: "New Folder" };
     setFolders((prevFolders) => [...prevFolders, newFolder]);
 
@@ -44,11 +50,20 @@ const FolderManager: React.FC = () => {
       );
 
       if (response.status === 200) {
-        setPageData(response.data.page_data);
-        toast.success("Folder created successfully");
+        const updatedPageData = response.data.page_data;
+        console.log("API Response:", response.data);
+
+        if (updatedPageData?.gallery) {
+          setPageData(updatedPageData); // Update global state
+          setFolders(updatedPageData.gallery.folders); // Sync local state
+          toast.success("Folder created successfully");
+        } else {
+          toast.error("Failed to update page data after creating folder.");
+        }
       } else {
         toast.error("Unable to create folder");
       }
+
     } catch (error: any) {
       toast.error("Something went wrong: " + (error.response?.data?.message || error.message));
     }
@@ -100,7 +115,6 @@ const FolderManager: React.FC = () => {
           },
         }
       );
-
       if (response.status === 200) {
         setPageData(response.data.page_data);
         toast.success("Folder name updated successfully");

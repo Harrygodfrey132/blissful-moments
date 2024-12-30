@@ -10,6 +10,7 @@ class Obituary extends Model
         'page_id',
         'content',
         'tagline',
+        'status'
     ];
 
     public function page()

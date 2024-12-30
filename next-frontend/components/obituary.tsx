@@ -9,9 +9,10 @@ const Obituary = () => {
   const [isObituaryEnabled, setIsObituaryEnabled] = useState(true);
   const [tagline, setTagline] = useState<string>("Enter a memorable tagline here.");
   const [content, setContent] = useState<string>("Add a heartfelt message about your loved one.");
+  const [obituaryId, setObituaryId] = useState<string>("");
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
-  const { pageData } = usePageContext();
+  const { pageData , setPageData } = usePageContext();
 
   const taglineRef = useRef<HTMLDivElement>(null);
 
@@ -19,6 +20,8 @@ const Obituary = () => {
     if (pageData?.obituaries) {
       setTagline(pageData?.obituaries?.tagline || "Enter a memorable tagline here.");
       setContent(pageData?.obituaries?.content || "Add a heartfelt message about your loved one.");
+      setObituaryId(pageData?.obituaries?.id || "");
+      setIsObituaryEnabled(!!pageData?.obituaries?.status)
     }
   }, [pageData]);
 
@@ -56,6 +59,26 @@ const Obituary = () => {
     handleSave("content", content);
   };
 
+  const handleStatus = async (status: boolean) => {
+    setIsObituaryEnabled(status);
+
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_URL}${API.updateObituaryStatus}`,
+      {
+        obituary_id: pageData?.obituaries?.id,
+        status: status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      setPageData(response.data.page_data)
+    }
+  }
   return (
     <div>
       <div className="md:flex gap-4 justify-between">
@@ -66,7 +89,7 @@ const Obituary = () => {
                 type="checkbox"
                 id="toggle-obituary"
                 checked={isObituaryEnabled}
-                onChange={() => setIsObituaryEnabled(!isObituaryEnabled)}
+                onChange={() => handleStatus(!isObituaryEnabled)}
                 className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label

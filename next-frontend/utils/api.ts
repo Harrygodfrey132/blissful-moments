@@ -13,15 +13,16 @@ export const API = {
   savePersonalDetails: "/page/personal-info",
   checkDomainAvailability: "/page/name-availability",
   uploadBackgroundImage: "/page/background-image",
-  saveQuote: "/page/quote",
   uploadBackgroundMusic: "/page/uploadBackgroundMusic",
 
   // Gallery endpoints
   updateGalleryName: "/gallery/name",
   uploadGalleryImages: "/gallery/images",
+  updateGalleryStatus: "/gallery/update-status",
 
   // Obituary management
   saveObituary: "/obituary",
+  updateObituaryStatus: "/obituary/update-status",
 
   // Timeline management
   saveTimeline: "/timeline",
@@ -38,4 +39,8 @@ export const API = {
 
   // Fetch Countries
   fetchCountries: "/countries",
+
+  // Personal Quote Management
+  saveQuote: "/quote",
+  updateQuoteStatus: "/quote/update-status",
 };

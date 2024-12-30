@@ -8,6 +8,7 @@ import { API } from "../utils/api";
 import { usePageContext } from "../context/PageContext";
 import FolderManager from "../components/FolderManager";
 import { AiFillDelete } from "react-icons/ai";
+import Image from "next/image";
 
 interface Image {
   image_path: string;
@@ -27,12 +28,10 @@ interface GalleryImage {
 }
 
 const Gallery: React.FC = () => {
-  const [isGalleryEnabled, setGalleryIsEnabled] = useState(true);
+  const [isGalleryEnabled, setGalleryIsEnabled] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [galleryName, setCurrentGalleryName] = useState<string>("Gallery");
-  const [galleryId, setCurrentGalleryId] = useState<number | null>(null);
-  const [folders, setFolders] = useState<Folder[]>([]);
   const { setPageData, pageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
@@ -40,8 +39,8 @@ const Gallery: React.FC = () => {
   const [popoverImageIndex, setPopoverImageIndex] = useState<number | null>(null);
   const [assignFolderPopoverIndex, setAssignFolderPopoverIndex] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
-
-  console.log(pageData);
+  const [blobUrls, setBlobUrls] = useState<Record<string, string>>({});
+  const [showLocalImages, setShowLocalImages] = useState(true);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,6 +57,30 @@ const Gallery: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [assignFolderPopoverIndex]);
+
+  useEffect(() => {
+    if (pageData?.gallery?.status !== undefined) {
+      setGalleryIsEnabled(!!pageData.gallery.status);
+
+    }
+  }, [pageData]);
+
+
+  useEffect(() => {
+    // Generate blob URLs for uploaded images
+    const urls = uploadedImages.reduce((acc, file, index) => {
+      const id = `uploaded-${index}`;
+      acc[id] = URL.createObjectURL(file);
+      return acc;
+    }, {} as Record<string, string>);
+
+    setBlobUrls(urls);
+
+    // Cleanup blob URLs on unmount
+    return () => {
+      Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [uploadedImages]);
 
   const deleteImage = async (index: number, isUploaded: boolean, imageId?: number) => {
     if (isUploaded) {
@@ -120,8 +143,6 @@ const Gallery: React.FC = () => {
     }
   };
 
-
-
   const saveGalleryName = async (galleryTagline: string) => {
     setCurrentGalleryName(galleryTagline);
 
@@ -148,21 +169,51 @@ const Gallery: React.FC = () => {
     }
   };
 
-  const allImages = [
-    ...uploadedImages.map((file, index) => ({
-      id: `uploaded-${index}`, // Assign unique IDs to avoid conflicts
-      src: URL.createObjectURL(file),
+  const allImages = showLocalImages
+    ? uploadedImages.map((file, index) => ({
+      id: `uploaded-${index}`,
+      src: blobUrls[`uploaded-${index}`],
       name: file.name,
       isUploaded: true,
-    })),
-    ...(pageData?.gallery?.images || []).map((image: GalleryImage) => ({
+    }))
+    : (pageData?.gallery?.images || []).map((image: GalleryImage) => ({
       id: image.id,
       src: image.image_path,
       name: `Image ${image.id}`,
       isUploaded: false,
-    })),
-  ];
+    }));
 
+  useEffect(() => {
+    // Switch to server images on page refresh
+    if (pageData?.gallery?.images?.length > 0) {
+      setShowLocalImages(false);
+    }
+  }, [pageData]);
+
+
+  const handleStatus = async (status: boolean) => {
+    setGalleryIsEnabled(status);
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}${API.updateGalleryStatus}`,
+      {
+        gallery_id: pageData?.gallery.id,
+        status: status,
+
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    if (response.status === 200) {
+      console.log("Response Data", response.data.page_data);
+
+      setPageData(response.data.page_data);
+
+    } else {
+      toast.error('Something went wrong');
+      setGalleryIsEnabled(!status);
+    }
+  }
   return (
     <div className="font-playfair">
       <div className="flex justify-between">
@@ -188,7 +239,7 @@ const Gallery: React.FC = () => {
                 type="checkbox"
                 id="gallery-toggle"
                 checked={isGalleryEnabled}
-                onChange={() => setGalleryIsEnabled(!isGalleryEnabled)}
+                onChange={() => handleStatus(!isGalleryEnabled)}
                 className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label
@@ -210,9 +261,11 @@ const Gallery: React.FC = () => {
           <div className="grid md:grid-cols-3 grid-cols-2 gap-5 mt-6 relative">
             {allImages.map((image, index) => (
               <div key={image.id} className="relative group">
-                <img
+                <Image
                   src={image.src}
                   alt={image.name}
+                  width={500}
+                  height={500}
                   className="w-full md:h-72 h-32 object-cover rounded shadow"
                 />
                 <button
@@ -284,6 +337,7 @@ const Gallery: React.FC = () => {
             onRequestClose={() => setModalOpen(false)}
             uploadedImages={uploadedImages}
             setUploadedImages={setUploadedImages}
+            blobUrls={blobUrls}
           />
         </>
       )}
