@@ -62,6 +62,11 @@ class PageController extends Controller
                     'description' => "Event description",
                     'location' => "Event location"
                 ]);
+
+                $page->socialMediaData()->create([
+                    'page_id' => $page->id,
+                    'content' => "This page is a forever tribute to . Please spread the page so others can contribute and reminise"
+                ]);
             });
 
             return response()->json([

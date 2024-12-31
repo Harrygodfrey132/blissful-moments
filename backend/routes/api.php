@@ -10,6 +10,7 @@ use App\Http\Controllers\ObituaryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PersonalQuoteController;
+use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -63,8 +64,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/quote', [PersonalQuoteController::class, 'saveQuote']);
     Route::put('/quote/update-status', [PersonalQuoteController::class, 'saveQuote']);
 
-    // Gallery Management
-
+    // Social Media Data Management
+    Route::post('/save-social-media-data', [SocialMediaController::class, 'saveSocialMediaData']);
     //Payment Management
 
 });

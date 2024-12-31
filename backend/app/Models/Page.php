@@ -30,7 +30,8 @@ class Page extends Model
         'personalQuote',
         'gallery',
         'obituaries',
-        'timeline'
+        'timeline',
+        'socialMediaData'
     ];
 
     /**
@@ -70,5 +71,10 @@ class Page extends Model
     public function timeline()
     {
         return $this->hasOne(Timeline::class);
+    }
+
+    public function socialMediaData()
+    {
+        return $this->hasOne(SocialMedia::class);
     }
 }

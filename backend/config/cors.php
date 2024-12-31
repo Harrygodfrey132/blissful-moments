@@ -26,6 +26,7 @@ return [
         'http://admin.theblissfulmoments.com',
         'https://staging.theblissfulmoments.com',
         'https://theblissfulmoments.com',
+        'https://ca93-2401-4900-1c70-b34b-e84c-917e-c222-4c2a.ngrok-free.app',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
