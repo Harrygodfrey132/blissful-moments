@@ -15,9 +15,10 @@ import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 
-const stripePromise = process.env.NODE_ENV === "production"
-  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
-  : null;
+// const stripePromise = process.env.NODE_ENV === "production"
+//   ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
+//   : null;
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state

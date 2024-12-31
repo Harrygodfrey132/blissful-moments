@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useStripe, useElements, PaymentElement, Elements } from "@stripe/react-stripe-js";
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+  Elements,
+} from "@stripe/react-stripe-js";
 import axios from "axios";
 import { API } from "../utils/api";
 import { usePageContext } from "../context/PageContext";
@@ -19,7 +24,7 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
         // API call to create a payment intent
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}${API.createPaymentIntent}`,
-          { amount: 5000 }, // amount in cents ($50.00)
+          { amount: 500 }, // amount in cents ($50.00)
           {
             headers: {
               "Content-Type": "application/json",
@@ -27,6 +32,7 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
             },
           }
         );
+        console.log(response.data);
 
         const { clientSecret } = response.data;
         setClientSecret(clientSecret);
@@ -35,6 +41,7 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
         alert("There was an issue processing your payment. Please try again.");
       }
     };
+    console.log(stripe, elements);
 
     if (stripe && elements) {
       fetchClientSecret();
@@ -55,17 +62,39 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
         clientSecret, // The client secret from your backend
         elements, // The elements object containing the Stripe Elements instances
         confirmParams: {
-          return_url: `${window.location.origin}/success`, // URL to return to after payment confirmation
+          return_url: `${window.location.origin}/success`,
         },
       });
 
       if (isPaymentError(response)) {
         // Handle error response
         console.error(response.error?.message);
-        alert("Payment failed: " + (response.error?.message ?? "Unknown error"));
+        alert(
+          "Payment failed: " + (response.error?.message ?? "Unknown error")
+        );
       } else if (response.paymentIntent?.status === "succeeded") {
         // Handle successful payment
         alert("Payment successful!");
+
+        const orderData = {
+          amount: 500, // amount in cents
+          stripe_payment_intent: response.paymentIntent.id,
+          stripe_payment_status: response.paymentIntent.status,
+          plan_type: "monthly", // Example, adjust according to the selected plan
+          plan_amount: 500, // Example, adjust according to the selected plan
+        };
+
+        const result = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/orders`,
+          orderData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(result.data); // Log the response from Laravel
       }
     } catch (error) {
       console.error("Error confirming payment:", error);
@@ -75,15 +104,18 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
 
   // Check if the response contains an error
   const isPaymentError = (response) => {
-    return 'error' in response;
+    return "error" in response;
   };
 
+  console.log(clientSecret);
   if (!isOpen || !clientSecret) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white w-1/2 p-6 rounded shadow-lg">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Register Your Page</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Register Your Page
+        </h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
@@ -114,7 +146,7 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              Pay $50
+              Pay $5
             </button>
           </div>
         </form>

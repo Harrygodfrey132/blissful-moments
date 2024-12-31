@@ -36,7 +36,7 @@ interface AllImage {
 };
 
 const Gallery: React.FC = () => {
-  const [isGalleryEnabled, setGalleryIsEnabled] = useState(false);
+  const [isGalleryEnabled, setGalleryIsEnabled] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [galleryName, setCurrentGalleryName] = useState<string>("Gallery");

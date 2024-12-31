@@ -43,4 +43,7 @@ export const API = {
   // Personal Quote Management
   saveQuote: "/quote",
   updateQuoteStatus: "/quote/update-status",
+
+  // Social Media Management
+  saveSocialMediaData: "/save-social-media-data"
 };
