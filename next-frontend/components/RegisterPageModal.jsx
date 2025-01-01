@@ -19,6 +19,7 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
           customer_id: session?.user?.id,
           plan_type: 12,
           plan_name: "Individual",
+          plan_amount: 50000,
         },
         {
           headers: {
