@@ -81,10 +81,14 @@ export default function PersonalInfo() {
     setDateState((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleBlur = async (field: string, value: string) => {
+  const handleBlur = async (field: string, value: string | File) => {
     try {
       const formData = new FormData();
-      formData.append(field, value);
+      if (value instanceof File) {
+        formData.append(field, value);
+      } else {
+        formData.append(field, value);
+      }
 
       const response = await axios.post(`${API_URL}${API.savePersonalDetails}`, formData, {
         headers: {
@@ -154,7 +158,7 @@ export default function PersonalInfo() {
             className="w-full h-auto object-cover"
           />
           <ImageCropperModal
-            onSave={(file) => handleBlur("profile_picture", file.name)}
+            onSave={(file) => handleBlur("profile_picture", file)}
           />
         </div>
       </div>

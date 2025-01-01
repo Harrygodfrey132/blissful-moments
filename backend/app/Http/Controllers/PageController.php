@@ -85,54 +85,62 @@ class PageController extends Controller
      */
     public function updatePersonalInformation(Request $request)
     {
-        $user = $request->user();
-        $page = $user->page;
+        try {
+            $user = $request->user();
+            $page = $user->page;
+            Log::info("Requested Data", [print_r($request->all(), true)]);
+            // Validate the incoming data
+            $validated = $request->validate([
+                'firstName' => 'nullable|string|max:255',
+                'middleName' => 'nullable|string|max:255',
+                'lastName' => 'nullable|string|max:255',
+                'location' => 'nullable|string|max:255',
+                'date_of_birth' => 'nullable|date_format:Y-m-d',
+                'death_date' => 'nullable|date_format:Y-m-d',
+                'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
-        // Validate the incoming data
-        $validated = $request->validate([
-            'firstName' => 'nullable|string|max:255',
-            'middleName' => 'nullable|string|max:255',
-            'lastName' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'date_of_birth' => 'nullable|date_format:Y-m-d',
-            'death_date' => 'nullable|date_format:Y-m-d',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+            // Collect the data to be updated
+            $updateData = [];
 
-        // Collect the data to be updated
-        $updateData = [];
+            // Dynamically map the validated fields to the model attributes
+            $fieldsMap = [
+                'firstName' => 'first_name',
+                'middleName' => 'middle_name',
+                'lastName' => 'last_name',
+                'location' => 'address',
+                'date_of_birth' => 'date_of_birth',
+                'death_date' => 'death_date',
+            ];
 
-        // Dynamically map the validated fields to the model attributes
-        $fieldsMap = [
-            'firstName' => 'first_name',
-            'middleName' => 'middle_name',
-            'lastName' => 'last_name',
-            'location' => 'address',
-            'date_of_birth' => 'date_of_birth',
-            'death_date' => 'death_date',
-        ];
-
-        foreach ($fieldsMap as $requestField => $modelField) {
-            // If the field is set in the validated data, assign it (check if it's an empty string)
-            if (array_key_exists($requestField, $validated)) {
-                $updateData[$modelField] = $validated[$requestField] === '' ? '' : $validated[$requestField];
+            foreach ($fieldsMap as $requestField => $modelField) {
+                // If the field is set in the validated data, assign it (check if it's an empty string)
+                if (array_key_exists($requestField, $validated)) {
+                    $updateData[$modelField] = $validated[$requestField] === '' ? '' : $validated[$requestField];
+                }
             }
+
+            // Handling profile picture upload if provided
+            if ($request->hasFile('profile_picture')) {
+                $updateData['profile_picture'] = $this->handleProfilePictureUpload($request);
+            }
+
+            // Update page information with the data that has changed
+            $page->update($updateData);
+
+            // Return response with updated data
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Personal information updated successfully.',
+                'page_data' => $page->refresh(),
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'false',
+                'message' => 'Something went wrong. Unable to Save Data.' . $th->getMessage(),
+                'page_data' => $page->refresh(),
+            ]);
         }
-
-        // Handling profile picture upload if provided
-        if ($request->hasFile('profile_picture')) {
-            $updateData['profile_picture'] = $this->handleProfilePictureUpload($request);
-        }
-
-        // Update page information with the data that has changed
-        $page->update($updateData);
-
-        // Return response with updated data
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Personal information updated successfully.',
-            'page_data' => $page->refresh(),
-        ]);
     }
 
     // Helper method for handling profile picture upload

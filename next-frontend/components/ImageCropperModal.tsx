@@ -17,10 +17,28 @@ function ImageCropperModal({ onSave }: ImageCropperModalProps) {
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
 
-  // Handle file selection and open modal
+  // Allowed file formats
+  const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
+
+  // Handle file selection and open modal with validation
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
+      // Validate file size
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        toast.error("File size should not exceed 2MB.");
+        return;
+      }
+
+      // Validate file type
+      if (!allowedFormats.includes(file.type)) {
+        toast.error("Invalid file format. Please upload a JPG or PNG image.");
+        return;
+      }
+
+      // If validations pass, read the file and open modal
       const reader = new FileReader();
       reader.onload = () => setImage(reader.result as string);
       reader.readAsDataURL(file);
@@ -34,13 +52,13 @@ function ImageCropperModal({ onSave }: ImageCropperModalProps) {
       try {
         // Get the cropped image as a Blob
         const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels);
-
+  
         // Convert Blob to File
         const file = new File([croppedImageBlob], "profile_picture.jpg", { type: "image/jpeg" });
-
+  
         // Send the cropped image as a File to the parent component via onSave
-        onSave(file);
-
+        onSave(file);  // Pass the whole file object, not just the name
+  
         // Optionally close the modal
         setIsModalOpen(false);
       } catch (error) {

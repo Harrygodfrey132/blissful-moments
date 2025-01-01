@@ -9,16 +9,10 @@ import { API } from "../utils/api";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 
-// const stripePromise = process.env.NODE_ENV === "production"
-//   ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
-//   : null;
-// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state
@@ -90,9 +84,7 @@ export default function Home() {
         <Modal isOpen={isModalOpen} onClose={() => closeModal("config")} />
 
         {/* Register Page Modal */}
-        {/* <Elements stripe={stripePromise}> */}
           <RegisterPageModal isOpen={isRegisterModalOpen} onClose={() => closeModal("register")} />
-        {/* </Elements> */}
         {/* Overlay for Modal Active State */}
         {(isModalOpen || isRegisterModalOpen) && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"></div>
