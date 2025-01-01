@@ -105,8 +105,6 @@ const Gallery: React.FC = () => {
         },
       });
     if (response.status === 200) {
-      console.log("Response Data", response.data.page_data);
-
       setPageData(response.data.page_data);
 
     } else {

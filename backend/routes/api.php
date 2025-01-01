@@ -69,5 +69,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //Payment Management
 
 });
+Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 Route::get('/countries', [CountryController::class, 'fetchCountries']);

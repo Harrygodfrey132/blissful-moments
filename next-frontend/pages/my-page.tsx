@@ -18,7 +18,7 @@ import { ROUTES } from "../utils/routes";
 // const stripePromise = process.env.NODE_ENV === "production"
 //   ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
 //   : null;
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state
@@ -90,9 +90,9 @@ export default function Home() {
         <Modal isOpen={isModalOpen} onClose={() => closeModal("config")} />
 
         {/* Register Page Modal */}
-        <Elements stripe={stripePromise}>
+        {/* <Elements stripe={stripePromise}> */}
           <RegisterPageModal isOpen={isRegisterModalOpen} onClose={() => closeModal("register")} />
-        </Elements>
+        {/* </Elements> */}
         {/* Overlay for Modal Active State */}
         {(isModalOpen || isRegisterModalOpen) && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"></div>

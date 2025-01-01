@@ -47,8 +47,6 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
       });
 
       if (response.status === 200) {
-        console.log("response" , response.data);
-
         toast.success('Images uploaded successfully!');
         setPageData(response.data.page_data);
         onRequestClose();

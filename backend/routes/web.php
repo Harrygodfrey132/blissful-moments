@@ -3,6 +3,7 @@
 use App\Http\Controllers\CmsController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\GDPRrequestController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QRCodeController;
@@ -75,7 +76,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/user/update-details', [UserDetailController::class, 'update']);
     });
 });
-
+Route::get('/checkout/success', [PaymentController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [PaymentController::class, 'cancel'])->name('checkout.cancel');
 Route::get('/orderdetails', function () {
     return view('pages/order-details');
 });

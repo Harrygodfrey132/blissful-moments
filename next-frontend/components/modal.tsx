@@ -162,7 +162,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white px-12 py-10 rounded shadow w-1/2">
+      <div className="bg-white px-12 py-10 rounded shadow w-3/4">
         {/* Step Progress Indicator */}
         <div className="relative mb-6 w-3/4 m-auto">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 rounded transform -translate-y-1/2"></div>

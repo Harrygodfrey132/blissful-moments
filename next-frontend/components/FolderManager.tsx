@@ -51,8 +51,6 @@ const FolderManager: React.FC = () => {
 
       if (response.status === 200) {
         const updatedPageData = response.data.page_data;
-        console.log("API Response:", response.data);
-
         if (updatedPageData?.gallery) {
           setPageData(updatedPageData); // Update global state
           setFolders(updatedPageData.gallery.folders); // Sync local state
