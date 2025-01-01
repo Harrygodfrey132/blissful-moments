@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const RegisterPageModal = ({ isOpen, onClose }) => {
   const { data: session } = useSession();
@@ -49,32 +50,61 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white md:w-1/3 w-full m-4 p-6 text-center rounded shadow-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-5">
-          Register Your Page
-        </h2>
-        <div className="flex justify-center mb-3 gap-4">
-        <div className="font-medium">Cureent Plan</div>
-        <div><span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Yearly</span></div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white md:w-1/3 w-full mx-4 p-8 rounded-lg shadow-xl relative">
+        {/* Close button */}
+        <button
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+          onClick={onClose}
+        >
+          <FaTimesCircle size={20} />
+        </button>
+
+        {/* Header section */}
+        <div className="text-center">
+          <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-4" />
+          <h2 className="text-3xl font-bold text-gray-800">
+            Confirm Your Registration
+          </h2>
         </div>
 
-        <div className="font-medium justify-center flex gap-4">Payment Amount : <span className="font-bold">$5</span> </div>
-        <div className="flex justify-center pt-5 border-t mt-5 gap-2">
+        {/* Plan and amount section */}
+        <div className="bg-gray-100 p-4 rounded-lg mt-6 text-gray-800">
+          <div className="flex justify-between mb-3">
+            <span className="font-medium">Current Plan:</span>
+            <span className="text-green-700 font-bold">Yearly</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-medium">Payment Amount:</span>
+            <span className="text-blue-600 font-bold">$50</span>
+          </div>
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex justify-center mt-8 gap-4">
           <button
             type="button"
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg shadow-md hover:bg-gray-300 transition"
             onClick={onClose}
           >
             Cancel
           </button>
           <button
             type="button"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            onClick={handleCheckout} // Trigger Stripe Checkout on button click
+            className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition"
+            onClick={handleCheckout}
           >
-            Pay
+            Proceed to Payment
           </button>
+        </div>
+
+        {/* Footer section */}
+        <div className="mt-6 text-center text-sm text-gray-500">
+          By proceeding, you agree to our
+          <a href="/terms" className="text-blue-500 hover:underline ml-1">
+            Terms and Conditions
+          </a>
+          .
         </div>
       </div>
     </div>
