@@ -37,11 +37,18 @@ class PaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         // Set your Stripe Secret Key
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY')); // Make sure to set your secret key in .env
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         try {
+            $customerId = $request->user()->id;
+
+            // Plan details (replace with dynamic values based on your application)
+            $planName = $request->plan_name;
+            $planType = '12';
+            $planAmount = $request->plan_amount;
+
             // Create a Checkout Session
-            $session = Session::create([
+            $session = \Stripe\Checkout\Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [
                     [
@@ -50,14 +57,20 @@ class PaymentController extends Controller
                             'product_data' => [
                                 'name' => 'Page Registration', // Example product name
                             ],
-                            'unit_amount' => 500, // Amount in cents (e.g. $5.00)
+                            'unit_amount' => $planAmount, // Amount in cents (e.g. $5.00)
                         ],
                         'quantity' => 1,
                     ],
                 ],
                 'mode' => 'payment',
-                'success_url' => route('checkout.success', ['session_id' => '{CHECKOUT_SESSION_ID}']),
-                'cancel_url' => route('checkout.cancel'),
+                'success_url' => env('FRONTEND_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => env('FRONTEND_URL') . '/cancel',
+                'metadata' => [
+                    'customer_id' => $customerId,  // Add customer ID
+                    'plan_type' => $planType,     // Add plan type (e.g. 'monthly', 'quarterly')
+                    'plan_name' => $planName,     // Add plan type (e.g. 'monthly', 'quarterly')
+                    'plan_amount' => $planAmount,  // Add plan amount (in cents)
+                ],
             ]);
 
             return response()->json(['sessionId' => $session->id]);
@@ -65,6 +78,7 @@ class PaymentController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
 
     // Add success and cancel methods for handling the response
     public function success(Request $request)

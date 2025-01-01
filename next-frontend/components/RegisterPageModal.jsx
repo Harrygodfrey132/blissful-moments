@@ -15,7 +15,11 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
       // Send a request to your Laravel backend to create a checkout session
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/create-checkout-session`,
-        {},
+        {
+          customer_id: session?.user?.id,
+          plan_type: 12,
+          plan_name: "Individual",
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -26,11 +30,13 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
       const { sessionId } = response.data;
 
       // Redirect to Stripe Checkout page
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+      );
       const { error } = await stripe.redirectToCheckout({ sessionId });
 
       if (error) {
-        console.error('Error redirecting to Checkout:', error.message);
+        console.error("Error redirecting to Checkout:", error.message);
         alert("There was an issue processing your payment. Please try again.");
       }
     } catch (error) {

@@ -7,6 +7,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDetailController;
@@ -76,6 +77,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/user/update-details', [UserDetailController::class, 'update']);
     });
 });
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 Route::get('/checkout/success', [PaymentController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel', [PaymentController::class, 'cancel'])->name('checkout.cancel');
 Route::get('/orderdetails', function () {
