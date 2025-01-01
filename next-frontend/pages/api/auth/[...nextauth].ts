@@ -54,7 +54,7 @@ const authOptions: NextAuthOptions = {
           name: user.name || null,
           isVerified: user.isVerified || false,
           userDetails: user.userDetails || undefined,
-        } as JWT; // Explicitly cast to JWT
+        } as JWT;
       }
       return token;
     },
@@ -79,6 +79,11 @@ const authOptions: NextAuthOptions = {
   pages: {
     signIn: ROUTES.Login,
     error: ROUTES.Login,
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 2 * 60 * 60,
+    updateAge: 30 * 60,
   },
 };
 
