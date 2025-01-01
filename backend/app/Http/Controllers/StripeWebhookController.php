@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class StripeWebhookController extends Controller
 {
@@ -42,9 +43,9 @@ class StripeWebhookController extends Controller
                 $paymentStatus = $session->payment_status;
                 $amount = $session->amount_total / 100; // Amount is in cents
                 $planType = $session->metadata->plan_type; // Assuming you stored this in metadata
-
+                $planName = $session->metadata->plan_name;
                 // Store the order in the database
-                $this->storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType);
+                $this->storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName);
 
                 break;
                 // Handle other event types if needed (like failed payments, refunds, etc.)
@@ -53,20 +54,27 @@ class StripeWebhookController extends Controller
         return response('Webhook received', 200);
     }
 
-    private function storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType)
+    private function storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName)
     {
         // You can store any other relevant info in the order as needed
-        $user = User::where('id', $session->metadata->customer_id);
+        try {
+            $user = User::where('id', $session->metadata->customer_id);
 
-        $order = Order::create([
-            'user_id' => $user->id,
-            'amount' => $amount,
-            'stripe_payment_intent' => $paymentIntent,
-            'stripe_payment_status' => $paymentStatus,
-            'plan_type' => $planType,
-            'plan_amount' => $amount,
-            'next_renewal_date' => $this->getNextRenewalDate($planType),
-        ]);
+            Order::create([
+                'user_id' => $user->id,
+                'amount' => $amount,
+                'stripe_payment_intent' => $paymentIntent,
+                'stripe_payment_status' => $paymentStatus,
+                'plan_type' => $this->getPlanType($planType),
+                'plan_name' => $planName,
+                'plan_amount' => $amount,
+                'next_renewal_date' => $this->getNextRenewalDate($planType),
+            ]);
+
+            $user->page->update(['is_registered' => true]);
+        } catch (\Throwable $th) {
+            Log::info("Error while saving Order Data", $th->getMessage());
+        }
     }
 
     private function getNextRenewalDate($planType)
@@ -86,5 +94,26 @@ class StripeWebhookController extends Controller
         }
 
         return $nextRenewalDate;
+    }
+
+    private function getPlanType($planType)
+    {
+        $plan_type = null;
+
+        switch ($planType) {
+            case '1':
+                $plan_type = "monthly";
+                break;
+            case '3':
+                $plan_type = "quarterly";
+                break;
+            case '6':
+                $plan_type = "semi_annual";
+                break;
+            case '12':
+                $plan_type = "annual";
+                break;
+        }
+        return $plan_type;
     }
 }

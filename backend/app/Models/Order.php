@@ -15,6 +15,7 @@ class Order extends Model
         'stripe_payment_intent',
         'stripe_payment_status',
         'plan_type',
+        'plan_name',
         'plan_amount',
         'next_renewal_date',
     ];

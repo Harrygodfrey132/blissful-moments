@@ -41,6 +41,8 @@ class User extends Authenticatable
 
     protected $with = [
         'userDetails',
+        'page',
+        'orderDetails'
     ];
 
     /**
@@ -143,5 +145,10 @@ class User extends Authenticatable
     public function gallerFolders(): HasMany
     {
         return $this->hasMany(GalleryFolder::class, 'user_id');
+    }
+
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 }

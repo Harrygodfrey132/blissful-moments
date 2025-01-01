@@ -40,7 +40,7 @@ class PaymentController extends Controller
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         try {
-            $customerId = $request->user()->id;
+            $customerId = $request->customer_id;
 
             // Plan details (replace with dynamic values based on your application)
             $planName = $request->plan_name;
@@ -48,7 +48,7 @@ class PaymentController extends Controller
             $planAmount = $request->plan_amount;
 
             // Create a Checkout Session
-            $session = \Stripe\Checkout\Session::create([
+            $session = Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [
                     [
@@ -77,17 +77,5 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-
-    // Add success and cancel methods for handling the response
-    public function success(Request $request)
-    {
-        return view('checkout.success', ['session_id' => $request->session_id]);
-    }
-
-    public function cancel()
-    {
-        return view('checkout.cancel');
     }
 }
