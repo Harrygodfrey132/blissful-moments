@@ -316,46 +316,45 @@ export default function Timeline() {
                                 </div>
 
                                 {/* Event Description and Location */}
-                                <div className="border border-dashed bg-[#f8f8f8]  border-gray-300 w-full p-2">
+                                <div className="border border-dashed bg-[#f8f8f8]  !border-gray-300 w-full p-2">
                                     <h1 className="text-sm flex gap-4 font-medium mb-2">
-                                        <span
-                                            className="border border-dashed text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
-                                            contentEditable
-                                            suppressContentEditableWarning
+                                        <input
+                                            type="text"
+                                            className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500"
+                                            value={event.title}
+                                            onChange={(e) =>
+                                                handleEventChange(index, "title", e.target.value || "")
+                                            }
                                             aria-label="Title"
-                                            onInput={(e) =>
-                                                handleEventChange(index, "title", e.currentTarget.textContent || "")
-                                            }
-                                        >
-                                            {event.title}
-                                        </span>
+                                            placeholder="Enter Title"
+                                        />
                                     </h1>
+
                                     <h1 className="text-sm flex gap-4 font-medium mb-2">
-                                        <span
-                                            className="border border-dashed text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
-                                            contentEditable
-                                            suppressContentEditableWarning
+                                        <textarea
+                                            className="border border-dashed w-1/2 bg-[#f8f8f8] text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
+                                            value={event.description}
+                                            onChange={(e) =>
+                                                handleEventChange(index, "description", e.target.value || "")
+                                            }
                                             aria-label="Description"
-                                            onInput={(e) =>
-                                                handleEventChange(index, "description", e.currentTarget.textContent || "")
-                                            }
-                                        >
-                                            {event.description}
-                                        </span>
+                                            placeholder="Enter Description"
+                                        />
                                     </h1>
+
                                     <h1 className="text-sm flex gap-4 font-medium">
-                                        <span
-                                            className="border border-dashed text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
-                                            contentEditable
-                                            suppressContentEditableWarning
-                                            aria-label="Timeline Location"
-                                            onInput={(e) =>
-                                                handleEventChange(index, "location", e.currentTarget.textContent || "")
+                                        <input
+                                            type="text"
+                                            className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none focus:border-gray-500"
+                                            value={event.location}
+                                            onChange={(e) =>
+                                                handleEventChange(index, "location", e.target.value || "")
                                             }
-                                        >
-                                            {event.location}
-                                        </span>
+                                            aria-label="Timeline Location"
+                                            placeholder="Enter Location"
+                                        />
                                     </h1>
+
                                 </div>
                             </div>
                         );
