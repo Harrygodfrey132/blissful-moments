@@ -77,15 +77,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/user/update-details', [UserDetailController::class, 'update']);
     });
 });
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
-Route::get('/checkout/success', [PaymentController::class, 'success'])->name('checkout.success');
-Route::get('/checkout/cancel', [PaymentController::class, 'cancel'])->name('checkout.cancel');
 Route::get('/orderdetails', function () {
     return view('pages/order-details');
 });
 
-Route::get('/smpt', function () {
-    return view('pages/smpt');
-});
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 require __DIR__ . '/auth.php';

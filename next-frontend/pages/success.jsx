@@ -12,7 +12,7 @@ const BookingSuccess = () => {
   const { session_id } = router.query; // Retrieve session_id from query
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {data : session} = useSession();
+  const { data: session } = useSession();
   const token = session?.user?.accessToken;
 
   useEffect(() => {
@@ -29,8 +29,15 @@ const BookingSuccess = () => {
           );
 
           if (response.status === 200) {
-           const orderData = response.data.user.order_details;
-            setOrderDetails(orderData);
+            const orderData = response.data.user.order_details;
+
+            // Sort the order_details array by created_at in descending order
+            const latestOrder = orderData.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            )[0];
+
+            setOrderDetails(latestOrder);
+            setLoading(false);
           }
           console.log("User data:", response.data);
         } catch (error) {
@@ -53,10 +60,15 @@ const BookingSuccess = () => {
   if (!orderDetails) {
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-100 via-white to-blue-100">
-        <p className="text-red-600 text-xl">Unable to retrieve booking details. Please try again.</p>
+        <p className="text-red-600 text-xl">
+          Unable to retrieve booking details. Please try again.
+        </p>
       </div>
     );
   }
+
+  // Format amount to dollars (assuming amount is in cents)
+  const formattedAmount = (orderDetails.amount / 100).toFixed(2);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-100 via-white to-blue-100">
@@ -64,25 +76,30 @@ const BookingSuccess = () => {
         <div className="flex justify-center mb-4">
           <FaCheckCircle className="text-blue-500 text-6xl animate-bounce" />
         </div>
-        <h1 className="text-3xl font-bold text-blue-600 mb-4">Booking Successful!</h1>
-        <p className="text-gray-600 mb-6">Thank you for your booking. Here are your details:</p>
+        <h1 className="text-3xl font-bold text-green-600 mb-4">
+          Payment Successful!
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Thank you for your booking. Here are your details:
+        </p>
 
-        {/* <div className="mb-6 text-left">
+        <div className="mb-6 text-left">
           <div className="flex justify-between mb-2 text-gray-800">
             <strong>Order ID:</strong>
-            <span>{orderDetails.id}</span>
+            <span>{orderDetails.order_id}</span>
           </div>
           <div className="flex justify-between mb-2 text-gray-800">
             <strong>Amount:</strong>
-            <span>${orderDetails.amount / 100}</span>
+            <span>${formattedAmount}</span>
           </div>
           <div className="flex justify-between mb-2 text-gray-800">
             <strong>Date & Time:</strong>
-            <span>{orderDetails.dateTime}</span>
+            <span>{new Date(orderDetails.created_at).toLocaleString()}</span>
           </div>
-        </div> */}
+        </div>
 
-        <Link href={ROUTES.Dashboard}
+        <Link
+          href={ROUTES.Dashboard}
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 shadow-md"
         >
           Go to Home

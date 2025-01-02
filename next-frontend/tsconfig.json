@@ -26,7 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     "next-auth.d.ts" // Explicitly include the type definition
-, "components/RegisterPageModal.jsx"  ],
+, "components/RegisterPageModal.jsx", "pages/success.jsx"  ],
   "exclude": [
     "node_modules"
   ]

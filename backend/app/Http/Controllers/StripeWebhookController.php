@@ -21,15 +21,20 @@ class StripeWebhookController extends Controller
         $sig_header = $request->header('Stripe-Signature');
         $event = null;
 
+
         try {
-            // Use Stripe's Webhook signature verification to ensure the event is valid
             $event = Webhook::constructEvent(
                 $request->getContent(),
                 $sig_header,
                 env('STRIPE_WEBHOOK_SECRET')
             );
         } catch (\Exception $e) {
-            // Log the error if the signature is invalid or any other error
+            // Log the error and return a response with the error message
+            Log::error('Webhook signature verification failed', [
+                'error' => $e->getMessage(),
+                'payload' => $request->getContent()
+            ]);
+
             return response('Webhook error: ' . $e->getMessage(), 400);
         }
 
@@ -44,23 +49,49 @@ class StripeWebhookController extends Controller
                 $amount = $session->amount_total / 100; // Amount is in cents
                 $planType = $session->metadata->plan_type; // Assuming you stored this in metadata
                 $planName = $session->metadata->plan_name;
+
                 // Store the order in the database
                 $this->storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName);
 
+                Log::info('Processed checkout.session.completed', [
+                    'payment_intent' => $paymentIntent,
+                    'payment_status' => $paymentStatus,
+                    'amount' => $amount,
+                    'plan_type' => $planType,
+                    'plan_name' => $planName,
+                ]);
                 break;
-                // Handle other event types if needed (like failed payments, refunds, etc.)
+
+                // Handle other event types if needed (e.g., payment failed, refund, etc.)
+            case 'invoice.payment_failed':
+                $invoice = $event->data->object;
+                // Handle the failed payment (e.g., notify the user, retry payment, etc.)
+                Log::warning('Invoice payment failed', ['invoice_id' => $invoice->id]);
+                break;
+
+            case 'payment_intent.succeeded':
+                $paymentIntent = $event->data->object;
+                break;
+
+                // Add more event cases as required
+
+            default:
+                Log::info('Unhandled Stripe event', ['event_type' => $event->type]);
         }
 
+        // Return a success response
         return response('Webhook received', 200);
     }
 
     private function storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName)
     {
-        // You can store any other relevant info in the order as needed
         try {
-            $user = User::where('id', $session->metadata->customer_id);
-
+            // Retrieve the user from the metadata customer_id
+            $user = User::where('id', $session->metadata->customer_id)->firstOrFail();
+            $orderId = 'BM' . date('YmdHis') . rand(1000, 9999);
+            // Store the order in the database
             Order::create([
+                'order_id' => $orderId,
                 'user_id' => $user->id,
                 'amount' => $amount,
                 'stripe_payment_intent' => $paymentIntent,
@@ -71,9 +102,13 @@ class StripeWebhookController extends Controller
                 'next_renewal_date' => $this->getNextRenewalDate($planType),
             ]);
 
+            // Update the user's page status to registered
             $user->page->update(['is_registered' => true]);
         } catch (\Throwable $th) {
-            Log::info("Error while saving Order Data", $th->getMessage());
+            Log::error("Error while saving Order Data", [
+                'exception' => $th->getMessage(),
+                'session' => $session,
+            ]);
         }
     }
 
