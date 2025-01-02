@@ -48,7 +48,8 @@ const Gallery: React.FC = () => {
   const [assignFolderPopoverIndex, setAssignFolderPopoverIndex] = useState<number | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const [blobUrls, setBlobUrls] = useState<Record<string, string>>({});
-  const [showLocalImages, setShowLocalImages] = useState(true);
+  const [showLocalImages, setShowLocalImages] = useState(() => uploadedImages.length > 0);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,6 +74,11 @@ const Gallery: React.FC = () => {
     }
   }, [pageData]);
 
+  useEffect(() => {
+    if (uploadedImages.length === 0 && showLocalImages) {
+      setShowLocalImages(false);
+    }
+  }, [uploadedImages]);
 
   useEffect(() => {
     // Generate blob URLs for uploaded images
@@ -190,8 +196,8 @@ const Gallery: React.FC = () => {
   const handleFolderAssignment = async (folderId: number, imageId: number, isChecked: boolean) => {
     try {
       const apiUrl = isChecked
-        ? `${process.env.NEXT_PUBLIC_API_URL}/images/${imageId}/assign-folder`
-        : `${process.env.NEXT_PUBLIC_API_URL}/images/${imageId}/unassign-folder`;
+        ? `${process.env.NEXT_PUBLIC_API_URL}/gallery/images/${imageId}/assign-folder`
+        : `${process.env.NEXT_PUBLIC_API_URL}/gallery/images/${imageId}/unassign-folder`;
 
       const response = await axios.patch(
         apiUrl,
@@ -262,10 +268,10 @@ const Gallery: React.FC = () => {
             {allImages.map((image: AllImage, index: number) => (
               <div key={image.id} className="relative group">
                 <Image
-                  src={image.src}
-                  alt={image.name}
                   width={500}
                   height={500}
+                  src={image.src}
+                  alt={image.name}
                   className="w-full md:h-72 h-32 object-cover rounded shadow"
                 />
                 <button

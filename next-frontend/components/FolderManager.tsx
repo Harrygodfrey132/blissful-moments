@@ -14,126 +14,106 @@ interface Folder {
 const FolderManager: React.FC = () => {
   const { data: session } = useSession();
   const { pageData, setPageData } = usePageContext();
-  const [folders, setFolders] = useState<Folder[]>([]); // Initialize folders state
+  const [folders, setFolders] = useState<Folder[]>([]); // Local folder state
   const token = session?.user?.accessToken;
 
-  // Initialize folders from pageData when the component mounts or pageData changes
+  // Initialize folders from pageData
   useEffect(() => {
     if (pageData?.gallery?.folders) {
       setFolders(pageData.gallery.folders);
     }
   }, [pageData]);
 
+  // API call utility with token handling
+  const axiosConfig = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
   // Function to add a new folder
   const addFolder = async () => {
-
     if (!pageData?.gallery?.id) {
-      toast.error("Gallery ID is missing. Cannot create folder.");
+      toast.error("Something went wrong. Cannot create folder.");
       return;
     }
-
-    const newFolder: Folder = { id: Date.now(), name: "New Folder" };
-    setFolders((prevFolders) => [...prevFolders, newFolder]);
 
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.createFolder}`,
-        {
-          name: newFolder.name,
-          gallery_id: pageData.gallery?.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { name: "New Folder", gallery_id: pageData.gallery.id },
+        axiosConfig
       );
 
       if (response.status === 200) {
-        const updatedPageData = response.data.page_data;
-        if (updatedPageData?.gallery) {
-          setPageData(updatedPageData); // Update global state
-          setFolders(updatedPageData.gallery.folders); // Sync local state
-          toast.success("Folder created successfully");
-        } else {
-          toast.error("Failed to update page data after creating folder.");
-        }
+        setPageData(response.data.page_data); // Update global state
+        toast.success("Folder created successfully");
       } else {
-        toast.error("Unable to create folder");
+        toast.error("Failed to create folder.");
       }
-
     } catch (error: any) {
-      toast.error("Something went wrong: " + (error.response?.data?.message || error.message));
+      toast.error(`Error: ${error.response?.data?.message || error.message}`);
     }
   };
 
   // Function to delete a folder
   const deleteFolder = async (id: number) => {
-    setFolders((prevFolders) => prevFolders.filter((folder) => folder.id !== id));
-
     try {
+      // Call the API to delete the folder
       const response = await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}${API.deleteFolder}/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        axiosConfig
       );
 
       if (response.status === 200) {
+        // Update the global state with the response
         setPageData(response.data.page_data);
+        setFolders(response.data.page_data.gallery?.folders || []); // Sync local state
         toast.success("Folder deleted successfully");
       } else {
-        toast.error("Unable to delete folder");
+        throw new Error("Failed to delete folder.");
       }
     } catch (error: any) {
-      toast.error("Something went wrong: " + (error.response?.data?.message || error.message));
+      // Show error if the API call fails
+      toast.error(`Error: ${error.response?.data?.message || error.message}`);
     }
   };
 
   // Function to update folder name
   const updateFolderName = async (id: number, newName: string) => {
+    const originalFolders = [...folders]; // Backup current state
+
     setFolders((prevFolders) =>
       prevFolders.map((folder) =>
         folder.id === id ? { ...folder, name: newName } : folder
       )
-    );
+    ); // Optimistic update
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.createFolder}`,
-        {
-          name: newName,
-          gallery_id: pageData.gallery?.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.renameFolder}/${id}`,
+        { name: newName, gallery_id: pageData.gallery?.id },
+        axiosConfig
       );
+
       if (response.status === 200) {
-        setPageData(response.data.page_data);
+        setPageData(response.data.page_data); // Update global state
         toast.success("Folder name updated successfully");
       } else {
-        toast.error("Unable to update folder name");
+        throw new Error("Failed to update folder name.");
       }
     } catch (error: any) {
-      toast.error("Something went wrong: " + (error.response?.data?.message || error.message));
+      setFolders(originalFolders); // Rollback on error
+      toast.error(`Error: ${error.response?.data?.message || error.message}`);
     }
   };
 
   return (
     <div className="font-playfair mb-5">
-      {/* List of Folders */}
       <div className="flex flex-wrap items-center gap-4">
         {folders.map((folder) => (
           <div
             key={folder.id}
             className="flex items-center justify-between border shadow p-1.5 bg-[#F8F8F8] rounded"
           >
-            {/* Editable Folder Name */}
             <span
               contentEditable
               suppressContentEditableWarning
@@ -144,8 +124,6 @@ const FolderManager: React.FC = () => {
             >
               {folder.name}
             </span>
-
-            {/* Delete Icon */}
             <button
               onClick={() => deleteFolder(folder.id)}
               className="text-base ml-1"
@@ -154,8 +132,6 @@ const FolderManager: React.FC = () => {
             </button>
           </div>
         ))}
-
-        {/* Add Folder Button */}
         <button
           onClick={addFolder}
           className="px-4 py-2 bg-blue-light-900 h-[40px] text-white font-medium rounded shadow flex justify-center items-center"

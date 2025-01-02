@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/name', [GalleryController::class, 'saveGalleryName']);
         Route::post('/images', [GalleryController::class, 'uploadGalleryImages']);
         Route::post('/folders/save', [GalleryController::class, 'updateCreateFolderName']);
+        Route::put('/folders/rename/{id}', [GalleryController::class, 'renameFolder']);
         Route::delete('/folder/delete/{id}', [GalleryController::class, 'destroyFolder']);
         Route::patch('/images/{id}/assign-folder', [GalleryController::class, 'assignFolder']);
         Route::patch('/images/{id}/unassign-folder', [GalleryController::class, 'unassignFolder']);

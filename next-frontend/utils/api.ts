@@ -33,6 +33,7 @@ export const API = {
   createFolder: "/gallery/folders/save",
   deleteFolder: "/gallery/folder/delete",
   deleteImage: "/gallery/delete/image",
+  renameFolder: "/gallery/folders/rename",
 
   //Payment Management
   createPaymentIntent: "/create-payment-intent",
@@ -45,5 +46,5 @@ export const API = {
   updateQuoteStatus: "/quote/update-status",
 
   // Social Media Management
-  saveSocialMediaData: "/save-social-media-data"
+  saveSocialMediaData: "/save-social-media-data",
 };

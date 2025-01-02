@@ -133,7 +133,17 @@ class GalleryController extends Controller
         $folder->delete();
         $page = $request->user()->page;
 
-        return response()->json(['message' => 'Folder deleted', 'page_data' => $page]);
+        return response()->json(['message' => 'Folder deleted', 'page_data' => $page->refresh()]);
+    }
+
+    public function renameFolder(Request $request, $id)
+    {
+        $folder = GalleryFolder::findOrFail($id);
+        // Unassign images
+        $folder->update(['name' => $request->name]);
+        $page = $request->user()->page;
+
+        return response()->json(['message' => 'Folder renamed', 'page_data' => $page->refresh()]);
     }
 
     public function assignFolder(Request $request, $id)
@@ -142,7 +152,7 @@ class GalleryController extends Controller
 
         // Validate the folder ID
         $validated = $request->validate([
-            'folder_id' => 'required|integer|exists:gallery_folders,id',
+            'folder_id' => 'required|integer',
         ]);
 
         $image = GalleryImage::where('id', $id)
