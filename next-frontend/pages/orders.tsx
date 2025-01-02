@@ -18,7 +18,7 @@ const OrderPage = () => {
                             Authorization: `Bearer ${session.user.accessToken}`,
                         },
                     });
-                    
+
                     // Assuming response contains orders field
                     setOrders(response.data.order_data.data || []); // Ensure the data is set
                 } catch (error) {
@@ -110,7 +110,7 @@ const OrderPage = () => {
                                                     <tbody className="divide-y divide-gray-200 bg-white">
                                                         {orders.length === 0 ? (
                                                             <tr>
-                                                                <td colSpan="7" className="text-center py-4 text-sm text-gray-500">No orders found</td>
+                                                                <td colSpan={7} className="text-center py-4 text-sm text-gray-500">No orders found</td>
                                                             </tr>
                                                         ) : (
                                                             orders.map((order) => (
