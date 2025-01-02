@@ -58,10 +58,15 @@ class OrderController extends Controller
     }
 
     // Method to get orders for the user
-    public function getUserOrders()
+    public function getUserOrders(Request $request)
     {
-        $user = Auth::user();
-        $orders = Order::where('user_id', $user->id)->get();
-        return response()->json($orders);
+        $user = $request->user();
+        $orders = Order::where('user_id', $user->id)
+            ->paginate(10); // Set the number of items per page (e.g., 10)
+
+        // Return paginated data with metadata
+        return response()->json([
+            'order_data' => $orders
+        ]);
     }
 }

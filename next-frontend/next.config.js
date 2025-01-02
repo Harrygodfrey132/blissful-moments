@@ -2,11 +2,27 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    domains: [
-      "admin.blissful-moments.app.local",
-      "admin.theblissfulmoments.com",
-      "blissful-moments.app.local",
-      "localhost",
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "admin.blissful-moments.app.local",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "admin.theblissfulmoments.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "blissful-moments.app.local",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/**",
+      },
     ],
   },
 };

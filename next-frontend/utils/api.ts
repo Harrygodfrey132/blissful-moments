@@ -47,4 +47,8 @@ export const API = {
 
   // Social Media Management
   saveSocialMediaData: "/save-social-media-data",
+
+  // Order Management
+
+  getOrders: "/orders",
 };

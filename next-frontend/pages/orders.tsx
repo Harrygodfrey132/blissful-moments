@@ -1,23 +1,34 @@
-// pages/dashboard.tsx
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../components/Sidebar';
 import { useEffect, useState } from 'react';
-import { LinkIcon, ClipboardDocumentIcon } from '@heroicons/react/24/solid'; // Importing Heroicons
-import { MdOutlineQrCodeScanner } from "react-icons/md";
-
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import { API } from '../utils/api';
 
 const OrderPage = () => {
-    const people = [
-        {
-            name: 'Lindsay Walton',
-            title: 'Front-end Developer',
-            department: 'Optimization',
-            email: 'lindsay.walton@example.com',
-            role: 'Member',
-            image:
-                'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        // More people...
-    ]
+    const { data: session } = useSession(); // To get the user session
+    const [orders, setOrders] = useState<any[]>([]); // Store orders data
+
+    useEffect(() => {
+        // Fetch orders data on page load
+        const fetchOrders = async () => {
+            if (session?.user?.accessToken) {
+                try {
+                    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.getOrders}`, {
+                        headers: {
+                            Authorization: `Bearer ${session.user.accessToken}`,
+                        },
+                    });
+                    
+                    // Assuming response contains orders field
+                    setOrders(response.data.order_data.data || []); // Ensure the data is set
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                }
+            }
+        };
+
+        fetchOrders();
+    }, [session?.user?.accessToken]);
 
     return (
         <div>
@@ -52,17 +63,15 @@ const OrderPage = () => {
                 </ol>
             </nav>
 
-
-            <div className='md:flex gap-10 px-16 w-full  mb-10'>
+            <div className='md:flex gap-10 px-16 w-full mb-10'>
                 <Sidebar />
                 <main className='w-full'>
                     <div>
-
                         <section className='bg-white p-4 w-full shadow rounded'>
                             <div className="px-4 sm:px-6 lg:px-8">
                                 <div className="sm:flex sm:items-center">
                                     <div className="sm:flex-auto">
-                                        <h1 className="text-lg font-semibold text-blue-light-900 mb-2 border-b-2 border-blue-600 inline-block">Users</h1>
+                                        <h1 className="text-lg font-semibold text-blue-light-900 mb-2 border-b-2 border-blue-600 inline-block">Orders</h1>
                                         <p className="mt-2 text-sm text-gray-700">
                                             A list of all the orders in your account.
                                         </p>
@@ -71,59 +80,54 @@ const OrderPage = () => {
                                 <div className="mt-8 flow-root">
                                     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                            <table className="min-w-full divide-y divide-gray-300">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                                            Name
-                                                        </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                            Title
-                                                        </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                            Status
-                                                        </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                            Role
-                                                        </th>
-                                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                                                            <span className="sr-only">Edit</span>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-gray-200 bg-white">
-                                                    {people.map((person) => (
-                                                        <tr key={person.email}>
-                                                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                                                                <div className="flex items-center">
-                                                                    <div className="size-11 shrink-0">
-                                                                        <img alt="" src={person.image} className="size-11 rounded-full" />
-                                                                    </div>
-                                                                    <div className="ml-4">
-                                                                        <div className="font-medium text-gray-900">{person.name}</div>
-                                                                        <div className="mt-1 text-gray-500">{person.email}</div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                                <div className="text-gray-900">{person.title}</div>
-                                                                <div className="mt-1 text-gray-500">{person.department}</div>
-                                                            </td>
-                                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                                                    Active
-                                                                </span>
-                                                            </td>
-                                                            <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{person.role}</td>
-                                                            <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                                                <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                                    Edit<span className="sr-only">, {person.name}</span>
-                                                                </a>
-                                                            </td>
+                                            <div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
+                                                <table className="min-w-full divide-y divide-gray-300">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                                                Order ID
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Plan Name
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Amount
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Transaction ID
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Order Placed
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Next Renewal Date
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Status
+                                                            </th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-200 bg-white">
+                                                        {orders.length === 0 ? (
+                                                            <tr>
+                                                                <td colSpan="7" className="text-center py-4 text-sm text-gray-500">No orders found</td>
+                                                            </tr>
+                                                        ) : (
+                                                            orders.map((order) => (
+                                                                <tr key={order.id}>
+                                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">{order.order_id}</td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.planName}</td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${order.amount}</td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.transactionId}</td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.orderPlaced}</td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.nextRenewalDate}</td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.status}</td>
+                                                                </tr>
+                                                            ))
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

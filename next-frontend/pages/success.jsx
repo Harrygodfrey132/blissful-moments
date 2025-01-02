@@ -39,7 +39,6 @@ const BookingSuccess = () => {
             setOrderDetails(latestOrder);
             setLoading(false);
           }
-          console.log("User data:", response.data);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -71,10 +70,10 @@ const BookingSuccess = () => {
   const formattedAmount = (orderDetails.amount / 100).toFixed(2);
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-100 via-white to-blue-100">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-green-100 via-white to-green-100">
       <div className="bg-white p-8 rounded-lg shadow-xl text-center max-w-md w-full transform transition duration-500 hover:scale-105">
         <div className="flex justify-center mb-4">
-          <FaCheckCircle className="text-blue-500 text-6xl animate-bounce" />
+          <FaCheckCircle className="text-green-500 text-6xl animate-bounce" />
         </div>
         <h1 className="text-3xl font-bold text-green-600 mb-4">
           Payment Successful!

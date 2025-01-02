@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ObituaryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PersonalQuoteController;
@@ -67,8 +68,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Social Media Data Management
     Route::post('/save-social-media-data', [SocialMediaController::class, 'saveSocialMediaData']);
-    //Payment Management
 
+    // Order Management
+    Route::get('/orders', [OrderController::class, 'getUserOrders']);
 });
 Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
