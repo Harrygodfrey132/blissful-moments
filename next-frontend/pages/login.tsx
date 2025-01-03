@@ -112,7 +112,7 @@ const Login = () => {
                   </div>
 
                   <div className="text-sm">
-                    <a href="#" className="font-semibold text-blue-light-900 hover:text-blue-light-900">
+                    <a href="forgot-password" className="font-semibold text-blue-light-900 hover:text-blue-light-900">
                       Forgot password?
                     </a>
                   </div>
@@ -121,7 +121,7 @@ const Login = () => {
                 <div>
                   <button
                     type="submit"
-                    className="flex w-full justify-center rounded bg-blue-light-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-900"
+                    className="flex w-full justify-center rounded bg-blue-light-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900"
                     disabled={loading} // Disable button while loading
                   >
                     {loading ? "Signing in..." : "Sign in"}

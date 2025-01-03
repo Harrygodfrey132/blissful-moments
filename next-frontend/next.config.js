@@ -23,6 +23,11 @@ const nextConfig = {
         hostname: "localhost",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "blissfull.test",
+        pathname: "/**",
+      },
     ],
   },
 };
