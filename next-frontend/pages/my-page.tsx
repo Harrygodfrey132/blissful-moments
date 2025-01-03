@@ -13,7 +13,6 @@ import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 
-
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Register page modal state
@@ -77,6 +76,12 @@ export default function Home() {
         className={`relative min-h-screen ${isModalOpen || isRegisterModalOpen ? "overflow-hidden" : ""
           }`}
       >
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <div className="spinner"></div>
+          </div>
+        )}
+
         {/* Page Content */}
         <MyPage />
 
@@ -84,7 +89,8 @@ export default function Home() {
         <Modal isOpen={isModalOpen} onClose={() => closeModal("config")} />
 
         {/* Register Page Modal */}
-          <RegisterPageModal isOpen={isRegisterModalOpen} onClose={() => closeModal("register")} />
+        <RegisterPageModal isOpen={isRegisterModalOpen} onClose={() => closeModal("register")} />
+
         {/* Overlay for Modal Active State */}
         {(isModalOpen || isRegisterModalOpen) && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"></div>

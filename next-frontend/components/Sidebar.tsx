@@ -4,9 +4,9 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 
 export default function Sidebar() {
-  const [openMenu, setOpenMenu] = useState<string>(""); // Track open dropdown
+  const [openMenu, setOpenMenu] = useState<string>("");
   const { data: session } = useSession();
-  const router = useRouter(); // Access the current route
+  const router = useRouter();
 
   const toggleMenu = (menu: string) => {
     setOpenMenu(openMenu === menu ? "" : menu);
@@ -15,30 +15,30 @@ export default function Sidebar() {
   const isActive = (path: string) => router.pathname === path;
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start bg-gray-50 md:min-h-screen">
       {/* Profile Section */}
-      <div className="flex items-center md:w-[17rem] w-full mb-4 p-4 rounded bg-white shadow">
+      <div className="flex items-center md:w-[17rem] w-full mb-6 p-4 rounded-lg bg-white shadow hover:shadow-lg transition">
         <Image
-          src={session?.user?.userDetails?.profile_picture || '/img/dummy.png'}
+          src={session?.user?.userDetails?.profile_picture || "/img/dummy.png"}
           alt="Profile"
           width={300}
           height={300}
-          className="w-12 h-12 rounded-full object-cover"
+          className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
         />
         <div className="ml-4">
-          <h3 className="text-lg font-semibold">{session?.user?.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-800">{session?.user?.name}</h3>
           <p className="text-sm text-gray-500">{session?.user?.email}</p>
         </div>
       </div>
 
       {/* Sidebar Navigation */}
-      <nav className="md:w-[17rem] w-full shadow bg-white text-gray-800 rounded px-6 py-6">
+      <nav className="md:w-[17rem] w-full bg-white shadow rounded-lg p-6">
         <div className="flex flex-col space-y-4">
           {/* Dashboard */}
           <a
             href="/dashboard"
-            className={`flex items-center px-4 py-3 text-sm hover:bg-gray-300 rounded-md transition ${
-              isActive("/dashboard") ? "bg-gray-300 text-black" : "text-gray-800"
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
+              isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
             }`}
           >
             <span className="material-icons-outlined">dashboard</span>
@@ -48,8 +48,8 @@ export default function Sidebar() {
           {/* Orders */}
           <a
             href="/orders"
-            className={`flex items-center px-4 py-3 text-sm hover:bg-gray-300 rounded-md transition ${
-              isActive("/orders") ? "bg-gray-300 text-black" : "text-gray-800"
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
+              isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
             }`}
           >
             <span className="material-icons-outlined">shopping_cart</span>
@@ -59,55 +59,23 @@ export default function Sidebar() {
           {/* My Pages */}
           <a
             href="/my-page"
-            className={`flex items-center px-4 py-3 hover:bg-gray-300 rounded-md transition ${
-              isActive("/my-page") ? "bg-gray-300 text-black" : "text-gray-800"
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
+              isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
             }`}
           >
             <span className="material-icons-outlined">pages</span>
-            <span className="ml-3 text-sm">My Pages</span>
+            <span className="ml-3">My Pages</span>
           </a>
-
-          {/* User Access */}
-          {/* <div>
-            <button
-              onClick={() => toggleMenu("userAccess")}
-              aria-expanded={openMenu === "userAccess"}
-              className={`flex items-center justify-between px-4 py-3 w-full hover:bg-gray-300 rounded-md transition ${
-                openMenu === "userAccess" ? "bg-gray-300 text-black" : "text-gray-800"
-              }`}
-            >
-              <div className="flex items-center">
-                <span className="material-icons-outlined">people</span>
-                <span className="ml-3 text-sm">User Access</span>
-              </div>
-              <span className="material-icons-outlined">
-                {openMenu === "userAccess" ? "expand_less" : "expand_more"}
-              </span>
-            </button>
-            {openMenu === "userAccess" && (
-              <div className="ml-8 mt-2 flex flex-col space-y-2">
-                {["Admin", "Editor", "Viewer"].map((label, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className="text-gray-600 hover:text-gray-400"
-                  >
-                    {label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div> */}
 
           {/* Payments */}
           <a
             href="/payments"
-            className={`flex items-center px-4 py-3 hover:bg-gray-300 rounded-md transition ${
-              isActive("/payments") ? "bg-gray-300 text-black" : "text-gray-800"
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
+              isActive("/payments") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
             }`}
           >
             <span className="material-icons-outlined">payment</span>
-            <span className="ml-3 text-sm">Payments</span>
+            <span className="ml-3">Payments</span>
           </a>
         </div>
       </nav>

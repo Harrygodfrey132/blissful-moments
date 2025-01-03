@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 
+
+/* Add this to your global styles (e.g., styles/globals.css) */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #ccc;
+  border-top: 4px solid #1D4ED8; /* Customize the color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+
+
 .edit-profile button {
   margin: 0 auto;
   right: 14px;
