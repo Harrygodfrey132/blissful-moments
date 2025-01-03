@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { IoMdArrowBack } from "react-icons/io";
+import { FaHome } from "react-icons/fa";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 
@@ -97,7 +98,7 @@ export default function Home() {
         )}
 
         <div
-          className={`fixed bottom-0 left-0 w-full bg-stone-100 border-t border-gray-200 shadow-2xl py-3 px-2 flex items-center z-50 ${isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""
+          className={`fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 shadow-2xl py-3 px-5 flex items-center z-50 ${isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""
             }`}
         >
           {/* Left-aligned Back to Home button */}
@@ -109,10 +110,10 @@ export default function Home() {
 
           {!pageData?.is_registered && (
             // Center-aligned Register page button
-            <div className="flex-grow flex justify-center">
+            <div className="flex-grow flex bg-white justify-center">
               <button
                 onClick={() => openModal("register")}
-                className="bg-gray-200 hover:bg-gray-300 text-blue-light-900 border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded"
+                className="bg-blue-light-900  text-white border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded"
               >
                 Register page{" "}
                 <IoIosArrowRoundForward className="group-hover:translate-x-0.5 text-lg transition-transform duration-150 ease-in-out" />

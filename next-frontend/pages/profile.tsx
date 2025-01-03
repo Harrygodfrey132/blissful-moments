@@ -154,41 +154,11 @@ const ProfilePage = () => {
     };
     return (
         <div>
-            <nav className="flex mt-28 px-16 mb-5" aria-label="Breadcrumb">
-                <ol role="list" className="flex items-center space-x-2">
-                    <li>
-                        <div>
-                            <a href="#" className="text-gray-400 hover:text-gray-500">
-                                <svg className="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                                    <path fillRule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clipRule="evenodd" />
-                                </svg>
-                                <span className="sr-only">Home</span>
-                            </a>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="flex items-center">
-                            <svg className="size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                                <path fillRule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                            </svg>
-                            <a href="#" className="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="flex items-center">
-                            <svg className="size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                                <path fillRule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                            </svg>
-                            <a href="#" className="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Project Nero</a>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
-            <div className='md:flex gap-10 md:px-16 px-5 w-full  mb-10'>
+            <div className='md:flex gap-10 md:px-16 px-5 w-full mt-32  mb-10'>
                 <Sidebar />
                 <main className='w-full'>
                     <div>
-                        <h1 className='font-semibold text-xl mb-5'>Edit Profile</h1>
+                        <h1 className='font-semibold md:text-xl text-lg mb-5 mt-5 md:mb-0'>Edit Profile</h1>
                         <section className='bg-white p-6 w-full shadow rounded'>
                             <form onSubmit={handleSubmit}>
                                 <div className="space-y-12">
@@ -200,12 +170,12 @@ const ProfilePage = () => {
                                             </p>
                                         </div>
                                         <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                                            <div className="col-span-full w-[350px] relative">
+                                            <div className="col-span-full md:w-[350px] relative">
                                                 <label htmlFor="photo" className="block text-sm/6 font-medium text-gray-900">
                                                     Photo
                                                 </label>
                                                 <div className="mt-2 relative  items-center gap-x-3 edit-profile">
-                                                    <div className='shadow bg-gray-50 p-2 w-[350px]'>
+                                                    <div className='shadow bg-gray-50 p-2 md:w-[350px]'>
                                                         <Image
                                                             src={previewImage || '/img/profile-img.png'}
                                                             alt="Profile Picture"

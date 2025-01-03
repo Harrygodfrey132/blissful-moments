@@ -85,15 +85,15 @@ const BookingSuccess = () => {
         <div className="mb-6 text-left">
           <div className="flex justify-between mb-2 text-gray-800">
             <strong>Order ID:</strong>
-            <span>{orderDetails.order_id}</span>
+            <span className="font-semibold">{orderDetails.order_id}</span>
           </div>
           <div className="flex justify-between mb-2 text-gray-800">
             <strong>Amount:</strong>
-            <span>${formattedAmount}</span>
+            <span className="font-semibold">${formattedAmount}</span>
           </div>
           <div className="flex justify-between mb-2 text-gray-800">
             <strong>Date & Time:</strong>
-            <span>{new Date(orderDetails.created_at).toLocaleString()}</span>
+            <span className="font-semibold">{new Date(orderDetails.created_at).toLocaleString()}</span>
           </div>
         </div>
 
