@@ -39,11 +39,6 @@ class User extends Authenticatable
         'gallerFolders'
     ];
 
-    protected $with = [
-        'userDetails',
-        'page',
-        'orderDetails'
-    ];
 
     /**
      * The attributes that should be hidden for serialization.

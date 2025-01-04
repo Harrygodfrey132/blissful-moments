@@ -61,7 +61,7 @@
             </a>
 
             <!-- Orders -->
-            <a href="#"
+            <a href="{{route('orders.index')}}"
                 class="relative flex items-center py-2 px-2 {{ request()->is('orders') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
                 :class="{ 'justify-start': menu, 'justify-center': !menu }"
                 x-data="{ tooltip: false }"

@@ -96,7 +96,6 @@ const OrderPage = () => {
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${order.amount}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.orderPlaced}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.nextRenewalDate}</td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.status}</td>
                                                                     </tr>
                                                                 ))
                                                             )}

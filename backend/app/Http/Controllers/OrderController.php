@@ -8,6 +8,24 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+
+    public function adminOrderListing(Request $request)
+    {
+        // Retrieve all filter data from the request
+        $data = [
+            'search' => $request->input('search', ''),
+        ];
+
+        $orders = Order::orderSearchFilter($data)->latest()->paginate(20);
+
+        // Return AJAX response if the request is AJAX
+        if ($request->ajax()) {
+            return view('admin.orders.partials.order-table', compact('orders' , 'data' ));
+        }
+
+        return view('admin.orders.index', compact('orders' , 'data' ));
+    }
+
     public function store(Request $request)
     {
         // Ensure the user is authenticated

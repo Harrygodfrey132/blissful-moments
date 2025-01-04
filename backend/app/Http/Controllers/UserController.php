@@ -19,7 +19,7 @@ class UserController extends Controller
             'end_date' => $request->input('end_date', ''),
         ];
 
-        $users = User::userSearchFilter($data)->latest()->paginate(10);
+        $users = User::with('userDetails')->userSearchFilter($data)->latest()->paginate(10);
 
         // Return AJAX response if the request is AJAX
         if ($request->ajax()) {

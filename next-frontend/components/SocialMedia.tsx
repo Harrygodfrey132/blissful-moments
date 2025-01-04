@@ -20,7 +20,7 @@ const SocialMedia: React.FC = () => {
 
   useEffect(() => {
     if (pageData?.social_media_data) {
-      setIsSocialMediaEnabled(pageData.social_media_data.status === 1);
+      setIsSocialMediaEnabled(pageData.social_media_data.status == 1);
       setContent(pageData.social_media_data.content);
     }
   }, [pageData]);

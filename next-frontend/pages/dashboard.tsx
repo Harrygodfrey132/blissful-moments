@@ -40,9 +40,6 @@ const DashboardPage = () => {
                 <p className="text-green-600 font-medium">Active</p>
               </div>
               <p className="text-yellow-500 mt-2 text-sm">Expires on 5th Feb 2025</p>
-              <button className="mt-6 w-full bg-blue-600 text-white font-medium px-4 py-2 rounded hover:bg-blue-700 transition">
-                Upgrade Plan
-              </button>
             </div>
 
             {/* Public URL */}

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\CmsController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GDPRrequestController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
@@ -18,9 +20,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('pages/dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard' , [DashboardController::class , 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -56,6 +56,13 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix('configuration')->name('configuration.')->group(function () {
             Route::get('/system-configuration', [ConfigurationController::class, 'index'])->name('index');
+            Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
+            Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
+            Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
+        });
+
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/listing', [OrderController::class, 'adminOrderListing'])->name('index');
             Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
             Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');

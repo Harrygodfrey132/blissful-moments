@@ -152,7 +152,7 @@ class AuthController extends Controller
     {
         try {
             $email = $request->input('email');
-            $user = User::where('email', $email)->first();
+            $user = User::with('userDetails')->where('email', $email)->first();
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
             }

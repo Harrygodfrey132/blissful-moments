@@ -34,6 +34,12 @@
         $trail->push('GDPR Requests', route('gdpr.index'));
     });
 
+    // Home > Order
+    Breadcrumbs::for('orders.index', function (BreadcrumbTrail $trail) {
+        $trail->parent('dashboard');
+        $trail->push('Orders', route('orders.index'));
+    });
+
     // // Home > Users > [User Name]
     // Breadcrumbs::for('users.show', function (BreadcrumbTrail $trail, $user) {
     //     $trail->parent('users.index');
