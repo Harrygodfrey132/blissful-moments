@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Link from "next/link";
+import { ROUTES } from "../utils/routes";
 
 export default function Sidebar() {
   const [openMenu, setOpenMenu] = useState<string>("");
@@ -35,48 +37,44 @@ export default function Sidebar() {
       <nav className="md:w-[17rem] w-full bg-white shadow rounded-lg p-6">
         <div className="flex flex-col space-y-4">
           {/* Dashboard */}
-          <a
-            href="/dashboard"
-            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
-              isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-            }`}
+          <Link
+            href={ROUTES.Dashboard}
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+              }`}
           >
             <span className="material-icons-outlined">dashboard</span>
             <span className="ml-3">Dashboard</span>
-          </a>
+          </Link>
 
           {/* Orders */}
-          <a
-            href="/orders"
-            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
-              isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-            }`}
+          <Link
+            href={ROUTES.Orders}
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+              }`}
           >
             <span className="material-icons-outlined">shopping_cart</span>
             <span className="ml-3">Orders</span>
-          </a>
+          </Link>
 
           {/* My Pages */}
-          <a
-            href="/my-page"
-            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
-              isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-            }`}
+          <Link
+            href={ROUTES.myPage}
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+              }`}
           >
             <span className="material-icons-outlined">pages</span>
             <span className="ml-3">My Pages</span>
-          </a>
+          </Link>
 
           {/* Payments */}
-          <a
-            href="/payments"
-            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${
-              isActive("/payments") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-            }`}
+          <Link
+            href={ROUTES.updatePassword}
+            className={`flex items-center px-4 py-3 font-semibold text-sm rounded-lg transition ${isActive("/update-password") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+              }`}
           >
-            <span className="material-icons-outlined">payment</span>
-            <span className="ml-3">Payments</span>
-          </a>
+            <span className="material-icons-outlined">password</span>
+            <span className="ml-3">Change Password</span>
+          </Link>
         </div>
       </nav>
     </div>

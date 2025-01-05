@@ -12,6 +12,7 @@ class Page extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'qr_code',
         'is_private',
         'password',
         'background_image',

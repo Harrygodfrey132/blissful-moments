@@ -16,6 +16,7 @@
     "aos": "^2.3.4",
     "axios": "^1.7.8",
     "bcryptjs": "^2.4.3",
+    "clipboard": "^2.0.11",
     "cropperjs": "^1.6.2",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",

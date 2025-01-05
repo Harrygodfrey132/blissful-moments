@@ -6,6 +6,7 @@ export const API = {
   Logout: "/logout",
   getUser: "/user",
   updateProfile: "/update-profile",
+  updatePassword:"/update-password",
 
   // Page management
   savePageSettings: "/page/settings",

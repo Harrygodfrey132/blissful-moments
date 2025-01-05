@@ -6,9 +6,9 @@ import { API } from '../utils/api';
 import { FaSpinner } from 'react-icons/fa'; // Import spinner icon
 
 const OrderPage = () => {
-    const { data: session } = useSession(); // To get the user session
-    const [orders, setOrders] = useState<any[]>([]); // Store orders data
-    const [loading, setLoading] = useState(false); // Loader state
+    const { data: session } = useSession();
+    const [orders, setOrders] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Fetch orders data on page load

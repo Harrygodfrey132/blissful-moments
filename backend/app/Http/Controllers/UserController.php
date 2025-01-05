@@ -6,6 +6,7 @@ use App\Models\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -120,4 +121,43 @@ class UserController extends Controller
 
         return response()->json(['isVerified' => $isVerified]);
     }
+
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            // Validate the input
+            $request->validate([
+                'current_password' => 'required',
+                'new_password' => 'required|min:8', // Ensure new password meets criteria
+            ]);
+    
+            $user = $request->user();
+    
+            // Check if the provided current password matches the stored password
+            if (Hash::check($request->current_password, $user->password)) {
+                // Update the password
+                $user->update([
+                    'password' => bcrypt($request->new_password) // Encrypt the new password
+                ]);
+    
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password updated successfully.',
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The current password is incorrect.',
+                ], 400); // Return 400 Bad Request
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the password. Please try again later.',
+                'error' => $e->getMessage(), // Include error message for debugging
+            ], 500); // Return 500 Internal Server Error
+        }
+    }
+    
 }

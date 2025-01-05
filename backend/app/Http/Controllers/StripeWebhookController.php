@@ -9,6 +9,9 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class StripeWebhookController extends Controller
 {
@@ -102,8 +105,13 @@ class StripeWebhookController extends Controller
                 'next_renewal_date' => $this->getNextRenewalDate($planType),
             ]);
 
+            $qrCode = $this->generatePageQrCode($user->page->slug);
+
             // Update the user's page status to registered
-            $user->page->update(['is_registered' => true]);
+            $user->page->update([
+                'is_registered' => true,
+                'qr_code' => $qrCode
+            ]);
         } catch (\Throwable $th) {
             Log::error("Error while saving Order Data", [
                 'exception' => $th->getMessage(),
@@ -150,5 +158,25 @@ class StripeWebhookController extends Controller
                 break;
         }
         return $plan_type;
+    }
+
+
+    private function generatePageQrCode($pageSlug)
+    {
+        // Example data to encode in the QR code
+        $data =  env('FRONTEND_URL') . '/' . $pageSlug;
+
+        // Generate the QR code
+        $qrCode = QrCode::format('png')->size(300)->generate($data);
+
+        // Define the file path and name
+        $fileName = $pageSlug . '.png';
+        $path = 'qrcodes/' . $fileName;
+
+        // Store the QR code in the public directory
+        Storage::disk('public')->put($path, $qrCode);
+
+        // Return the publicly accessible URL
+        return url(Storage::url($path));
     }
 }

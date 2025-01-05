@@ -28,6 +28,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/verify-email', [AuthController::class, 'validateOTP']);
     Route::post('/user/validation-status', [UserController::class, 'checkValidation']);
     Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
+    Route::post('/update-password', [UserController::class, 'updatePassword'])->middleware('auth');
 
 
     // Page settings and management
