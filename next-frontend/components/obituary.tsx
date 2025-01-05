@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
@@ -9,28 +9,24 @@ const Obituary = () => {
   const [isObituaryEnabled, setIsObituaryEnabled] = useState(true);
   const [tagline, setTagline] = useState<string>("Enter a memorable tagline here.");
   const [content, setContent] = useState<string>("Add a heartfelt message about your loved one.");
-  const [obituaryId, setObituaryId] = useState<string>("");
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
-  const { pageData , setPageData } = usePageContext();
-
+  const { pageData, setPageData } = usePageContext();
   const taglineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (pageData?.obituaries) {
-      setTagline(pageData?.obituaries?.tagline || "Enter a memorable tagline here.");
-      setContent(pageData?.obituaries?.content || "Add a heartfelt message about your loved one.");
-      setObituaryId(pageData?.obituaries?.id || "");
-      setIsObituaryEnabled(!!pageData?.obituaries?.status)
+      setTagline(pageData.obituaries?.tagline || "Enter a memorable tagline here.");
+      setContent(pageData.obituaries?.content || "Add a heartfelt message about your loved one.");
+      setIsObituaryEnabled(!!pageData.obituaries?.status);
     }
   }, [pageData]);
 
-  const handleSave = async (field: string, value: string) => {
+  const handleSave = useCallback(async (field: string, value: string) => {
     try {
-      const data = { [field]: value };
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.saveObituary}`,
-        data,
+        { [field]: value },
         {
           headers: {
             "Content-Type": "application/json",
@@ -38,47 +34,47 @@ const Obituary = () => {
           },
         }
       );
-
       if (response.status !== 200) {
         toast.error(`Error saving ${field}`);
       }
     } catch (error) {
       toast.error("Error sending request");
     }
-  };
+  }, [token]);
 
   const handleTaglineBlur = () => {
-    if (taglineRef.current) {
-      const value = taglineRef.current.textContent || "";
-      setTagline(value);
-      handleSave("tagline", value);
-    }
+    const value = taglineRef.current?.textContent || "";
+    setTagline(value);
+    handleSave("tagline", value);
   };
 
   const handleContentBlur = () => {
     handleSave("content", content);
   };
 
-  const handleStatus = async (status: boolean) => {
+  const handleStatus = useCallback(async (status: boolean) => {
     setIsObituaryEnabled(status);
-
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_URL}${API.updateObituaryStatus}`,
-      {
-        obituary_id: pageData?.obituaries?.id,
-        status: status,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${session?.user?.accessToken}`,
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.updateObituaryStatus}`,
+        {
+          obituary_id: pageData?.obituaries?.id,
+          status: status,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user?.accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setPageData(response.data.page_data);
       }
-    );
-
-    if (response.status === 200) {
-      setPageData(response.data.page_data)
+    } catch (error) {
+      toast.error("Error updating obituary status");
     }
-  }
+  }, [pageData, session?.user?.accessToken, setPageData]);
+
   return (
     <div>
       <div className="md:flex gap-4 justify-between">

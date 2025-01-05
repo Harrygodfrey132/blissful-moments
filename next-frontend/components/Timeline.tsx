@@ -7,205 +7,189 @@ import { API } from "../utils/api";
 import { toast } from "react-toastify";
 
 type TimelineEvent = {
-    id: number;
-    event_date: string;
-    day: string;
-    month: string;
-    year: string;
-    title: string;
-    description: string;
-    location: string;
+  id: number;
+  event_date: string;
+  day: string;
+  month: string;
+  year: string;
+  title: string;
+  description: string;
+  location: string;
 };
 
 type PageData = {
+  tagline: string;
+  timeline: {
     tagline: string;
-    timeline: {
-        tagline: string;
-        events: TimelineEvent[];
-    };
-    created_at: string;
-    updated_at: string;
+    events: TimelineEvent[];
+  };
+  created_at: string;
+  updated_at: string;
 };
 
 export default function Timeline() {
-    const [isTimelineEnabled, setIsTimelineEnabled] = useState(true);
-    const [tagline, setTagline] = useState<string>("");
-    const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
-    const editableRef = useRef<HTMLSpanElement>(null);
+  const [isTimelineEnabled, setIsTimelineEnabled] = useState(true);
+  const [tagline, setTagline] = useState<string>("");
+  const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
+  const editableRef = useRef<HTMLSpanElement>(null);
 
-    const { data: session } = useSession();
-    const token = session?.user?.accessToken;
-    const { pageData, setPageData } = usePageContext();
+  const { data: session } = useSession();
+  const token = session?.user?.accessToken;
+  const { pageData, setPageData } = usePageContext();
 
-    const defaultTagline = "Your Timeline Goes Here";
-    const defaultEvents: TimelineEvent[] = [
-        {
-            id: 0,
-            event_date: "2015-09-06", // Default date for demonstration
-            day: "6",
-            month: "9",
-            year: "2015",
-            title: "Sample Event",
-            description: "This is a sample event description.",
-            location: "Sample Location",
-        },
-    ];
+  const defaultTagline = "Your Timeline Goes Here";
+  const defaultEvents: TimelineEvent[] = [
+    {
+      id: 0,
+      event_date: "2015-09-06", // Default date for demonstration
+      day: "6",
+      month: "9",
+      year: "2015",
+      title: "Sample Event",
+      description: "This is a sample event description.",
+      location: "Sample Location",
+    },
+  ];
 
-    useEffect(() => {
-        if (pageData?.timeline) {
-            setTagline(pageData?.timeline.tagline || defaultTagline);
-            setTimelineEvents(pageData?.timeline.events || defaultEvents);
-        } else {
-            setTagline(defaultTagline);
-            setTimelineEvents(defaultEvents);
-        }
-    }, [pageData]);
+  useEffect(() => {
+    if (pageData?.timeline) {
+      setTagline(pageData?.timeline.tagline || defaultTagline);
+      setTimelineEvents(pageData?.timeline.events || defaultEvents);
+    } else {
+      setTagline(defaultTagline);
+      setTimelineEvents(defaultEvents);
+    }
+  }, [pageData]);
 
-    // Function to extract day, month, and year from event_date
-    const getDateParts = (event_date: string) => {
-        const date = new Date(event_date); // Parse the date string
-        return {
-            day: date.getDate().toString(), // Get day of the month
-            month: (date.getMonth() + 1).toString(), // Get month (0-indexed, so add 1)
-            year: date.getFullYear().toString(), // Get full year
-        };
+  // Function to extract day, month, and year from event_date
+  const getDateParts = (event_date: string) => {
+    const date = new Date(event_date);
+    return {
+      day: date.getDate().toString(),
+      month: (date.getMonth() + 1).toString(),
+      year: date.getFullYear().toString(),
     };
+  };
 
-    const updatePageData = (updatedData: any) => {
-        setPageData(updatedData);
+  const updatePageData = (updatedData: any) => {
+    setPageData(updatedData);
+  };
+
+  const handleEventChange = (index: number, field: keyof TimelineEvent, value: string) => {
+    const updatedEvents = [...timelineEvents];
+    updatedEvents[index] = { ...updatedEvents[index], [field]: value };
+    setTimelineEvents(updatedEvents);
+  };
+
+  const addTimelineEvent = () => {
+    const newEvent: TimelineEvent = {
+      id: 0,
+      event_date: "2024-01-01", // Default date for new event
+      day: "1",
+      month: "1",
+      year: "2024",
+      title: "New Event",
+      description: "Event description",
+      location: "Event location",
     };
+    setTimelineEvents((prevEvents) => [...prevEvents, newEvent]);
+  };
 
-    const handleEventChange = (index: number, field: keyof TimelineEvent, value: string) => {
-        if (field === "day" && !value) {
-            value = "1"; // Default to "1" if day is empty
-        }
+  const deleteEvent = async (index: number) => {
+    const eventToDelete = timelineEvents[index];
+    const data = { event_id: eventToDelete.id };
+    const updatedEvents = timelineEvents.filter((_, i) => i !== index);
 
-        const updatedEvents = [...timelineEvents];
-        updatedEvents[index] = { ...updatedEvents[index], [field]: value };
+    try {
+      if (!eventToDelete.id) {
         setTimelineEvents(updatedEvents);
-    };
-
-    const addTimelineEvent = () => {
-        const newEvent: TimelineEvent = {
-            id: 0,
-            event_date: "2024-01-01", // Default date for new event
-            day: "1",
-            month: "1",
-            year: "2024",
-            title: "New Event",
-            description: "Event description",
-            location: "Event location",
-        };
-        setTimelineEvents((prevEvents) => [...prevEvents, newEvent]);
-    };
-
-    // Updated deleteEvent function
-    const deleteEvent = async (index: number) => {
-        const eventToDelete = timelineEvents[index];
-
-        // Create the payload to send in the API request
-        const data = { event_id: eventToDelete.id };
-
-        // Remove event from local state immediately for instant UI update
-        const updatedEvents = timelineEvents.filter((_, i) => i !== index);
-
-        try {
-            if (!eventToDelete.id) {
-                setTimelineEvents(updatedEvents);
-                return;
-            }
-            // Send the DELETE request to the API
-            const response = await axios.delete(
-                `${process.env.NEXT_PUBLIC_API_URL}${API.deleteTimelineEvent}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    data, // Send event ID to be deleted
-                }
-            );
-
-            if (response.status === 200) {
-                toast.success("Timeline Event Deleted Successfully");
-
-                // Update the local state with the filtered events
-                setTimelineEvents(updatedEvents);
-
-                // If pageData is available, update it as well
-                if (pageData?.timeline?.events) {
-                    // Filter out the deleted event from pageData.timeline.events
-                    const updatedPageData = {
-                        ...pageData,
-                        timeline: {
-                            ...pageData.timeline,
-                            events: pageData.timeline.events.filter(
-                                (event: TimelineEvent) => event.id !== eventToDelete.id
-                            ),
-                        },
-                    };
-
-                    // Call the callback to update the parent pageData state
-                    updatePageData(updatedPageData);
-                }
-            } else {
-                console.error("Error deleting event:", response.statusText);
-                toast.error("Failed to delete event");
-            }
-        } catch (error) {
-            console.error("Error deleting event:", error);
-            toast.error("An error occurred while deleting the event.");
+        return;
+      }
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.deleteTimelineEvent}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          data,
         }
-    };
+      );
 
-    const saveData = async (data: PageData | { tagline: string }) => {
-        try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}${API.saveTimeline}`,
-                data,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                toast.success("Timeline Data Saved Successfully");
-                setPageData(response.data.page_data);
-            } else {
-                console.error("Error saving data:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error saving data:", error);
-        }
-    };
-
-    const handleTaglineBlur = () => {
-        saveData({ tagline });
-    };
-
-    const saveTimeline = () => {
-        const payload: PageData = {
-            tagline,
+      if (response.status === 200) {
+        toast.success("Timeline Event Deleted Successfully");
+        setTimelineEvents(updatedEvents);
+        if (pageData?.timeline?.events) {
+          const updatedPageData = {
+            ...pageData,
             timeline: {
-                tagline,
-                events: timelineEvents.map((event) => ({
-                    ...event,
-                    day: event.day || "1", // Ensure day is always set, fallback to "1" if empty
-                    month: event.month || "1",
-                    year: event.year || "2024",
-                    title: event.title || "Untitled Event",
-                    description: event.description || "No description",
-                    location: event.location || "Unknown location",
-                })),
+              ...pageData.timeline,
+              events: pageData.timeline.events.filter(
+                (event: TimelineEvent) => event.id !== eventToDelete.id
+              ),
             },
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        };
-        saveData(payload);
+          };
+          updatePageData(updatedPageData);
+        }
+      } else {
+        toast.error("Failed to delete event");
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting the event.");
+    }
+  };
+
+  const saveData = async (data: PageData | { tagline: string }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.saveTimeline}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Timeline Data Saved Successfully");
+        setPageData(response.data.page_data);
+      } else {
+        toast.error("Error saving data");
+      }
+    } catch (error) {
+      toast.error("Error saving data");
+    }
+  };
+
+  const handleTaglineBlur = () => {
+    saveData({ tagline });
+  };
+
+  const saveTimeline = () => {
+    const payload: PageData = {
+      tagline,
+      timeline: {
+        tagline,
+        events: timelineEvents.map((event) => ({
+          ...event,
+          day: event.day || "1",
+          month: event.month || "1",
+          year: event.year || "2024",
+          title: event.title || "Untitled Event",
+          description: event.description || "No description",
+          location: event.location || "Unknown location",
+        })),
+      },
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
+    saveData(payload);
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 126 }, (_, i) => currentYear - i);
 
     return (
         <div>
@@ -306,9 +290,9 @@ export default function Timeline() {
                                             value={year}
                                             onChange={(e) => handleEventChange(index, "year", e.target.value)}
                                         >
-                                            {Array.from({ length: 100 }, (_, i) => (
-                                                <option key={i} value={2024 - i}>
-                                                    {2024 - i}
+                                            {years.map((yearOption) => (
+                                                <option key={yearOption} value={yearOption}>
+                                                    {yearOption}
                                                 </option>
                                             ))}
                                         </select>

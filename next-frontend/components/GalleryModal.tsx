@@ -106,7 +106,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
           onClick={uploadImages}
           className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
         >
-          Add Photos
+          Save Photos
         </button>
       </div>
     </Modal>

@@ -6,10 +6,12 @@ import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { AxiosError } from 'axios';
 import { usePageContext } from "../context/PageContext";
+import Modal from "../components/modal";
 
 const FloatingSettingsButton: React.FC = () => {
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isConfigModalOpen, setConfigModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const popoverRef = useRef<HTMLDivElement | null>(null); // Reference for popover container
@@ -27,6 +29,14 @@ const FloatingSettingsButton: React.FC = () => {
       setSelectedFile(file);
       setModalOpen(true);
     }
+  };
+
+  const openModal = (modalType: "config" | "register") => {
+    if (modalType === "config") setConfigModalOpen(true);
+  };
+
+  const closeModal = (modalType: "config" | "register") => {
+    if (modalType === "config") setConfigModalOpen(false);
   };
 
   const handleFileUpload = async () => {
@@ -122,10 +132,14 @@ const FloatingSettingsButton: React.FC = () => {
               </li>
               <li className="hover:bg-white text-black py-1.5 px-2 hover:text-black rounded">
                 <a
-                  href="/other-settings"
+                  href="#"
                   className="text-sm transition-all font-playfair font-medium duration-200"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent the default link behavior
+                    openModal("config"); // Open the config modal
+                  }}
                 >
-                  Other Settings
+                  Page Configuration
                 </a>
               </li>
             </ul>
@@ -158,6 +172,9 @@ const FloatingSettingsButton: React.FC = () => {
           Your browser does not support the audio element.
         </audio>
       )}
+
+      {/* Configuration Modal */}
+      <Modal isOpen={isConfigModalOpen} onClose={() => closeModal("config")} />
     </div>
   );
 };

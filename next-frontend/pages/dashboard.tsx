@@ -89,25 +89,27 @@ const DashboardPage = () => {
           </header>
 
           {pageData && pageData?.is_registered == true ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
               {/* Subscription Plan */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-800">Subscription Plan</h2>
-                <p className="text-sm text-gray-500 mt-1">Yearly</p>
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg transition-transform hover:scale-105 border border-blue-200">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Subscription Plan</h2>
+                <p className="text-sm text-gray-600">Yearly</p>
                 <div className="mt-4 flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 bg-green-500 rounded-full"></span>
-                  <p className="text-green-600 font-medium">Active</p>
+                  <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                  <p className="text-green-700 font-medium">Active</p>
                 </div>
-                <p className="text-yellow-500 mt-2 text-sm">Expires on 5th Feb 2025</p>
+                <p className="text-yellow-600 mt-2 text-sm font-semibold">
+                  Expires on <span className="underline">5th Feb 2025</span>
+                </p>
               </div>
 
               {/* Public URL */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-800">Public URL</h2>
+              <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-xl shadow-lg transition-transform hover:scale-105 border border-purple-200">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Public URL</h2>
                 <div className="mt-4 flex items-center gap-4">
                   <a
                     href={publicUrl}
-                    className="text-blue-600 underline hover:text-blue-800 break-all"
+                    className="text-blue-700 underline hover:text-blue-900 break-all text-sm"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -115,28 +117,28 @@ const DashboardPage = () => {
                   </a>
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200 transition"
+                    className="flex items-center gap-2 bg-purple-200 px-4 py-2 rounded-lg text-sm font-medium text-purple-700 hover:bg-purple-300 transition"
                   >
                     <ClipboardDocumentIcon className="w-5 h-5" aria-hidden="true" />
-                    {copied ? 'Copied!' : 'Copy'}
+                    {copied ? "Copied!" : "Copy"}
                   </button>
                 </div>
               </div>
 
               {/* QR Code */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">QR Code</h2>
-                  <p className="text-sm text-gray-500 mt-1">Scan to access your page</p>
-                </div>
-                <div className="text-blue-600 text-center">
-                  <MdOutlineQrCodeScanner className="text-7xl mx-auto" />
-                  <a href="#" className="text-sm underline hover:text-blue-800 mt-2 block">
-                    Download QR Code
-                  </a>
-                </div>
+              <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-xl shadow-lg transition-transform hover:scale-105 border border-green-200 flex flex-col items-center">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">QR Code</h2>
+                <p className="text-sm text-gray-600">Scan to access your page</p>
+                <MdOutlineQrCodeScanner className="text-7xl text-green-600 mt-4" />
+                <a
+                  href="#"
+                  className="text-sm text-blue-700 underline hover:text-blue-900 mt-4"
+                >
+                  Download QR Code
+                </a>
               </div>
             </div>
+
           ) : (
             <div className="text-center mt-10 bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg shadow-lg">
               <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
@@ -154,7 +156,6 @@ const DashboardPage = () => {
                 </Link>
               </div>
             </div>
-
           )}
 
         </main>

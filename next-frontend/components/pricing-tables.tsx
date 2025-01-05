@@ -1,9 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
+import { ROUTES } from '../utils/routes'
 
 export default function PricingTables() {
-  
+
   return (
     <div>
 
@@ -47,9 +49,12 @@ export default function PricingTables() {
             </li>
           </ul>
           <div className="p-3 rounded bg-slate-50">
-                      <a className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href="https://buy.stripe.com/5kAeXy0sY9Wed7a000">
-  Buy Now <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
-</a>
+            <Link className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href={ROUTES.Register}>
+              Buy Now <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
+            </Link>
+            {/* <a className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href="https://buy.stripe.com/5kAeXy0sY9Wed7a000">
+          Buy Now <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
+          </a> */}
           </div>
         </div>
 
@@ -100,8 +105,8 @@ export default function PricingTables() {
           </ul>
           <div className="p-3 rounded bg-slate-50">
             <a className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href="/request-demo">
-  Get in touch <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
-</a>
+              Get in touch <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
+            </a>
 
           </div>
         </div>
@@ -144,8 +149,8 @@ export default function PricingTables() {
           </ul>
           <div className="p-3 rounded bg-slate-50">
             <a className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href="/request-demo">
-  Get in touch <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
-</a>
+              Get in touch <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
+            </a>
 
           </div>
         </div>

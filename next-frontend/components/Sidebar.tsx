@@ -63,7 +63,7 @@ export default function Sidebar() {
               }`}
           >
             <span className="material-icons-outlined">pages</span>
-            <span className="ml-3">My Pages</span>
+            <span className="ml-3">My Page</span>
           </Link>
 
           {/* Payments */}
