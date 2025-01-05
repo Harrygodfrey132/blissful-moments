@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify"; // Import React Toastify
 import { useRouter } from "next/router";
-import { useSession, getSession } from "next-auth/react";
+import { useSession, getSession, signIn } from "next-auth/react";
 import { API } from "../utils/api";
 import { ROUTES } from "../utils/routes";
 import "react-toastify/dist/ReactToastify.css"; // Import React Toastify's default styles
@@ -49,16 +49,40 @@ const useVerifyEmail = () => {
       if (response.status === 200) {
         toast.success("Verification successful!");
 
-        // Update the session state (ensure token reflects the new verification status)
-        if (session?.user) {
-          const updatedUser = { ...session.user, isVerified: true }; // Set the verification flag
-          await update({ user: updatedUser }); // Update session client-side
-        }
+        // Get the user data from localStorage
+        const storedUserData = localStorage.getItem("userData");
+        // Check if storedUserData is null before parsing it
+        if (storedUserData) {
+          // Parse the stored user data
+          const { email, password } = JSON.parse(storedUserData);
 
-        // Reload the session to confirm the changes
-        await getSession();
-        setIsVerified(true);
-        router.push(ROUTES.Dashboard);
+          try {
+            // Attempt to log the user in with the credentials
+            const loginResult = await signIn("credentials", {
+              redirect: false,
+              email: email,
+              password: password,
+            });
+
+            if (!loginResult || loginResult.error) {
+              throw new Error(loginResult?.error || "Login failed");
+            }
+
+            // Reload the session to confirm the changes
+            await getSession();
+            setIsVerified(true);
+            router.push(ROUTES.Dashboard);
+          } catch (error: any) {
+            if (error instanceof Error) {
+              toast.error(error.message || "Login failed");
+            } else {
+              toast.error("An unknown error occurred during login.");
+            }
+          }
+        } else {
+          // Handle the case where no user data is found in localStorage
+          toast.error("User data not found in localStorage.");
+        }
       } else {
         toast.error(response.data.message || "Verification failed!");
       }
@@ -70,7 +94,8 @@ const useVerifyEmail = () => {
         router.push(ROUTES.Login);
       } else {
         toast.error(
-          axiosError.response?.data?.message || "Network error. Please try again."
+          axiosError.response?.data?.message ||
+            "Network error. Please try again."
         );
       }
     } finally {

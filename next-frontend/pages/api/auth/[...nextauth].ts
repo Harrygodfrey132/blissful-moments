@@ -32,6 +32,7 @@ const authOptions: NextAuthOptions = {
           return {
             ...user,
             accessToken: token,
+            isVerified: !!user.email_verified_at,
             userDetails: user.user_details || undefined,
           };
         } catch (error: any) {
