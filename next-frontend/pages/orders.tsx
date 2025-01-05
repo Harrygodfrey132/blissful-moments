@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import Sidebar from '../components/Sidebar';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -34,6 +35,12 @@ const OrderPage = () => {
 
         fetchOrders();
     }, [session?.user?.accessToken]);
+
+    // Function to format the date
+    const formatDate = (dateString: string) => {
+        if (!dateString) return '';
+        return format(new Date(dateString), 'M/d/y h:mm:ss a'); // Format: m/d/y h:i:s AM/PM
+    };
 
     return (
         <div>
@@ -92,10 +99,10 @@ const OrderPage = () => {
                                                                 orders.map((order) => (
                                                                     <tr key={order.id}>
                                                                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-4">{order.order_id}</td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.planName}</td>
+                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.plan_name}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${order.amount}</td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.orderPlaced}</td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.nextRenewalDate}</td>
+                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{formatDate(order.created_at)}</td>
+                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{formatDate(order.next_renewal_date)}</td>
                                                                     </tr>
                                                                 ))
                                                             )}

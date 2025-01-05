@@ -167,7 +167,7 @@ class StripeWebhookController extends Controller
         $data =  env('FRONTEND_URL') . '/' . $pageSlug;
 
         // Generate the QR code
-        $qrCode = QrCode::format('png')->size(300)->generate($data);
+        $qrCode = QrCode::size(300)->generate($data);
 
         // Define the file path and name
         $fileName = $pageSlug . '.png';

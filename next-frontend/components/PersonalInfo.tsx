@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { API } from "../utils/api";
+import { format, parse, isValid } from "date-fns";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
-import { format, parse, isValid } from "date-fns";
 import ImageCropperModal from "../components/ImageCropperModal";
+import { API } from "../utils/api";
 
 interface DateState {
   day: string;
@@ -88,6 +88,8 @@ export default function PersonalInfo() {
   const handleBlur = async (field: string, value: string | File) => {
     try {
       const formData = new FormData();
+
+      // Add the field value (for regular text fields)
       if (value instanceof File) {
         formData.append(field, value);
       } else {
