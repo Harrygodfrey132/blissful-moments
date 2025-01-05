@@ -94,7 +94,13 @@
                                                     </div>
                                                 </td>
                                                 <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
-                                                    {{ formatDate($user->created_at) }}
+                                                    <div class="flex items-center">
+                                                        <span
+                                                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset 
+                                                            {{ $user->page && $user->page->is_registered ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-yellow-50 text-yellow-700 ring-yellow-600/20' }}">
+                                                            {{ $user->page && $user->page->is_registered ? 'Registered' : 'Pending' }}
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <td
                                                     class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">

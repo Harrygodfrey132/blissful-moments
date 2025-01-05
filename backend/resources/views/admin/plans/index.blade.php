@@ -76,7 +76,7 @@
                                                     class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                                                     <div class="flex gap-3">
 
-                                                        <a href="{{ route('code.generate') }}"><x-icon-qrcode /></a>
+                                                        {{-- <a href="{{ route('code.generate') }}"><x-icon-qrcode /></a> --}}
 
                                                         <a href="javascript:void(0);"
                                                             @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan) }}')"
