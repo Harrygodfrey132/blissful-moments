@@ -65,12 +65,15 @@ const Contributions = () => {
     };
 
     // Function to handle changes in the contribution (editable fields)
-    const handleContributionChange = (index: number, field: string, value: string) => {
+    const handleContributionChange = (
+        index: number,
+        field: keyof Contribution,
+        value: string
+      ) => {
         const updatedContributions = [...contributions];
         updatedContributions[index][field] = value;
         setContributions(updatedContributions);
-    };
-
+      };
     return (
         <div className="mb-[300px]">
             {/* Toggle Contributions Switch */}
