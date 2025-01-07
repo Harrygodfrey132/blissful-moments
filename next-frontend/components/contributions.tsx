@@ -108,7 +108,7 @@ const Contributions = () => {
                                 />
                                 <button
                                     onClick={addContribution}
-                                    className="text-white bg-blue-900 px-4 py-2 rounded-md"
+                                    className="text-white add-button px-4 py-2.5"
                                 >
                                     Add Contribution
                                 </button>
@@ -155,7 +155,7 @@ const Contributions = () => {
             </h1>
 
             {/* misonery gallery */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="grid gap-4">
                     <div>
                         <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg" alt=""></img>
@@ -200,15 +200,16 @@ const Contributions = () => {
                         <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg" alt=""></img>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Display Contributions */}
             {isContributionsEnabled && contributions.length > 0 && (
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                    <div className="grid gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+                    
 
                         {contributions.map((contribution, index) => (
+                            <div className="grid gap-4">
                             <div
                                 key={index}
                                 className={`p-6 border h-auto border-gray-300 max-w-full rounded-lg rounded-lg bg-[#f8f8f8] shadow-md transition-transform ${index % 2 === 0 ? "translate-y-4" : "-translate-y-4"
@@ -223,18 +224,7 @@ const Contributions = () => {
                                 </button>
                                 {/* Editable Contribution Block */}
                                 <div className="flex flex-col space-y-4">
-                                    <h3
-                                        className="border border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
-                                        contentEditable={isContributionsEnabled}
-                                        suppressContentEditableWarning
-                                        onBlur={(e) =>
-                                            handleContributionChange(index, "name", e.currentTarget.textContent || "")
-                                        }
-                                        role="textbox"
-                                        aria-label="Edit Contribution Name"
-                                    >
-                                        {contribution.name}
-                                    </h3>
+                                  
                                     <p
                                         className="border border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
                                         contentEditable={isContributionsEnabled}
@@ -247,11 +237,24 @@ const Contributions = () => {
                                     >
                                         {contribution.message}
                                     </p>
+                                    <h3
+                                        className="border border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
+                                        contentEditable={isContributionsEnabled}
+                                        suppressContentEditableWarning
+                                        onBlur={(e) =>
+                                            handleContributionChange(index, "name", e.currentTarget.textContent || "")
+                                        }
+                                        role="textbox"
+                                        aria-label="Edit Contribution Name"
+                                    >
+                                        {contribution.name}
+                                    </h3>
                                 </div>
+                            </div>
                             </div>
                         ))}
                     </div>
-                </div>
+               
             )}
         </div>
     );
