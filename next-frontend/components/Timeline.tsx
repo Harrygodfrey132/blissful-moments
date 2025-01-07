@@ -349,14 +349,14 @@ export default function Timeline() {
                     <div className="flex items-center gap-3 font-playfair align-middle mt-4">
                         <button
                             onClick={addTimelineEvent}
-                            className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
+                            className="px-4 py-2.5 font-playfair add-button text-white"
                         >
                             Add a Timeline
                         </button>
 
                         <button
                             onClick={saveTimeline}
-                            className="px-4 py-2 bg-blue-light-900 text-white rounded shadow"
+                            className="px-4 py-2.5 font-playfair add-button text-white"
                         >
                             Save Timeline
                         </button>

@@ -134,7 +134,7 @@ const FolderManager: React.FC = () => {
         ))}
         <button
           onClick={addFolder}
-          className="px-4 py-2 bg-blue-light-900 h-[40px] text-white font-medium rounded shadow flex justify-center items-center"
+          className="px-4 py-2.5 add-button text-white font-playfair flex justify-center items-center"
         >
           Create a Folder
         </button>

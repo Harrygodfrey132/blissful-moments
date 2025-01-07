@@ -3,11 +3,49 @@
 @tailwind utilities;
 
 
+.popover-container {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  z-index: 10;
+}
+
+.popover-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff;
+  box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
 
 /* Add this to your global styles (e.g., styles/globals.css) */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.add-button {
+
+  background-color: #7497ac;
+  border-radius: 10px;
+  box-shadow: 3px 7px 4px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
 }
 
 .spinner {

@@ -12,6 +12,7 @@ module.exports = {
       colors: {
         'blue-light-900': '#0B4A6F',
         'light-gray' : '#F3EAEA', // Add your custom color here
+        'blue-light' : '#7497ac',
       },
 
       fontFamily: {

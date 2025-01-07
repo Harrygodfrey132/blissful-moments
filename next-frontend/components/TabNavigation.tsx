@@ -28,12 +28,14 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, setActiv
   };
 
   return (
-    <div className="tabs-wrapper md:justify-center sticky top-0 md:px-0 z-10 bg-gray-50 sticky">
+    <div className="tabs-wrapper md:justify-center sticky top-0 md:px-0 z-10 bg-gray-50">
       {tabs.map((tab, index) => (
         <button
           key={index}
-          className={`tab-button px-6 py-2 border md:w-auto md:text-2xl text-xl font-playfair font-medium transition-all ${activeTab === index ? "bg-blue-light-900 text-white" : "bg-[#F5F5F5] text-blue-light-900"
-            }`}
+          className={`tab-button px-6 py-2.5 border md:w-auto md:text-2xl text-xl font-playfair font-medium transition-all 
+            ${activeTab === index ? "bg-blue-light text-white" : "bg-[#F5F5F5] text-blue-light-900"}
+            ${index === 0 ? "rounded-l" : ""}
+            ${index === tabs.length - 1 ? "rounded-r" : ""}`}
           onClick={() => scrollToTab(tab.ref, index)}
         >
           {tab.label}

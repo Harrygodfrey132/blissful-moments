@@ -149,7 +149,7 @@ const SocialMedia: React.FC = () => {
 
       <button
         onClick={handleCopyLink}
-        className="px-4 py-2 bg-blue-light-900 text-white rounded shadow mb-32"
+        className="px-4 py-2.5 add-button text-white font-playfair mb-32"
       >
         Copy Link
       </button>

@@ -5,7 +5,9 @@ import PersonalQuote from "../components/PersonalQuote";
 import Gallery from "../components/Gallery";
 import Obituary from "../components/obituary";
 import Timeline from "../components/Timeline";
-import SocialMedia from "../components/SocialMedia"; // Import SocialMedia component
+import SocialMedia from "../components/SocialMedia"; 
+import Favourites from "../components/favourites"; 
+import Contributions from "../components/contributions"; 
 
 export default function StyledTabs() {
   const tab1Ref = useRef<HTMLDivElement>(null);
@@ -13,7 +15,8 @@ export default function StyledTabs() {
   const tab3Ref = useRef<HTMLDivElement>(null);
   const tab4Ref = useRef<HTMLDivElement>(null);
   const tab5Ref = useRef<HTMLDivElement>(null);
-  // const tab6Ref = useRef<HTMLDivElement>(null);
+  const tab6Ref = useRef<HTMLDivElement>(null);
+  const tab7Ref = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<number>(0);
 
@@ -23,7 +26,8 @@ export default function StyledTabs() {
     { label: "Obituary", ref: tab3Ref },
     { label: "Timeline", ref: tab4Ref },
     { label: "Social Media", ref: tab5Ref },
-    // { label: "Contributions", ref: tab6Ref },
+    { label: "Favourites", ref: tab6Ref },
+    { label: "Contributions", ref: tab7Ref },
   ];
 
   return (
@@ -56,6 +60,16 @@ export default function StyledTabs() {
         {/* Social Media */}
         <div ref={tab5Ref}>
           <SocialMedia />
+        </div>
+
+          {/* Favourites */}
+          <div ref={tab6Ref}>
+          <Favourites />
+        </div>
+
+         {/* Contribution */}
+         <div ref={tab6Ref}>
+          <Contributions />
         </div>
 
         {/* Other Tabs */}
