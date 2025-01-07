@@ -61,9 +61,7 @@ class FavouriteController extends Controller
     {
         try {
             $user = $request->user();
-            $favouriteEvent = FavouriteEvent::where('id', $id)
-                ->where('user_id', $user->id)
-                ->first();
+            $favouriteEvent = FavouriteEvent::where('id', $id)->first();
 
             if (!$favouriteEvent) {
                 return response()->json([

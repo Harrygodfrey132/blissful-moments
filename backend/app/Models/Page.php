@@ -33,7 +33,8 @@ class Page extends Model
         'obituaries',
         'timeline',
         'socialMediaData',
-        'favourites'
+        'favourites',
+        'contributions'
     ];
 
     /**
@@ -83,5 +84,10 @@ class Page extends Model
     public function favourites()
     {
         return $this->hasOne(Favourite::class);
+    }
+
+    public function contributions()
+    {
+        return $this->hasOne(Contribution::class);
     }
 }
