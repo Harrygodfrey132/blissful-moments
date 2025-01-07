@@ -67,6 +67,17 @@ class PageController extends Controller
                     'page_id' => $page->id,
                     'content' => "This page is a forever tribute to . Please spread the page so others can contribute and reminise"
                 ]);
+
+                $favourite = $page->favourites()->create([
+                    'page_id' => $page->id,
+                    'tagline' => "A place to remember John's favourite things",
+                ]);
+
+                $favourite->favouriteEvents()->create([
+                    'favourite_id' => $favourite->id,
+                    'title' => "Default Title",
+                    'description' => "Default Description"
+                ]);
             });
 
             return response()->json([

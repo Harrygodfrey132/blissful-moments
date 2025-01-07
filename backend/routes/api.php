@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ObituaryController;
 use App\Http\Controllers\OrderController;
@@ -72,6 +73,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Order Management
     Route::get('/orders', [OrderController::class, 'getUserOrders']);
+
+    // Favourite Management
+    Route::prefix('favourite')->group(function () {
+        Route::post('/update-tagline', [FavouriteController::class, 'updateTagline']);
+        Route::post('/update-events', [FavouriteController::class, 'updateFavouriteEvents']);
+        Route::delete('/delete-event/{id}', [FavouriteController::class, 'deleteFavouriteEvent']);
+    });
 });
 Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);

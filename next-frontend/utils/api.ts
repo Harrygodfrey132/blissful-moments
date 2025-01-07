@@ -50,6 +50,10 @@ export const API = {
   saveSocialMediaData: "/save-social-media-data",
 
   // Order Management
-
   getOrders: "/orders",
+
+  // Fovourite Management
+  updateFavouriteTagline : "/favourite/update-tagline",
+  updateFavouriteEvents : "/favourite/update-events",
+  deleteFavouriteEvent : "/favourite/delete-event"
 };

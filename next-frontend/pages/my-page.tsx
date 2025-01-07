@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MyPage from "../components/MyPage";
 import Modal from "../components/modal";
 import Layout from "../components/Layout";
@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { IoMdArrowBack } from "react-icons/io";
-import { FaHome } from "react-icons/fa";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 
@@ -21,6 +20,7 @@ export default function Home() {
   const [hasPage, setHasPage] = useState(false); // Track if user already has a page
   const { pageData, setPageId, setPageData } = usePageContext();
   const { data: session, status } = useSession();
+  const fetchCalledRef = useRef(false); // Guard for preventing multiple fetch calls
 
   const openModal = (modalType: "config" | "register") => {
     if (modalType === "config") setIsModalOpen(true);
@@ -34,10 +34,11 @@ export default function Home() {
 
   useEffect(() => {
     const fetchUserPage = async () => {
-      if (status === "loading" || !session?.user?.accessToken) {
+      if (fetchCalledRef.current || status === "loading" || !session?.user?.accessToken) {
         setLoading(true);
         return;
       }
+      fetchCalledRef.current = true; // Ensure the function only runs once
 
       try {
         const token = session.user.accessToken;
@@ -74,8 +75,7 @@ export default function Home() {
   return (
     <Layout noLayout={true}>
       <div
-        className={`relative min-h-screen ${isModalOpen || isRegisterModalOpen ? "overflow-hidden" : ""
-          }`}
+        className={`relative min-h-screen ${isModalOpen || isRegisterModalOpen ? "overflow-hidden" : ""}`}
       >
         {loading && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
@@ -98,8 +98,7 @@ export default function Home() {
         )}
 
         <div
-          className={`fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 shadow-2xl py-3 px-5 flex items-center z-50 ${isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""
-            }`}
+          className={`fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 shadow-2xl py-3 px-5 flex items-center z-50 ${isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""}`}
         >
           {/* Left-aligned Back to Home button */}
           <div className="flex justify-start flex-shrink-0">
