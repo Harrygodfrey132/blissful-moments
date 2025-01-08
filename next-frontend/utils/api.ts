@@ -6,7 +6,7 @@ export const API = {
   Logout: "/logout",
   getUser: "/user",
   updateProfile: "/update-profile",
-  updatePassword:"/update-password",
+  updatePassword: "/update-password",
 
   // Page management
   savePageSettings: "/page/settings",
@@ -53,7 +53,13 @@ export const API = {
   getOrders: "/orders",
 
   // Fovourite Management
-  updateFavouriteTagline : "/favourite/update-tagline",
-  updateFavouriteEvents : "/favourite/update-events",
-  deleteFavouriteEvent : "/favourite/delete-event"
+  updateFavouriteTagline: "/favourite/update-tagline",
+  updateFavouriteEvents: "/favourite/update-events",
+  deleteFavouriteEvent: "/favourite/delete-event",
+
+  // Contribution Management
+  updateContributionTagline: "/contribution/update-tagline",
+  storeContributionData: "/contribution/store-data",
+  updateContributionData: "/contribution/update-data",
+  deleteContribution: "/contribution/delete",
 };

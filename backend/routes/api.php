@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\GalleryController;
@@ -79,6 +80,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/update-tagline', [FavouriteController::class, 'updateTagline']);
         Route::post('/update-events', [FavouriteController::class, 'updateFavouriteEvents']);
         Route::delete('/delete-event/{id}', [FavouriteController::class, 'deleteFavouriteEvent']);
+    });
+
+    // Contribution Controller
+    Route::prefix('contribution')->group(function () {
+        Route::post('/update-tagline', [ContributionController::class, 'updateTagline']);
+        Route::post('/store-data', [ContributionController::class, 'storeContributionData']);
+        Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
+        Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
     });
 });
 Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);

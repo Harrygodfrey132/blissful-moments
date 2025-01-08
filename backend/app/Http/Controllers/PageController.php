@@ -78,6 +78,11 @@ class PageController extends Controller
                     'title' => "Default Title",
                     'description' => "Default Description"
                 ]);
+
+                $page->contributions()->create([
+                    'page_id' => $page->id,
+                    'tagline' => "This is a place to celebrate the life of and their impact on all of us. Please post respectfully."
+                ]);
             });
 
             return response()->json([
