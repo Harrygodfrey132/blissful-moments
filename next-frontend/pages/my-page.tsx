@@ -112,7 +112,7 @@ export default function Home() {
             <div className="flex-grow flex bg-white justify-center">
               <button
                 onClick={() => openModal("register")}
-                className="bg-blue-light-900  text-white border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-1.5 rounded"
+                className="bg-blue-light  text-white border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-2 rounded-lg"
               >
                 Register page{" "}
                 <IoIosArrowRoundForward className="group-hover:translate-x-0.5 text-lg transition-transform duration-150 ease-in-out" />

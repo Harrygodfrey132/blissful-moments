@@ -97,21 +97,21 @@ const PersonalQuote: React.FC = () => {
     <div>
       {/* Toggle switch */}
       <div className="flex justify-end mb-4">
-        <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
+        <div className="flex items-center gap-2">
           <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
             <input
               type="checkbox"
               id="toggle-switch"
               checked={isEnabled}
               onChange={() => handleStatus(!isEnabled)}
-              className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+              className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
             />
             <label
               htmlFor="toggle-switch"
-              className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
+              className={`toggle-label block overflow-hidden  h-6 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
             ></label>
           </div>
-          <span className="md:text-3xl text-xl font-medium font-playfair text-blue-light-900">Intro</span>
+          <span className="md:text-xl text-lg font-medium font-playfair text-blue-light-900">Intro</span>
         </div>
       </div>
 
@@ -119,7 +119,7 @@ const PersonalQuote: React.FC = () => {
       {/* Quote content */}
       {(isEnabled) && (
         <div>
-          <h2 className="md:text-4xl text-2xl text-center font-medium font-playfair mb-4 relative">
+          <h2 className="md:text-2xl text-xl text-center font-medium font-playfair mb-4 relative">
             <RiDoubleQuotesL className="text-blue-light-900 absolute top-2 left-1" />
             <div
               className="border w-full border-dashed bg-[#f8f8f8] text-blue-900 px-6 py-5 border-gray-300 focus:outline-none focus:border-gray-500"
@@ -136,7 +136,7 @@ const PersonalQuote: React.FC = () => {
 
           {/* Button to suggest quote */}
           <div className="w-full mb-4 m-auto text-center">
-            <button onClick={generateQuote} className="md:text-2xl text-lg font-playfair border border-gray-300 font-medium px-4 py-2 bg-[#F3EAEACC] text-blue-light-900 shadow-md rounded-lg">
+            <button onClick={generateQuote} className="md:text-xl text-lg font-playfair border border-gray-300 font-medium px-4 py-2 bg-[#F3EAEACC] text-blue-light-900 suggest-btn rounded-lg">
               {quoteRequested ? "Fetching Quote..." : "Suggest Quote"}
             </button>
           </div>

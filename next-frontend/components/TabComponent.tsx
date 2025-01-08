@@ -25,9 +25,9 @@ export default function StyledTabs() {
     { label: "Gallery", ref: tab2Ref },
     { label: "Obituary", ref: tab3Ref },
     { label: "Timeline", ref: tab4Ref },
-    { label: "Social Media", ref: tab5Ref },
+    { label: "Contributions", ref: tab5Ref },
     { label: "Favourites", ref: tab6Ref },
-    { label: "Contributions", ref: tab7Ref },
+    { label: "Social Media", ref: tab7Ref },
   ];
 
   return (
@@ -57,9 +57,9 @@ export default function StyledTabs() {
           <Timeline />
         </div>
 
-        {/* Social Media */}
-        <div ref={tab5Ref}>
-          <SocialMedia />
+       {/* Contribution */}
+       <div ref={tab5Ref}>
+          <Contributions />
         </div>
 
           {/* Favourites */}
@@ -67,9 +67,10 @@ export default function StyledTabs() {
           <Favourites />
         </div>
 
-         {/* Contribution */}
-         <div ref={tab6Ref}>
-          <Contributions />
+        
+          {/* Social Media */}
+          <div ref={tab7Ref}>
+          <SocialMedia />
         </div>
 
         {/* Other Tabs */}

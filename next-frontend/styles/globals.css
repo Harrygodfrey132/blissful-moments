@@ -3,28 +3,38 @@
 @tailwind utilities;
 
 
+
+
+
 .popover-container {
   position: absolute;
-  top: 100%;
-  left: 50%;
+  top: 74px;
+  left: 31px;
   transform: translateX(-50%);
-  background-color: #ffffff;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  z-index: 10;
+  background-color: #fdfdfd;
+  padding: 25px 20px;
+  width: 330px;
+  z-index: 10
 }
+
+.popover-container h2{
+  width: 199px;
+  margin: 0 auto;
+  margin-bottom: 22px
+}
+
 
 .popover-arrow {
   position: absolute;
-  top: -8px;
-  left: 50%;
+  top: -18px;
+  right: 10%;
   transform: translateX(-50%) rotate(45deg);
-  width: 16px;
-  height: 16px;
+  width: 35px;
+  height: 35px;
+  border:1px solid #d1d5db;
   background-color: #ffffff;
-  box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.1); */
+  border-color: #d1d5db transparent transparent #d1d5db;
 }
 
 
@@ -39,13 +49,14 @@
 .add-button {
 
   background-color: #7497ac;
-  border-radius: 10px;
-  box-shadow: 3px 7px 4px rgba(0, 0, 0, 0.25);
-  color: #ffffff;
-  font-size: 25px;
-  font-weight: 400;
-  text-align: center;
-  cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 3px 7px 4px rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    cursor: pointer;
+    padding: 9px 16px !important;
 }
 
 .spinner {
@@ -124,6 +135,9 @@
   background-color: #1d4ed8;
   color: white;
 }
+.suggest-btn {
+  box-shadow:3px 7px 4px rgba(0, 0, 0, 0.25)
+}
 
 
 /* Mobile responsive styles */
@@ -131,8 +145,15 @@
   .tabs-wrapper {
     flex-wrap: nowrap;  /* Ensures all tabs stay in a single line */
   }
-}
 
+  .popover-container {
+    left: 175px;
+    width: 300px;
+}
+.popover-arrow{
+  right: 60%;
+}
+}
 
 
 /* Add this to your global CSS */

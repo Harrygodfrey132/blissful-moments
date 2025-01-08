@@ -32,7 +32,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, setActiv
       {tabs.map((tab, index) => (
         <button
           key={index}
-          className={`tab-button px-6 py-2.5 border md:w-auto md:text-2xl text-xl font-playfair font-medium transition-all 
+          className={`tab-button px-6 py-2.5 border md:w-auto md:text-xl text-lg font-playfair font-medium transition-all 
             ${activeTab === index ? "bg-blue-light text-white" : "bg-[#F5F5F5] text-blue-light-900"}
             ${index === 0 ? "rounded-l" : ""}
             ${index === tabs.length - 1 ? "rounded-r" : ""}`}

@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
 import ImageCropperModal from "../components/ImageCropperModal";
 import { API } from "../utils/api";
+import { GoDotFill } from "react-icons/go";
 
 interface DateState {
   day: string;
@@ -158,13 +159,13 @@ export default function PersonalInfo() {
   }, [pageData]);
 
   return (
-    <section className="flex flex-col md:flex-row px-4 md:px-12 personal-info">
+    <section className="flex flex-col md:flex-row px-4 md:px-20 personal-info">
       <div className="mt-[-50px] mx-auto md:mx-0 profile-thumb">
-        <div className="relative bg-[#EAEAEA] p-2 w-[352px]">
+        <div className="relative bg-[#EAEAEA] p-2 w-[330px] h-[300px]">
           <img
             src={pageData?.profile_picture || "/img/dummy.png"}
             alt="Profile"
-            className="w-full h-auto object-cover"
+            className="w-full h-[285px] object-cover"
           />
           <ImageCropperModal
             onSave={(file) => handleBlur("profile_picture", file)}
@@ -174,7 +175,7 @@ export default function PersonalInfo() {
 
       <div className="flex-1">
         <div className="space-y-4 md:p-4 p-0">
-          <h1 className="text-3xl md:text-5xl font-playfair flex flex-wrap gap-4 font-medium mb-6 mt-4">
+          <h1 className="text-xl md:text-3xl font-playfair justify-center md:justify-start flex flex-wrap gap-4 font-medium mb-6 md:mt-0 mt-10">
             {["firstName", "middleName", "lastName"].map((field) => (
               <div
                 key={field}
@@ -198,13 +199,13 @@ export default function PersonalInfo() {
             ))}
           </h1>
 
-          <div className="flex flex-wrap gap-4 items-center">
+          <div className="flex flex-wrap gap-4 justify-center md:justify-start items-center">
             {["dob"].map((type) => (
               <div key={type} className="flex gap-2">
                 {["day", "month", "year"].map((field) => (
                   <select
                     key={field}
-                    className={`p-2 border-2 bg-[#f8f8f8] text-xl h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-30" : "w-24"
+                    className={`p-2 border-2 bg-[#f8f8f8] text-base h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-[121px]" : "w-24"
                       }`}
                     value={type === "dob" ? dateOfBirth[field as keyof DateState] : deathDate[field as keyof DateState]}
                     onChange={(e) =>
@@ -235,14 +236,15 @@ export default function PersonalInfo() {
 
             {/* Divider Icon */}
             <div className="flex items-center">
-              <svg
+              {/* <svg
                 className="w-6 h-6 text-blue-light-900 mx-4"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
               >
                 <path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"></path>
-              </svg>
+              </svg> */}
+              <GoDotFill className="text-blue-light-900" />
             </div>
 
             {["death"].map((type) => (
@@ -250,7 +252,7 @@ export default function PersonalInfo() {
                 {["day", "month", "year"].map((field) => (
                   <select
                     key={field}
-                    className={`p-2 border-2 bg-[#f8f8f8] text-xl h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-30" : "w-24"
+                    className={`p-2 border-2 bg-[#f8f8f8] text-base h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-[121px]" : "w-24"
                     }`}
                     value={type === "dob" ? dateOfBirth[field as keyof DateState] : deathDate[field as keyof DateState]}
                     onChange={(e) =>
@@ -287,7 +289,7 @@ export default function PersonalInfo() {
             </span>
             <div
               ref={inputRefs.location}
-              className="border-2 p-3 text-xl md:w-[87%] w-full border-gray-300 bg-[#f8f8f8] text-blue-light-900 pl-12 focus:outline-none focus:border-blue-600 focus:text-blue-600"
+              className="border-2 p-3 text-base md:w-[85.5%] w-full border-gray-300 bg-[#f8f8f8] text-blue-light-900 pl-12 focus:outline-none focus:border-blue-600 focus:text-blue-600"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) =>

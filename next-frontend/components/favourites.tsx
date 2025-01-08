@@ -5,6 +5,7 @@ import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
 import { toast } from "react-toastify";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 type FavouriteEvent = {
   id?: number; // Optional to handle new events without an ID
@@ -164,27 +165,27 @@ const Favourites = () => {
     <div className="mb-24">
       <div className="md:flex gap-4 justify-between">
         <div className="flex md:order-2 order-1 justify-end mb-4">
-          <div className="flex items-center md:gap-2 md:space-x-4 space-x-2">
+          <div className="flex items-center gap-2">
             <div className="relative inline-block w-12 font-playfair align-middle select-none transition-all duration-200 ease-in">
               <input
                 type="checkbox"
                 id="toggle-favourites"
                 checked={isFavouritesEnabled}
                 onChange={handleToggleChange}
-                className="toggle-checkbox absolute block md:w-8 w-6 md:h-8 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label
                 htmlFor="toggle-favourites"
-                className={`toggle-label block overflow-hidden md:h-8 h-6 md:!w-16 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isFavouritesEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
+                className={`toggle-label block overflow-hidden  h-6 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isFavouritesEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
               ></label>
             </div>
-            <span className="md:text-3xl text-xl font-playfair font-medium text-blue-light-900">
+            <span className="md:text-xl text-xl font-playfair font-medium text-blue-light-900">
               Favourites
             </span>
           </div>
         </div>
 
-        <h1 className="md:text-3xl md:order-1 order-2 text-2xl flex gap-4 font-playfair font-medium mb-6 mt-4">
+        <h1 className="md:text-xl md:order-1 order-2 text-xl flex gap-4 font-playfair font-medium mb-6 mt-4">
           <span
             className={`border border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isFavouritesEnabled ? "" : "text-gray-500 cursor-not-allowed"}`}
             contentEditable={isFavouritesEnabled}
@@ -202,16 +203,16 @@ const Favourites = () => {
           {favourites.map((favourite, index) => (
             <div key={index} className="relative">
               <button
-                className="absolute text-xl bottom-[-20px] font-playfair right-[-5px] text-red-600"
+                className="absolute text-xl bottom-[-20px] font-playfair right-[-5px]"
                 onClick={() => deleteFavouriteBlock(index)}
                 aria-label="Delete Favourite"
               >
-                <TiDelete />
+                 <AiTwotoneDelete />
               </button>
               <h3
                 contentEditable
                 suppressContentEditableWarning
-                className="text-blue-light-900 text-xl border-gray-300 bg-[#f8f8f8] font-400 border-dashed border p-3 mb-2 focus:outline-none focus:border-b focus:border-gray-400"
+                className="text-blue-light-900 font-playfair text-lg border-gray-300 bg-[#f8f8f8] font-400 border-dashed border p-3 mb-2 focus:outline-none focus:border-b focus:border-gray-400"
                 onBlur={(e) => handleContentChange(index, "title", e.currentTarget.textContent || "")}
               >
                 {favourite.title}
@@ -219,7 +220,7 @@ const Favourites = () => {
               <p
                 contentEditable
                 suppressContentEditableWarning
-                className="text-blue-light-900 font-400 text-xl border-gray-300 bg-[#f8f8f8] focus:outline-none border-dashed border p-3 focus:border-b focus:border-gray-400"
+                className="text-blue-light-900 font-400 font-playfair text-lg border-gray-300 bg-[#f8f8f8] focus:outline-none border-dashed border p-3 focus:border-b focus:border-gray-400"
                 onBlur={(e) => handleContentChange(index, "description", e.currentTarget.textContent || "")}
               >
                 {favourite.description}
