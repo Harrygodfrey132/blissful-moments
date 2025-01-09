@@ -306,6 +306,8 @@ const Contributions = () => {
                     </div>
                 </div>
 
+                </div>
+
                 {/* Editable Header */}
                 <h1 className="md:text-xl md:order-1 order-2 text-xl flex gap-4 font-playfair font-medium mb-6 mt-6">
                     <span
@@ -367,7 +369,7 @@ const Contributions = () => {
                         ))}
                     </div>
                 )}
-            </div>
+            
         </div>
     );
 };
