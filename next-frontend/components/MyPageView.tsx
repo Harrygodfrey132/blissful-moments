@@ -25,7 +25,7 @@ export default function MyPageView() {
                 </div>
                 <div className="flex-1">
                     <div className="space-y-4 md:p-4 p-0">
-                        <h1 className="text-xl md:text-3xl font-playfair justify-center md:justify-start flex flex-wrap gap-2 font-medium mb-4 md:mt-0 mt-10">
+                        <h1 className="text-xl md:text-3xl font-playfair justify-center md:justify-start flex flex-wrap gap-2 font-medium mb-4 md:mt-0 mt-5">
                             <div className="border bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
                                 Monu
                             </div>

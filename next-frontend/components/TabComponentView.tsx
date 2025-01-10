@@ -27,7 +27,7 @@ export default function StyledTabs() {
     { label: "Social Media", ref: tab7Ref },
   ];
   return (
-    <div className=" min-h-screen flex flex-col items-center mt-5 pt-10 border-t-4">
+    <div className=" min-h-screen flex flex-col items-center mt-5 md:pt-10 pt-5 border-t-4">
       {/* Tab Navigation */}
       <TabNavigation
         tabs={tabs}
