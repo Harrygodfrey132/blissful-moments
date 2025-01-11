@@ -32,11 +32,17 @@ class PageController extends Controller
             $page = null;
 
             DB::transaction(function () use ($validated, &$page) {
+
                 $page = Page::create([
                     'user_id' => $validated['user_id'],
                     'name' => $validated['name'],
                     'is_private' => $validated['is_private'],
                     'password' => $validated['is_private'] ? bcrypt($validated['password']) : null,
+                ]);
+
+                $page->personalQuote()->create([
+                    'page_id' => $page->id,
+                    'quote' => "Share Something special for loved one"
                 ]);
 
                 $page->gallery()->create([
@@ -232,8 +238,6 @@ class PageController extends Controller
         ], 400);
     }
 
-
-
     public function uploadBackgroundMusic(Request $request)
     {
         $request->validate([
@@ -261,5 +265,21 @@ class PageController extends Controller
         return response()->json([
             'message' => 'No file uploaded.',
         ], 400);
+    }
+
+    public function show($pageName)
+    {
+        // Fetch page data from the database based on the page name
+        $page = Page::where('slug', $pageName)->first();
+
+        // If the page is found, return the data
+        if ($page) {
+            return response()->json([
+                'page_data' => $page->refresh(),
+            ]);
+        }
+
+        // If the page is not found, return a 404 error
+        return response()->json(['error' => 'Page not found'], 404);
     }
 }

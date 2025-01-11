@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\ContributionRequestController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\GalleryController;
@@ -21,6 +22,11 @@ use App\Http\Controllers\UserProfileController;
 // Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
+Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+Route::get('/countries', [CountryController::class, 'fetchCountries']);
+Route::get('/memory/{pageName}', [PageController::class, 'show']);
+Route::post('/storeUserContributionData', [ContributionRequestController::class, 'store']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -89,7 +95,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
         Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
     });
+
+    // Contribution Request Controller
+    Route::prefix('contribution')->group(function () {
+        Route::get('/contribution-requests', [ContributionRequestController::class, 'index']);
+        Route::post('/update/requests', [ContributionRequestController::class, 'updateStatus']);
+        Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
+        Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
+    });
 });
-Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
-Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-Route::get('/countries', [CountryController::class, 'fetchCountries']);
