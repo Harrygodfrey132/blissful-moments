@@ -80,10 +80,9 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="md:flex gap-5 md:px-10 px-4 w-full mb-10 md:mt-32 mt-24">
-      <div className="md:flex gap-5 w-full">
+    <div className="flex px-4 flex-col md:flex-row mb-10 md:mt-32 mt-24">
         <Sidebar />
-        <main className="flex-1">
+        <main className="flex-1 px-6 overflow-x-auto">
           <header className="mb-6 md:mt-0 mt-4">
             <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
           </header>
@@ -161,7 +160,6 @@ const DashboardPage = () => {
           )}
 
         </main>
-      </div>
     </div>
   );
 };
