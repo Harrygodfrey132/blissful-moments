@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
 
@@ -124,7 +125,11 @@ const ContributionView = ({ contributionData, userId }) => {
 
   return (
     <div className="mb-20 mt-20">
-      {isContributionsEnabled && (
+      <div className="flex items-center justify-between">
+        <div className="text-blue-light-900 font-playfair md:text-2xl text-xl border-b-4 border-blue-light-800 font-400 inline-block">
+        Contributions
+        </div>
+        {isContributionsEnabled && (
         <div className="relative" ref={popoverRef}>
           <button
             onClick={() => setIsFormOpen(true)}
@@ -134,7 +139,7 @@ const ContributionView = ({ contributionData, userId }) => {
           </button>
 
           {isFormOpen && (
-            <div className="popover-container border border-gray-300 transition-all">
+            <div className="popover-container popover-contribution border border-gray-300 transition-all">
               <div className="popover-arrow"></div>
               <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
                 Create a Contribution
@@ -197,11 +202,21 @@ const ContributionView = ({ contributionData, userId }) => {
           )}
         </div>
       )}
+      </div>
 
-      <h1 className="md:text-xl text-xl font-playfair font-medium mb-6 mt-6">
-        <div className="text-blue-light-900 md:text-2xl text-xl border-b-4 border-blue-light-800">
+
+      <h1 className="md:text-xl relative text-xl font-playfair font-medium mb-6 mt-6">
+        <div className="border bg-[#f8f8f8] font-playfair w-full md:text-xl text-base text-blue-light-900 p-4 border-gray-300 ">
           {tagline}
+         
         </div>
+        <Image
+                        className="absolute right-0 bottom-0 w-[50px]"
+                        src="/img/dove.svg"
+                        alt="Dove"
+                        width={50}
+                        height={50}
+                      />
       </h1>
 
       {isContributionsEnabled && contributions.length > 0 && (

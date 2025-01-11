@@ -262,7 +262,7 @@ export default function StyledTabs({ pageData }) {
                     key={index}
                     className="timeline-event font-playfair flex gap-4 relative mt-4"
                   >
-                    <div className="timeline-date flex flex-col gap-1 items-start space-y-1">
+                    <div className="timeline-date flex flex-col md:w-2/12 w-4/12 gap-1 items-start space-y-1">
                       <div className="text-blue-light-900 font-medium md:text-xl text-base">
                         {event?.title}
                       </div>
@@ -282,8 +282,8 @@ export default function StyledTabs({ pageData }) {
                         </div>
                       </div>
                     </div>
-                    <div>
-                      <div className="border-4 relative bg-white rounded text-blue-light-900 font-medium text-base md:text-xl border-gray-200 w-full p-4">
+                    <div className="md:w-10/12 w-8/12">
+                      <div className="border-4 relative bg-[#fafafa] rounded text-blue-light-900 font-medium text-base md:text-xl border-gray-200 w-full p-4">
                         <AiOutlineCaretLeft className="text-gray-200 text-2xl left-[-36px] top-0 h-12 w-12 absolute" />
                         <p>{event?.description}</p>
                       </div>

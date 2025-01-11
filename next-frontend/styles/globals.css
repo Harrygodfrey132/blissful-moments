@@ -153,6 +153,20 @@
 .popover-arrow{
   right: 60%;
 }
+
+.popover-contribution {
+  left: 0 !important;
+}
+
+.popover-contribution  .popover-arrow{
+  right: 0 !important;
+}
+
+.add-button{
+  font-size: 16px;
+}
+
+
 }
 
 
