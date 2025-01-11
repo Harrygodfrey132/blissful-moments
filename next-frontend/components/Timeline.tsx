@@ -79,17 +79,20 @@ export default function Timeline() {
     const updatedEvents = [...timelineEvents];
     const updatedEvent = { ...updatedEvents[index] };
 
-    // Update the specific field (title, description, location, day, month, or year)
-    updatedEvent[field] = value;
+    // Update the specific field with type-safe assignments
+    if (field === "day" || field === "month" || field === "year" || field === "title" || field === "description" || field === "location") {
+      updatedEvent[field] = value;
 
-    // If the updated field is day, month, or year, we need to recalculate the event_date
-    if (field === "day" || field === "month" || field === "year") {
-      updatedEvent.event_date = `${updatedEvent.year}-${String(updatedEvent.month).padStart(2, '0')}-${String(updatedEvent.day).padStart(2, '0')}`;
+      // If the updated field is day, month, or year, recalculate the event_date
+      if (field === "day" || field === "month" || field === "year") {
+        updatedEvent.event_date = `${updatedEvent.year}-${String(updatedEvent.month).padStart(2, "0")}-${String(updatedEvent.day).padStart(2, "0")}`;
+      }
     }
 
     updatedEvents[index] = updatedEvent;
     setTimelineEvents(updatedEvents);
   };
+
 
 
   const addTimelineEvent = () => {
