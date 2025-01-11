@@ -164,7 +164,7 @@ class StripeWebhookController extends Controller
     private function generatePageQrCode($pageSlug)
     {
         // Example data to encode in the QR code
-        $data =  env('FRONTEND_URL') . '/' . $pageSlug;
+        $data =  env('FRONTEND_URL') . '/memory/' . $pageSlug;
 
         // Generate the QR code
         $qrCode = QrCode::size(300)->generate($data);

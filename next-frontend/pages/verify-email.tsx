@@ -13,29 +13,24 @@ const VerifyEmailPage = () => {
   }, [user, userLoading]);
 
   return (
-    <div className="flex bg-white min-h-full flex-1">
-      {/* Main content */}
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="mt-10">
-            <VerifyEmailForm />
-          </div>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300">
+      {/* Main Card */}
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105">
+        <div className="p-8">
+          <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
+            Verify Your Email
+          </h1>
+          <p className="text-sm text-gray-600 text-center mb-3">
+            Please check your email and follow the instructions to verify your account.
+          </p>
+          <VerifyEmailForm />
         </div>
-      </div>
-
-      {/* Background image */}
-      <div className="relative hidden w-0 flex-1 lg:block">
-        <img
-          alt=""
-          src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
-          className="absolute inset-0 size-full object-cover"
-        />
       </div>
 
       {/* Loader Overlay */}
       {loading && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-16 h-16"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-75"></div>
         </div>
       )}
     </div>
@@ -43,3 +38,4 @@ const VerifyEmailPage = () => {
 };
 
 export default VerifyEmailPage;
+VerifyEmailPage.noLayout = true;

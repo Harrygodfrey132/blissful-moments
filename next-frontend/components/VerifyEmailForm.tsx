@@ -14,10 +14,9 @@ const VerifyEmailForm = () => {
     };
 
     return (
-        <div className="relative flex flex-col justify-center py-12">
+        <div className="relative flex flex-col justify-center py-6">
             <div className="mx-auto w-full max-w-lg rounded-2xl px-6 pb-9">
                 <div className="text-center space-y-4">
-                    <h2 className="text-2xl font-semibold">Email Verification</h2>
                     <p className="text-sm text-gray-500 m">
                         We have sent a code to your email{" "}
                         <strong>

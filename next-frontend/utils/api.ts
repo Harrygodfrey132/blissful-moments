@@ -62,4 +62,7 @@ export const API = {
   storeContributionData: "/contribution/store-data",
   updateContributionData: "/contribution/update-data",
   deleteContribution: "/contribution/delete",
+  storeUserContributionData: "/storeUserContributionData",
+  getContributionRequests: "/contribution/contribution-requests",
+  updateContributionRequestStatus: "/contribution/update/requests",
 };

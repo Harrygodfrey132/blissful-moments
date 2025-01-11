@@ -4,7 +4,7 @@ import Footer from './Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
-  noLayout?: boolean;  // Optional prop to conditionally hide Header and Footer
+  noLayout?: boolean;
 }
 
 const Layout = ({ children, noLayout = false }: LayoutProps) => {

@@ -48,13 +48,6 @@ const DashboardPage = () => {
     fetchUserData();
   }, [session?.user?.accessToken]);
 
-  const downloadQRCode = () => {
-    const link = document.createElement('a');
-    link.href = pageData.qr_code; // Set the QR code image URL
-    link.download = 'qr-code.png'; // The name of the downloaded file
-    link.click(); // Programmatically click the link to start the download
-  };
-
   const handleCopy = async () => {
     if (typeof window === 'undefined' || !publicUrl) {
       console.warn('Copy failed: publicUrl or window is not available');
@@ -138,8 +131,9 @@ const DashboardPage = () => {
                 <p className="text-sm text-gray-600">Scan to access your page</p>
                 <MdOutlineQrCodeScanner className="text-7xl text-green-600 mt-4" />
                 <a
-                  href="#"
-                  onClick={downloadQRCode}
+                  href={pageData?.qr_code}
+                  target='blank'
+                  download={"qr-code"}
                   className="text-sm text-blue-700 underline hover:text-blue-900 mt-4"
                 >
                   Download QR Code

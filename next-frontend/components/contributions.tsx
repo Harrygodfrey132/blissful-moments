@@ -369,7 +369,6 @@ const Contributions = () => {
                         ))}
                     </div>
                 )}
-            
         </div>
     );
 };

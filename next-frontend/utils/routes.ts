@@ -14,5 +14,6 @@ export const ROUTES = {
   Profile: "/profile",
   Orders: "/orders",
   myPage: "/my-page",
-  updatePassword:"/update-password"
+  updatePassword:"/update-password",
+  contributionRequests:"/contribution-requests"
 };

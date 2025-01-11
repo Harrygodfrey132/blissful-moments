@@ -97,6 +97,15 @@ export default function PersonalInfo() {
         formData.append(field, value);
       }
 
+      // Include date of birth and death date in form data if they have been updated
+      if (dateOfBirth.day !== "Day" && dateOfBirth.month !== "Month" && dateOfBirth.year !== "Year") {
+        formData.append("date_of_birth", `${dateOfBirth.year}-${months.indexOf(dateOfBirth.month) + 1}-${dateOfBirth.day}`);
+      }
+
+      if (deathDate.day !== "Day" && deathDate.month !== "Month" && deathDate.year !== "Year") {
+        formData.append("death_date", `${deathDate.year}-${months.indexOf(deathDate.month) + 1}-${deathDate.day}`);
+      }
+
       const response = await axios.post(`${API_URL}${API.savePersonalDetails}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -114,6 +123,7 @@ export default function PersonalInfo() {
     }
   };
 
+
   const handleContentEditableChange = (
     ref: React.RefObject<HTMLDivElement>,
     field: string,
@@ -126,6 +136,7 @@ export default function PersonalInfo() {
       const range = selection?.getRangeAt(0);
       const cursorPos = range?.startOffset || 0;
 
+      // Delay the cursor positioning to ensure it happens after the DOM update
       setTimeout(() => {
         if (ref.current?.firstChild) {
           const cursorRange = document.createRange();
@@ -236,14 +247,6 @@ export default function PersonalInfo() {
 
             {/* Divider Icon */}
             <div className="flex items-center">
-              {/* <svg
-                className="w-6 h-6 text-blue-light-900 mx-4"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"></path>
-              </svg> */}
               <GoDotFill className="text-blue-light-900" />
             </div>
 
@@ -253,7 +256,7 @@ export default function PersonalInfo() {
                   <select
                     key={field}
                     className={`p-2 border-2 bg-[#f8f8f8] text-base h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-[121px]" : "w-24"
-                    }`}
+                      }`}
                     value={type === "dob" ? dateOfBirth[field as keyof DateState] : deathDate[field as keyof DateState]}
                     onChange={(e) =>
                       handleDateChange(
