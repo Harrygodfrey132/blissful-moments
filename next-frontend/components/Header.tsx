@@ -26,6 +26,7 @@ const Header = () => {
     return router.pathname === path ? 'text-blue-600' : 'text-gray-700';
   };
 
+  // ✅ Close mobile menu when clicking outside
   const handleClickOutside = (event: MouseEvent) => {
     if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
       setIsProfileMenuOpen(false);
@@ -38,6 +39,15 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // ✅ Close mobile menu on route change
+  useEffect(() => {
+    const handleRouteChange = () => setIsMobileMenuOpen(false);
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
 
   return (
     <header className="absolute w-full py-1 z-30 bg-white shadow">
@@ -93,7 +103,6 @@ const Header = () => {
               </li>
             </ul>
             <ul className="flex grow justify-end flex-wrap items-center">
-
               {!session ? (
                 <>
                   <li>
@@ -152,7 +161,7 @@ const Header = () => {
                   )}
                 </li>
               )}
-              <li className='ml-5'>
+              <li className="ml-5">
                 <Link
                   href={ROUTES.Request_Demo}
                   className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"

@@ -162,7 +162,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white px-12 py-10 rounded shadow w-3/4">
+      <div className="bg-white md:px-12 px-6 py-10 rounded shadow w-full m-4 md:w-1/2">
         {/* Step Progress Indicator */}
         <div className="relative mb-6 w-3/4 m-auto">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 rounded transform -translate-y-1/2"></div>
@@ -207,11 +207,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div className="mb-4 text-gray-800">You can change this anytime later</div>
 
-            <div className="flex gap-2 mt-5 items-center">
+            <div className="md:flex gap-2 mt-5 items-center">
               <div className="text-black text-2xl">{process.env.NEXT_PUBLIC_BASE_URL}/</div>
-              <h1 className="md:text-xl text-xl gap-4 font-medium">
+              <h1 className="md:text-xl w-full mt-4 md:mt-0 w-full text-xl gap-4 font-medium">
                 <input
-                  className="border border-dashed text-blue-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500"
+                  className="border w-full border-dashed text-blue-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500"
                   type="text"
                   value={pageName}
                   onChange={handlePageNameChange}

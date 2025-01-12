@@ -99,9 +99,9 @@ const UpdatePasswordPage = () => {
     <div>
       <div className="flex px-4 flex-col md:flex-row mb-10 md:mt-32 mt-24">
         <Sidebar />
-        <main className="flex-1 px-6 overflow-x-auto">
+        <main className="flex-1 md:px-6 overflow-x-auto">
           <div>
-            <h1 className="font-semibold md:text-xl text-lg mb-5 md:mb-0">Update Password</h1>
+            <h1 className="font-semibold md:text-xl text-lg mb-5 mt-5 md:mt-0 md:mb-0">Update Password</h1>
             <section className="bg-white p-12 w-full max-w-lg shadow rounded mt-5">
               <form onSubmit={handleSubmit}>
                 <div className="space-y-6">
