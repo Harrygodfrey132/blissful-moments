@@ -153,13 +153,10 @@ class GalleryController extends Controller
         // Validate the folder ID
         $validated = $request->validate([
             'folder_id' => 'required|integer',
+            'image_id' => 'required|integer',
         ]);
 
-        $image = GalleryImage::where('id', $id)
-            ->whereHas('gallery', function ($query) use ($user) {
-                $query->where('page_id', $user->page->id);
-            })
-            ->firstOrFail();
+        $image = GalleryImage::where('id', $validated['image_id'])->firstOrFail();
 
         // Assign the folder
         $image->update(['folder_id' => $validated['folder_id']]);

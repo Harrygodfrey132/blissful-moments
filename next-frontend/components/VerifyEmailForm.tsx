@@ -1,7 +1,7 @@
 import { useState } from "react";
 import OTPInput from "react-otp-input";
 import useVerifyEmail from "../hooks/useVerifyEmail";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const VerifyEmailForm = () => {
     const [code, setCode] = useState("");
@@ -55,6 +55,18 @@ const VerifyEmailForm = () => {
                         {isSubmitting ? "Verifying..." : "Verify Account"}
                     </button>
                 </form>
+                <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-500">
+                        Want to <span
+                            onClick={() => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}` })}
+                            className="text-blue-500 cursor-pointer hover:underline hover:font-semibold"
+                        >
+                            logout
+                        </span>
+                        ?
+                    </p>
+                </div>
+
             </div>
         </div>
     );

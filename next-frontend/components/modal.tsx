@@ -11,6 +11,7 @@ import { BiLoaderAlt } from "react-icons/bi";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
@@ -26,7 +27,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [hasChecked, setHasChecked] = useState<boolean>(false);
 
   const { data: session, status } = useSession();
-  const { setPageId , setPageData } = usePageContext();
+  const { setPageId, setPageData } = usePageContext();
 
   const token = session?.user?.accessToken;
 
@@ -208,7 +209,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="mb-4 text-gray-800">You can change this anytime later</div>
 
             <div className="flex gap-2 mt-5 items-center">
-              <div className="text-black text-2xl">{process.env.NEXT_PUBLIC_BASE_URL}/</div>
+              <div className="text-black text-2xl">{process.env.NEXT_PUBLIC_BASE_URL}/memory/</div>
               <h1 className="md:text-xl text-xl gap-4 font-medium">
                 <input
                   className="border border-dashed text-blue-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500"

@@ -27,6 +27,7 @@ Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentI
 Route::get('/countries', [CountryController::class, 'fetchCountries']);
 Route::get('/memory/{pageName}', [PageController::class, 'show']);
 Route::post('/storeUserContributionData', [ContributionRequestController::class, 'store']);
+Route::post('/verify-password', [PageController::class, 'verifyPassword']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -47,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/name-availability', [PageController::class, 'checkPageNameAvailability']);
         Route::post('/background-image', [PageController::class, 'uploadBackgroundImage']);
         Route::post('/uploadBackgroundMusic', [PageController::class, 'uploadBackgroundMusic']);
+        Route::delete('/deleteBackgroundMusic', [PageController::class, 'deleteBackgroundMusic']);
     });
 
     // Gallery endpoints

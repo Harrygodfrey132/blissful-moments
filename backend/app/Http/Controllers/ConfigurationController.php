@@ -22,6 +22,11 @@ class ConfigurationController extends Controller
         return view('admin.configuration.smtp');
     }
 
+    public function thirdPartySettings()
+    {
+        return view('admin.configuration.third-party-settings');
+    }
+
     public function store(Request $request)
     {
         try {

@@ -163,7 +163,7 @@ const Gallery: React.FC = () => {
 
       const response = await axios.patch(
         apiUrl,
-        isChecked ? { folder_id: folderId } : null,
+        isChecked ? { folder_id: folderId , image_id: imageId } : null,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

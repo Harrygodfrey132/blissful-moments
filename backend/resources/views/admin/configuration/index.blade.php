@@ -9,28 +9,29 @@
             </div>
             <div class="grid gap-y-8">
                 <div>
-                    <div
-                        class="box-shadow  shadow max-1580:grid-cols-3 mt-2 grid grid-cols-4 flex-wrap justify-between gap-12 rounded bg-white p-4 max-xl:grid-cols-2 max-sm:grid-cols-1">
-                        <a class="flex max-w-[360px] items-center gap-2 rounded-lg p-2 transition-all hover:bg-gray-100"
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Email Settings Tile -->
+                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
                             href="{{ route('configuration.email.settings') }}">
-                            <x-icon-email-icon />
-                            <div class="grid">
-                                <p class="mb-1.5 text-base font-semibold text-gray-800">Email Settings</p>
-                                <p class="text-xs text-gray-600"> Set email sender name, admin name and
-                                    admin email address.</p>
-                            </div>
-                        </a>
-                        <a class="flex max-w-[360px] items-center gap-2 rounded-lg p-2 transition-all hover:bg-gray-100"
-                            href="{{ route('configuration.smtp.settings') }}">
-                            <x-icon-smpt />
-                            <div class="grid">
-                                <p class="mb-1.5 text-base font-semibold text-gray-800">SMTP Settings</p>
-                                <p class="text-xs text-gray-600">
-                                    Set SMTP host, SMTP port etc
+                            <x-icon-email-icon class="w-10 h-10 text-blue-500" />
+                            <div>
+                                <p class="text-lg font-semibold text-gray-800">Email Settings</p>
+                                <p class="text-sm text-gray-600">
+                                    Set email sender name, admin name, and admin email address.
                                 </p>
                             </div>
                         </a>
-
+                        <!-- SMTP Settings Tile -->
+                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
+                            href="{{ route('configuration.smtp.settings') }}">
+                            <x-icon-smpt class="w-10 h-10 text-gray-700" />
+                            <div>
+                                <p class="text-lg font-semibold text-gray-800">SMTP Settings</p>
+                                <p class="text-sm text-gray-600">
+                                    Set SMTP host, SMTP port, etc.
+                                </p>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>

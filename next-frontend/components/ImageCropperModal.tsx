@@ -26,7 +26,7 @@ function ImageCropperModal({ onSave }: ImageCropperModalProps) {
 
     if (file) {
       // Validate file size
-      const maxSize = 2 * 1024 * 1024; // 2MB
+      const maxSize = 4 * 1024 * 1024; // 2MB
       if (file.size > maxSize) {
         toast.error("File size should not exceed 2MB.");
         return;

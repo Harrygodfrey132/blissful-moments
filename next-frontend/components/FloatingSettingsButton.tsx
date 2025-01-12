@@ -80,6 +80,22 @@ const FloatingSettingsButton: React.FC = () => {
     }
   };
 
+  const handleDelete = async () => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}${API.deleteBackgroundMusic}`, {
+      headers: {
+        Authorization: `Bearer ${session?.user?.accessToken}`
+      }
+    })
+
+    if (response.status === 200) {
+      setPageData({
+        ...pageData,
+        background_music: null,
+      });
+      setModalOpen(false);
+    }
+  };
+
   // Close the popover if clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -151,23 +167,48 @@ const FloatingSettingsButton: React.FC = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 rounded-lg w-11/12 max-w-lg relative transform transition-all duration-300">
-            <h2 className="text-lg font-bold mb-4">Upload Background Music</h2>
-            <input type="file" accept="audio/*" onChange={handleFileChange} />
+            <h2 className="text-lg font-bold mb-4">Background Music</h2>
+
+            {/* Display the file name if background music is added */}
+            {pageData?.background_music ? (
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-gray-700">{pageData.background_music}</span>
+                <button
+                  onClick={handleDelete}
+                  className="text-red-600 hover:text-red-700"
+                  aria-label="Delete"
+                >
+                  <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+                </button>
+              </div>
+            ) : (
+              <p className="text-gray-500">No background music uploaded.</p>
+            )}
+
+            <input type="file" accept="audio/*" onChange={handleFileChange} className="mt-4" />
+
             <div className="mt-4 flex justify-end gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
+              >
                 Cancel
               </button>
-              <button onClick={handleFileUpload} className="px-4 py-2 bg-blue-light-900 text-white rounded">
-                Upload
+              <button
+                onClick={handleFileUpload}
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+              >
+                {pageData?.background_music ? 'Update' : 'Upload'}
               </button>
             </div>
           </div>
         </div>
+
       )}
 
       {/* Play the background music if available */}
       {isMusicAvailable && (
-        <audio controls autoPlay loop>
+        <audio className="hidden" controls autoPlay loop>
           <source src={audioSrc} type="audio/mp3" />
           Your browser does not support the audio element.
         </audio>

@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GalleryImage;
-use App\Models\Obituary;
 use App\Models\Page;
-use App\Models\Timeline;
-use App\Models\TimelineEvent;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PageController extends Controller
 {
@@ -23,84 +20,103 @@ class PageController extends Controller
         try {
             $validated = $request->validate([
                 'user_id' => 'required|integer',
-                'name' => 'required|string|unique:pages',
+                'name' => [
+                    'required',
+                    'string',
+                    Rule::unique('pages')->where(function ($query) use ($request) {
+                        return $query->where('user_id', '!=', $request->user_id);
+                    }),
+                ],
                 'is_private' => 'required|boolean',
-                'password' => 'nullable|string|required_if:is_private,true',
+                'password' => 'nullable|string|required_if:is_private,true|min:8',
             ]);
 
             // Initialize the page variable outside the transaction
-            $page = null;
+            $page = $request->user()->page ?? null;
 
-            DB::transaction(function () use ($validated, &$page) {
+            if (!$page) {
+                DB::transaction(function () use ($validated) {
+                    $page = Page::create([
+                        'user_id' => $validated['user_id'],
+                        'name' => $validated['name'],
+                        'is_private' => $validated['is_private'],
+                        'password' => $validated['is_private'] ? Hash::make($validated['password']) : null,
+                    ]);
 
-                $page = Page::create([
-                    'user_id' => $validated['user_id'],
+                    $page->personalQuote()->create([
+                        'page_id' => $page->id,
+                        'quote' => "Share Something special for loved one"
+                    ]);
+
+                    $page->gallery()->create([
+                        'gallery_name' => "Gallery",
+                        'user_id' => $validated['user_id']
+                    ]);
+
+                    $page->obituaries()->create([
+                        'tagline' => "Enter a memorable tagline here.",
+                        'content' => "Add a heartfelt message about your loved one.",
+                        'page_id' => $page->id,
+                    ]);
+
+                    $timeline = $page->timeline()->create([
+                        'tagline' => "Your Timeline Goes Here",
+                        'page_id' => $page->id
+                    ]);
+
+                    $timeline->events()->create([
+                        'timeline_id' => $timeline->id,
+                        'event_date' => now(),
+                        'title' => "New Event",
+                        'description' => "Event description",
+                        'location' => "Event location"
+                    ]);
+
+                    $page->socialMediaData()->create([
+                        'page_id' => $page->id,
+                        'content' => "This page is a forever tribute to. Please spread the page so others can contribute and reminisce."
+                    ]);
+
+                    $favourite = $page->favourites()->create([
+                        'page_id' => $page->id,
+                        'tagline' => "A place to remember John's favourite things",
+                    ]);
+
+                    $favourite->favouriteEvents()->create([
+                        'favourite_id' => $favourite->id,
+                        'title' => "Default Title",
+                        'description' => "Default Description"
+                    ]);
+
+                    $page->contributions()->create([
+                        'page_id' => $page->id,
+                        'tagline' => "This is a place to celebrate the life of and their impact on all of us. Please post respectfully."
+                    ]);
+                });
+            } else {
+                $page->update([
                     'name' => $validated['name'],
                     'is_private' => $validated['is_private'],
-                    'password' => $validated['is_private'] ? bcrypt($validated['password']) : null,
+                    'password' => $validated['is_private'] ? Hash::make($validated['password']) : $page->password,
                 ]);
-
-                $page->personalQuote()->create([
-                    'page_id' => $page->id,
-                    'quote' => "Share Something special for loved one"
-                ]);
-
-                $page->gallery()->create([
-                    'gallery_name' => "Gallery",
-                    'user_id' => $validated['user_id']
-                ]);
-
-                $page->obituaries()->create([
-                    'tagline' => "Enter a memorable tagline here.",
-                    'content' => "Add a heartfelt message about your loved one.",
-                    'page_id' => $page->id,
-                ]);
-
-                $timeline = $page->timeline()->create([
-                    'tagline' => "Your Timeline Goes Here",
-                    'page_id' => $page->id
-                ]);
-
-                $timeline->events()->create([
-                    'timeline_id' => $timeline->id,
-                    'event_date' => now(),
-                    'title' => "New Event",
-                    'description' => "Event description",
-                    'location' => "Event location"
-                ]);
-
-                $page->socialMediaData()->create([
-                    'page_id' => $page->id,
-                    'content' => "This page is a forever tribute to . Please spread the page so others can contribute and reminise"
-                ]);
-
-                $favourite = $page->favourites()->create([
-                    'page_id' => $page->id,
-                    'tagline' => "A place to remember John's favourite things",
-                ]);
-
-                $favourite->favouriteEvents()->create([
-                    'favourite_id' => $favourite->id,
-                    'title' => "Default Title",
-                    'description' => "Default Description"
-                ]);
-
-                $page->contributions()->create([
-                    'page_id' => $page->id,
-                    'tagline' => "This is a place to celebrate the life of and their impact on all of us. Please post respectfully."
-                ]);
-            });
+            }
 
             return response()->json([
-                'message' => 'Page created successfully.',
+                'message' => $page->wasRecentlyCreated ? 'Page created successfully.' : 'Page updated successfully.',
                 'page' => $page,
             ], 200);
         } catch (\Throwable $th) {
+            Log::error('Error creating/updating page', [
+                'error' => $th->getMessage(),
+                'stack' => $th->getTraceAsString(),
+            ]);
+
             return response()->json([
                 'message' => 'Unable to create page: ' . $th->getMessage(),
-            ]);
+            ], 500);
         }
     }
+
 
     /**
      * Update personal information for the user's page.
@@ -110,16 +126,16 @@ class PageController extends Controller
         try {
             $user = $request->user();
             $page = $user->page;
-            Log::info("Requested Data", [print_r($request->all(), true)]);
+
             // Validate the incoming data
             $validated = $request->validate([
                 'firstName' => 'nullable|string|max:255',
                 'middleName' => 'nullable|string|max:255',
                 'lastName' => 'nullable|string|max:255',
                 'location' => 'nullable|string|max:255',
-                'date_of_birth' => 'nullable|date_format:Y-m-d',
-                'death_date' => 'nullable|date_format:Y-m-d',
-                'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'date_of_birth' => 'nullable',
+                'death_date' => 'nullable',
+                'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096',
             ]);
 
             // Collect the data to be updated
@@ -210,38 +226,58 @@ class PageController extends Controller
      */
     public function uploadBackgroundImage(Request $request)
     {
-        $validated = $request->validate([
-            'background_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        try {
+            // Validate incoming request
+            $validated = $request->validate([
+                'background_image' => 'required|max:4096', // 4MB max size
+            ]);
 
-        $user = $request->user();
-        $page = $user->page;
+            Log::info('Validated Request:', $validated);
 
-        if ($request->hasFile('background_image')) {
-            $file = $request->file('background_image');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('images', $fileName, 'public');
-            $fileUrl = url(Storage::url($path));
+            $user = $request->user();
+            $page = $user->page;
 
-            $page->update(['background_image' => $fileUrl]);
+            if ($request->hasFile('background_image')) {
+                $file = $request->file('background_image');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('images', $fileName, 'public');
+                $fileUrl = url(Storage::url($path));
+
+                $page->update(['background_image' => $fileUrl]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Background image uploaded successfully.',
+                    'page_data' => $page->refresh(),
+                ]);
+            }
 
             return response()->json([
-                'success' => true,
-                'message' => 'Background image uploaded successfully.',
-                'page_data' => $page,
-            ]);
+                'success' => false,
+                'message' => 'No image was uploaded.',
+            ], 400);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            Log::error('Validation Errors:', $e->errors());
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('File Upload Error:', ['exception' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while uploading the image.',
+            ], 500);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'No image was uploaded.',
-        ], 400);
     }
+
 
     public function uploadBackgroundMusic(Request $request)
     {
         $request->validate([
-            'background_music' => 'required|file|mimes:mp3,wav,ogg|max:10240',
+            'background_music' => 'required|file|mimes:mp3,wav,ogg|max:4096',
         ]);
 
         $user = $request->user();
@@ -267,6 +303,27 @@ class PageController extends Controller
         ], 400);
     }
 
+    public function deleteBackgroundMusic(Request $request)
+    {
+
+        $user = $request->user();
+        $page = $user->page;
+
+        if ($page->background_music) {
+            $existingFilePath = str_replace(url('/storage'), '', $page->background_music);
+            $existingFilePath = ltrim($existingFilePath, '/');
+            Storage::disk('public')->delete($existingFilePath);
+        }
+
+        $page->update(['background_music' => null]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Background image uploaded successfully.',
+            'page_data' => $page->refresh(),
+        ]);
+    }
+
     public function show($pageName)
     {
         // Fetch page data from the database based on the page name
@@ -281,5 +338,27 @@ class PageController extends Controller
 
         // If the page is not found, return a 404 error
         return response()->json(['error' => 'Page not found'], 404);
+    }
+
+    public function verifyPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'page_id' => 'required|',
+        ]);
+
+        $page = Page::where('id', $request->page_id)->first();
+
+        if (Hash::check($request->password, $page->password)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Password verified successfully.',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid password.',
+        ], 401);
     }
 }

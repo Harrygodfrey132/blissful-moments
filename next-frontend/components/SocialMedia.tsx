@@ -9,6 +9,7 @@ const SocialMedia: React.FC = () => {
   const { pageData, setPageData } = usePageContext();
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
+  const [isPageLinkCopied, setIsPageLinkCopied] = useState(false);
 
   const [isSocialMediaEnabled, setIsSocialMediaEnabled] = useState(
     pageData?.social_media_data?.status == 1
@@ -98,8 +99,10 @@ const SocialMedia: React.FC = () => {
         document.execCommand("copy");
         document.body.removeChild(textArea);
       }
-
-      toast.success("Page link copied!");
+      setIsPageLinkCopied(true);
+      setTimeout(() => {
+        setIsPageLinkCopied(false);
+      }, 2000);
     } catch (error) {
       console.error("Failed to copy link:", error); // Log error details
       toast.error("Failed to copy link.");
@@ -149,10 +152,18 @@ const SocialMedia: React.FC = () => {
 
       <button
         onClick={handleCopyLink}
+        className={`px-4 py-2.5 text-white font-playfair mb-32 transition-all duration-300 ease-in-out
+              ${isPageLinkCopied ? "bg-blue-light-900" : "add-button"
+          } rounded-lg`}
+      >
+        {isPageLinkCopied ? "Copied!" : "Copy Link"}
+      </button>
+      {/* <button
+        onClick={handleCopyLink}
         className="px-4 py-2.5 add-button text-white font-playfair mb-32"
       >
         Copy Link
-      </button>
+      </button> */}
     </div>
   );
 };

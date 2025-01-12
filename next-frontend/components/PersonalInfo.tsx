@@ -71,7 +71,7 @@ export default function PersonalInfo() {
       return null;
     }
     return {
-      day: format(parsedDate, "dd"),
+      day: format(parsedDate, "d"),
       month: format(parsedDate, "MMMM"),
       year: format(parsedDate, "yyyy"),
     };
@@ -83,8 +83,73 @@ export default function PersonalInfo() {
     value: string
   ) => {
     const setDateState = type === "dob" ? setDateOfBirth : setDeathDate;
-    setDateState((prev) => ({ ...prev, [field]: value }));
+    const dateState = type === "dob" ? dateOfBirth : deathDate;
+
+    const updatedDate = { ...dateState, [field]: value };
+    setDateState(updatedDate);
+
+    // Validation checks
+    const validateDates = () => {
+      // Ensure all fields are selected for both dates
+      if (
+        dateOfBirth.day !== "Day" &&
+        dateOfBirth.month !== "Month" &&
+        dateOfBirth.year !== "Year" &&
+        updatedDate.day !== "Day" &&
+        updatedDate.month !== "Month" &&
+        updatedDate.year !== "Year"
+      ) {
+        const dobDate = new Date(
+          parseInt(dateOfBirth.year),
+          months.indexOf(dateOfBirth.month),
+          parseInt(dateOfBirth.day)
+        );
+        const deathDate = new Date(
+          parseInt(updatedDate.year),
+          months.indexOf(updatedDate.month),
+          parseInt(updatedDate.day)
+        );
+
+        const currentDate = new Date();
+
+        // Validation 1: Date of birth and death date can't be the same
+        if (dobDate.getTime() === deathDate.getTime()) {
+          toast.error("Date of birth and death date cannot be the same.");
+          return false;
+        }
+
+        // Validation 2: Death date cannot be earlier than the date of birth
+        if (deathDate < dobDate) {
+          toast.error("Date of death cannot be earlier than the date of birth.");
+          return false;
+        }
+
+        // Validation 3: Death date cannot be in the future
+        if (deathDate > currentDate) {
+          toast.error("Date of death cannot be in the future.");
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    if (
+      updatedDate.day !== "Day" &&
+      updatedDate.month !== "Month" &&
+      updatedDate.year !== "Year"
+    ) {
+      const zeroPaddedDay = String(updatedDate.day).padStart(2, "0");
+      const zeroPaddedMonth = String(months.indexOf(updatedDate.month) + 1).padStart(2, "0");
+      const formattedDate = `${updatedDate.year}-${zeroPaddedMonth}-${zeroPaddedDay}`;
+
+      if (validateDates()) {
+        handleBlur(type === "dob" ? "date_of_birth" : "death_date", formattedDate);
+      }
+    }
   };
+
+
 
   const handleBlur = async (field: string, value: string | File) => {
     try {
@@ -98,12 +163,26 @@ export default function PersonalInfo() {
       }
 
       // Include date of birth and death date in form data if they have been updated
-      if (dateOfBirth.day !== "Day" && dateOfBirth.month !== "Month" && dateOfBirth.year !== "Year") {
-        formData.append("date_of_birth", `${dateOfBirth.year}-${months.indexOf(dateOfBirth.month) + 1}-${dateOfBirth.day}`);
+      if (
+        dateOfBirth.day !== "Day" &&
+        dateOfBirth.month !== "Month" &&
+        dateOfBirth.year !== "Year"
+      ) {
+        formData.append(
+          "date_of_birth",
+          `${dateOfBirth.year}-${months.indexOf(dateOfBirth.month) + 1}-${dateOfBirth.day}`
+        );
       }
 
-      if (deathDate.day !== "Day" && deathDate.month !== "Month" && deathDate.year !== "Year") {
-        formData.append("death_date", `${deathDate.year}-${months.indexOf(deathDate.month) + 1}-${deathDate.day}`);
+      if (
+        deathDate.day !== "Day" &&
+        deathDate.month !== "Month" &&
+        deathDate.year !== "Year"
+      ) {
+        formData.append(
+          "death_date",
+          `${deathDate.year}-${months.indexOf(deathDate.month) + 1}-${deathDate.day}`
+        );
       }
 
       const response = await axios.post(`${API_URL}${API.savePersonalDetails}`, formData, {
@@ -115,14 +194,30 @@ export default function PersonalInfo() {
 
       if (response.status === 200 && response.data?.page_data) {
         setPageData(response.data.page_data);
+        toast.success("Data updated successfully.");
       } else {
         toast.error("Failed to update data.");
       }
-    } catch (error) {
-      toast.error(`Error updating ${field}`);
+    } catch (error: any) {
+      // Handle validation errors from the server
+      if (error.response && error.response.status === 422) {
+        const validationErrors = error.response.data.errors;
+        if (validationErrors) {
+          Object.keys(validationErrors).forEach((key) => {
+            toast.error(`${key}: ${validationErrors[key].join(", ")}`);
+          });
+        } else {
+          toast.error(error.response.data.message || "Validation error occurred.");
+        }
+      } else if (error.response) {
+        // Other errors from the server
+        toast.error(error.response.data.message || "Failed to update data.");
+      } else {
+        // Network or unknown errors
+        toast.error("An unexpected error occurred.");
+      }
     }
   };
-
 
   const handleContentEditableChange = (
     ref: React.RefObject<HTMLDivElement>,
@@ -284,7 +379,6 @@ export default function PersonalInfo() {
               </div>
             ))}
           </div>
-
 
           <div className="flex items-center relative">
             <span className="material-icons-outlined absolute left-4 text-blue-light-900">

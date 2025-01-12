@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & {
           </div>
         </div>
       )}
-
+  
       <UserProvider>
         <SessionProvider session={session}>
           <AuthProvider>

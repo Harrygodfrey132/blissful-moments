@@ -15,6 +15,8 @@ export const API = {
   checkDomainAvailability: "/page/name-availability",
   uploadBackgroundImage: "/page/background-image",
   uploadBackgroundMusic: "/page/uploadBackgroundMusic",
+  deleteBackgroundMusic: "/page/deleteBackgroundMusic",
+  verifyPassword: "/verify-password",
 
   // Gallery endpoints
   updateGalleryName: "/gallery/name",

@@ -7,11 +7,11 @@
                 <div class="mt-3.5 mb-10 md:flex items-center justify-between gap-4 max-sm:flex-wrap">
                     <p class="text-xl font-bold text-gray-800"> Email Settings </p>
                     <div class="flex items-center gap-4">
-                        <a href="{{ route('configuration.index') }}" class="text-black font-medium">
+                        <a href="{{ route('configuration.index') }}" class="text-black font-medium bg-gray-200 p-2 px-4 hover:bg-black hover:text-white rounded-md">
                             Back
                         </a>
                         <button type="submit"
-                            class="flex px-6 justify-center rounded-md bg-black py-2 text-sm/6 font-semibold text-white shadow-sm hover:bg-black-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            class="flex px-6 justify-center rounded-md bg-black py-2 text-sm/6 font-semibold text-white shadow-sm hover:bg-black-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-gray-800">
                             Save Configuration
                         </button>
                     </div>
