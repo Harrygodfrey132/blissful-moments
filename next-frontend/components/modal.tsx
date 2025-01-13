@@ -208,9 +208,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div className="mb-4 text-gray-800">You can change this anytime later</div>
 
-            <div className="flex gap-2 mt-5 items-center">
+            <div className="gap-2 mt-5 items-center">
               <div className="text-black text-2xl">{process.env.NEXT_PUBLIC_BASE_URL}/memory/</div>
-              <h1 className="md:text-xl text-xl gap-4 font-medium">
+              <h1 className="md:text-xl mt-4  text-xl gap-4 font-medium">
                 <input
                   className="border w-full border-dashed text-blue-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500"
                   type="text"
