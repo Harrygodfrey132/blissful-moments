@@ -98,7 +98,7 @@ export default function Sidebar() {
                   isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <span className="material-icons-outlined">bolt</span>
+                <span className="material-icons-outlined">key</span>
                 <span className="ml-3">Access Requests</span>
               </Link>
             </li>
