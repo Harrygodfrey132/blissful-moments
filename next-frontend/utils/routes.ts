@@ -15,5 +15,6 @@ export const ROUTES = {
   Orders: "/orders",
   myPage: "/my-page",
   updatePassword:"/update-password",
-  contributionRequests:"/contribution-requests"
+  contributionRequests:"/contribution-requests",
+  accessRequests: "/access-requests"
 };

@@ -91,6 +91,17 @@ export default function Sidebar() {
                 <span className="ml-3">Contribution Requests</span>
               </Link>
             </li>
+            <li>
+              <Link
+                href={ROUTES.accessRequests}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
+                  isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span className="material-icons-outlined">bolt</span>
+                <span className="ml-3">Access Requests</span>
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>

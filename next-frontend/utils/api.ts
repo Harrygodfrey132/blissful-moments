@@ -67,4 +67,9 @@ export const API = {
   storeUserContributionData: "/storeUserContributionData",
   getContributionRequests: "/contribution/contribution-requests",
   updateContributionRequestStatus: "/contribution/update/requests",
+
+  // Request Access
+  requestAccess: "/request-access",
+  getAccessRequests: "/all-access-requests",
+  updateAccessRequestStatus: "/update/access-requests",
 };

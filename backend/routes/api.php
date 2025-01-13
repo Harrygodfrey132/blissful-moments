@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessRequestController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::get('/countries', [CountryController::class, 'fetchCountries']);
 Route::get('/memory/{pageName}', [PageController::class, 'show']);
 Route::post('/storeUserContributionData', [ContributionRequestController::class, 'store']);
 Route::post('/verify-password', [PageController::class, 'verifyPassword']);
+Route::post('/request-access', [AccessRequestController::class, 'store']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -105,4 +107,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
         Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
     });
+
+    // Access Request Controller
+    Route::get('/all-access-requests', [AccessRequestController::class, 'index']);
+    Route::post('/update/access-requests', [AccessRequestController::class, 'updateStatus']);
+    Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
+    Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
 });
