@@ -7,7 +7,8 @@
                 <div class="mt-3.5 mb-10 md:flex items-center justify-between gap-4 max-sm:flex-wrap">
                     <p class="text-xl font-bold text-gray-800"> Email Settings </p>
                     <div class="flex items-center gap-4">
-                        <a href="{{ route('configuration.index') }}" class="text-black font-medium bg-gray-200 p-2 px-4 hover:bg-black hover:text-white rounded-md">
+                        <a href="{{ route('configuration.index') }}"
+                            class="text-black font-medium bg-gray-200 p-2 px-4 hover:bg-black hover:text-white rounded-md">
                             Back
                         </a>
                         <button type="submit"
@@ -34,7 +35,8 @@
                                     </label>
                                 </div>
                                 <input type="text" name="conf_email_sender_name"
-                                    class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400">
+                                    class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400"
+                                    value="{{ old('conf_email_sender_name') ?? Config::getConfig('conf_email_sender_name') }}">
                                 <p class="mt-1 block text-xs italic leading-5 text-gray-600">This name
                                     will be displayed in the customers inbox
                                 </p>
@@ -50,7 +52,8 @@
                                     </label>
                                 </div>
                                 <input type="text" name="conf_admin_name"
-                                    class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400 "
+                                    class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400"
+                                    value="{{ old('conf_admin_name') ?? Config::getConfig('conf_admin_name') }}"
                                     id="emails">
                                 <p class="mt-1 block text-xs italic leading-5 text-gray-600">This name
                                     will be displayed in all admin emails
@@ -68,6 +71,7 @@
                                 </div>
                                 <input type="text" name="conf_admin_email"
                                     class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400"
+                                    value="{{ old('conf_admin_email') ?? Config::getConfig('conf_admin_email') }}"
                                     id="emails">
                                 <p class="mt-1 block text-xs italic leading-5 text-gray-600">The email
                                     address of the admin for this channel to receive emails
@@ -85,6 +89,7 @@
                                 </div>
                                 <input type="text" name="conf_contact_name"
                                     class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400"
+                                    value="{{ old('conf_contact_name') ?? Config::getConfig('conf_contact_name') }}"
                                     id="emails">
                                 <p class="mt-1 block text-xs italic leading-5 text-gray-600">This name
                                     will be shown at the bottom of your emails
@@ -102,6 +107,7 @@
                                 </div>
                                 <input type="text" name="conf_contact_email"
                                     class="w-full rounded-md border px-3 py-2.5 text-sm text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400"
+                                    value="{{ old('conf_contact_email') ?? Config::getConfig('conf_contact_email') }}"
                                     id="emails">
                                 <p class="mt-1 block text-xs italic leading-5 text-gray-600">The email
                                     address will be shown at the bottom of your emails

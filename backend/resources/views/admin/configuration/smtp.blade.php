@@ -31,6 +31,7 @@
                                 </label>
                                 <input type="text" id="smtp-host" name="conf_smtp_host"
                                     class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ old('conf_smtp_host') ?? Config::getConfig('conf_smtp_host') }}"
                                     placeholder="e.g., smtp.example.com" required />
                             </div>
                             <!-- SMTP Port -->
@@ -40,6 +41,7 @@
                                 </label>
                                 <input type="text" id="smtp-port" name="conf_smtp_port"
                                     class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ old('conf_smtp_port') ?? Config::getConfig('conf_smtp_port') }}"
                                     placeholder="e.g., 587" required />
                             </div>
                             <!-- SMTP Username -->
@@ -49,6 +51,7 @@
                                 </label>
                                 <input type="text" id="smtp-username" name="conf_smtp_username"
                                     class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ old('conf_smtp_username') ?? Config::getConfig('conf_smtp_username') }}"
                                     placeholder="e.g., user@example.com" required />
                             </div>
                             <!-- SMTP Password -->
@@ -58,6 +61,7 @@
                                 </label>
                                 <input type="password" id="smtp-password" name="conf_smtp_password"
                                     class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ old('conf_smtp_password') ?? Config::getConfig('conf_smtp_password') }}"
                                     placeholder="Enter your SMTP password" required />
                             </div>
                             <!-- Encryption -->
@@ -69,10 +73,17 @@
                                     class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                     required>
                                     <option value="" disabled selected>Select Encryption</option>
-                                    <option value="none">None</option>
-                                    <option value="ssl">SSL</option>
-                                    <option value="tls">TLS</option>
+                                    <option value="none"
+                                        {{ Config::getConfig('conf_smtp_encryption') == 'none' ? 'selected' : '' }}>None
+                                    </option>
+                                    <option value="ssl"
+                                        {{ Config::getConfig('conf_smtp_encryption') == 'ssl' ? 'selected' : '' }}>SSL
+                                    </option>
+                                    <option value="tls"
+                                        {{ Config::getConfig('conf_smtp_encryption') == 'tls' ? 'selected' : '' }}>TLS
+                                    </option>
                                 </select>
+
                             </div>
                         </div>
                     </div>
