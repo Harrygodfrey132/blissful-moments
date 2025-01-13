@@ -93,8 +93,8 @@ const ContributionRequestsPage = () => {
         <div>
             <div className="flex px-4 flex-col md:flex-row mb-10 md:mt-32 mt-24">
                 <Sidebar />
-                <main className="flex-1 px-6 overflow-x-auto">
-                    <header className="mb-6 md:mt-0 mt-4">
+                <main className="flex-1 md:px-6 overflow-x-auto">
+                    <header className="mb-6 md:mt-0 mt-5">
                         <h1 className="text-xl font-bold text-gray-800">Contribution Requests</h1>
                     </header>
                     <div>
