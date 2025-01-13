@@ -3,7 +3,6 @@ import axios from "axios";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import { ROUTES } from "../utils/routes";
 import { usePageContext } from "../context/PageContext";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { BiLoaderAlt } from "react-icons/bi";
