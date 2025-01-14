@@ -2,7 +2,7 @@
   <!-- Session Status -->
   <x-auth-session-status class="mb-4" :status="session('status')" />
 
-  <form class="bg-white rounded-lg p-8 max-w-md mx-auto" method="POST" action="{{ route('login') }}">
+  <form class="bg-gradient-to-r from-gray-100 rounded-lg p-8 max-w-md mx-auto" method="POST" action="{{ route('login') }}">
     <div class="space-y-4">
       @csrf
       <!-- Logo -->

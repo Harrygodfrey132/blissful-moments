@@ -6,7 +6,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form class="bg-white shadow-lg rounded-lg p-8 max-w-md mx-auto" method="POST" action="{{ route('password.email') }}">
+    <form class="bg-gradient-to-r from-gray-100 shadow-lg rounded-lg p-8 max-w-md mx-auto" method="POST" action="{{ route('password.email') }}">
     <div class="text-center">
       <img class="w-20 transition-opacity m-auto duration-300" src="{{ asset('img/logo-black-transparent.png') }}" alt="Logo">
       </div>
