@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccessRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -73,7 +74,7 @@ class AccessRequestController extends Controller
             $editUrl = URL::to(env('FRONTEND_URL') . '/memory/edit?data=' . urlencode($encryptedData));
             // Save the token in the database (or generate it dynamically based on user data)
             $accessRequest->update(['access_link' => $editUrl, 'expires_at' => now()->addHours(24)]);
-
+            Log::info("Access Request Data", ['Data' => $accessRequest->refresh()]);
             // Create a unique URL for editing (include the token and any relevant data in the URL)
 
             // Send the email to the user with the unique link
