@@ -62,7 +62,6 @@ const MyPageView = ({ pageData }) => {
       obituary: false,
       timeline: false,
       favourites: false,
-      contributions: false,
       name: "",
       email: "",
     });
@@ -353,7 +352,6 @@ const MyPageView = ({ pageData }) => {
                   { id: "obituary", label: "Obituary" },
                   { id: "timeline", label: "Timeline" },
                   { id: "favourites", label: "Favourites" },
-                  { id: "contributions", label: "Contributions" },
                 ].map((field) => (
                   <div key={field.id} className="flex gap-3">
                     <div className="flex h-6 shrink-0 items-center">

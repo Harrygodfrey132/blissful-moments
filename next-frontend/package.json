@@ -20,6 +20,7 @@
     "cropperjs": "^1.6.2",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
+    "dompurify": "^3.2.3",
     "next": "^15.0.3",
     "next-auth": "^4.24.10",
     "next-mdx-remote": "^5.0.0",

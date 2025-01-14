@@ -327,7 +327,7 @@ class PageController extends Controller
     public function show($pageName)
     {
         // Fetch page data from the database based on the page name
-        $page = Page::where('slug', $pageName)->where('is_registered', true)->first();
+        $page = Page::where('slug', $pageName)->first();
 
         // If the page is found, return the data
         if ($page) {

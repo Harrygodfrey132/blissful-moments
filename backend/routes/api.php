@@ -30,6 +30,7 @@ Route::get('/memory/{pageName}', [PageController::class, 'show']);
 Route::post('/storeUserContributionData', [ContributionRequestController::class, 'store']);
 Route::post('/verify-password', [PageController::class, 'verifyPassword']);
 Route::post('/request-access', [AccessRequestController::class, 'store']);
+Route::post('/verify/request-access-data', [AccessRequestController::class, 'verifyData']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
