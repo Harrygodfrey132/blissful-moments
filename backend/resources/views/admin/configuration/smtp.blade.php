@@ -1,91 +1,87 @@
 @extends('layouts.admin')
 @section('content')
     <div class="flex-grow text-gray-800">
-        <main class="md:p-6 p-2 sm:p-6 space-y-6">
-            <form action="{{ route('configuration.store') }}" method="POST">
+        <main class="md:p-6 p-4 space-y-8">
+            <!-- Form Header -->
+            <form action="{{ route('configuration.store') }}" method="POST" id="smtp-settings-form">
                 @csrf
-                <div class="mt-3.5 mb-10 md:flex items-center justify-between gap-4 max-sm:flex-wrap">
-                    <p class="text-xl font-bold text-gray-800"> SMTP Settings </p>
-                    <div class="flex items-center gap-4">
-                        <a href="{{ route('configuration.index') }}" class="text-black font-medium"> Back
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-900">SMTP Settings</h1>
+                    <div class="flex space-x-4">
+                        <a href="{{ route('configuration.index') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Back
                         </a>
-                        <button type="submit"
-                            class="flex px-6 justify-center rounded-md bg-black py-2 text-sm/6 font-semibold text-white shadow-sm hover:bg-black-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            Save Configuration
+                        <button type="submit" class="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">
+                            <i class="fas fa-save mr-2"></i> Save Configuration
                         </button>
                     </div>
                 </div>
-                <div class="mt-6 md:grid grid-cols-2 gap-10 max-xl:flex-wrap">
-                    <div class=" content-start gap-2.5">
-                        <p class="text-base font-semibold text-gray-600"> SMTP Settings </p>
-                        <p class="text-gray-600"> Set email sender name, admin name and admin email
-                            address.
-                        </p>
-                    </div>
-                    <div class="box-shadow rounded bg-white p-4">
-                        <div class="grid gap-6">
-                            <!-- SMTP Host -->
-                            <div class="flex flex-col">
-                                <label for="smtp-host" class="mb-2 text-sm font-medium text-gray-700">
-                                    SMTP Host
-                                </label>
-                                <input type="text" id="smtp-host" name="conf_smtp_host"
-                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    value="{{ old('conf_smtp_host') ?? Config::getConfig('conf_smtp_host') }}"
-                                    placeholder="e.g., smtp.example.com" required />
-                            </div>
-                            <!-- SMTP Port -->
-                            <div class="flex flex-col">
-                                <label for="smtp-port" class="mb-2 text-sm font-medium text-gray-700">
-                                    SMTP Port
-                                </label>
-                                <input type="text" id="smtp-port" name="conf_smtp_port"
-                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    value="{{ old('conf_smtp_port') ?? Config::getConfig('conf_smtp_port') }}"
-                                    placeholder="e.g., 587" required />
-                            </div>
-                            <!-- SMTP Username -->
-                            <div class="flex flex-col">
-                                <label for="smtp-username" class="mb-2 text-sm font-medium text-gray-700">
-                                    SMTP Username
-                                </label>
-                                <input type="text" id="smtp-username" name="conf_smtp_username"
-                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    value="{{ old('conf_smtp_username') ?? Config::getConfig('conf_smtp_username') }}"
-                                    placeholder="e.g., user@example.com" required />
-                            </div>
-                            <!-- SMTP Password -->
-                            <div class="flex flex-col">
-                                <label for="smtp-password" class="mb-2 text-sm font-medium text-gray-700">
-                                    SMTP Password
-                                </label>
-                                <input type="password" id="smtp-password" name="conf_smtp_password"
-                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    value="{{ old('conf_smtp_password') ?? Config::getConfig('conf_smtp_password') }}"
-                                    placeholder="Enter your SMTP password" required />
-                            </div>
-                            <!-- Encryption -->
-                            <div class="flex flex-col">
-                                <label for="smtp-encryption" class="mb-2 text-sm font-medium text-gray-700">
-                                    Encryption Type
-                                </label>
-                                <select id="smtp-encryption" name="conf_smtp_encryption"
-                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    required>
-                                    <option value="" disabled selected>Select Encryption</option>
-                                    <option value="none"
-                                        {{ Config::getConfig('conf_smtp_encryption') == 'none' ? 'selected' : '' }}>None
-                                    </option>
-                                    <option value="ssl"
-                                        {{ Config::getConfig('conf_smtp_encryption') == 'ssl' ? 'selected' : '' }}>SSL
-                                    </option>
-                                    <option value="tls"
-                                        {{ Config::getConfig('conf_smtp_encryption') == 'tls' ? 'selected' : '' }}>TLS
-                                    </option>
-                                </select>
 
-                            </div>
+                <!-- Form Body -->
+                <div class="bg-white shadow mt-5 rounded-lg p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- SMTP Host -->
+                    <div>
+                        <label for="smtp-host" class="block text-sm font-medium text-gray-700">SMTP Host <span class="text-red-500">*</span></label>
+                        <div class="relative mt-1">
+                            <input type="text" id="smtp-host" name="conf_smtp_host" placeholder="e.g., smtp.example.com" class="w-full pl-10 rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-black" value="{{ old('conf_smtp_host') ?? Config::getConfig('conf_smtp_host') }}">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                <i class="fas fa-server"></i>
+                            </span>
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Enter your SMTP server's hostname (e.g., smtp.gmail.com).</p>
+                    </div>
+
+                    <!-- SMTP Port -->
+                    <div>
+                        <label for="smtp-port" class="block text-sm font-medium text-gray-700">SMTP Port <span class="text-red-500">*</span></label>
+                        <div class="relative mt-1">
+                            <input type="text" id="smtp-port" name="conf_smtp_port" placeholder="e.g., 587" class="w-full pl-10 rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-black" value="{{ old('conf_smtp_port') ?? Config::getConfig('conf_smtp_port') }}">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                <i class="fas fa-network-wired"></i>
+                            </span>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Enter the port number for your SMTP server.</p>
+                    </div>
+
+                    <!-- SMTP Username -->
+                    <div>
+                        <label for="smtp-username" class="block text-sm font-medium text-gray-700">SMTP Username <span class="text-red-500">*</span></label>
+                        <div class="relative mt-1">
+                            <input type="text" id="smtp-username" name="conf_smtp_username" placeholder="e.g., user@example.com" class="w-full pl-10 rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-black" value="{{ old('conf_smtp_username') ?? Config::getConfig('conf_smtp_username') }}">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Enter your SMTP account's username.</p>
+                    </div>
+
+                    <!-- SMTP Password -->
+                    <div>
+                        <label for="smtp-password" class="block text-sm font-medium text-gray-700">SMTP Password <span class="text-red-500">*</span></label>
+                        <div class="relative mt-1">
+                            <input type="password" id="smtp-password" name="conf_smtp_password" placeholder="Enter your password" class="w-full pl-10 rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-black" value="{{ old('conf_smtp_password') ?? Config::getConfig('conf_smtp_password') }}">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Enter your SMTP account's password securely.</p>
+                    </div>
+
+                    <!-- Encryption Type -->
+                    <div>
+                        <label for="smtp-encryption" class="block text-sm font-medium text-gray-700">Encryption Type <span class="text-red-500">*</span></label>
+                        <div class="relative mt-1">
+                            <select id="smtp-encryption" name="conf_smtp_encryption" class="w-full pl-10 rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-black" required>
+                                <option value="" disabled selected>Select Encryption</option>
+                                <option value="none" {{ Config::getConfig('conf_smtp_encryption') == 'none' ? 'selected' : '' }}>None</option>
+                                <option value="ssl" {{ Config::getConfig('conf_smtp_encryption') == 'ssl' ? 'selected' : '' }}>SSL</option>
+                                <option value="tls" {{ Config::getConfig('conf_smtp_encryption') == 'tls' ? 'selected' : '' }}>TLS</option>
+                            </select>
+                            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                <i class="fas fa-shield-alt"></i>
+                            </span>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Select the encryption type for your SMTP connection.</p>
                     </div>
                 </div>
             </form>

@@ -2,10 +2,17 @@
   <!-- Session Status -->
   <x-auth-session-status class="mb-4" :status="session('status')" />
 
-  <form method="POST" action="{{ route('login') }}">
-    <div class="space-y-6">
+  <form class="bg-gradient-to-r from-gray-100 rounded-lg p-8 max-w-md mx-auto" method="POST" action="{{ route('login') }}">
+    <div class="space-y-4">
       @csrf
-      <h2 class="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">Login</h2>
+      <!-- Logo -->
+      <div class="text-center">
+        <img class="w-20 m-auto opacity-90 hover:opacity-100 transition-opacity duration-300" src="{{ asset('img/logo-black-transparent.png') }}" alt="Logo">
+      </div>
+
+      <!-- Welcome Message -->
+      <h2 class="text-2xl font-bold text-center text-gray-900">Welcome Back</h2>
+      <p class="text-center text-gray-600">Login to continue to your account</p>
       <!-- Email Address -->
       <div class="relative">
        <x-icon-email />
@@ -39,8 +46,8 @@
 
 
 
-    <div class="mt-7 mb-5">
-      <x-primary-button>
+    <div class="mt-7 mb-5 w-full">
+      <x-primary-button class="w-full">
         {{ __('Log in') }}
       </x-primary-button>
 

@@ -23,6 +23,7 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <!-- Scripts -->
     <!-- Place the first <script> tag in your HTML's <head> -->
