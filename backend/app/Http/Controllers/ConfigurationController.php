@@ -27,6 +27,11 @@ class ConfigurationController extends Controller
         return view('admin.configuration.third-party-settings');
     }
 
+    public function generalSettings()
+    {
+        return view('admin.configuration.general-settings');
+    }
+
     public function store(Request $request)
     {
         try {

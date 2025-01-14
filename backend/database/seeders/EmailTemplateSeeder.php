@@ -14,6 +14,8 @@ class EmailTemplateSeeder extends Seeder
     public function run(): void
     {
 
+        Template::truncate();
+
         Template::create([
             'id' => 1,
             'name' => 'welcome_email',
@@ -170,10 +172,10 @@ class EmailTemplateSeeder extends Seeder
                 </tr>
                 <tr>
                     <td class="email-content">
-                        <h2>Hi {{name}},</h2>
+                        <h2>Hi {user_name},</h2>
                         <p>Thank you for signing up with Blissful Moments! To complete your account setup, please use the OTP below to verify your email address:</p>
-                        <span class="otp-code">{{otp}}</span>
-                        <p class="expiry-note">This OTP is valid for {{expiry_time}} minutes. Please do not share it with anyone.</p>
+                        <span class="otp-code">{otp_code}</span>
+                        <p class="expiry-note">This OTP is valid for {expiry_time} minutes. Please do not share it with anyone.</p>
                         <p>If you did not request this verification, please ignore this email or contact our support team for assistance.</p>
                     </td>
                 </tr>
@@ -188,11 +190,11 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
-                '{name}' => "Recipient's Name",
-                '{otp}' => 'OTP for verification',
+            'replacements' =>"
+                '{user_name}' => 'Recipient's Name',
+                '{otp_code}' => 'OTP for verification',
                 '{expiry_time}' => 'Expiration time in minutes',
-            ]),
+            ",
         ]);
 
         Template::create([
@@ -248,11 +250,11 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
-                '{name}' => "Recipient's Name",
+            'replacements' =>"
+                '{name}' => 'Recipient's Name',
                 '{otp}' => 'OTP for resetting the password',
                 '{expiry_time}' => 'Expiration time in minutes',
-            ]),
+            ",
         ]);
 
         Template::create([
@@ -324,12 +326,12 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
+            'replacements' =>"
                 '{name}' => 'Recipient\'s Name',
                 '{order_id}' => 'Order ID',
                 '{order_date}' => 'Order Date',
                 '{order_total}' => 'Total Amount of Order',
-            ]),
+            ",
         ]);
 
         Template::create([
@@ -399,12 +401,12 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
+            'replacements' =>"
                 '{name}' => 'Recipient\'s Name',
                 '{plan_name}' => 'Name of the Plan',
                 '{expiry_date}' => 'Plan Expiry Date',
                 '{renewal_link}' => 'Link to Renew the Plan',
-            ]),
+            ",
         ]);
 
         Template::create([
@@ -479,13 +481,13 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
+            'replacements' => "
                 '{name}' => 'Recipient\'s Name',
                 '{page_name}' => 'Page Name',
                 '{visitor_name}' => 'Visitor\'s Name',
                 '{message}' => 'Contribution Request Message',
                 '{page_url}' => 'URL to the page where the request was made',
-            ]),
+            ",
         ]);
 
         Template::create([
@@ -560,13 +562,13 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
+            'replacements' => "
                 '{name}' => 'Recipient\'s Name',
                 '{page_name}' => 'Page Name',
                 '{visitor_name}' => 'Visitor\'s Name',
                 '{requested_changes}' => 'Description of the requested changes',
                 '{page_url}' => 'URL to the page where the edit request can be reviewed',
-            ]),
+            ",
         ]);
 
         Template::create([
@@ -622,10 +624,10 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' => json_encode([
+            'replacements' => "
                 '{name}' => 'Recipient\'s Name',
                 '{page_url}' => 'URL to the page where the user can visit their registered page',
-            ]),
+            ",
         ]);
     }
 }

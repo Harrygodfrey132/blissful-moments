@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ConfigHelper;
 use App\Models\OTP;
+use App\Models\Template;
 use App\Models\User;
 use App\Models\UserDetail;
+use App\Notifications\AccountVerificationNotification;
+use App\Notifications\WelcomeEmailNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -42,8 +47,8 @@ class AuthController extends Controller
             $token = $user->createToken($user->name);
 
             //  Generate and send OTP to registered email
-            $this->generateAndSendOTP($user->email, $user->id);
-
+            $otp = $this->generateAndSendOTP($user->email, $user->id);
+            $this->sendEmailNotifications($user, $otp);
             return response()->json([
                 'message' => 'Registration successful',
                 'user' => $user,
@@ -51,6 +56,7 @@ class AuthController extends Controller
                 'token' => $token->plainTextToken,
             ], 200);
         } catch (\Throwable $th) {
+            Log::info('Error sending email notifications', ['error' => $th]);
             return response()->json([
                 'message' => 'Something went wrong! Unable to register',
             ], 500);
@@ -83,13 +89,14 @@ class AuthController extends Controller
         }
     }
 
-    private function generateAndSendOTP($email, $userId = null)
+    private function generateAndSendOTP($email,  $userId = null)
     {
         // Generate a random 4-digit OTP
         $otpValue = random_int(1000, 9999);
 
         // Define OTP expiration (e.g., 5 minutes from now)
-        $expiresAt = now()->addMinutes(5);
+        $expiry_time = (int)(ConfigHelper::getConfig('conf_otp_expiration_time') ?? 10);
+        $expiresAt = now()->addMinutes($expiry_time);
 
         // Store the OTP in the database
         $otp = OTP::create([
@@ -100,14 +107,24 @@ class AuthController extends Controller
             'expires_at' => $expiresAt,
         ]);
 
-        // Send the OTP via email
-        // Mail::raw("Your OTP is: $otpValue", function ($message) use ($email) {
-        //     $message->to($email)
-        //         ->subject('Your OTP Verification Code');
-        // });
-
         return $otp;
     }
+
+    private function sendEmailNotifications($user, $otp)
+    {
+        try {
+            // Retrieve templates and validate
+            $welcomeTemplate = Template::where('name', Template::WELCOME_EMAIL)->firstOrFail();
+            $accountVerificationTemplate = Template::where('name', Template::ACCOUNT_VERIFICATION_EMAIL)->firstOrFail();
+
+            // Send notifications
+            $user->notify(new WelcomeEmailNotification($user, $welcomeTemplate));
+            $user->notify(new AccountVerificationNotification($user, $accountVerificationTemplate, $otp));
+        } catch (\Throwable $th) {
+            Log::error('Error sending email notifications', ['error' => $th]);
+        }
+    }
+
 
     public function validateOTP(Request $request)
     {

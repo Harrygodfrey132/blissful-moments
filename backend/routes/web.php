@@ -58,14 +58,12 @@ Route::prefix('admin')->group(function () {
             Route::get('/system-configuration', [ConfigurationController::class, 'index'])->name('index');
             Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
             Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
+            Route::get('/general-settings', [ConfigurationController::class, 'generalSettings'])->name('general.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
         });
 
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::get('/listing', [OrderController::class, 'adminOrderListing'])->name('index');
-            Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
-            Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
-            Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
         });
 
         Route::prefix('cms')->name('cms.')->group(function () {

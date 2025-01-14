@@ -10,6 +10,18 @@
             <div class="grid gap-y-8">
                 <div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- General Settings Tile -->
+                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
+                            href="{{ route('configuration.general.settings') }}">
+                            <x-icon-settings-icon class="w-10 h-10 text-green-500" />
+                            <div>
+                                <p class="text-lg font-semibold text-gray-800">General Settings</p>
+                                <p class="text-sm text-gray-600">
+                                    Manage application logo, OTP expiration time, and other general configurations.
+                                </p>
+                            </div>
+                        </a>
+
                         <!-- Email Settings Tile -->
                         <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
                             href="{{ route('configuration.email.settings') }}">
