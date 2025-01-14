@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->json('sections');
             $table->integer('status')->default(0);
-            $table->string('access_link')->nullable();
+            $table->longText('access_link')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 
