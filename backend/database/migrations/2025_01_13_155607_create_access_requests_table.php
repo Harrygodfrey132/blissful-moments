@@ -19,6 +19,7 @@ return new class extends Migration
             $table->json('sections');
             $table->integer('status')->default(0);
             $table->longText('access_link')->nullable();
+            $table->longText('access_token')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 

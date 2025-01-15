@@ -160,17 +160,17 @@ export default function TimelineEdit({ setTimeline }: { setTimeline: (timeline: 
                 </select>
               </div>
 
-              <div className="border border-dashed bg-[#f8f8f8] !border-gray-300 w-full p-2">
+              <div className="border flex flex-col border-dashed bg-[#f8f8f8] !border-gray-300 w-full p-2">
                 <input
                   type="text"
-                  className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500"
+                  className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500 mb-2"
                   value={event.title}
                   onChange={(e) => handleEventChange(index, 'title', e.target.value)}
                   placeholder="Enter Title"
                 />
 
                 <textarea
-                  className="border border-dashed w-1/2 bg-[#f8f8f8] text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
+                  className="border border-dashed w-1/2 bg-[#f8f8f8] text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500 mb-2"
                   value={event.description}
                   onChange={(e) => handleEventChange(index, 'description', e.target.value)}
                   placeholder="Enter Description"
@@ -178,7 +178,7 @@ export default function TimelineEdit({ setTimeline }: { setTimeline: (timeline: 
 
                 <input
                   type="text"
-                  className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500"
+                  className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500 mb-2"
                   value={event.location}
                   onChange={(e) => handleEventChange(index, 'location', e.target.value)}
                   placeholder="Enter Location"

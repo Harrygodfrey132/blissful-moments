@@ -7,6 +7,8 @@ import { API } from '../../utils/api';
 import GalleryEdit from '../access-request-pages/GalleryEdit';
 import FavouritesEdit from '../access-request-pages/FavouritesEdit';
 import { FavouriteEvent } from '../../utils/types';
+import { Router, useRouter } from 'next/router';
+import { ROUTES } from '../../utils/routes';
 
 type TimelineEvent = {
     id: number;
@@ -20,20 +22,22 @@ type TimelineEvent = {
 };
 
 const EditPage = () => {
+    const [encryptedData, setEncryptedData] = useState<string | null>(null);
     const [sectionsToRender, setSectionsToRender] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [quote, setQuote] = useState<string>('');
     const [obituary, setObituary] = useState<string>('');
     const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
-    const [galleryData, setGalleryData] = useState<any>(null); // Add gallery state
+    const [galleryData, setGalleryData] = useState<any>(null);
+    const router = useRouter();
     const [favouritesData, setFavouritesData] = useState<{
         favourites: FavouriteEvent[];
         tagline: string;
-      }>({
+    }>({
         favourites: [],
         tagline: '',
-      });
+    });
 
     const handleSubmit = async () => {
         try {
@@ -41,8 +45,9 @@ const EditPage = () => {
                 quote,
                 obituary,
                 timeline: JSON.stringify(timeline),
-                gallery: galleryData, // Include gallery data
-                favourites: favouritesData, // Include favourites data
+                gallery: galleryData,
+                favourites: favouritesData,
+                encryptedData: encryptedData,
             };
 
             const response = await axios.post(
@@ -51,7 +56,7 @@ const EditPage = () => {
             );
 
             if (response.status === 200) {
-                setErrorMessage('Changes submitted successfully!');
+                router.push(ROUTES.submissionSuccessful);
             } else {
                 setErrorMessage('Failed to submit changes.');
             }
@@ -63,9 +68,12 @@ const EditPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const encryptedData = urlParams.get('data');
+            const validationData = urlParams.get('data');
 
-            if (!encryptedData) {
+            // Use a fallback value if validationData is null
+            setEncryptedData(validationData || '');  // Fallback to an empty string
+
+            if (!validationData) {
                 setErrorMessage('Invalid or missing data.');
                 setIsLoading(false);
                 return;
@@ -74,7 +82,7 @@ const EditPage = () => {
             try {
                 const response = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_URL}${API.verifyRequestAccessData}`,
-                    { data: encryptedData }
+                    { data: validationData }
                 );
                 setSectionsToRender(response.data.sections);
             } catch (error) {
@@ -87,6 +95,7 @@ const EditPage = () => {
         fetchData();
     }, []);
 
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -96,7 +105,7 @@ const EditPage = () => {
     }
 
     return (
-        <div>
+        <div className='mt-28 md:px-20 px-5'>
             {sectionsToRender.includes('personalQuote') && <PersonalQuoteEdit setQuote={setQuote} />}
             {sectionsToRender.includes('gallery') && <GalleryEdit setGalleryData={setGalleryData} />}
             {sectionsToRender.includes('obituary') && <ObituaryEdit setObituary={setObituary} />}
@@ -109,10 +118,10 @@ const EditPage = () => {
                 />
             )}
 
-            <div className="mt-4">
+            <div className="mt-4 flex justify-center mb-10">
                 <button
                     onClick={handleSubmit}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    className="bg-blue-light-900 text-white px-4 py-2 rounded"
                 >
                     Submit Changes
                 </button>
@@ -122,4 +131,3 @@ const EditPage = () => {
 };
 
 export default EditPage;
-EditPage.noLayout = true;

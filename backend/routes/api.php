@@ -31,6 +31,7 @@ Route::post('/storeUserContributionData', [ContributionRequestController::class,
 Route::post('/verify-password', [PageController::class, 'verifyPassword']);
 Route::post('/request-access', [AccessRequestController::class, 'store']);
 Route::post('/verify/request-access-data', [AccessRequestController::class, 'verifyData']);
+Route::post('/submit/user-Changes', [AccessRequestController::class, 'submitUserChanges']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -114,4 +115,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/update/access-requests', [AccessRequestController::class, 'updateStatus']);
     Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
     Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
+    Route::post('/update/user-Changes', [AccessRequestController::class, 'updateUserChanges']);
+
 });

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ROUTES } from "./utils/routes";  // Import your routes object
+import { ROUTES } from "./utils/routes"; // Import your routes object
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
@@ -17,7 +17,10 @@ export async function middleware(req) {
       pathname.startsWith(ROUTES.Dashboard) ||
       pathname.startsWith(ROUTES.myPage) ||
       pathname.startsWith(ROUTES.Orders) ||
-      pathname.startsWith(ROUTES.updatePassword)
+      pathname.startsWith(ROUTES.updatePassword) ||
+      pathname.startsWith(ROUTES.contributionRequests) ||
+      pathname.startsWith(ROUTES.accessRequests) ||
+      pathname.startsWith(ROUTES.viewSubmittedData)
     ) {
       return redirectTo(ROUTES.Login); // Redirect unauthenticated users to the login page
     }
@@ -40,7 +43,10 @@ export async function middleware(req) {
       pathname.startsWith(ROUTES.Dashboard) ||
       pathname.startsWith(ROUTES.myPage) ||
       pathname.startsWith(ROUTES.Orders) ||
-      pathname.startsWith(ROUTES.updatePassword)
+      pathname.startsWith(ROUTES.updatePassword) ||
+      pathname.startsWith(ROUTES.contributionRequests) ||
+      pathname.startsWith(ROUTES.accessRequests) ||
+      pathname.startsWith(ROUTES.viewSubmittedData)
     ) {
       return redirectTo(ROUTES.Verify_Email); // Redirect unverified users to verify-email page
     }

@@ -14,15 +14,6 @@ const ModalEdit: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       <div className="bg-white md:px-12 px-6 py-10 rounded shadow w-full m-4 md:w-1/2">
         {/* Modal Content */}
         {children}
-
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 rounded font-semibold bg-gray-300 text-gray-600 hover:bg-gray-400"
-          >
-            Close
-          </button>
-        </div>
       </div>
     </div>
   );

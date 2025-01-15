@@ -73,5 +73,6 @@ export const API = {
   getAccessRequests: "/all-access-requests",
   updateAccessRequestStatus: "/update/access-requests",
   verifyRequestAccessData: "/verify/request-access-data",
-  submitUserChanges:"/submit/user-Changes"
+  submitUserChanges:"/submit/user-Changes",
+  updateUserChanges:"/update/user-Changes"
 };

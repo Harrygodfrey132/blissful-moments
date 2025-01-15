@@ -73,11 +73,11 @@ const GalleryEdit: React.FC<{ setGalleryData: (data: any) => void }> = ({ setGal
 
       {isGalleryEnabled && (
         <>
-          <FolderManagerEdit />
+          {/* <FolderManagerEdit /> */}
           <div className="grid md:grid-cols-3 grid-cols-2 gap-5 mt-6 relative">
             {allImages.map((image, index) => (
               <div key={image.id} className="relative group">
-                <Image src={image.src} alt={image.name} className="w-full md:h-72 h-32 object-cover rounded shadow" />
+                <Image src={image.src} alt={image.name} width={300} height={300} className="w-full md:h-72 h-32 object-cover rounded shadow" />
                 <button
                   className="absolute top-2 right-2 text-2xl text-gray-500"
                   onClick={() => setPopoverImageIndex(popoverImageIndex === index ? null : index)}
@@ -99,9 +99,12 @@ const GalleryEdit: React.FC<{ setGalleryData: (data: any) => void }> = ({ setGal
             ))}
           </div>
 
-          <button onClick={() => setModalOpen(true)} className="mt-10 text-white px-4 py-2.5 bg-blue-light-900">
+          <div className="flex justify-center">
+          <button onClick={() => setModalOpen(true)} className="mt-10  px-4 py-2.5 font-playfair add-button text-white">Add a photos</button>
+          </div>
+          {/* <button onClick={() => setModalOpen(true)} className="mt-10 text-white px-4 py-2.5 bg-blue-light-900">
             Add a photo
-          </button>
+          </button> */}
 
           <GalleryModalEdit
             isOpen={isModalOpen}

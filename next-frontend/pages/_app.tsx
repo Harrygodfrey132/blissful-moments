@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & {
   useEffect(() => {
     Aos.init({
       duration: 1200,
-      once: true, // Only animate once
+      once: true,
     });
   }, []);
 
@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps & {
           </div>
         </div>
       )}
-  
+
       <UserProvider>
         <SessionProvider session={session}>
           <AuthProvider>

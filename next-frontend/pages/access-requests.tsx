@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { API } from '../utils/api';
-import { FaSpinner, FaEye } from 'react-icons/fa';
+import { FaSpinner, FaEye, FaWpforms } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
+import { ROUTES } from '../utils/routes';
 
 interface AccessRequest {
     id: string;
@@ -14,6 +16,7 @@ interface AccessRequest {
     created_at: string;
     status: number;
     sections: string;
+    access_token: string;
 }
 
 const AccessRequestPage = () => {
@@ -115,7 +118,6 @@ const AccessRequestPage = () => {
                                                                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Requester Name</th>
                                                                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Requester Email</th>
                                                                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Requested On</th>
-                                                                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Section Details</th>
                                                                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                                                                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Action</th>
                                                             </tr>
@@ -134,15 +136,51 @@ const AccessRequestPage = () => {
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{accessRequest.name}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{accessRequest.email}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{formatDate(accessRequest.created_at)}</td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                            <FaEye className="text-blue-500 cursor-pointer" onClick={() => handleViewDetails(accessRequest)} />
-                                                                        </td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm">
-                                                                            <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${accessRequest.status === 0 ? 'bg-yellow-100 text-yellow-800' : accessRequest.status === 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                                                                                {accessRequest.status === 0 ? 'Pending' : accessRequest.status === 1 ? 'Accepted' : 'Declined'}
+                                                                            <span
+                                                                                className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${(() => {
+                                                                                    switch (accessRequest.status) {
+                                                                                        case 0:
+                                                                                            return 'bg-yellow-100 text-yellow-800'; // Pending
+                                                                                        case 1:
+                                                                                            return 'bg-green-100 text-green-800'; // Accepted
+                                                                                        case 2:
+                                                                                            return 'bg-red-100 text-red-800'; // Declined
+                                                                                        case 3:
+                                                                                            return 'bg-blue-100 text-blue-800'; // Submitted Changes
+                                                                                        case 4:
+                                                                                            return 'bg-purple-100 text-purple-800'; // Changes Updated
+                                                                                        case 5:
+                                                                                            return 'bg-gray-100 text-gray-800'; // Changes Declined
+                                                                                        default:
+                                                                                            return 'bg-gray-100 text-gray-800'; // Fallback for unknown status
+                                                                                    }
+                                                                                })()
+                                                                                    }`}
+                                                                            >
+                                                                                {(() => {
+                                                                                    switch (accessRequest.status) {
+                                                                                        case 0:
+                                                                                            return 'Pending';
+                                                                                        case 1:
+                                                                                            return 'Accepted';
+                                                                                        case 2:
+                                                                                            return 'Declined';
+                                                                                        case 3:
+                                                                                            return 'Submitted Changes';
+                                                                                        case 4:
+                                                                                            return 'Changes Updated';
+                                                                                        case 5:
+                                                                                            return 'Changes Declined';
+                                                                                        default:
+                                                                                            return 'Unknown Status';
+                                                                                    }
+                                                                                })()}
                                                                             </span>
                                                                         </td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+
+                                                                        <td className="flex items-center gap-2 whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                            <FaEye className="text-blue-500 cursor-pointer" onClick={() => handleViewDetails(accessRequest)} />
                                                                             {accessRequest.status === 0 && (
                                                                                 <>
                                                                                     <button
@@ -159,6 +197,15 @@ const AccessRequestPage = () => {
                                                                                         Decline
                                                                                     </button>
 
+                                                                                </>
+                                                                            )}
+                                                                            {accessRequest.status === 3 && (
+                                                                                <>
+                                                                                    <Link
+                                                                                        href={`/memory/view?data=${accessRequest.access_token}`}
+                                                                                    >
+                                                                                        <FaWpforms className="text-gray-900 cursor-pointer" />
+                                                                                    </Link>
                                                                                 </>
                                                                             )}
                                                                         </td>

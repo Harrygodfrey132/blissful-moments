@@ -2,8 +2,8 @@
 
 export const ROUTES = {
   Home: "/",
-  Register: "/register",
   Verify_Email: "/verify-email",
+  Register: "/register",
   Login: "/login",
   PROFILE: (id: string) => `/profile/${id}`,
   Dashboard: "/dashboard",
@@ -14,7 +14,9 @@ export const ROUTES = {
   Profile: "/profile",
   Orders: "/orders",
   myPage: "/my-page",
-  updatePassword:"/update-password",
-  contributionRequests:"/contribution-requests",
-  accessRequests: "/access-requests"
+  updatePassword: "/update-password",
+  contributionRequests: "/contribution-requests",
+  accessRequests: "/access-requests",
+  submissionSuccessful: "/submission-successful",
+  viewSubmittedData: "/memory/view",
 };
