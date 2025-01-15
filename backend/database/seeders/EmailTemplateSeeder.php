@@ -858,8 +858,8 @@ class EmailTemplateSeeder extends Seeder
                 <tr>
                     <td class="email-content">
                         <p>Hi {name},</p>
-                        <p>Your request has been {{status}}.</p>
-                        <p>{{status_message}}</p>
+                        <p>Your request has been {status}.</p>
+                        <p>{status_message}</p>
                     </td>
                 </tr>
                 <tr>
