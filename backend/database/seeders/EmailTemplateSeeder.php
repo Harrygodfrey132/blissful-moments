@@ -190,7 +190,7 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' =>"
+            'replacements' => "
                 '{user_name}' => 'Recipient's Name',
                 '{otp_code}' => 'OTP for verification',
                 '{expiry_time}' => 'Expiration time in minutes',
@@ -250,7 +250,7 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' =>"
+            'replacements' => "
                 '{name}' => 'Recipient's Name',
                 '{otp}' => 'OTP for resetting the password',
                 '{expiry_time}' => 'Expiration time in minutes',
@@ -326,7 +326,7 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' =>"
+            'replacements' => "
                 '{name}' => 'Recipient\'s Name',
                 '{order_id}' => 'Order ID',
                 '{order_date}' => 'Order Date',
@@ -401,7 +401,7 @@ class EmailTemplateSeeder extends Seeder
         </html>',
             'created_at' => now(),
             'updated_at' => now(),
-            'replacements' =>"
+            'replacements' => "
                 '{name}' => 'Recipient\'s Name',
                 '{plan_name}' => 'Name of the Plan',
                 '{expiry_date}' => 'Plan Expiry Date',
@@ -446,22 +446,22 @@ class EmailTemplateSeeder extends Seeder
                 </tr>
                 <tr>
                     <td class="email-content">
-                        <h2>Hi {{name}},</h2>
+                        <h2>Hi {name},</h2>
                         <p>You’ve received a new contribution request on your Blissful Moments page! A visitor has requested to contribute to your page.</p>
                         <div class="notification-details">
                             <h3>Contribution Request Details</h3>
                             <table>
                                 <tr>
                                     <th>Page Name</th>
-                                    <td>{{page_name}}</td>
+                                    <td>{page_name}</td>
                                 </tr>
                                 <tr>
                                     <th>Visitor Name</th>
-                                    <td>{{visitor_name}}</td>
+                                    <td>{visitor_name}</td>
                                 </tr>
                                 <tr>
                                     <th>Contribution Request Message</th>
-                                    <td>{{message}}</td>
+                                    <td>{message}</td>
                                 </tr>
                             </table>
                         </div>
@@ -527,27 +527,23 @@ class EmailTemplateSeeder extends Seeder
                 </tr>
                 <tr>
                     <td class="email-content">
-                        <h2>Hi {{name}},</h2>
+                        <h2>Hi {name},</h2>
                         <p>You’ve received a request to edit your page on Blissful Moments! A visitor has expressed interest in making changes to your page.</p>
                         <div class="notification-details">
                             <h3>Edit Request Details</h3>
                             <table>
                                 <tr>
                                     <th>Page Name</th>
-                                    <td>{{page_name}}</td>
+                                    <td>{page_name}</td>
                                 </tr>
                                 <tr>
                                     <th>Visitor Name</th>
-                                    <td>{{visitor_name}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Requested Changes</th>
-                                    <td>{{requested_changes}}</td>
+                                    <td>{visitor_name}</td>
                                 </tr>
                             </table>
                         </div>
                         <p>Please log in to your account to review and approve or decline the edit request.</p>
-                        <a href="{{page_url}}" class="cta-button">View Edit Request</a>
+                        <a href="{page_url}" class="cta-button">View Edit Request</a>
                         <p>If you have any questions or need assistance, our support team is here to help!</p>
                     </td>
                 </tr>
@@ -605,12 +601,12 @@ class EmailTemplateSeeder extends Seeder
                 </tr>
                 <tr>
                     <td class="email-content">
-                        <h2>Hi {{name}},</h2>
+                        <h2>Hi {name},</h2>
                         <p>Congratulations! Your page has been successfully registered on Blissful Moments.</p>
                         <p>We’re excited to have your page as part of our community. You can now start adding your personal touches and share your memories with the world.</p>
                         <p>Feel free to personalize your page with images, quotes, events, and more. Your page is now live, and visitors will be able to see and interact with it.</p>
                         <p>If you have any questions or need assistance, our support team is here to help!</p>
-                        <a href="{{page_url}}" class="cta-button">Visit Your Page</a>
+                        <a href="{page_url}" class="cta-button">Visit Your Page</a>
                     </td>
                 </tr>
                 <tr>
@@ -629,5 +625,257 @@ class EmailTemplateSeeder extends Seeder
                 '{page_url}' => 'URL to the page where the user can visit their registered page',
             ",
         ]);
+
+        Template::create([
+            'id' => 9,
+            'name' => 'new_contribution_request_email',
+            'type' => 1,
+            'subject' => 'New Contribution Request Received - Blissful Moments',
+            'body' => '<!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
+                .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
+                .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
+                .email-content { padding: 20px 30px; }
+                .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
+                .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
+                .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+                .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
+                .email-footer a { color: #4cafeb; text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <table class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1>New Contribution Request!</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <p>Hi {name},</p>
+                        <p>You have received a new contribution request for your page.</p>
+                        <p>Details of the contribution request:</p>
+                        <p>Contributor Name: {contributor_name}</p>
+                        <a href="{manage_request_url}" class="cta-button">Review Contribution Request</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>',
+            'replacements' => "
+                '{name}' => 'User Name',
+                '{contributor_name}' => 'Name of the contributor',
+                '{contributor_message}' => 'Message sent by the contributor',
+                '{manage_request_url}' => 'URL to manage the contribution request',
+            ",
+        ]);
+
+        Template::create([
+            'id' => 10,
+            'name' => 'request_submission_confirmation_email',
+            'type' => 1,
+            'subject' => 'Request Submitted - Blissful Moments',
+            'body' => '<!DOCTYPE html>
+        <html>
+        <head>
+                <style>
+                body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
+                .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
+                .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
+                .email-content { padding: 20px 30px; }
+                .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
+                .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
+                .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+                .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
+                .email-footer a { color: #4cafeb; text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <table class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1>Request Submitted!</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <p>Hi {name},</p>
+                        <p>Your request has been successfully submitted. Our admin team will review it shortly.</p>
+                        <p>We appreciate your patience and will notify you once your request is processed.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>',
+            'replacements' => "
+                '{name}' => 'Visitor Name',
+            ",
+        ]);
+
+        Template::create([
+            'id' => 11,
+            'name' => 'new_submitted_data_request_email',
+            'type' => 1,
+            'subject' => 'New Data Submission Received - Blissful Moments',
+            'body' => '<!DOCTYPE html>
+        <html>
+        <head>
+                <style>
+                body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
+                .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
+                .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
+                .email-content { padding: 20px 30px; }
+                .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
+                .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
+                .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+                .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
+                .email-footer a { color: #4cafeb; text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <table class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1>New Data Submission!</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <p>Hi {name},</p>
+                        <p>We have received new data submitted for your page. Please review the submitted details and take necessary actions.</p>
+                        <a href="{manage_submission_url}" class="cta-button">Review Submitted Data</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>',
+            'replacements' => "
+                '{name}' => 'User Name',
+                '{manage_submission_url}' => 'URL to review submitted data',
+            ",
+        ]);
+        
+        Template::create([
+            'id' => 12,
+            'name' => 'request_accepted_with_link_email',
+            'type' => 1,
+            'subject' => 'Your Request Has Been Accepted - Blissful Moments',
+            'body' => '<!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
+                .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
+                .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
+                .email-content { padding: 20px 30px; }
+                .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
+                .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
+                .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+                .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
+                .email-footer a { color: #4cafeb; text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <table class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1>Your Request Has Been Accepted!</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <p>Hi {name},</p>
+                        <p>Your request has been accepted! Use the link below to edit the sections and submit your data.</p>
+                        <p>Please note: This link will expire within {expiry_time}.</p>
+                        <a href="{{unique_link}}" class="cta-button">Edit & Submit Data</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>',
+            'replacements' => "
+                '{name}' => 'Visitor Name',
+                '{unique_link}' => 'Unique link to edit and submit data',
+                '{expiry_time}' => 'Expiry time of the link',
+            ",
+        ]);
+        
+        Template::create([
+            'id' => 13,
+            'name' => 'request_status_update_email',
+            'type' => 1,
+            'subject' => 'Request Status Update - Blissful Moments',
+            'body' => '<!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
+                .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
+                .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
+                .email-content { padding: 20px 30px; }
+                .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
+                .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
+                .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+                .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
+                .email-footer a { color: #4cafeb; text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <table class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1>Request Status Update</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <p>Hi {name},</p>
+                        <p>Your request has been {{status}}.</p>
+                        <p>{{status_message}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>',
+            'replacements' => "
+                '{name}' => 'Visitor Name',
+                '{status}' => 'Accepted or Declined',
+                '{status_message}' => 'Additional message regarding the status',
+            ",
+        ]);
+        
     }
 }

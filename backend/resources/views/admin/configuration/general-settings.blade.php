@@ -35,6 +35,18 @@
                                 <small class="text-gray-500">Set the time in minutes before an OTP expires. Default Time is
                                     10 minutes</small>
                             </div>
+                            <!-- Edit Link Expiration Time -->
+                            <div class="flex flex-col">
+                                <label for="otp-expiration-time" class="mb-2 text-sm font-medium text-gray-700">
+                                    Page Edit Link Expiration Time (Hours)
+                                </label>
+                                <input type="number" id="otp-expiration-time" name="conf_edit_page_expiration_time"
+                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ Config::getConfig('conf_edit_page_expiration_time') }}" placeholder="e.g., 10"
+                                    required min="1" max="1440" />
+                                <small class="text-gray-500">Set the time in hours before link expires. Default Time is
+                                    24 hours</small>
+                            </div>
                         </div>
                     </div>
                 </div>

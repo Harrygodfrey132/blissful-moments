@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
+use App\Helper\ConfigHelper;
 use App\Models\AccessRequest;
 use App\Models\Submission;
+use App\Models\Template;
+use App\Notifications\AccessRequestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
@@ -59,7 +62,8 @@ class AccessRequestController extends Controller
 
         // Find the contribution request by ID
         $accessRequest = AccessRequest::findOrFail($id);
-
+        $hours = (int) ConfigHelper::getConfig('conf_edit_page_expiration_time') ?? 24 ;
+        $expiry_time =  now()->addHours($hours);
         // Update the status to 'accepted' or declined (based on the action)
         $accessRequest->update(['status' => $status]);
 
@@ -70,7 +74,7 @@ class AccessRequestController extends Controller
                 'sections' => json_decode($accessRequest->sections),
                 'email' => $accessRequest->email,
                 'token' => Str::random(40),
-                'expires_at' => now()->addHours(24),
+                'expires_at' => $expiry_time,
                 'access_request_id' => $accessRequest->id
             ];
             $encryptedData = Crypt::encryptString(json_encode($data));
@@ -80,7 +84,8 @@ class AccessRequestController extends Controller
             // Create a unique URL for editing (include the token and any relevant data in the URL)
 
             // Send the email to the user with the unique link
-            // Mail::to($accessRequest->user->email)->send(new AccessRequestMail($editUrl));
+            $template = Template::find(Template::EDIT_PAGE_ACCCESS_EMAIL);
+            $accessRequest->notify(new AccessRequestNotification($accessRequest->name , $editUrl , $expiry_time , $template));
 
             return response()->json([
                 'success' => true,

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 
 class ContributionRequest extends Model
 {
+    use Notifiable;
     public const PENDING = 0;
 
     protected $fillable = [
@@ -17,4 +20,9 @@ class ContributionRequest extends Model
         'status',
         'email'
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo('user_id', User::class);
+    }
 }

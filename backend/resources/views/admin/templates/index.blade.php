@@ -13,6 +13,9 @@
                                 <thead class="bg-[#E5E7EB]">
                                     <tr>
                                         <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-[#374151]">
+                                           S No
+                                        </th>
+                                        <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-[#374151]">
                                             Template Name
                                         </th>
                                         <th scope="col"
@@ -25,8 +28,11 @@
                                     </tr>
                                 </thead>
                                 <tbody id="listingTable" class="divide-y divide-gray-200">
-                                    @foreach ($templates as $template)
+                                    @foreach ($templates as $key => $template)
                                         <tr class="hover:bg-gray-50">
+                                            <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
+                                                {{ $key + 1 }}
+                                            </td>
                                             <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
                                                 {{ $template->name }}
                                             </td>

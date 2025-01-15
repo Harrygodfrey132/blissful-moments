@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\ContributionData;
 use App\Models\ContributionRequest;
+use App\Models\Template;
+use App\Notifications\UserContributionRequestNotification;
+use App\Notifications\VisitorRequestStatusNotification;
+use App\Notifications\VisitorSubmissionRequestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,11 +58,17 @@ class ContributionRequestController extends Controller
             'contribution_id' => $request->contribution_id,
             'user_id' => $request->user_id,
             'name' => $request->name,
-            'full_name' => $request->fullName,
             'description' => $request->description,
+            'full_name' => $request->fullName,
             'email' => $request->email,
             'status' => ContributionRequest::PENDING,
         ]);
+
+        // Send Emails to user and visitor
+        $userTemplate = Template::find(Template::CONTRIBUTION_REQUEST_EMAIL);
+        $visitorTemplate = Template::find(Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL);
+        $contributionRequest->user->notify(new UserContributionRequestNotification($contributionRequest, $userTemplate));
+        $contributionRequest->notify(new VisitorSubmissionRequestNotification($contributionRequest, $visitorTemplate));
 
         // Return a success response with the created data
         return response()->json([
@@ -89,6 +99,11 @@ class ContributionRequestController extends Controller
                 'name' => $contributionRequest->name,
                 'description' => $contributionRequest->description,
             ]);
+
+            $template = Template::find(Template::REQUEST_STATUS_UPDATE_EMAIL);
+            $contributionRequest->notify(new VisitorRequestStatusNotification($contributionRequest, $template));
+        }else {
+            # code...
         }
 
         // Return a JSON response

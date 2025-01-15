@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class AccessRequest extends Model
 {
-
+    use Notifiable;
     protected $fillable = [
         'page_id',
         'name',

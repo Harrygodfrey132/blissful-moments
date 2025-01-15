@@ -16,10 +16,10 @@ class ConfigHelper
     public static function getConfig(string $key)
     {
         $sanitizedKey = strtoupper($key);
-
         // Cache the configuration value to avoid repeated DB queries
         return Cache::rememberForever("config_{$sanitizedKey}", function () use ($sanitizedKey) {
             $configuration = Configuration::where('conf_key', $sanitizedKey)->first();
+            dd($configuration);
             return $configuration->conf_value ?? '';
         });
     }
