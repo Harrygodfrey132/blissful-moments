@@ -36,7 +36,7 @@ const GalleryModalEdit: React.FC<GalleryModalProps> = ({
         {isDragActive ? <p>Drop the files here...</p> : <p>Drag & drop files here, or click to select files</p>}
       </div>
 
-      {uploadedImages.length > 0 && (
+      {uploadedImages?.length > 0 && (
         <div className="mt-4 grid grid-cols-4 gap-4 overflow-y-auto md:h-[200px]">
           {uploadedImages.map((file, index) => (
             <div key={index} className="relative">
