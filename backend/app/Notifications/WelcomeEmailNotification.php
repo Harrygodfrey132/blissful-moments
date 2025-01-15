@@ -42,7 +42,7 @@ class WelcomeEmailNotification extends Notification implements ShouldQueue
         $replacements = [
             '{user_name}' => $this->user->name,
             '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => route('dashboard'),
+            '{dashboard_url}' => env('FRONTEND_URL'),
             ];
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
