@@ -104,18 +104,19 @@ export default function Sidebar() {
             </li>
           </ul>
         </nav>
+          {/* Bottom Section (Logout Link) */}
+        <div className="p-6 bg-white border-t shadow-sm mt-2">
+          <button
+            onClick={() => signOut()}
+            className="flex items-center w-full px-4 py-1 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition"
+          >
+            <span className="material-icons-outlined">logout</span>
+            <span className="ml-3">Logout</span>
+          </button>
+        </div>
       </div>
 
-      {/* Bottom Section (Logout Link) */}
-      <div className="p-6 bg-white border-t shadow-sm mt-4">
-        <button
-          onClick={() => signOut()}
-          className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition"
-        >
-          <span className="material-icons-outlined">logout</span>
-          <span className="ml-3">Logout</span>
-        </button>
-      </div>
+    
     </aside>
   );
 }
