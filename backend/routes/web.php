@@ -59,6 +59,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
             Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
             Route::get('/general-settings', [ConfigurationController::class, 'generalSettings'])->name('general.settings');
+            Route::get('/plugin-settings', [ConfigurationController::class, 'thirdPartySettings'])->name('plugins.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
         });
 

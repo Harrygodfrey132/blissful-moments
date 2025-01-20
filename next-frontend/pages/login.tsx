@@ -22,6 +22,7 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
   const [serverError, setServerError] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false); // Track password visibility
 
   const handleLogin = async (data: LoginFormInputs) => {
     setServerError("");
@@ -84,14 +85,23 @@ const Login = () => {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                     Password
                   </label>
-                  <div className="mt-2">
+                  <div className="mt-2 relative">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"} // Toggle password visibility
                       id="password"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                       placeholder="Enter your password"
                       {...register("password", validateLogin.password)}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)} // Toggle the showPassword state
+                      className="absolute right-2 top-2 text-sm text-gray-600"
+                    >
+                      <span className="material-icons-outlined">
+                        {showPassword ? "visibility_off" : "visibility"}
+                      </span>
+                    </button>
                     {errors.password && (
                       <p className="text-red-500 text-sm">{errors.password.message}</p>
                     )}

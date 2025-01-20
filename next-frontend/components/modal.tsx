@@ -6,11 +6,11 @@ import { toast } from "react-toastify";
 import { usePageContext } from "../context/PageContext";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { BiLoaderAlt } from "react-icons/bi";
-
+import { useDebounce } from "use-debounce"; // Use use-debounce hook
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // Import eye icons
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
@@ -24,10 +24,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [isDomainAvailable, setDomainAvailable] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const [hasChecked, setHasChecked] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { data: session, status } = useSession();
   const { setPageId, setPageData } = usePageContext();
-
   const token = session?.user?.accessToken;
 
   useEffect(() => {
@@ -61,6 +61,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       if (!password) validationErrors.password = "Password is required";
       else if (password.length < 8)
         validationErrors.password = "Password must be at least 8 characters";
+      else if (!/[A-Z]/.test(password))
+        validationErrors.password = "Password must contain at least one uppercase letter";
+      else if (!/[0-9]/.test(password))
+        validationErrors.password = "Password must contain at least one number";
+      else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+        validationErrors.password = "Password must contain at least one special character";
     }
 
     return validationErrors;
@@ -118,29 +124,31 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  // Debounced version of checkDomainAvailability
+  const [debouncedPageName] = useDebounce(pageName, 500); // 500ms debounce
+
   const checkDomainAvailability = useCallback(async () => {
-    if (!pageName) return;
+    if (!debouncedPageName) return;
     setIsChecking(true);
     setHasChecked(true);
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.checkDomainAvailability}?domain=${pageName}`,
+        `${process.env.NEXT_PUBLIC_API_URL}${API.checkDomainAvailability}?domain=${debouncedPageName}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         }
       );
-      setIsChecking(true);
+      setIsChecking(false);
       setDomainAvailable(response.data.isAvailable);
     } catch (error) {
       toast.error("Error checking domain availability");
-      setDomainAvailable(false);
-    } finally {
       setIsChecking(false);
+      setDomainAvailable(false);
     }
-  }, [pageName]);
+  }, [debouncedPageName, token]);
 
   const handlePageNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPageName(e.target.value);
@@ -152,11 +160,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const handlePasswordVisibilityToggle = () => {
+    setShowPassword(!showPassword);
+  };
+
   useEffect(() => {
-    if (pageName) {
+    if (debouncedPageName) {
       checkDomainAvailability();
     }
-  }, [pageName, checkDomainAvailability]);
+  }, [debouncedPageName, checkDomainAvailability]);
 
   if (!isOpen) return null;
 
@@ -281,16 +293,27 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
             {selectedOption === "private" && (
               <div>
-                <div className="mt-4">
+                <div className="mt-4 relative">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"} // Change input type based on showPassword state
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full border p-2 mt-2 rounded"
                   />
-                  {errors.password && <div className="text-sm text-red-600">{errors.password}</div>}
+                  <button
+                    type="button"
+                    onClick={handlePasswordVisibilityToggle} // Toggle password visibility
+                    className="absolute right-3 top-4 text-gray-500"
+                  >
+                    {showPassword ? (
+                      <AiFillEyeInvisible className="w-6 h-6" />
+                    ) : (
+                      <AiFillEye className="w-6 h-6" />
+                    )}
+                  </button>
                 </div>
+                {errors.password && <div className="text-sm text-red-600">{errors.password}</div>}
               </div>
             )}
 

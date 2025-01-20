@@ -155,7 +155,8 @@ class GalleryController extends Controller
             'folder_id' => 'required|integer',
             'image_id' => 'required|integer',
         ]);
-
+        Log::info("Folder ID" . $validated['folder_id']);
+        Log::info("Image ID" . $validated['image_id']);
         $image = GalleryImage::where('id', $validated['image_id'])->firstOrFail();
 
         // Assign the folder

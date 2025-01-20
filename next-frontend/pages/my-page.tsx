@@ -12,6 +12,7 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
+import { useRouter } from "next/router";  // Import useRouter
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state
@@ -21,6 +22,8 @@ export default function Home() {
   const { pageData, setPageId, setPageData } = usePageContext();
   const { data: session, status } = useSession();
   const fetchCalledRef = useRef(false); // Guard for preventing multiple fetch calls
+
+  const router = useRouter();  // Hook to monitor route changes
 
   const openModal = (modalType: "config" | "register") => {
     if (modalType === "config") setIsModalOpen(true);
@@ -72,6 +75,31 @@ export default function Home() {
     fetchUserPage();
   }, [session?.user?.accessToken, setPageId, setPageData, status]);
 
+  // Show loader during route transitions
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      setLoading(true);
+    };
+
+    const handleRouteChangeComplete = () => {
+      setLoading(false);
+    };
+
+    const handleRouteChangeError = () => {
+      setLoading(false); // Ensure loader stops if there's an error
+    };
+
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events.on("routeChangeError", handleRouteChangeError);
+
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events.off("routeChangeError", handleRouteChangeError);
+    };
+  }, [router]);
+
   return (
     <Layout noLayout={true}>
       <div
@@ -79,7 +107,7 @@ export default function Home() {
       >
         {loading && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-            <div className="spinner"></div>
+            <div className="spinner"></div> {/* Add your spinner styling here */}
           </div>
         )}
 

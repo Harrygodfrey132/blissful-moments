@@ -5,6 +5,7 @@ import { MdSettings, MdClose } from "react-icons/md";
 import { API } from "../utils/api";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -28,6 +29,7 @@ const MyPageView = ({ pageData }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
   const audioRef = useRef(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     personalQuote: false,
     gallery: false,
@@ -212,6 +214,10 @@ const MyPageView = ({ pageData }) => {
     }
   };
 
+  const handlePasswordVisibilityToggle = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Banner */}
@@ -276,6 +282,9 @@ const MyPageView = ({ pageData }) => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="border bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
+            {pageData.location}
           </div>
         </div>
       </section>
@@ -427,34 +436,39 @@ const MyPageView = ({ pageData }) => {
         </div>
       )}
       {/* Password Modal */}
-      {isModalPasswordOpen && (
+      {!isModalPasswordOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xl bg-white/30">
           <div className="bg-white m-4 rounded-lg shadow-lg p-8 max-w-md w-full relative">
-            {/* Close Button */}
-            {/* <button
-         onClick={closeModal}
-         className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none"
-         aria-label="Close"
-         >
-      ✖
-      </button> */}
             {/* Modal Content */}
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
               Enter password to access the page
             </h2>
             <form className="space-y-4" onSubmit={verifyPasswordHandler}>
-              <input
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Enter your password"
-                className="w-full px-4 py-2 text-sm border !rounded text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="flex justify-end">
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"} // Toggle input type based on showPassword state
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Enter your password"
+                  className="w-full px-4 py-2 text-sm border !rounded text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
                 <button
                   type="button"
-                  onClick={verifyPasswordHandler}
-                  className="bg-blue-light-900 text-white px-4 py-2 rounded  transition"
+                  onClick={handlePasswordVisibilityToggle} // Toggle visibility on button click
+                  className="absolute right-3 top-2 text-gray-500"
+                >
+                  {showPassword ? (
+                    <AiFillEyeInvisible className="w-6 h-6" />
+                  ) : (
+                    <AiFillEye className="w-6 h-6" />
+                  )}
+                </button>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-blue-light-900 text-white px-4 py-2 rounded transition"
                 >
                   Submit
                 </button>

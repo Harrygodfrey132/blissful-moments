@@ -55,11 +55,13 @@ export default function StyledTabs({ pageData }) {
     try {
       // Use a fallback for browsers that don't support Clipboard API
       if (navigator.clipboard) {
-        await navigator.clipboard.writeText(pageData.slug);
+        await navigator.clipboard.writeText(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/memory/${pageData.slug}`
+        );
       } else {
         // Fallback for older browsers
         const textArea = document.createElement("textarea");
-        textArea.value = pageData.slug;
+        textArea.value = `${process.env.NEXT_PUBLIC_BASE_URL}/memory/${pageData.slug}`;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand("copy");

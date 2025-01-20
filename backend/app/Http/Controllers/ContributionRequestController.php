@@ -53,14 +53,17 @@ class ContributionRequestController extends Controller
             ], 422); // HTTP status code 422 for validation error
         }
 
-        // Create the contribution request
+        // Get the validated data
+        $validatedData = $validator->validated();
+
+        // Create the contribution request using $validatedData
         $contributionRequest = ContributionRequest::create([
-            'contribution_id' => $request->contribution_id,
-            'user_id' => $request->user_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'full_name' => $request->fullName,
-            'email' => $request->email,
+            'contribution_id' => $validatedData['contribution_id'],
+            'user_id' => $validatedData['user_id'],
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'full_name' => $validatedData['fullName'],
+            'email' => $validatedData['email'],
             'status' => ContributionRequest::PENDING,
         ]);
 
@@ -102,7 +105,7 @@ class ContributionRequestController extends Controller
 
             $template = Template::find(Template::REQUEST_STATUS_UPDATE_EMAIL);
             $contributionRequest->notify(new VisitorRequestStatusNotification($contributionRequest, $template));
-        }else {
+        } else {
             # code...
         }
 

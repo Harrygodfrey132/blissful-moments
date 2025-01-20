@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ConfigHelper;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
@@ -17,7 +18,7 @@ class PaymentController extends Controller
         ]);
 
         try {
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+            Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
             $paymentIntent = PaymentIntent::create([
                 'amount' => $request->amount, // Amount in cents
@@ -37,7 +38,7 @@ class PaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         // Set your Stripe Secret Key
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
         try {
             $customerId = $request->customer_id;

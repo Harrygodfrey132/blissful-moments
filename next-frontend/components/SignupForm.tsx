@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { validateSignup } from "../utils/validation";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify"; // Import Toastify
-
 import { registerUser } from "../utils/registrationApiService";
 import { useIsVerified } from "../context/IsUserVerifiedContext";
 import { useUserContext } from "../context/UserContext";
@@ -41,6 +40,8 @@ const SignupForm = () => {
     });
 
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for toggling confirm password visibility
 
     const onSubmit = async (data: SignupFormData) => {
         if (data.password !== data.confirmPassword) {
@@ -138,25 +139,47 @@ const SignupForm = () => {
 
                 <div>
                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                    <input
-                        type="password"
-                        {...register('password', validateSignup.password)}
-                        id="password"
-                        placeholder="••••••••"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"} // Toggle password visibility
+                            {...register('password', validateSignup.password)}
+                            id="password"
+                            placeholder="••••••••"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                            className="absolute right-2 top-2 text-sm text-gray-600"
+                        >
+                            <span className="material-icons-outlined">
+                                {showPassword ? "visibility_off" : "visibility"}
+                            </span>
+                        </button>
+                    </div>
                     {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                 </div>
 
                 <div>
                     <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-                    <input
-                        type="password"
-                        {...register('confirmPassword', validateSignup.confirmPassword)}
-                        id="confirm-password"
-                        placeholder="••••••••"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    />
+                    <div className="relative">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"} // Toggle confirm password visibility
+                            {...register('confirmPassword', validateSignup.confirmPassword)}
+                            id="confirm-password"
+                            placeholder="••••••••"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle confirm password visibility
+                            className="absolute right-2 top-2 text-sm text-gray-600"
+                        >
+                            <span className="material-icons-outlined">
+                                {showConfirmPassword ? "visibility_off" : "visibility"}
+                            </span>
+                        </button>
+                    </div>
                     {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
                 </div>
 

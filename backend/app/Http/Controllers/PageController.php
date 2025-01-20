@@ -102,7 +102,7 @@ class PageController extends Controller
             }
 
             return response()->json([
-                'message' => $page->wasRecentlyCreated ? 'Page created successfully.' : 'Page updated successfully.',
+                'message' =>'Record updated successfully.',
                 'page' => $page,
             ], 200);
         } catch (\Throwable $th) {
@@ -231,8 +231,6 @@ class PageController extends Controller
             $validated = $request->validate([
                 'background_image' => 'required|max:4096', // 4MB max size
             ]);
-
-            Log::info('Validated Request:', $validated);
 
             $user = $request->user();
             $page = $user->page;
