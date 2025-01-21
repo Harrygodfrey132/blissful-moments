@@ -105,12 +105,14 @@
                                                 <td
                                                     class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">
                                                     <div class="flex gap-3">
-
+                                                        <!-- Edit Icon -->
                                                         <a href="javascript:void(0);"
                                                             @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('users.edit', $user) }}')"
                                                             class="text-gray-600 hover:text-black">
                                                             <x-icon-edit />
                                                         </a>
+
+                                                        <!-- Delete Icon -->
                                                         <a href="javascript:void(0);"
                                                             data-userId="{{ encrypt($user->id) }}"
                                                             onclick="deleteModalHandler(this)"
@@ -118,8 +120,24 @@
                                                             class="text-red-500 hover:text-red-700">
                                                             <x-icon-delete />
                                                         </a>
+
+                                                        <!-- Page View Icon -->
+                                                        <a href="{{ route('user.page.view', $user) }}"
+                                                            class="text-blue-500 w-6hover:text-blue-700" title="View Page">
+                                                            <x-icon-page class="w-5 h-5" />
+                                                        </a>
+
+                                                        <!-- Page Password Reset Icon -->
+                                                        <button
+                                                            title="{{ $user->page ? 'Reset Password' : 'No Page Created' }}"
+                                                            {{ $user->page ? '' : 'disabled' }}
+                                                            @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('users.page.password.edit', $user) }}')"
+                                                            class="text-gray-600 hover:text-black {{ $user->page ? 'cursor-pointer' : 'cursor-not-allowed' }}">
+                                                            <x-icon-lock class="w-5 h-5" />
+                                                        </button>
                                                     </div>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -136,4 +154,5 @@
             </div>
         </div>
     </div>
+
 @endsection

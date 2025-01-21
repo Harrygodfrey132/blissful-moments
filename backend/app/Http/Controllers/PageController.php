@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -102,7 +103,7 @@ class PageController extends Controller
             }
 
             return response()->json([
-                'message' =>'Record updated successfully.',
+                'message' => 'Record updated successfully.',
                 'page' => $page,
             ], 200);
         } catch (\Throwable $th) {

@@ -127,96 +127,98 @@ const ContributionView = ({ contributionData, userId }) => {
     <div className="mb-20 mt-20">
       <div className="flex items-center justify-between">
         <div className="text-blue-light-900 font-playfair md:text-2xl text-xl border-b-4 border-blue-light-800 font-400 inline-block">
-        Contributions
+          Contributions
         </div>
         {isContributionsEnabled && (
-        <div className="relative" ref={popoverRef}>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="text-white add-button px-6 py-2.5 font-playfair"
-          >
-            Add Contribution
-          </button>
+          <div className="relative" ref={popoverRef}>
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="text-white add-button px-6 py-2.5 font-playfair"
+            >
+              Add Contribution
+            </button>
 
-          {isFormOpen && (
-            <div className="popover-container popover-contribution border border-gray-300 transition-all">
-              <div className="popover-arrow"></div>
-              <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
-                Create a Contribution
-              </h2>
-              <input
-                type="text"
-                name="name"
-                placeholder="Insert Name or Connection"
-                value={formInputs.name}
-                onChange={(e) => handleInputChange(e, setFormInputs)}
-                className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-              />
-              <textarea
-                name="message"
-                placeholder="Write your message"
-                value={formInputs.message}
-                onChange={(e) => handleInputChange(e, setFormInputs)}
-                className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-                rows={6}
-              />
-              <button
-                type="button"
-                onClick={handleFirstFormSubmit}
-                className="text-white add-button px-4 py-2.5"
-              >
-                Next
-              </button>
-            </div>
-          )}
+            {isFormOpen && (
+              <div className="popover-container popover-contribution border border-gray-300 transition-all">
+                <div className="popover-arrow"></div>
+                <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
+                  Create a Contribution
+                </h2>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Insert Name or Connection"
+                  value={formInputs.name}
+                  onChange={(e) => handleInputChange(e, setFormInputs)}
+                  className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                />
+                <textarea
+                  name="message"
+                  placeholder="Write your message"
+                  value={formInputs.message}
+                  onChange={(e) => handleInputChange(e, setFormInputs)}
+                  className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                  rows={6}
+                />
+                <button
+                  type="button"
+                  onClick={handleFirstFormSubmit}
+                  className="text-white add-button px-4 py-2.5"
+                >
+                  Next
+                </button>
+              </div>
+            )}
 
-          {isSecondFormOpen && (
-            <div className="popover-container border border-gray-300 transition-all">
-              <div className="popover-arrow"></div>
-              <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
-                Provide Your Details
-              </h2>
-              <input
-                type="text"
-                name="fullName"
-                placeholder="Full Name"
-                value={additionalFormInputs.fullName}
-                onChange={(e) => handleInputChange(e, setAdditionalFormInputs)}
-                className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                value={additionalFormInputs.email}
-                onChange={(e) => handleInputChange(e, setAdditionalFormInputs)}
-                className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-              />
-              <button
-                onClick={handleFinalSubmit}
-                className="text-white add-button px-4 py-2.5"
-              >
-                Submit
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+            {isSecondFormOpen && (
+              <div className="popover-container border border-gray-300 transition-all">
+                <div className="popover-arrow"></div>
+                <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
+                  Provide Your Details
+                </h2>
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Full Name"
+                  value={additionalFormInputs.fullName}
+                  onChange={(e) =>
+                    handleInputChange(e, setAdditionalFormInputs)
+                  }
+                  className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={additionalFormInputs.email}
+                  onChange={(e) =>
+                    handleInputChange(e, setAdditionalFormInputs)
+                  }
+                  className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                />
+                <button
+                  onClick={handleFinalSubmit}
+                  className="text-white add-button px-4 py-2.5"
+                >
+                  Submit
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
-
 
       <h1 className="md:text-xl relative text-xl font-playfair font-medium mb-6 mt-6">
         <div className="border bg-[#f8f8f8] font-playfair w-full md:text-xl text-base text-blue-light-900 p-4 border-gray-300 ">
           {tagline}
-         
         </div>
         <Image
-                        className="absolute right-0 bottom-0 w-[50px]"
-                        src="/img/dove.svg"
-                        alt="Dove"
-                        width={50}
-                        height={50}
-                      />
+          className="absolute right-0 bottom-0 w-[50px]"
+          src="/img/dove.svg"
+          alt="Dove"
+          width={50}
+          height={50}
+        />
       </h1>
 
       {isContributionsEnabled && contributions.length > 0 && (
@@ -224,14 +226,17 @@ const ContributionView = ({ contributionData, userId }) => {
           {contributions.map((contribution, index) => (
             <div
               key={index}
-              className="relative mb-4 break-inside-avoid p-4 border h-auto border-gray-300 bg-[#f8f8f8] shadow-md"
+              className="relative mb-4 break-inside-avoid p-2 border h-auto border-gray-300 bg-[#f8f8f8] shadow-md"
             >
               <p className="border-dashed border-gray-300 bg-[#f8f8f8] font-playfair text-blue-light-900 p-3">
                 {contribution.message}
+                <div className="text-blue-light-900 font-medium py-3">
+                { "- " + contribution.name}
+
+                </div>
               </p>
-              <h3 className="border-dashed border-gray-300 bg-[#f8f8f8] font-semibold font-playfair text-blue-light-900 p-3">
-                {contribution.name}
-              </h3>
+              {/* <h3 className="border-dashed border-gray-300 bg-[#f8f8f8] font-semibold font-playfair text-blue-light-900 p-3">
+              </h3> */}
             </div>
           ))}
         </div>

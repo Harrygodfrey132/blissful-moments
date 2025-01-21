@@ -436,7 +436,7 @@ const MyPageView = ({ pageData }) => {
         </div>
       )}
       {/* Password Modal */}
-      {!isModalPasswordOpen && (
+      {isModalPasswordOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xl bg-white/30">
           <div className="bg-white m-4 rounded-lg shadow-lg p-8 max-w-md w-full relative">
             {/* Modal Content */}
