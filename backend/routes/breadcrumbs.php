@@ -40,6 +40,12 @@
         $trail->push('Orders', route('orders.index'));
     });
 
+    // Home > Email Logs
+    Breadcrumbs::for('email.logs.index', function (BreadcrumbTrail $trail) {
+        $trail->parent('dashboard');
+        $trail->push('Email Logs', route('email.logs.index'));
+    });
+
     // // Home > Users > [User Name]
     // Breadcrumbs::for('users.show', function (BreadcrumbTrail $trail, $user) {
     //     $trail->parent('users.index');

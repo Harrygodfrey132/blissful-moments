@@ -47,6 +47,41 @@
                                 <small class="text-gray-500">Set the time in hours before link expires. Default Time is
                                     24 hours</small>
                             </div>
+
+                            <!-- Plan Expire Reminder 1 (30 days) -->
+                            <div class="flex flex-col">
+                                <label for="plan-expire-reminder-1" class="mb-2 text-sm font-medium text-gray-700">
+                                    Plan Expire Reminder 1 (30 days)
+                                </label>
+                                <input type="number" id="plan-expire-reminder-1" name="conf_plan_expire_reminder_1"
+                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ Config::getConfig('conf_plan_expire_reminder_1') }}" placeholder="e.g., 30"
+                                    required min="1" max="30" />
+                                <small class="text-gray-500">Set the time in days before the plan expires for the first reminder. Default Time is 30 days.</small>
+                            </div>
+
+                            <!-- Plan Expire Reminder 2 (15 days) -->
+                            <div class="flex flex-col">
+                                <label for="plan-expire-reminder-2" class="mb-2 text-sm font-medium text-gray-700">
+                                    Plan Expire Reminder 2 (15 days)
+                                </label>
+                                <input type="number" id="plan-expire-reminder-2" name="conf_plan_expire_reminder_2"
+                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ Config::getConfig('conf_plan_expire_reminder_2') }}" placeholder="e.g., 15"
+                                    required min="1" max="30" />
+                                <small class="text-gray-500">Set the time in days before the plan expires for the second reminder. Default Time is 15 days.</small>
+                            </div>
+                            <!-- Plan Expire Reminder 3 (2 days) -->
+                            <div class="flex flex-col">
+                                <label for="plan-expire-reminder-2" class="mb-2 text-sm font-medium text-gray-700">
+                                    Plan Expire Reminder 3 (2 days)
+                                </label>
+                                <input type="number" id="plan-expire-reminder-2" name="conf_plan_expire_reminder_2"
+                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ Config::getConfig('conf_plan_expire_reminder_3') }}" placeholder="e.g., 2"
+                                    required min="1" max="30" />
+                                <small class="text-gray-500">Set the time in days before the plan expires for the second reminder. Default Time is 2 days.</small>
+                            </div>
                         </div>
                     </div>
                 </div>

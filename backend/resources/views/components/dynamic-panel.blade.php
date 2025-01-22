@@ -10,8 +10,8 @@
                 &times;
             </button>
             <!-- Panel Content Based on Action -->
-            <div x-show="actionType === 'Edit'" class="text-gray-600  space-y-6">
-                <div id="editForm">
+            <div x-show="actionType === 'Edit' || actionType === 'View'" class="text-gray-600  space-y-6">
+                <div id="formData">
                     <!-- Your Edit Form -->
                 </div>
             </div>

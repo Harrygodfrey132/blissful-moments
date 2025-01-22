@@ -3,6 +3,7 @@
 use App\Http\Controllers\CmsController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailLogController;
 use App\Http\Controllers\GDPRrequestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
@@ -79,6 +80,10 @@ Route::prefix('admin')->group(function () {
             Route::get('/email-templates/{template}/update', [TemplateController::class, 'update'])->name('emails.update');
         });
 
+        Route::prefix('email-logs')->group(function () {
+            Route::get('/listing', [EmailLogController::class, 'index'])->name('email.logs.index');
+            Route::get('/view/email/{id}', [EmailLogController::class, 'show'])->name('email.logs.show');
+        });
         Route::prefix('QrCode')->name('code.')->group(function () {
             Route::get('/generate', [QRCodeController::class, 'generateQRCode'])->name('generate');
         });

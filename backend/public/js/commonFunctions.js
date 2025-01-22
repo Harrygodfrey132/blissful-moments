@@ -85,19 +85,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
     const multiDeleteRoute = deleteButton.getAttribute("data-multi-delete-url"); // Get the route from the button
 
-    // Handle select all checkboxes
-    selectAllCheckbox.addEventListener("change", () => {
-        rowCheckboxes.forEach((checkbox) => {
-            checkbox.checked = selectAllCheckbox.checked;
+    // Check if selectAllCheckbox exists on the page before adding event listener
+    if (selectAllCheckbox) {
+        // Handle select all checkboxes
+        selectAllCheckbox.addEventListener("change", () => {
+            rowCheckboxes.forEach((checkbox) => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            toggleDeleteButton(); // Toggle delete button based on checkboxes
         });
-        toggleDeleteButton(); // Toggle delete button based on checkboxes
-    });
+    }
 
     // Handle individual checkbox change
     rowCheckboxes.forEach((checkbox) => {
         checkbox.addEventListener("change", () => {
             const allChecked = [...rowCheckboxes].every((cb) => cb.checked);
-            selectAllCheckbox.checked = allChecked; // Update select all checkbox
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = allChecked; // Update select all checkbox
+            }
             toggleDeleteButton(); // Toggle delete button based on checkboxes
         });
     });
@@ -142,7 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then((response) => {
                     if (response.ok) {
                         // Uncheck all items
-                        selectAllCheckbox.checked = false;
+                        if (selectAllCheckbox) {
+                            selectAllCheckbox.checked = false;
+                        }
                         rowCheckboxes.forEach((checkbox) => {
                             checkbox.checked = false;
                         });
@@ -255,7 +262,7 @@ function commonData() {
             fetch(url)
                 .then((response) => response.text())
                 .then((html) => {
-                    document.getElementById("editForm").innerHTML = html;
+                    document.getElementById("formData").innerHTML = html;
                     this.openPanel = true;
                 })
                 .catch((error) =>
@@ -269,7 +276,21 @@ function commonData() {
             fetch(url)
                 .then((response) => response.text())
                 .then((html) => {
-                    document.getElementById("editForm").innerHTML = html;
+                    document.getElementById("formData").innerHTML = html;
+                    this.openPanel = true;
+                })
+                .catch((error) =>
+                    showNotification(
+                        "errorNotification",
+                        "Error loading edit form"
+                    )
+                );
+        },
+        loadViewForm(url) {
+            fetch(url)
+                .then((response) => response.text())
+                .then((html) => {
+                    document.getElementById("formData").innerHTML = html;
                     this.openPanel = true;
                 })
                 .catch((error) =>

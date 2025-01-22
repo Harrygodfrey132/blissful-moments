@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\EmailSent;
 use App\Helper\ConfigHelper;
+use App\Listeners\LogEmailToDatabase;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,5 +34,10 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('authenticatedUser', Auth::user());
             });
         }
+
+        Event::listen(
+            EmailSent::class,
+            LogEmailToDatabase::class
+        );
     }
 }

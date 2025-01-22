@@ -108,7 +108,7 @@ const Header = () => {
                   <li>
                     <Link
                       href={ROUTES.Login}
-                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                      className="font-semibold text-white hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                     >
                       Sign in
                     </Link>
@@ -116,7 +116,7 @@ const Header = () => {
                   <li>
                     <Link
                       href={ROUTES.Register}
-                      className="font-semibold text-gray-700 hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                      className="font-semibold text-white hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                     >
                       Sign Up
                     </Link>
