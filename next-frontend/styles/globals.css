@@ -1,10 +1,11 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
-
+.select-width{
+  width:6.7rem;
+}
 
 .popover-container {
   position: absolute;
@@ -52,7 +53,7 @@
     border-radius: 10px;
     box-shadow: 3px 7px 4px rgba(0, 0, 0, 0.25);
     color: #ffffff;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 400;
     text-align: center;
     cursor: pointer;

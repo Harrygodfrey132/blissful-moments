@@ -114,31 +114,31 @@ const SocialMedia: React.FC = () => {
   return (
     <div>
       <div className="flex justify-end mb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center md:gap-8 gap-3">
           <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
             <input
               type="checkbox"
               id="social-media-toggle"
               checked={isSocialMediaEnabled}
               onChange={handleToggleChange}
-              className="toggle-checkbox absolute block  w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+              className="toggle-checkbox absolute block  md:w-8 md:h-8 h-6 w-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
             />
             <label
               htmlFor="social-media-toggle"
-              className={`toggle-label block overflow-hidden  h-6 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isSocialMediaEnabled ? "bg-blue-light-900" : "bg-gray-300"
+              className={`toggle-label block overflow-hidden  md:h-8 h-6 md:!w-14 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isSocialMediaEnabled ? "bg-blue-light-900" : "bg-gray-300"
                 }`}
             />
           </div>
-          <span className="md:text-xl text-xl font-playfair font-medium text-blue-light-900">
+          <span className="md:text-3xl text-xl font-playfair font-medium text-blue-light-900">
             Social Media Link
           </span>
         </div>
       </div>
 
       {isSocialMediaEnabled && (
-        <h1 className="md:text-xl text-xl flex gap-4 font-medium mb-6 mt-8">
+        <h1 className="md:text-3xl text-xl flex gap-4 !leading-9 font-medium mb-6 mt-8">
           <span
-            className={`border border-dashed bg-[#f8f8f8] font-playfair w-full text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isSocialMediaEnabled ? "" : "text-gray-500 cursor-not-allowed"
+            className={`border border-dashed bg-[#f8f8f8] font-playfair w-full text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500 ${isSocialMediaEnabled ? "" : "text-gray-500 cursor-not-allowed"
               }`}
             contentEditable={isSocialMediaEnabled}
             suppressContentEditableWarning

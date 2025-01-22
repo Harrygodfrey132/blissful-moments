@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   const isActive = (path: string) => {
-    return router.pathname === path ? 'text-blue-600' : 'text-gray-700';
+    return router.pathname === path ? 'text-blue-600' : 'text-gray-200';
   };
 
   // ✅ Close mobile menu when clicking outside
@@ -50,12 +50,12 @@ const Header = () => {
   }, [router]);
 
   return (
-    <header className="absolute w-full py-1 z-30 bg-white shadow">
+    <header className="absolute w-full py-1 z-30 bg-slate-900">
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="shrink-0 mr-4">
-            <img className="w-16" src="/img/logo-black.png" alt="Logo" />
+            <img className="w-16" src="/img/logo.png" alt="Logo" />
           </div>
 
           {/* Desktop Navigation */}
@@ -135,7 +135,7 @@ const Header = () => {
                       height={150}
                       alt={session.user?.name || 'User'}
                     />
-                    <span className="ml-2 font-semibold hidden lg:block">
+                    <span className="ml-2 text-white font-semibold hidden lg:block">
                       {session.user?.name || 'Profile'}
                     </span>
                   </button>
@@ -164,7 +164,7 @@ const Header = () => {
               <li className="ml-5">
                 <Link
                   href={ROUTES.Request_Demo}
-                  className="font-semibold text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 flex items-center group"
+                  className="font-semibold text-blue-600 py-2 px-4 flex items-center group"
                 >
                   Request Demo
                   <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
@@ -206,7 +206,7 @@ const Header = () => {
             <li>
               <Link
                 href={ROUTES.Home}
-                className={`font-semibold py-2 transition duration-150 ease-in-out ${isActive(
+                className={`font-semibold py-2 text-gray-700 hover:text-gray-500 transition duration-150 ease-in-out ${isActive(
                   '/'
                 )}`}
               >
@@ -216,7 +216,7 @@ const Header = () => {
             <li>
               <Link
                 href={ROUTES.Request_Demo}
-                className="font-semibold text-white bg-blue-600 group hover:bg-blue-700 py-2 px-2 w-[150px] md:w-auto flex items-center"
+                className="font-semibold text-blue-600 group  py-2  flex items-center"
               >
                 Request Demo
                 <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">

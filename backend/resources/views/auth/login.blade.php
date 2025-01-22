@@ -7,6 +7,7 @@
       @csrf
       <!-- Logo -->
       <div class="text-center">
+        
         <img class="w-20 m-auto opacity-90 hover:opacity-100 transition-opacity duration-300" src="{{ asset('img/logo-black-transparent.png') }}" alt="Logo">
       </div>
 

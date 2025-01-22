@@ -182,9 +182,9 @@ const Gallery: React.FC = () => {
   return (
     <div className="font-playfair">
       <div className="flex justify-between">
-        <h1 className="text-xl flex gap-4 font-medium mb-6 mt-4">
+        <h1 className="md:text-4xl text-3xl flex gap-4 font-medium mb-6 mt-4">
           <span
-            className={`border border-dashed text-blue-light-900 p-2 border-gray-300 focus:outline-none focus:border-gray-500 ${isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
+            className={`border border-dashed text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isGalleryEnabled ? "" : "text-gray-500 cursor-not-allowed"
               }`}
             contentEditable={isGalleryEnabled}
             suppressContentEditableWarning
@@ -196,22 +196,22 @@ const Gallery: React.FC = () => {
           </span>
         </h1>
         <div className="flex justify-end mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center md:gap-8 gap-3">
             <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
               <input
                 type="checkbox"
                 id="gallery-toggle"
                 checked={isGalleryEnabled}
                 onChange={() => handleStatus(!isGalleryEnabled)}
-                className="toggle-checkbox absolute block  w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+                className="toggle-checkbox absolute block  md:w-8 md:h-8 h-6 w-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label
                 htmlFor="gallery-toggle"
-                className={`toggle-label block overflow-hidden  h-6  !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                className={`toggle-label block overflow-hidden  md:h-8 h-6  md:!w-14 !w-12 bg-blue-light-900 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isGalleryEnabled ? "bg-blue-light-900" : "bg-gray-300"
                   }`}
               />
             </div>
-            <span className="md:text-xl text-xl font-medium font-playfair text-blue-light-900">Gallery</span>
+            <span className="md:text-3xl text-xl font-medium font-playfair text-blue-light-900">Gallery</span>
           </div>
         </div>
       </div>

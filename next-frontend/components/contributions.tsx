@@ -286,21 +286,21 @@ const Contributions = () => {
 
                 {/* Toggle Switch for Enabling Contributions */}
                 <div className="flex md:order-2 order-1 justify-end">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center md:gap-8 gap-3">
                         <div className="relative inline-block w-12 font-playfair align-middle select-none transition-all duration-200 ease-in">
                             <input
                                 type="checkbox"
                                 id="toggle-contributions"
                                 checked={isContributionsEnabled}
                                 onChange={toggleContributions}
-                                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+                                className="toggle-checkbox absolute block md:w-8 md:h-8 h-6 w-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
                             />
                             <label
                                 htmlFor="toggle-contributions"
-                                className={`block overflow-hidden h-6 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isContributionsEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
+                                className={`block overflow-hidden md:h-8 h-6 md:!w-14 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isContributionsEnabled ? "bg-blue-light-900" : "bg-gray-300"}`}
                             ></label>
                         </div>
-                        <span className="md:text-xl text-xl font-playfair font-medium text-blue-light-900">
+                        <span className="md:text-3xl text-xl font-playfair font-medium text-blue-light-900">
                             Contributions
                         </span>
                     </div>
@@ -309,9 +309,9 @@ const Contributions = () => {
                 </div>
 
                 {/* Editable Header */}
-                <h1 className="md:text-xl md:order-1 order-2 text-xl flex gap-4 font-playfair font-medium mb-6 mt-6">
+                <h1 className="md:text-3xl md:order-1 order-2 text-3xl flex gap-4 font-playfair font-medium mb-6 mt-6">
                     <span
-                        className={`border relative border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isContributionsEnabled ? "" : "text-gray-500 cursor-not-allowed"}`}
+                        className={`border relative border-dashed w-full bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500 ${isContributionsEnabled ? "" : "text-gray-500 cursor-not-allowed"}`}
                         contentEditable={isContributionsEnabled}
                         suppressContentEditableWarning
                         aria-label="Contributions Title"
@@ -340,7 +340,7 @@ const Contributions = () => {
                                 {/* Editable Contribution Block */}
                                 <div className="flex flex-col space-y-4">
                                     <p
-                                        className="border border-dashed w-full bg-[#f8f8f8] font-playfair text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
+                                        className="border border-dashed w-full text-lg bg-[#f8f8f8] font-playfair text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
                                         contentEditable={isContributionsEnabled}
                                         suppressContentEditableWarning
                                         onBlur={(e) =>
@@ -353,7 +353,7 @@ const Contributions = () => {
                                     </p>
 
                                     <h3
-                                        className="border border-dashed w-full bg-[#f8f8f8] font-semibold font-playfair text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
+                                        className="border border-dashed text-lg w-full bg-[#f8f8f8] font-semibold font-playfair text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
                                         contentEditable={isContributionsEnabled}
                                         suppressContentEditableWarning
                                         onBlur={(e) =>

@@ -210,31 +210,31 @@ export default function Timeline() {
       <div className="md:flex gap-5 justify-between">
         {/* Toggle Switch */}
         <div className="flex md:order-2 order-1 justify-end mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center md:gap-8 gap-3">
             <div className="relative inline-block w-12 align-middle select-none transition-all duration-200 ease-in">
               <input
                 type="checkbox"
                 id="toggle-timeline"
                 checked={isTimelineEnabled}
                 onChange={() => setIsTimelineEnabled(!isTimelineEnabled)}
-                className="toggle-checkbox absolute block  w-6 h-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
+                className="toggle-checkbox absolute block  md:w-8 md:h-8 h-6 w-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label
                 htmlFor="toggle-timeline"
-                className={`toggle-label block overflow-hidden  h-6 !w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isTimelineEnabled ? "bg-blue-light-900" : "bg-gray-300"
+                className={`toggle-label block overflow-hidden  md:h-8 h-6 md:!w-14 md:!w-12 rounded-full cursor-pointer transition-all duration-200 ease-in-out ${isTimelineEnabled ? "bg-blue-light-900" : "bg-gray-300"
                   }`}
               ></label>
             </div>
-            <span className="md:text-xl text-xl font-playfair font-medium text-blue-light-900">Timeline</span>
+            <span className="md:text-3xl text-xl font-playfair font-medium text-blue-light-900">Timeline</span>
           </div>
         </div>
 
         {/* Heading */}
         <div>
-          <h1 className="md:text-xl md:order-1 order-2 text-xl flex gap-4 font-medium mb-6 mt-4">
+          <h1 className="md:text-4xl md:order-1 order-2 text-3xl flex gap-4 font-medium mb-6 mt-4">
             <span
               ref={editableRef}
-              className={`border border-dashed font-playfair bg-[#f8f8f8] text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500 ${isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
+              className={`border border-dashed font-playfair bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500 ${isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
                 }`}
               contentEditable={isTimelineEnabled}
               suppressContentEditableWarning
@@ -267,7 +267,7 @@ export default function Timeline() {
                   {/* Day Selector */}
                   <div>
                     <select
-                      className="p-2 w-16 border-2 bg-[#f8f8f8] h-10 border-gray-300 text-blue-900 font-medium"
+                      className="p-2 w-16 text-lg border-1 bg-[#f8f8f8] border-gray-300 text-blue-900 font-medium"
                       value={event.day}  // Bind the selected day here
                       onChange={(e) => handleEventChange(index, "day", e.target.value)}
                     >
@@ -282,7 +282,7 @@ export default function Timeline() {
                   {/* Month Selector */}
                   <div>
                     <select
-                      className="p-2 w-28 border-2 bg-[#f8f8f8] h-10 border-gray-300 text-blue-900 font-medium"
+                      className="p-2 w-[125px] text-lg border-1 bg-[#f8f8f8]  border-gray-300 text-blue-900 font-medium"
                       value={event.month}  // Bind the selected month here
                       onChange={(e) => handleEventChange(index, "month", e.target.value)}
                     >
@@ -300,7 +300,7 @@ export default function Timeline() {
                   {/* Year Selector */}
                   <div>
                     <select
-                      className="p-2 w-24 bg-[#f8f8f8] border-2 h-10 border-gray-300 text-blue-900 font-medium"
+                      className="p-2 text-lg w-24 bg-[#f8f8f8] border-1  border-gray-300 text-blue-900 font-medium"
                       value={event.year}  // Bind the selected year here
                       onChange={(e) => handleEventChange(index, "year", e.target.value)}
                     >
@@ -315,10 +315,10 @@ export default function Timeline() {
 
                 {/* Event Description and Location */}
                 <div className="border border-dashed bg-[#f8f8f8] !border-gray-300 w-full p-2">
-                  <h1 className="text-sm flex gap-4 font-medium mb-2">
+                  <h1 className="text-lg flex gap-4 font-medium mb-2">
                     <input
                       type="text"
-                      className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500"
+                      className="border w-1/2 text-lg  !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none !focus:border-gray-500"
                       value={event.title}
                       onChange={(e) =>
                         handleEventChange(index, "title", e.target.value || "")
@@ -328,9 +328,9 @@ export default function Timeline() {
                     />
                   </h1>
 
-                  <h1 className="text-sm flex gap-4 font-medium mb-2">
+                  <h1 className="text-lg flex gap-4 font-medium mb-2">
                     <textarea
-                      className="border border-dashed w-1/2 bg-[#f8f8f8] text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
+                      className="border border-dashed  text-lg w-1/2 bg-[#f8f8f8] text-blue-900 p-1 border-gray-300 focus:outline-none focus:border-gray-500"
                       value={event.description}
                       onChange={(e) =>
                         handleEventChange(index, "description", e.target.value || "")
@@ -340,10 +340,10 @@ export default function Timeline() {
                     />
                   </h1>
 
-                  <h1 className="text-sm flex gap-4 font-medium">
+                  <h1 className="text-lg flex gap-4 font-medium">
                     <input
                       type="text"
-                      className="border w-1/2 !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none focus:border-gray-500"
+                      className="border w-1/2 text-lg  !bg-[#f8f8f8] border-dashed text-blue-900 p-1 !border-gray-300 focus:outline-none focus:border-gray-500"
                       value={event.location}
                       onChange={(e) =>
                         handleEventChange(index, "location", e.target.value || "")

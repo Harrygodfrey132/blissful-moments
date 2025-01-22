@@ -265,7 +265,7 @@ export default function PersonalInfo() {
   }, [pageData]);
 
   return (
-    <section className="flex flex-col md:flex-row px-4 md:px-20 personal-info">
+    <section className="flex flex-col md:flex-row px-4 container mx-auto px-4 !max-w-6xl personal-info">
       <div className="mt-[-50px] mx-auto md:mx-0 profile-thumb">
         <div className="relative bg-[#EAEAEA] p-2 w-[330px] h-[300px]">
           <img
@@ -280,13 +280,13 @@ export default function PersonalInfo() {
       </div>
 
       <div className="flex-1">
-        <div className="space-y-4 md:p-4 p-0">
-          <h1 className="text-xl md:text-3xl font-playfair justify-center md:justify-start flex flex-wrap gap-4 font-medium mb-6 md:mt-0 mt-10">
+        <div className="space-y-4 md:pt-4 md:pb-4 md:pr-0 md:pl-4 p-0">
+          <h1 className="text-3xl md:text-5xl font-playfair justify-center md:justify-start flex flex-wrap gap-4 font-medium mb-6 md:mt-0 mt-10">
             {["firstName", "middleName", "lastName"].map((field) => (
               <div
                 key={field}
                 ref={inputRefs[field as keyof typeof inputRefs]}
-                className="border border-dashed bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500"
+                className="border md:pt-10 pt-6 border-dashed bg-[#f8f8f8] text-blue-light-900 px-4 pb-3 border-gray-300 focus:outline-none focus:border-gray-500"
                 contentEditable
                 suppressContentEditableWarning
                 onInput={(e) =>
@@ -305,13 +305,13 @@ export default function PersonalInfo() {
             ))}
           </h1>
 
-          <div className="flex flex-wrap gap-4 justify-center md:justify-start items-center">
+          <div className="flex flex-wrap gap-4 font-playfair justify-center md:justify-start items-center">
             {["dob"].map((type) => (
               <div key={type} className="flex gap-2">
                 {["day", "month", "year"].map((field) => (
                   <select
                     key={field}
-                    className={`p-2 border-2 bg-[#f8f8f8] text-base h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-[121px]" : "w-24"
+                    className={`p-2 border-1 bg-[#f8f8f8] text-lg h-12 border-gray-300 text-blue-light-900 font-normal ${field === "month" ? "w-[132px]" : "select-width"
                       }`}
                     value={type === "dob" ? dateOfBirth[field as keyof DateState] : deathDate[field as keyof DateState]}
                     onChange={(e) =>
@@ -350,7 +350,7 @@ export default function PersonalInfo() {
                 {["day", "month", "year"].map((field) => (
                   <select
                     key={field}
-                    className={`p-2 border-2 bg-[#f8f8f8] text-base h-12 border-gray-300 text-blue-light-900 font-medium ${field === "month" ? "w-[121px]" : "w-24"
+                    className={`p-2 border-1 bg-[#f8f8f8] text-lg h-12 border-gray-300 text-blue-light-900 font-normal ${field === "month" ? "w-[132px]" : "select-width"
                       }`}
                     value={type === "dob" ? dateOfBirth[field as keyof DateState] : deathDate[field as keyof DateState]}
                     onChange={(e) =>
@@ -380,14 +380,14 @@ export default function PersonalInfo() {
             ))}
           </div>
 
-          <div className="flex items-center relative">
+          <div className="flex items-center relative font-playfair">
             <span className="material-icons-outlined absolute left-4 text-blue-light-900">
               location_on
             </span>
             <div className="w-full">
               <input
                 type="text"
-                className="border-2 p-3 text-base md:w-[85.5%] w-full border-gray-200 bg-[#f8f8f8] text-blue-light-900 pl-12 focus:outline-none focus:border-blue-600 focus:text-blue-600"
+                className="border-1 p-2 text-lg w-full border-gray-200 !bg-[#f8f8f8] text-blue-light-900 pl-12 focus:outline-none focus:border-blue-600 focus:text-blue-600"
                 value={fields.location}
                 onChange={(e) => handleContentEditableChange(inputRefs.location, "location", e.target.value)}
                 onBlur={(e) => handleBlur("location", e.target.value)}
