@@ -384,23 +384,14 @@ export default function PersonalInfo() {
             <span className="material-icons-outlined absolute left-4 text-blue-light-900">
               location_on
             </span>
-            <div
-              ref={inputRefs.location}
-              className="border-2 p-3 text-base md:w-[85.5%] w-full border-gray-300 bg-[#f8f8f8] text-blue-light-900 pl-12 focus:outline-none focus:border-blue-600 focus:text-blue-600"
-              contentEditable
-              suppressContentEditableWarning
-              onInput={(e) =>
-                handleContentEditableChange(
-                  inputRefs.location,
-                  "location",
-                  e.currentTarget.textContent || ""
-                )
-              }
-              onBlur={(e) =>
-                handleBlur("location", e.currentTarget.textContent || "")
-              }
-            >
-              {fields.location}
+            <div className="w-full">
+              <input
+                type="text"
+                className="border-2 p-3 text-base md:w-[85.5%] w-full border-gray-200 bg-[#f8f8f8] text-blue-light-900 pl-12 focus:outline-none focus:border-blue-600 focus:text-blue-600"
+                value={fields.location}
+                onChange={(e) => handleContentEditableChange(inputRefs.location, "location", e.target.value)}
+                onBlur={(e) => handleBlur("location", e.target.value)}
+              />
             </div>
           </div>
         </div>

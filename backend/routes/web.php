@@ -5,6 +5,7 @@ use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GDPRrequestController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
@@ -20,7 +21,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard' , [DashboardController::class , 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,6 +36,8 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{user}/delete', [UserController::class, 'delete'])->name('destroy');
             Route::post('/{user}/status', [UserController::class, 'updateStatus'])->name('update.status');
             Route::post('/multi-delete', [UserController::class, 'multiDelete'])->name('multiDelete');
+            Route::get('/{user}/page/password/edit', [UserController::class, 'editPagePassword'])->name('page.password.edit');
+            Route::post('/{user}/page/password/update', [UserController::class, 'updateUserPagePassword'])->name('page.password.reset');
         });
 
         Route::prefix('plans')->name('plans.')->group(function () {
@@ -59,6 +62,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/email-settings', [ConfigurationController::class, 'emailSettings'])->name('email.settings');
             Route::get('/smtp-settings', [ConfigurationController::class, 'smtpSettings'])->name('smtp.settings');
             Route::get('/general-settings', [ConfigurationController::class, 'generalSettings'])->name('general.settings');
+            Route::get('/plugin-settings', [ConfigurationController::class, 'thirdPartySettings'])->name('plugins.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
         });
 
@@ -80,6 +84,7 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::post('/user/update-details', [UserDetailController::class, 'update']);
+        Route::get('/user/{page}/page/view', [PageController::class, 'showUserPage'])->name('user.page.view');
     });
 });
 Route::get('/orderdetails', function () {

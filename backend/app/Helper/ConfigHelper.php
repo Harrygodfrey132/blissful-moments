@@ -19,8 +19,7 @@ class ConfigHelper
         // Cache the configuration value to avoid repeated DB queries
         return Cache::rememberForever("config_{$sanitizedKey}", function () use ($sanitizedKey) {
             $configuration = Configuration::where('conf_key', $sanitizedKey)->first();
-            dd($configuration);
-            return $configuration->conf_value ?? '';
+             return $configuration->conf_value ?? '';
         });
     }
 

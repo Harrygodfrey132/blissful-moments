@@ -6,12 +6,12 @@
                 @csrf
                 <div class="mt-3.5 mb-10 md:flex items-center justify-between gap-4 max-sm:flex-wrap">
                     <p class="text-xl font-bold text-gray-800"> OTP Configuration </p>
-                    <div class="flex items-center gap-4">
-                        <a href="{{ route('configuration.index') }}" class="text-black font-medium"> Back
+                    <div class="flex space-x-4">
+                        <a href="{{ route('configuration.index') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Back
                         </a>
-                        <button type="submit"
-                            class="flex px-6 justify-center rounded-md bg-black py-2 text-sm/6 font-semibold text-white shadow-sm hover:bg-black-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            Save Configuration
+                        <button type="submit" class="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">
+                            <i class="fas fa-save mr-2"></i> Save Configuration
                         </button>
                     </div>
                 </div>

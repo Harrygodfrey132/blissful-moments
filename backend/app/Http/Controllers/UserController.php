@@ -131,16 +131,16 @@ class UserController extends Controller
                 'current_password' => 'required',
                 'new_password' => 'required|min:8', // Ensure new password meets criteria
             ]);
-    
+
             $user = $request->user();
-    
+
             // Check if the provided current password matches the stored password
             if (Hash::check($request->current_password, $user->password)) {
                 // Update the password
                 $user->update([
                     'password' => bcrypt($request->new_password) // Encrypt the new password
                 ]);
-    
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Password updated successfully.',
@@ -159,5 +159,26 @@ class UserController extends Controller
             ], 500); // Return 500 Internal Server Error
         }
     }
-    
+
+    public function editPagePassword(User $user)
+    {
+        return view('admin.users.partials.page-password-update', compact('user'));
+    }
+
+    public function updateUserPagePassword(Request $request, User $user)
+    {
+        try {
+            $request->validate([
+                'password' => 'required|min:8|confirmed',
+            ]);
+
+            $user->page->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            return back()->with('success', 'Password successfully reset!');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Unable to reset password!' . $th->getMessage());
+        }
+    }
 }

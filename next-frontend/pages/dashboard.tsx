@@ -34,7 +34,7 @@ const DashboardPage = () => {
             }
           );
           const pageDetails = response?.data?.user?.page;
-          setPublicUrl(`${process.env.NEXT_PUBLIC_BASE_URL}/${pageDetails?.slug}`);
+          setPublicUrl(`${process.env.NEXT_PUBLIC_BASE_URL}/memory/${pageDetails?.slug}`);
 
           // Assuming response contains orders field
           setPageData(pageDetails || []);

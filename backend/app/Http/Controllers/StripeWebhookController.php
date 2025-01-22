@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ConfigHelper;
 use Stripe\Stripe;
 use Stripe\Webhook;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class StripeWebhookController extends Controller
     public function handleWebhook(Request $request)
     {
         // Set your Stripe secret key
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
         // Get the Stripe signature header
         $sig_header = $request->header('Stripe-Signature');
@@ -29,7 +30,7 @@ class StripeWebhookController extends Controller
             $event = Webhook::constructEvent(
                 $request->getContent(),
                 $sig_header,
-                env('STRIPE_WEBHOOK_SECRET')
+                ConfigHelper::getConfig('conf_stripe_webhook_secret')
             );
         } catch (\Exception $e) {
             // Log the error and return a response with the error message

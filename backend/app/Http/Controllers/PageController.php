@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -102,7 +103,7 @@ class PageController extends Controller
             }
 
             return response()->json([
-                'message' => $page->wasRecentlyCreated ? 'Page created successfully.' : 'Page updated successfully.',
+                'message' => 'Record updated successfully.',
                 'page' => $page,
             ], 200);
         } catch (\Throwable $th) {
@@ -231,8 +232,6 @@ class PageController extends Controller
             $validated = $request->validate([
                 'background_image' => 'required|max:4096', // 4MB max size
             ]);
-
-            Log::info('Validated Request:', $validated);
 
             $user = $request->user();
             $page = $user->page;

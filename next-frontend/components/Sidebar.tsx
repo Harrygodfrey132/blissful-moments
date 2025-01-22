@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -10,10 +10,38 @@ export default function Sidebar() {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);  // Track loading state
+
+  // Detect route change events
+  useEffect(() => {
+    // Start the spinner when route change starts
+    const handleRouteChangeStart = () => setLoading(true);
+
+    // Stop the spinner when route change completes
+    const handleRouteChangeComplete = () => setLoading(false);
+
+    // Add event listeners
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+
+    // Clean up event listeners
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+    };
+  }, [router]);
+
   const isActive = (path: string) => router.pathname === path;
 
   return (
     <aside className="bg-white w-full md:w-[17rem] md:min-h-screen shadow-md flex flex-col justify-between">
+      {/* Show loading spinner when loading state is true */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="spinner"></div> {/* Replace with your spinner component */}
+        </div>
+      )}
+
       {/* Top Section */}
       <div className="flex-1">
         <div className="p-4 flex items-center bg-white rounded-lg shadow-sm">
@@ -35,9 +63,8 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.Dashboard}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                  isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                  }`}
               >
                 <span className="material-icons-outlined">dashboard</span>
                 <span className="ml-3">Dashboard</span>
@@ -47,9 +74,8 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.Orders}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                  isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                  }`}
               >
                 <span className="material-icons-outlined">shopping_cart</span>
                 <span className="ml-3">Orders</span>
@@ -59,9 +85,8 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.myPage}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                  isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                  }`}
               >
                 <span className="material-icons-outlined">pages</span>
                 <span className="ml-3">My Page</span>
@@ -71,9 +96,8 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.updatePassword}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                  isActive("/update-password") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/update-password") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                  }`}
               >
                 <span className="material-icons-outlined">password</span>
                 <span className="ml-3">Change Password</span>
@@ -83,9 +107,8 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.contributionRequests}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                  isActive("/contribution-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/contribution-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                  }`}
               >
                 <span className="material-icons-outlined">bolt</span>
                 <span className="ml-3">Contribution Requests</span>
@@ -94,9 +117,8 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.accessRequests}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                  isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                  }`}
               >
                 <span className="material-icons-outlined">key</span>
                 <span className="ml-3">Access Requests</span>

@@ -283,7 +283,7 @@ const Gallery: React.FC = () => {
 
           <button
             onClick={() => setModalOpen(true)}
-            className="mt-10 text-white  px-4 py-2.5 font-playfair add-button text-white"
+            className="mt-10 px-4 py-2.5 font-playfair add-button text-white"
           >
             Add a photo
           </button>

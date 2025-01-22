@@ -9,10 +9,10 @@ export default function MyPage() {
     <div className="bg-[#fafafa] min-h-screen relative">
       {/* Top Banner */}
       <TopBanner />
-      
+
       {/* Personal Info */}
       <PersonalInfo />
-      
+
       {/* Tab Component */}
       <TabComponent />
 

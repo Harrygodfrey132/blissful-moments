@@ -44,6 +44,17 @@
                                 </p>
                             </div>
                         </a>
+                        <!-- Third-Party Plugin Settings Tile -->
+                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
+                            href="{{ route('configuration.plugins.settings') }}">
+                            <x-icon-plugins class="w-10 h-10 text-gray-700" />
+                            <div>
+                                <p class="text-lg font-semibold text-gray-800">Plugin Settings</p>
+                                <p class="text-sm text-gray-600">
+                                    Configure payment methods, Google Captcha keys, and other third-party plugins.
+                                </p>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
