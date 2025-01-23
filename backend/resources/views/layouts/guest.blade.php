@@ -15,15 +15,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-white">
-            <div>
+        <div class="min-h-screen relative flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-white">
+          
+        <div 
+                class="absolute inset-0 bg-cover bg-center"
+                style="background-position:center center ; background-image: url('{{ asset('https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80') }}'); filter: blur(5px);"
+            ></div>
+        <div>
                 <!-- <a href="/">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                 </a> -->
             </div>
 
-            <div class="w-full  sm:max-w-md mt-6 shadow-xl  border overflow-hidden rounded-lg">
-                {{ $slot }}
+            <div class="relative w-full sm:max-w-md mt-6 mb-6 overflow-hidden  bg-opacity-90 p-6">
+                <div>
+                    {{ $slot }}
+                </div>
             </div>
         </div>
     </body>

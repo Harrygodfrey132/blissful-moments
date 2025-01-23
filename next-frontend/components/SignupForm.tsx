@@ -101,7 +101,7 @@ const SignupForm = () => {
 
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div className='flex gap-4'>
-                    <div>
+                    <div className="w-full">
                         <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900">First Name</label>
                         <input
                             type="text"
@@ -112,7 +112,7 @@ const SignupForm = () => {
                         />
                         {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
                     </div>
-                    <div>
+                    <div className="w-full">
                         <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900">Last Name</label>
                         <input
                             type="text"
