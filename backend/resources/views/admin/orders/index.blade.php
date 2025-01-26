@@ -78,7 +78,7 @@
                                         {{ $order->created_at->format('m/d/Y H:i:s') }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                        ${{ $order->amount }}
+                                        ${{ $order->order_total }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                         {{ $order->next_renewal_date }}
@@ -183,44 +183,4 @@
         </div>
 
     </div>
-
-    <script>
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const deleteButton = document.querySelector('#deleteButton');
-            const selectAllCheckbox = document.querySelector('#selectAll');
-            const rowCheckboxes = document.querySelectorAll('.rowCheckbox');
-
-            // Select all checkboxes
-            selectAllCheckbox.addEventListener('change', function() {
-                rowCheckboxes.forEach(checkbox => {
-                    checkbox.checked = selectAllCheckbox.checked;
-                });
-                toggleDeleteButton();
-            });
-
-            // Toggle individual checkbox and update Delete button state
-            rowCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const allChecked = [...rowCheckboxes].every(cb => cb.checked);
-                    selectAllCheckbox.checked = allChecked;
-                    toggleDeleteButton();
-                });
-            });
-
-            // Enable or disable the Delete button based on selected checkboxes
-            function toggleDeleteButton() {
-                const anyChecked = [...rowCheckboxes].some(cb => cb.checked);
-                if (anyChecked) {
-                    deleteButton.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                    deleteButton.classList.add('bg-indigo-500');
-                    deleteButton.disabled = false;
-                } else {
-                    deleteButton.classList.add('bg-gray-300', 'cursor-not-allowed');
-                    deleteButton.classList.remove('bg-indigo-500');
-                    deleteButton.disabled = true;
-                }
-            }
-        });
-    </script>
 @endsection

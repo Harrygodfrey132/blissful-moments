@@ -7,6 +7,10 @@ export const API = {
   getUser: "/user",
   updateProfile: "/update-profile",
   updatePassword: "/update-password",
+  sendForgotPasswordOTP: "/send-reset-otp",
+  validateForgotPasswordOTP: "/verify-reset-otp",
+  updateNewPassword: "/update-new-password",
+  validatePasswordResetToken: "/validate-password-reset-token",
 
   // Page management
   savePageSettings: "/page/settings",
@@ -73,6 +77,6 @@ export const API = {
   getAccessRequests: "/all-access-requests",
   updateAccessRequestStatus: "/update/access-requests",
   verifyRequestAccessData: "/verify/request-access-data",
-  submitUserChanges:"/submit/user-Changes",
-  updateUserChanges:"/update/user-Changes"
+  submitUserChanges: "/submit/user-Changes",
+  updateUserChanges: "/update/user-Changes",
 };

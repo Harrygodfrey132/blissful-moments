@@ -11,18 +11,19 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class VisitorContributionRequest extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    protected $user;
+
+    protected $contributionRequest;
     protected $template;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($contributionRequest , $template)
     {
-        $this->user = $user;
+        $this->contributionRequest = $contributionRequest;
         $this->template = $template;
     }
 
@@ -41,13 +42,13 @@ class WelcomeEmail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+
         $body = $this->template->body;
 
         $replacements = [
-            '{user_name}' => $this->user->name,
-            '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => env('FRONTEND_URL'),
+            '{name}' => $this->contributionRequest->full_name,
         ];
+
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
         }
@@ -56,8 +57,8 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             // Save the email log to the database
             EmailLog::create([
                 'subject' => $this->template->subject,
-                'recipient_name' => $this->user->name,
-                'recipient_email' => $this->user->email,
+                'recipient_name' => $this->contributionRequest->full_name,
+                'recipient_email' =>$this->contributionRequest->email,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);

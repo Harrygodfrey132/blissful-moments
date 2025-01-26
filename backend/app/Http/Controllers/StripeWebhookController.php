@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\AppConstant;
 use App\Helper\ConfigHelper;
+use App\Mail\OrderConfirmation;
+use App\Mail\OrderConfirmationEmail;
 use Stripe\Stripe;
 use Stripe\Webhook;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -51,34 +56,19 @@ class StripeWebhookController extends Controller
                 $paymentIntent = $session->payment_intent;
                 $paymentStatus = $session->payment_status;
                 $amount = $session->amount_total / 100; // Amount is in cents
-                $planType = $session->metadata->plan_type; // Assuming you stored this in metadata
+                $planType = $session->metadata->plan_type;
                 $planName = $session->metadata->plan_name;
 
                 // Store the order in the database
                 $this->storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName);
-
-                Log::info('Processed checkout.session.completed', [
-                    'payment_intent' => $paymentIntent,
-                    'payment_status' => $paymentStatus,
-                    'amount' => $amount,
-                    'plan_type' => $planType,
-                    'plan_name' => $planName,
-                ]);
-                break;
-
-                // Handle other event types if needed (e.g., payment failed, refund, etc.)
             case 'invoice.payment_failed':
                 $invoice = $event->data->object;
-                // Handle the failed payment (e.g., notify the user, retry payment, etc.)
                 Log::warning('Invoice payment failed', ['invoice_id' => $invoice->id]);
                 break;
 
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object;
                 break;
-
-                // Add more event cases as required
-
             default:
                 Log::info('Unhandled Stripe event', ['event_type' => $event->type]);
         }
@@ -94,7 +84,7 @@ class StripeWebhookController extends Controller
             $user = User::where('id', $session->metadata->customer_id)->firstOrFail();
             $orderId = 'BM' . date('YmdHis') . rand(1000, 9999);
             // Store the order in the database
-            Order::create([
+            $order = Order::create([
                 'order_id' => $orderId,
                 'user_id' => $user->id,
                 'amount' => $amount,
@@ -103,6 +93,8 @@ class StripeWebhookController extends Controller
                 'plan_type' => $this->getPlanType($planType),
                 'plan_name' => $planName,
                 'plan_amount' => $amount,
+                'order_total' => $amount,
+                'order_tax' => 0,
                 'next_renewal_date' => $this->getNextRenewalDate($planType),
             ]);
 
@@ -111,8 +103,16 @@ class StripeWebhookController extends Controller
             // Update the user's page status to registered
             $user->page->update([
                 'is_registered' => true,
-                'qr_code' => $qrCode
+                'qr_code' => $qrCode,
+                'next_renewal_date' => $this->getNextRenewalDate($planType),
             ]);
+
+            $user->update([
+                'subscription_status' => AppConstant::ACTIVE
+            ]);
+
+            $orderEmailTemplate = Template::where('name', Template::ORDER_CONFIRMATION_EMAIL)->first();
+            Mail::to($user->email)->send(new OrderConfirmationEmail($user, $order , $orderEmailTemplate));
         } catch (\Throwable $th) {
             Log::error("Error while saving Order Data", [
                 'exception' => $th->getMessage(),
@@ -126,10 +126,13 @@ class StripeWebhookController extends Controller
         $nextRenewalDate = Carbon::now();
 
         switch ($planType) {
-            case '30':
+            case '1':
                 $nextRenewalDate->addMonth();
                 break;
-            case '60':
+            case '3':
+                $nextRenewalDate->addMonths(3);
+                break;
+            case '6':
                 $nextRenewalDate->addMonths(6);
                 break;
             case '12':

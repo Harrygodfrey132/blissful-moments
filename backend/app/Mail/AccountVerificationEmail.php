@@ -50,7 +50,7 @@ class AccountVerificationEmail extends Mailable implements ShouldQueue
             '{user_name}' => $this->user->name,
             '{logo_url}' => asset('path/to/logo.png'),
             '{dashboard_url}' => route('dashboard'),
-            '{otp_code}' => $this->otp->otp,
+            '{otp_code}' => $this->otp,
             '{expiry_time}' => ConfigHelper::getConfig('conf_otp_expiration_time')
         ];
         foreach ($replacements as $placeholder => $value) {

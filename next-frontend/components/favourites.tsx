@@ -23,7 +23,7 @@ const Favourites = () => {
   const { data: session } = useSession();
   const { pageData, setPageData } = usePageContext();
 
-  const [isFavouritesEnabled, setIsFavouritesEnabled] = useState<boolean>(pageData?.favourites?.status === 1);
+  const [isFavouritesEnabled, setIsFavouritesEnabled] = useState<boolean>(pageData?.favourites?.status == 1);
   const [tagline, setTagline] = useState<string>(
     pageData?.favourites?.tagline || defaultTagline
   );

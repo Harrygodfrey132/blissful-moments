@@ -19,4 +19,7 @@ export const ROUTES = {
   accessRequests: "/access-requests",
   submissionSuccessful: "/submission-successful",
   viewSubmittedData: "/memory/view",
+  resetPassword: "/update-new-password",
+  viewPasswordPageOTP: "/verify-password-otp",
+  termsAndConditions: "/terms-and-conditions",
 };

@@ -15,6 +15,7 @@ class Template extends Model
 
     public const WELCOME_EMAIL = "welcome_email";
     public const ACCOUNT_VERIFICATION_EMAIL = "account_verification_email";
+    public const PASSWORD_RESET_EMAIL = "password_reset_email";
     public const ORDER_CONFIRMATION_EMAIL = "order_confirmation";
     public const EDIT_PAGE_ACCCESS_EMAIL = 'request_accepted_with_link_email';
     public const PLAN_EXPIRY_EMAIL = "plan_expiry_email";
@@ -26,7 +27,9 @@ class Template extends Model
     public const NEW_SUBMITTED_DATA_REQUEST_EMAIL = "new_submitted_data_request_email";
     public const REQUEST_ACCEPTED_WITH_LINK_EMAIL = "request_accepted_with_link_email";
     public const REQUEST_STATUS_UPDATE_EMAIL = "request_status_update_email";
-
+    public const SUBSCIPTION_FIRST_REMINDER = "subscription_first_reminder";
+    public const SUBSCIPTION_SECOND_REMINDER = "subscription_second_reminder";
+    public const SUBSCIPTION_FINAL_REMINDER = "subscription_final_reminder";
 
     protected $fillable = [
         'name',

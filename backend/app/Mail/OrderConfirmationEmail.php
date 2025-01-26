@@ -11,19 +11,22 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class OrderConfirmationEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
     protected $user;
-    protected $template;
+    protected $order;
+    protected $emailTemplate;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($user, $order, $emailTemplate)
     {
         $this->user = $user;
-        $this->template = $template;
+        $this->order = $order;
+        $this->emailTemplate = $emailTemplate;
     }
 
     /**
@@ -32,7 +35,7 @@ class WelcomeEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->template->subject,
+            subject: $this->emailTemplate->subject,
         );
     }
 
@@ -41,13 +44,16 @@ class WelcomeEmail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        $body = $this->template->body;
+        $body = $this->emailTemplate->body;
 
         $replacements = [
-            '{user_name}' => $this->user->name,
-            '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => env('FRONTEND_URL'),
+            '{name}' => $this->user->name,
+            '{order_id}' => $this->order->order_id,
+            '{order_date}' => $this->order->created_at->format('D M Y'),
+            '{order_total}' => $this->order->order_total,
+            '{order_tax}' => $this->order->order_tax,
         ];
+
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
         }
@@ -55,7 +61,7 @@ class WelcomeEmail extends Mailable implements ShouldQueue
         try {
             // Save the email log to the database
             EmailLog::create([
-                'subject' => $this->template->subject,
+                'subject' => $this->emailTemplate->subject,
                 'recipient_name' => $this->user->name,
                 'recipient_email' => $this->user->email,
                 'email_body' => $body,
@@ -63,7 +69,7 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             ]);
         } catch (\Throwable $th) {
             // Log any error while saving the data to the database
-            Log::error('Error saving email log: ' . $th->getMessage());
+            Log::error('Error sending order email: ' . $th->getMessage());
         }
 
         return new Content(

@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import Link from "next/link";
+import { ROUTES } from "../utils/routes";
 
 const RegisterPageModal = ({ isOpen, onClose }) => {
   const { data: session } = useSession();
@@ -101,9 +103,9 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
         {/* Footer section */}
         <div className="mt-6 text-center text-sm text-gray-500">
           By proceeding, you agree to our
-          <a href="/terms" className="text-blue-500 hover:underline ml-1">
+          <Link href={ROUTES.termsAndConditions} className="text-blue-500 hover:underline ml-1">
             Terms and Conditions
-          </a>
+          </Link>
           .
         </div>
       </div>

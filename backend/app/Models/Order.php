@@ -22,6 +22,8 @@ class Order extends Model
         'plan_type',
         'plan_name',
         'plan_amount',
+        'order_total',
+        'order_tax',
         'next_renewal_date',
     ];
 

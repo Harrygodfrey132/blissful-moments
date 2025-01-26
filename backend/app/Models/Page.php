@@ -24,7 +24,9 @@ class Page extends Model
         'death_date',
         'address',
         'background_music',
-        'is_registered'
+        'is_registered',
+        'is_suspended',
+        'next_renewal_date'
     ];
 
     protected $with = [

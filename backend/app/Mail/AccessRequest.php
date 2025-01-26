@@ -11,18 +11,23 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class AccessRequest extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    protected $user;
+
+    protected $accessRequest;
+    protected $uniqueLink;
+    protected $expiry_time;
     protected $template;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($accessRequest, $uniqueLink, $expiry_time, $template)
     {
-        $this->user = $user;
+        $this->accessRequest = $accessRequest;
+        $this->uniqueLink = $uniqueLink;
+        $this->expiry_time = $expiry_time;
         $this->template = $template;
     }
 
@@ -42,12 +47,12 @@ class WelcomeEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $body = $this->template->body;
-
         $replacements = [
-            '{user_name}' => $this->user->name,
-            '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => env('FRONTEND_URL'),
+            '{name}' => $this->accessRequest->name,
+            '{unique_link}' => $this->uniqueLink,
+            '{expiry_time}' => $this->expiry_time,
         ];
+
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
         }
@@ -56,8 +61,8 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             // Save the email log to the database
             EmailLog::create([
                 'subject' => $this->template->subject,
-                'recipient_name' => $this->user->name,
-                'recipient_email' => $this->user->email,
+                'recipient_name' => $this->accessRequest->name,
+                'recipient_email' => $this->accessRequest->email,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);

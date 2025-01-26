@@ -4,6 +4,7 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     accessToken?: string;
     isVerified?: boolean;
+    isSuspended?: integer;
     userDetails?: {
       id: number;
       first_name: string;
@@ -24,6 +25,7 @@ declare module "next-auth" {
       email: string;
       accessToken?: string;
       isVerified?: boolean;
+      isSuspended?: numeric;
       userDetails?: {
         id: number;
         first_name: string;
@@ -46,6 +48,7 @@ declare module "next-auth/jwt" {
     email?: string;
     name?: string;
     isVerified?: boolean;
+    isSuspended?: numeric;
     userDetails?: {
       id: number;
       first_name: string;

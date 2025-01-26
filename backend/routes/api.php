@@ -32,6 +32,10 @@ Route::post('/verify-password', [PageController::class, 'verifyPassword']);
 Route::post('/request-access', [AccessRequestController::class, 'store']);
 Route::post('/verify/request-access-data', [AccessRequestController::class, 'verifyData']);
 Route::post('/submit/user-Changes', [AccessRequestController::class, 'submitUserChanges']);
+Route::post('/send-reset-otp', [AuthController::class, 'sendPasswordResetOTP']);
+Route::post('/verify-reset-otp', [AuthController::class, 'validateResetPasswordOTP']);
+Route::post('/validate-password-reset-token', [AuthController::class, 'validatePasswordResetToken']);
+Route::post('/update-new-password', [AuthController::class, 'updateNewPassword']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -116,5 +120,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
     Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
     Route::post('/update/user-Changes', [AccessRequestController::class, 'updateUserChanges']);
-
 });

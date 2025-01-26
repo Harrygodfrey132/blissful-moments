@@ -11,18 +11,19 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class UserContributionRequest extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    protected $user;
+
+    protected $contributionRequest;
     protected $template;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($contributionRequest, $template)
     {
-        $this->user = $user;
+        $this->contributionRequest = $contributionRequest;
         $this->template = $template;
     }
 
@@ -44,10 +45,11 @@ class WelcomeEmail extends Mailable implements ShouldQueue
         $body = $this->template->body;
 
         $replacements = [
-            '{user_name}' => $this->user->name,
-            '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => env('FRONTEND_URL'),
+            '{name}' => $this->contributionRequest->name,
+            '{visitor_name}' => $this->contributionRequest->full_name,
+            '{page_url}' => env('FRONTEND_URL')
         ];
+
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
         }
@@ -56,8 +58,8 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             // Save the email log to the database
             EmailLog::create([
                 'subject' => $this->template->subject,
-                'recipient_name' => $this->user->name,
-                'recipient_email' => $this->user->email,
+                'recipient_name' => $this->contributionRequest->user->name,
+                'recipient_email' => $this->contributionRequest->user->email,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);
@@ -65,7 +67,6 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             // Log any error while saving the data to the database
             Log::error('Error saving email log: ' . $th->getMessage());
         }
-
         return new Content(
             view: 'emails.custom',
             with: [

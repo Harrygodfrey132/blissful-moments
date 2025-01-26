@@ -36,7 +36,6 @@ class PlanController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'billing_cycle' => 'required|integer|in:30,180,365',
             'price' => 'required|numeric|min:0',
         ]);
 
@@ -44,10 +43,16 @@ class PlanController extends Controller
         Plan::create([
             'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'billing_cycle' => $validated['billing_cycle'],
+            'billing_cycle' => 12,
             'price' => $validated['price'],
         ]);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Record created successfully!',
+            ]);
+        }
         // Redirect back or to a different page with a success message
         return to_route('plans.index')->with('success', 'Plan created successfully.');
     }

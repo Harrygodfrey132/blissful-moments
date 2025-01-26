@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Helper\ConfigHelper;
 use App\Models\EmailLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,19 +12,22 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class PasswordResetEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
     protected $user;
-    protected $template;
+    protected $emailTemplate;
+    protected $otp;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($user, $emailTemplate, $otp)
     {
         $this->user = $user;
-        $this->template = $template;
+        $this->emailTemplate = $emailTemplate;
+        $this->otp = $otp;
     }
 
     /**
@@ -32,7 +36,7 @@ class WelcomeEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->template->subject,
+            subject: $this->emailTemplate->subject,
         );
     }
 
@@ -41,12 +45,14 @@ class WelcomeEmail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        $body = $this->template->body;
+
+        $body = $this->emailTemplate->body;
 
         $replacements = [
-            '{user_name}' => $this->user->name,
+            '{name}' => $this->user->name,
+            '{otp}' => $this->otp,
+            '{expiry_time}' => (int)(ConfigHelper::getConfig('conf_otp_expiration_time') ?? 10),
             '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => env('FRONTEND_URL'),
         ];
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
@@ -55,14 +61,13 @@ class WelcomeEmail extends Mailable implements ShouldQueue
         try {
             // Save the email log to the database
             EmailLog::create([
-                'subject' => $this->template->subject,
+                'subject' => $this->emailTemplate->subject,
                 'recipient_name' => $this->user->name,
                 'recipient_email' => $this->user->email,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);
         } catch (\Throwable $th) {
-            // Log any error while saving the data to the database
             Log::error('Error saving email log: ' . $th->getMessage());
         }
 
@@ -76,8 +81,6 @@ class WelcomeEmail extends Mailable implements ShouldQueue
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

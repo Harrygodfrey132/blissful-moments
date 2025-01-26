@@ -20,7 +20,8 @@ export async function middleware(req) {
       pathname.startsWith(ROUTES.updatePassword) ||
       pathname.startsWith(ROUTES.contributionRequests) ||
       pathname.startsWith(ROUTES.accessRequests) ||
-      pathname.startsWith(ROUTES.viewSubmittedData)
+      pathname.startsWith(ROUTES.viewSubmittedData) ||
+      pathname.startsWith(ROUTES.Verify_Email)
     ) {
       return redirectTo(ROUTES.Login); // Redirect unauthenticated users to the login page
     }
@@ -48,9 +49,9 @@ export async function middleware(req) {
       pathname.startsWith(ROUTES.accessRequests) ||
       pathname.startsWith(ROUTES.viewSubmittedData)
     ) {
-      return redirectTo(ROUTES.Verify_Email); // Redirect unverified users to verify-email page
+      return redirectTo(ROUTES.Verify_Email);
     }
-    return NextResponse.next(); // Allow access to public pages
+    return NextResponse.next();
   }
 
   // If user is verified, prevent them from accessing verify-email page
@@ -60,8 +61,16 @@ export async function middleware(req) {
 
   // If user is already logged in, prevent access to login page
   if (pathname === ROUTES.Login) {
-    return redirectTo(ROUTES.Dashboard); // Redirect logged-in users to the dashboard
+    return redirectTo(ROUTES.Dashboard);
   }
 
-  return NextResponse.next(); // Continue processing the request for valid cases
+  // Ensure that users can only access the verify password page after sending OTP
+  if (pathname === ROUTES.viewPasswordPageOTP) {
+    const emailToken = searchParams.get("token");
+    if (!emailToken) {
+      return redirectTo(ROUTES.Login);
+    }
+  }
+
+  return NextResponse.next();
 }

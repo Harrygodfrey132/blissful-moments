@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserContributionRequest;
+use App\Mail\VisitorContributionRequest;
 use App\Models\ContributionData;
 use App\Models\ContributionRequest;
 use App\Models\Template;
@@ -9,6 +11,7 @@ use App\Notifications\UserContributionRequestNotification;
 use App\Notifications\VisitorRequestStatusNotification;
 use App\Notifications\VisitorSubmissionRequestNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class ContributionRequestController extends Controller
@@ -70,8 +73,8 @@ class ContributionRequestController extends Controller
         // Send Emails to user and visitor
         $userTemplate = Template::find(Template::CONTRIBUTION_REQUEST_EMAIL);
         $visitorTemplate = Template::find(Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL);
-        $contributionRequest->user->notify(new UserContributionRequestNotification($contributionRequest, $userTemplate));
-        $contributionRequest->notify(new VisitorSubmissionRequestNotification($contributionRequest, $visitorTemplate));
+        Mail::to($contributionRequest->user->email)->send(new UserContributionRequest($contributionRequest, $userTemplate));
+        Mail::to($contributionRequest->email)->send(new VisitorContributionRequest($contributionRequest, $visitorTemplate));
 
         // Return a success response with the created data
         return response()->json([

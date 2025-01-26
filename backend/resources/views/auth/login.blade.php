@@ -7,7 +7,6 @@
       @csrf
       <!-- Logo -->
       <div class="text-center">
-        
         <img class="w-20 m-auto opacity-90 hover:opacity-100 transition-opacity duration-300" src="{{ asset('img/logo-black-transparent.png') }}" alt="Logo">
       </div>
 
@@ -53,9 +52,5 @@
       </x-primary-button>
 
     </div>
-    {{-- <div class="font-body text-center text-primary mt-5">Don’t have an account?
-      <a class="font-medium text-sm  " href="/register">Sign Up</a>
-    </div> --}}
-
   </form>
 </x-guest-layout>

@@ -126,7 +126,7 @@ export default function Home() {
         )}
 
         <div
-          className={`fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 shadow-2xl py-3 px-5 flex items-center z-50 ${isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""}`}
+          className={`fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-2xl py-3 px-5 flex items-center z-50 ${isModalOpen || isRegisterModalOpen ? "pointer-events-none opacity-50" : ""}`}
         >
           {/* Left-aligned Back to Home button */}
           <div className="flex justify-start flex-shrink-0">
@@ -135,7 +135,7 @@ export default function Home() {
             </Link>
           </div>
 
-          {!pageData?.is_registered && (
+          {!pageData?.is_registered  && (
             // Center-aligned Register page button
             <div className="flex-grow flex bg-white justify-center">
               <button

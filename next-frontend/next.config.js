@@ -28,6 +28,11 @@ const nextConfig = {
         hostname: "blissfull.test",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
     ],
   },
 };

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
 use App\Helper\ConfigHelper;
+use App\Mail\AccessRequest as MailAccessRequest;
 use App\Models\AccessRequest;
 use App\Models\Submission;
 use App\Models\Template;
@@ -11,6 +12,7 @@ use App\Notifications\AccessRequestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -85,7 +87,7 @@ class AccessRequestController extends Controller
 
             // Send the email to the user with the unique link
             $template = Template::find(Template::EDIT_PAGE_ACCCESS_EMAIL);
-            $accessRequest->notify(new AccessRequestNotification($accessRequest->name , $editUrl , $expiry_time , $template));
+            Mail::to($accessRequest->email)->send(new MailAccessRequest($accessRequest , $editUrl , $expiry_time , $template));
 
             return response()->json([
                 'success' => true,

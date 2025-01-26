@@ -2,27 +2,27 @@
 
 namespace App\Mail;
 
-use App\Models\EmailLog;
+use App\Helper\ConfigHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class SubscriptionReminder extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    protected $user;
+
+    protected $subscription;
     protected $template;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($subscription, $template)
     {
-        $this->user = $user;
+        $this->subscription = $subscription;
         $this->template = $template;
     }
 
@@ -44,26 +44,13 @@ class WelcomeEmail extends Mailable implements ShouldQueue
         $body = $this->template->body;
 
         $replacements = [
-            '{user_name}' => $this->user->name,
-            '{logo_url}' => asset('path/to/logo.png'),
-            '{dashboard_url}' => env('FRONTEND_URL'),
+            '{name}' => $this->subscription->user->name,
+            '{renewal_url}' => env('FRONTEND_URL'),
+            '{first_reminder_email}' => ConfigHelper::getConfig('conf_plan_expire_reminder_1')
         ];
+
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
-        }
-
-        try {
-            // Save the email log to the database
-            EmailLog::create([
-                'subject' => $this->template->subject,
-                'recipient_name' => $this->user->name,
-                'recipient_email' => $this->user->email,
-                'email_body' => $body,
-                'sent_at' => now(),
-            ]);
-        } catch (\Throwable $th) {
-            // Log any error while saving the data to the database
-            Log::error('Error saving email log: ' . $th->getMessage());
         }
 
         return new Content(

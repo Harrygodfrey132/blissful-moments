@@ -21,7 +21,7 @@ class PaymentController extends Controller
             Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
             $paymentIntent = PaymentIntent::create([
-                'amount' => $request->amount, // Amount in cents
+                'amount' => $request->amount,
                 'currency' => 'usd',
                 'payment_method_types' => ['card'],
             ]);
@@ -54,11 +54,11 @@ class PaymentController extends Controller
                 'line_items' => [
                     [
                         'price_data' => [
-                            'currency' => 'usd',  // or your preferred currency
+                            'currency' => 'usd',
                             'product_data' => [
-                                'name' => 'Page Registration', // Example product name
+                                'name' => 'Page Registration',
                             ],
-                            'unit_amount' => $planAmount, // Amount in cents (e.g. $5.00)
+                            'unit_amount' => $planAmount,
                         ],
                         'quantity' => 1,
                     ],

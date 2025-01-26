@@ -33,6 +33,7 @@ const authOptions: NextAuthOptions = {
             ...user,
             accessToken: token,
             isVerified: !!user.email_verified_at,
+            isSuspended: user.is_suspended,
             userDetails: user.user_details || undefined,
           };
         } catch (error: any) {
@@ -55,6 +56,7 @@ const authOptions: NextAuthOptions = {
           name: user.name || null,
           isVerified: user.isVerified || false,
           userDetails: user.userDetails || undefined,
+          isSuspended:user.isSuspended || false
         } as JWT;
       }
       return token;
@@ -67,6 +69,7 @@ const authOptions: NextAuthOptions = {
         accessToken: token.accessToken || "",
         isVerified: token.isVerified || false,
         userDetails: token.userDetails || undefined,
+        isSuspended: token.isSuspended || undefined,
       };
       return session;
     },
