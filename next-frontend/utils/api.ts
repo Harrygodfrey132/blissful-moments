@@ -11,6 +11,8 @@ export const API = {
   validateForgotPasswordOTP: "/verify-reset-otp",
   updateNewPassword: "/update-new-password",
   validatePasswordResetToken: "/validate-password-reset-token",
+  fetchReCaptchaKey:"/get-recaptcha-key",
+  submitRequestDemoForm:"/submit-request-demo",
 
   // Page management
   savePageSettings: "/page/settings",

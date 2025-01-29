@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ConfigHelper;
 use App\Models\Configuration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -57,5 +58,18 @@ class ConfigurationController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', 'Something went wrong. Unable to update record!');
         }
+    }
+
+    /**
+     * FrontEnd Data
+     */
+
+    public function fetchReCaptchaKey()
+    {
+        $site_key = ConfigHelper::getConfig('conf_google_captcha_site_key');
+
+        return response([
+            'site_key' => $site_key,
+        ], 200);
     }
 }

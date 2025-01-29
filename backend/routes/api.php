@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\ContributionRequestController;
 use App\Http\Controllers\CountryController;
@@ -36,6 +38,9 @@ Route::post('/send-reset-otp', [AuthController::class, 'sendPasswordResetOTP']);
 Route::post('/verify-reset-otp', [AuthController::class, 'validateResetPasswordOTP']);
 Route::post('/validate-password-reset-token', [AuthController::class, 'validatePasswordResetToken']);
 Route::post('/update-new-password', [AuthController::class, 'updateNewPassword']);
+Route::get('/get-recaptcha-key', [ConfigurationController::class, 'fetchReCaptchaKey']);
+Route::post('/rsubmit-request-demo', [ContactController::class, 'requestDemo']);
+
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
