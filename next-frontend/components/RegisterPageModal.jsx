@@ -31,11 +31,11 @@ const RegisterPageModal = ({ isOpen, onClose }) => {
         }
       );
 
-      const { sessionId } = response.data;
+      const { sessionId , stripePublicKey } = response.data;
 
       // Redirect to Stripe Checkout page
       const stripe = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        stripePublicKey ?? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
       );
       const { error } = await stripe.redirectToCheckout({ sessionId });
 

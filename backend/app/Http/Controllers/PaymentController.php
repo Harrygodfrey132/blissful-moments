@@ -74,7 +74,7 @@ class PaymentController extends Controller
                 ],
             ]);
 
-            return response()->json(['sessionId' => $session->id]);
+            return response()->json(['sessionId' => $session->id, 'stripePublicKey' => ConfigHelper::getConfig('conf_stripe_public_key')]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

@@ -34,6 +34,17 @@
                                      />
                                 <small class="text-gray-500">Enter your Stripe secret key here.</small>
                             </div>
+                            <!-- Stripe Public Key -->
+                            <div class="flex flex-col">
+                                <label for="stripe-secret-key" class="mb-2 text-sm font-medium text-gray-700">
+                                    Stripe Public Key
+                                </label>
+                                <input type="text" id="stripe_public_key" name="conf_stripe_public_key"
+                                    class="rounded border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    value="{{ Config::getConfig('conf_stripe_public_key') }}" placeholder="Enter Stripe Public/Publishable Key"
+                                     />
+                                <small class="text-gray-500">Enter your Stripe public/publishable key here.</small>
+                            </div>
                             <!-- Stripe Webhook Secret -->
                             <div class="flex flex-col">
                                 <label for="stripe-webhook-secret" class="mb-2 text-sm font-medium text-gray-700">
