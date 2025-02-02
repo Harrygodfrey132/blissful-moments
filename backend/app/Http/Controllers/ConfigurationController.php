@@ -16,7 +16,7 @@ class ConfigurationController extends Controller
 
     public function emailSettings()
     {
-        return view('admin.configuration.email-setting');
+        return view('admin.configuration.email_settings');
     }
 
     public function smtpSettings()
@@ -26,12 +26,17 @@ class ConfigurationController extends Controller
 
     public function thirdPartySettings()
     {
-        return view('admin.configuration.third-party-settings');
+        return view('admin.configuration.third_party_settings');
     }
 
     public function generalSettings()
     {
-        return view('admin.configuration.general-settings');
+        return view('admin.configuration.general_settings');
+    }
+
+    public function socialmediaSettings()
+    {
+        return view('admin.configuration.social_media_settings');
     }
 
 

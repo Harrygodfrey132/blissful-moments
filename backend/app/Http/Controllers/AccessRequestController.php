@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Helper\AppConstant;
 use App\Helper\ConfigHelper;
 use App\Mail\AccessRequest as MailAccessRequest;
+use App\Mail\UserPageEditRequestEmail;
+use App\Mail\VisitorRequestStatusEmail;
 use App\Models\AccessRequest;
 use App\Models\Submission;
 use App\Models\Template;
@@ -44,13 +46,15 @@ class AccessRequestController extends Controller
                 'sections' => 'required|array',
             ]);
 
-            AccessRequest::create([
+            $accessRequest =  AccessRequest::create([
                 'page_id' => $validated['page_id'],
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'sections' => json_encode($validated['sections'])
             ]);
 
+            $template = Template::find(Template::PAGE_EDIT_REQUEST_EMAIL);
+            Mail::to($accessRequest->page->user)->send(new UserPageEditRequestEmail($accessRequest, $template));
             return response()->json(['message' => 'Access request submitted successfully.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()]);
@@ -64,7 +68,7 @@ class AccessRequestController extends Controller
 
         // Find the contribution request by ID
         $accessRequest = AccessRequest::findOrFail($id);
-        $hours = (int) ConfigHelper::getConfig('conf_edit_page_expiration_time') ?? 24 ;
+        $hours = (int) ConfigHelper::getConfig('conf_edit_page_expiration_time') ?? 24;
         $expiry_time =  now()->addHours($hours);
         // Update the status to 'accepted' or declined (based on the action)
         $accessRequest->update(['status' => $status]);
@@ -87,13 +91,15 @@ class AccessRequestController extends Controller
 
             // Send the email to the user with the unique link
             $template = Template::find(Template::EDIT_PAGE_ACCCESS_EMAIL);
-            Mail::to($accessRequest->email)->send(new MailAccessRequest($accessRequest , $editUrl , $expiry_time , $template));
+            Mail::to($accessRequest->email)->send(new MailAccessRequest($accessRequest, $editUrl, $expiry_time, $template));
 
             return response()->json([
                 'success' => true,
                 'message' => 'Access request updated successfully. Email has been sent.',
             ], 200);
         }
+        $template = Template::find(Template::EDIT_PAGE_ACCCESS_EMAIL);
+        Mail::to($accessRequest->email)->send(new VisitorRequestStatusEmail($accessRequest, $template));
 
         // Return a JSON response
         return response()->json([
@@ -202,6 +208,7 @@ class AccessRequestController extends Controller
             ]);
         }
     }
+
     public function updateUserChanges(Request $request)
     {
         try {

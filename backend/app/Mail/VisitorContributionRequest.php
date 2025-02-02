@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Helper\ConfigHelper;
 use App\Models\EmailLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +22,7 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct($contributionRequest , $template)
+    public function __construct($contributionRequest, $template)
     {
         $this->contributionRequest = $contributionRequest;
         $this->template = $template;
@@ -43,10 +44,47 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
     public function content(): Content
     {
 
+        // Path to the logo and social media images
+        $logoPath = public_path('img/logo-black.png');
+        $facebookLogoPath = public_path('img/facebook.png');
+        $instagramLogoPath = public_path('img/instagram.png');
+        $twitterLogoPath = public_path('img/twitter.png');
+        $youtubeLogoPath = public_path('img/youtube.png');
+        $footerLogoPath = public_path('img/black-transparent.png');
+
+        // Convert images to Base64
+        $logoData = base64_encode(file_get_contents($logoPath));
+        $facebookLogoData = base64_encode(file_get_contents($facebookLogoPath));
+        $instagramLogoData = base64_encode(file_get_contents($instagramLogoPath));
+        $twitterLogoData = base64_encode(file_get_contents($twitterLogoPath));
+        $youtubeLogoData = base64_encode(file_get_contents($youtubeLogoPath));
+        $footerLogoData = base64_encode(file_get_contents($footerLogoPath));
+
+        // Prepare the Base64 data with appropriate MIME types
+        $logoBase64 = 'data:image/png;base64,' . $logoData;
+        $facebookLogoBase64 = 'data:image/png;base64,' . $facebookLogoData;
+        $instagramLogoBase64 = 'data:image/png;base64,' . $instagramLogoData;
+        $twitterLogoBase64 = 'data:image/png;base64,' . $twitterLogoData;
+        $youtubeLogoBase64 = 'data:image/png;base64,' . $youtubeLogoData;
+        $footerLogoBase64 = 'data:image/png;base64,' . $footerLogoData;
+
+        // Replace placeholders with Base64 image data
         $body = $this->template->body;
 
         $replacements = [
             '{name}' => $this->contributionRequest->full_name,
+            '{frontend_url}' => env('FRONTEND_URL'),
+            '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),
+            '{instagram_link}' => ConfigHelper::getConfig('conf_instagram_link'),
+            '{twitter_link}' => ConfigHelper::getConfig('conf_twitter_link'),
+            '{youtube_link}' => ConfigHelper::getConfig('conf_youtube_link'),
+            '{logo_path}' => $logoBase64,
+            '{facebook_logo}' => $facebookLogoBase64,
+            '{instagram_logo}' => $instagramLogoBase64,
+            '{twitter_logo}' => $twitterLogoBase64,
+            '{youtube_logo}' => $youtubeLogoBase64,
+            '{footer_logo}' => $footerLogoBase64,
+            '{current_year}' => now('Y'),
         ];
 
         foreach ($replacements as $placeholder => $value) {
@@ -58,7 +96,7 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
             EmailLog::create([
                 'subject' => $this->template->subject,
                 'recipient_name' => $this->contributionRequest->full_name,
-                'recipient_email' =>$this->contributionRequest->email,
+                'recipient_email' => $this->contributionRequest->email,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);
@@ -68,7 +106,7 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
         }
 
         return new Content(
-            view: 'emails.custom',
+            view: 'emails.render_view',
             with: [
                 'body' => $body,
             ]

@@ -12,18 +12,19 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class WelcomeEmail extends Mailable implements ShouldQueue
+class UserPageRegistrationEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    protected $user;
+
+    protected $pageData;
     protected $template;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $template)
+    public function __construct($pageData, $template)
     {
-        $this->user = $user;
+        $this->pageData = $pageData;
         $this->template = $template;
     }
 
@@ -70,9 +71,8 @@ class WelcomeEmail extends Mailable implements ShouldQueue
         $body = $this->template->body;
 
         $replacements = [
-            '{Subject_Line}' => $this->template->subject,
-            '{First_Name}' => $this->user->name,
-            '{Reset_Link}' => env('FRONTEND_URL'),
+            '{name}' => $this->pageData->user->name,
+            '{page_url}' => env('FRONTEND_URL') . '/' . $this->pageData->name,
             '{frontend_url}' => env('FRONTEND_URL'),
             '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),
             '{instagram_link}' => ConfigHelper::getConfig('conf_instagram_link'),
@@ -91,18 +91,18 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             $body = str_replace($placeholder, $value, $body);
         }
 
-
         try {
             // Save the email log to the database
             EmailLog::create([
                 'subject' => $this->template->subject,
-                'recipient_name' => $this->user->name,
-                'recipient_email' => $this->user->email,
+                'recipient_name' => $this->pageData->user->name,
+                'recipient_email' => $this->pageData->user->email,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);
         } catch (\Throwable $th) {
-            Log::error('Error saving email log: ' . $th->getMessage());
+            // Log any error while saving the data to the database
+            Log::error('Error sending order email: ' . $th->getMessage());
         }
 
         return new Content(
@@ -112,7 +112,6 @@ class WelcomeEmail extends Mailable implements ShouldQueue
             ]
         );
     }
-
 
     /**
      * Get the attachments for the message.

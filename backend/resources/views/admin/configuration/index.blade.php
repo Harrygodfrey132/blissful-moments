@@ -55,6 +55,18 @@
                                 </p>
                             </div>
                         </a>
+                        <!-- Social Media Settings Tile -->
+                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
+                            href="{{ route('configuration.socialmedia.settings') }}">
+                            <x-icon-social-media class="w-10 h-10 text-gray-700" />
+                            <div>
+                                <p class="text-lg font-semibold text-gray-800">Social Media Settings</p>
+                                <p class="text-sm text-gray-600">
+                                    Manage social media links, API keys, and sharing settings.
+                                </p>
+                            </div>
+                        </a>
+
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\UserContributionRequest;
 use App\Mail\VisitorContributionRequest;
+use App\Mail\VisitorRequestStatusEmail;
 use App\Models\ContributionData;
 use App\Models\ContributionRequest;
 use App\Models\Template;
@@ -106,12 +107,10 @@ class ContributionRequestController extends Controller
                 'description' => $contributionRequest->description,
             ]);
 
-            $template = Template::find(Template::REQUEST_STATUS_UPDATE_EMAIL);
-            $contributionRequest->notify(new VisitorRequestStatusNotification($contributionRequest, $template));
         } else {
-            # code...
         }
-
+        $template = Template::find(Template::REQUEST_STATUS_UPDATE_EMAIL);
+        Mail::to($contributionRequest->email)->send(new VisitorRequestStatusEmail($contributionRequest, $template));
         // Return a JSON response
         return response()->json([
             'success' => true,
