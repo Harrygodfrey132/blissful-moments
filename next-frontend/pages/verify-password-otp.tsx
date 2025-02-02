@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ROUTES } from "../utils/routes";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { IoIosArrowRoundBack } from "react-icons/io"
 import { API } from "../utils/api";
 
 const VerifyPasswordPage = () => {
@@ -102,9 +103,9 @@ const VerifyPasswordPage = () => {
                                     {isSubmitting ? "Verifying..." : "Verify Account"}
                                 </button>
                             </form>
-                            <div className="text-center text-blue-500">
-                                <Link href={ROUTES.Login}>
-                                    Login
+                            <div className="text-center flex justify-center items-center relative text-blue-500">
+                                <Link className="flex justify-center items-center gap-2" href={ROUTES.Login}>
+                                <IoIosArrowRoundBack className="w-6 h-6" /> Back to Login
                                 </Link>
                             </div>
                         </div>

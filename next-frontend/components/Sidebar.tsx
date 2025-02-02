@@ -34,7 +34,7 @@ export default function Sidebar() {
   const isActive = (path: string) => router.pathname === path;
 
   return (
-    <aside className="bg-white w-full md:w-[17rem] md:min-h-screen shadow-md flex flex-col justify-between">
+    <aside className="bg-white w-full md:w-[17rem] h-screen shadow-md flex flex-col justify-between">
       {/* Show loading spinner when loading state is true */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
@@ -55,7 +55,11 @@ export default function Sidebar() {
           <div className="ml-4">
             <h3 className="text-lg font-semibold text-gray-800">{session?.user?.name}</h3>
             <p className="text-sm text-gray-500">{session?.user?.email}</p>
+            <Link href="/profile">
+              <div className="text-blue-light-900 font-medium text-sm underline">Manage Profile</div>
+            </Link>
           </div>
+          
         </div>
 
         <nav className="mt-6">

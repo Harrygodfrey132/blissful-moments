@@ -154,11 +154,15 @@ const ProfilePage = () => {
     };
     return (
         <div>
-            <div className='md:flex gap-10 md:px-16 px-5 w-full mt-32  mb-10'>
+            <div className='flex px-4 flex-col md:flex-row mb-10 md:mt-32 mt-24'>
                 <Sidebar />
-                <main className='w-full'>
+                <main className='flex-1 md:px-6 overflow-x-auto'>
+                    <header className='mb-6 md:mt-0 mt-4'>
+                        <h1 className="text-xl font-bold text-gray-800">Edit Profile</h1>
+
+                    </header>
                     <div>
-                        <h1 className='font-semibold md:text-xl text-lg mb-5 mt-5 md:mb-0'>Edit Profile</h1>
+
                         <section className='bg-white p-6 w-full shadow rounded'>
                             <form onSubmit={handleSubmit}>
                                 <div className="space-y-12">
@@ -170,12 +174,12 @@ const ProfilePage = () => {
                                             </p>
                                         </div>
                                         <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                                            <div className="col-span-full md:w-[350px] relative">
+                                            <div className="col-span-full md:w-[200px] relative">
                                                 <label htmlFor="photo" className="block text-sm/6 font-medium text-gray-900">
                                                     Photo
                                                 </label>
                                                 <div className="mt-2 relative  items-center gap-x-3 edit-profile">
-                                                    <div className='shadow bg-gray-50 p-2 md:w-[350px]'>
+                                                    <div className='shadow bg-gray-50 p-2 md:w-[200px]'>
                                                         <Image
                                                             src={previewImage || '/img/profile-img.png'}
                                                             alt="Profile Picture"
@@ -345,17 +349,25 @@ const ProfilePage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-6 flex items-center justify-end gap-x-6">
+                                <div className="mt-6 flex items-center justify-between gap-x-6">
                                     <Link href={ROUTES.Dashboard}
-                                        className="text-sm/6 font-semibold text-gray-900">
-                                        Cancel
+                                        className="text-red-500 underline text-sm font-medium">
+                                        Delete Account
                                     </Link>
-                                    <button
-                                        type="submit"
-                                        className="rounded bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    >
-                                        Save
-                                    </button>
+
+                                    <div className='gap-4 flex items-center'>
+                                        <Link href={ROUTES.Dashboard}
+                                            className="text-sm/6 font-semibold text-gray-900">
+                                            Cancel
+                                        </Link>
+                                        <button
+                                            type="submit"
+                                            className="rounded bg-blue-light-900 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
+
                                 </div>
                             </form>
                         </section>

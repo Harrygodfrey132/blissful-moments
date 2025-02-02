@@ -34,8 +34,8 @@ const Footer = () => {
             <h6 className="text-base text-black hover:text-blue-600 font-semibold mb-2">Company</h6>
             <ul className="text-sm font-medium space-y-2">
               <li><a href="#" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">About Us</a></li>
-              <li><a href="#" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Careers</a></li>
-              <li><a href="#" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Terms of Use</a></li>
+              <li><a href="/privacy-policy" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Privacy Policy</a></li>
+              <li><a href="/terms-and-conditions" className="text-black hover:text-blue-600 font-normal transition duration-150 ease-in-out">Terms of Use</a></li>
             </ul>
           </div>
         </div>
