@@ -210,7 +210,7 @@ const DashboardPage = () => {
               "Every memory has a story; let yours inspire and be remembered."
             </p>
             <div className="mt-6">
-              <Link href={ROUTES.myPage} className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 transition">
+              <Link href={ROUTES.myPage} className="px-6 py-3 bg-blue-light-900 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 transition">
                 Create Your Memory Journey
               </Link>
             </div>
@@ -221,21 +221,23 @@ const DashboardPage = () => {
       {/* Modal for Account Suspension */}
       {isAccountSuspended && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm mx-4">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Account Suspended</h2>
-            <p className="text-gray-600 mb-6">Your account has been suspended. Please renew your plan or log out to resolve the issue.</p>
-            <div className="flex justify-around">
+          <div className="bg-white p-8 rounded shadow-xl max-w-sm mx-4">
+            <h2 className="text-2xl text-center font-bold text-gray-800 mb-4">Account Suspended</h2>
+            <p className="text-gray-800 mb-6 text-center">Your account has been suspended. Please renew your plan or log out to resolve the issue.</p>
+            <div className=" justify-around">
               <button
                 onClick={handleRenewPlan}
-                className="px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition"
+                className="px-6 py-2 bg-blue-light-900 w-full text-white font-medium rounded transition"
               >
                 Renew Plan
               </button>
+              </div>
+              <div className='text-center'>
               <button
                 onClick={() => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}` })}
-                className="px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+                className="px-6 py-2 text-sm font-medium text-blue-900 underline font-medium  transition"
               >
-                Log Out
+                Logout
               </button>
             </div>
           </div>

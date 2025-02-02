@@ -12,7 +12,7 @@ const TermsAndConditions = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <div className="min-h-screen bg-gray-100 text-gray-800 py-8 px-4 sm:px-6 lg:px-8 mt-20">
-        <div className=" mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <div className="mx-auto bg-white p-12 rounded-lg shadow-lg">
           <h1 className="text-3xl font-semibold text-center mb-6">
             THE BLISSFUL MOMENTS – TERMS AND CONDITIONS
           </h1>
@@ -301,10 +301,13 @@ const TermsAndConditions = () => {
                 </span>
               </p>
             </div>
+
+            <h2 className="text-2xl font-semibold mb-2">
+              11. Disclaimer of Warranties
+            </h2>
+
             <div className="ml-6">
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>11. Disclaimer of Warranties</strong>
-              </p>
+
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   <strong>"As Is" Basis:</strong> The Service is provided on an
@@ -324,9 +327,13 @@ const TermsAndConditions = () => {
                 </li>
               </ul>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>12. Limitation of Liability</strong>
-              </p>
+            </div>
+
+
+            <h2 className="text-2xl font-semibold mb-2">
+              12. Limitation of Liability
+            </h2>
+            <div className="ml-6">
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   <strong>Indirect Damages:</strong> To the fullest extent
@@ -341,10 +348,14 @@ const TermsAndConditions = () => {
                   12 months preceding the claim.
                 </li>
               </ul>
+            </div>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>13. Indemnification</strong>
-              </p>
+
+            <h2 className="text-2xl font-semibold mb-2">
+              13. Indemnification
+            </h2>
+
+            <div className="ml-6">
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   You agree to indemnify, defend, and hold harmless The Blissful
@@ -360,10 +371,13 @@ const TermsAndConditions = () => {
                   the rights of a third party.
                 </li>
               </ul>
+            </div>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>14. Suspension & Termination</strong>
-              </p>
+
+            <h2 className="text-2xl font-semibold mb-2">
+              14. Suspension & Termination
+            </h2>
+            <div className="ml-6">
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   <strong>Termination by User:</strong> You may discontinue use
@@ -383,10 +397,12 @@ const TermsAndConditions = () => {
                   permanently deleted.
                 </li>
               </ul>
+            </div>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>15. Modifications to the Service & Terms</strong>
-              </p>
+            <h2 className="text-2xl font-semibold mb-2">
+              15. Modifications to the Service & Terms
+            </h2>
+            <div className="ml-6">
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   <strong>Service Changes:</strong> We reserve the right to
@@ -403,9 +419,13 @@ const TermsAndConditions = () => {
                 </li>
               </ul>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>16. Governing Law & Dispute Resolution</strong>
-              </p>
+            </div>
+
+
+            <h2 className="text-2xl font-semibold mb-2">
+              16. Governing Law & Dispute Resolution
+            </h2>
+            <div className="ml-6">
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   These Terms are governed by and construed in accordance with
@@ -415,10 +435,13 @@ const TermsAndConditions = () => {
                   jurisdiction of the courts located in [Your Jurisdiction].
                 </li>
               </ul>
+            </div>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>17. Miscellaneous</strong>
-              </p>
+
+            <h2 className="text-2xl font-semibold mb-2">
+              17. Miscellaneous
+            </h2>
+            <div className="ml-6">
               <ul className="list-disc ml-6 mb-4">
                 <li>
                   <strong>Entire Agreement:</strong> These Terms, together with
@@ -442,10 +465,12 @@ const TermsAndConditions = () => {
                   obligations under these Terms at our discretion.
                 </li>
               </ul>
+            </div>
 
-              <p className="text-lg leading-relaxed mb-4">
-                <strong>18. Contact Us</strong>
-              </p>
+            <h2 className="text-2xl font-semibold mb-2">
+              18. Contact Us
+            </h2>
+            <div className="ml-6">
               <p className="text-lg leading-relaxed mb-4">
                 If you have any questions or concerns about these Terms or the
                 Service, please contact us at:
@@ -459,16 +484,17 @@ const TermsAndConditions = () => {
                 </li>
                 <li>Phone: +447580531693</li>
               </ul>
-
+            </div>
+           
               <p className="text-lg leading-relaxed mb-4">
                 By accessing or using The Blissful Moments memorial page
                 service, you acknowledge that you have read, understood, and
                 agree to be bound by these Terms and Conditions.
               </p>
-            </div>
           </section>
         </div>
-      </div>
+     </div>
+
     </>
   );
 };

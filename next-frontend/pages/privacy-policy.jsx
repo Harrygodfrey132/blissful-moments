@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
       </Head>
 
       <div className="min-h-screen bg-gray-100 text-gray-800 py-8 px-4 sm:px-6 lg:px-8 mt-20">
-        <div className=" mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <div className=" mx-auto bg-white p-12 rounded-lg shadow-lg">
           <h1 className="text-3xl font-semibold text-center mb-6">
             Privacy Policy for The Blissful Moments
           </h1>
