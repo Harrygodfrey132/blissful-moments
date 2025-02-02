@@ -293,4 +293,6 @@ class AuthController extends Controller
             'message' => 'Password updated successfully.',
         ], 200);
     }
+
+
 }

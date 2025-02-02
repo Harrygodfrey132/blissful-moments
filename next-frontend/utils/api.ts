@@ -13,7 +13,7 @@ export const API = {
   validatePasswordResetToken: "/validate-password-reset-token",
   fetchReCaptchaKey:"/get-recaptcha-key",
   submitRequestDemoForm:"/submit-request-demo",
-
+  requestAccountDelete:"/request-account-deletion",
   // Page management
   savePageSettings: "/page/settings",
   checkExistingPage: "/page/exists",

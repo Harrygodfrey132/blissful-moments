@@ -50,13 +50,32 @@ class GDPRrequestController extends Controller
       try {
          DB::transaction(function () use ($gdpr, $request) {
             $gdpr->update([
-               'status' => $request->status ? AppConstant::ACCEPTED : AppConstant::REJECTED
+               'status' => $request->status ? AppConstant::ACCEPTED : AppConstant::DECLINED
             ]);
             $gdpr->user->delete();
          });
          return back()->with('success', 'Record removed successfully');
       } catch (\Throwable $th) {
          return back()->with('erorr', 'Something went wrong. Unable to remove record');
+      }
+   }
+
+   public function requestAccountDeletion(Request $request)
+   {
+      try {
+         $user = $request->user();
+
+         GDPRRequest::create([
+            'user_id' => $user->id
+         ]);
+
+         return response()->json([
+            'message' => 'Request submitted successfully'
+         ], 200);
+      } catch (\Throwable $th) {
+         return response()->json([
+            'message' => 'Error! Unable to process request'
+         ]);
       }
    }
 }

@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { ROUTES } from '../utils/routes';
 import { useUserContext } from '../context/UserContext';
 import Image from 'next/image';
+import { headers } from 'next/headers';
 
 interface Country {
     name: string;
@@ -24,6 +25,7 @@ const ProfilePage = () => {
     const [countries, setCountries] = useState<Country[]>([]);
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -151,6 +153,25 @@ const ProfilePage = () => {
             toast.error("Error updating profile.");
             console.error(error);
         }
+    };
+
+    const handleDelete = async () => {
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}${API.requestAccountDelete}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (response.status == 200) {
+            toast.success("Request has been submitted successfully! Please wait for 24-48 hours.")
+            setOpen(false);
+            return;
+        }
+        toast.error("Something went wrong. Please try again later!");
     };
     return (
         <div>
@@ -350,10 +371,36 @@ const ProfilePage = () => {
                                     </div>
                                 </div>
                                 <div className="mt-6 flex items-center justify-between gap-x-6">
-                                    <Link href={ROUTES.Dashboard}
-                                        className="text-red-500 underline text-sm font-medium">
+                                    <Link
+                                        href="#"
+                                        onClick={() => setOpen(true)}
+                                        className="text-red-500 underline text-sm font-medium"
+                                    >
                                         Delete Account
                                     </Link>
+
+
+                                    {open && (
+                                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                                                <h2 className="text-red-600 text-lg font-bold">Are you sure?</h2>
+                                                <p className="text-gray-700 text-sm mt-2">
+                                                    This action is <span className="font-bold">irreversible</span>. Your account and all associated data will be permanently deleted.
+                                                </p>
+                                                <div className="mt-4 flex justify-end space-x-2">
+                                                    <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" onClick={() => setOpen(false)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button type='button'
+                                                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                                        onClick={handleDelete}
+                                                    >
+                                                        Yes, Delete My Account
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div className='gap-4 flex items-center'>
                                         <Link href={ROUTES.Dashboard}

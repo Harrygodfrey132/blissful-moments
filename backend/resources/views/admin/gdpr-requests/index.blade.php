@@ -26,7 +26,7 @@
                                                 Email</th>
                                             <th scope="col"
                                                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                Description</th>
+                                                Requested Date</th>
                                             <th scope="col"
                                                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                                 Status</th>
@@ -61,9 +61,9 @@
                                                     </div>
                                                 </td>
                                                 <td class="whitespace-nowrap py-5 pr-3 text-sm">
-                                                    <div class="flex items-center">
+                                                    <div class="flex items-center pl-4">
                                                         <div>
-                                                            <div class="font-medium text-gray-900">{{ $request->comments }}
+                                                            <div class="font-medium text-gray-900">{{ $request->created_at->format(' d M Y') }}
                                                             </div>
                                                         </div>
                                                     </div>

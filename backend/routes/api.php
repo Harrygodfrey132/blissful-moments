@@ -12,6 +12,7 @@ use App\Http\Controllers\ContributionRequestController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\GDPRrequestController;
 use App\Http\Controllers\ObituaryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
@@ -51,7 +52,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/validation-status', [UserController::class, 'checkValidation']);
     Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
     Route::post('/update-password', [UserController::class, 'updatePassword'])->middleware('auth');
-
 
     // Page settings and management
     Route::prefix('page')->group(function () {
@@ -125,4 +125,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
     Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
     Route::post('/update/user-Changes', [AccessRequestController::class, 'updateUserChanges']);
+
+    // Account Deletion Request
+    Route::post('/request-account-deletion', [GDPRrequestController::class, 'requestAccountDeletion']);
 });
