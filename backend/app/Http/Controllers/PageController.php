@@ -24,19 +24,17 @@ class PageController extends Controller
                 'name' => [
                     'required',
                     'string',
-                    Rule::unique('pages')->where(function ($query) use ($request) {
-                        return $query->where('user_id', '!=', $request->user_id);
-                    }),
+                    Rule::unique('pages')->ignore(Page::where('user_id', $request->user_id)->value('id'))
                 ],
                 'is_private' => 'required|boolean',
                 'password' => 'nullable|string|required_if:is_private,true|min:8',
             ]);
 
-            // Initialize the page variable outside the transaction
-            $page = $request->user()->page ?? null;
+            // Find existing page
+            $page = Page::where('user_id', $validated['user_id'])->first();
 
             if (!$page) {
-                DB::transaction(function () use ($validated) {
+                $page = DB::transaction(function () use ($validated) {
                     $page = Page::create([
                         'user_id' => $validated['user_id'],
                         'name' => $validated['name'],
@@ -44,55 +42,21 @@ class PageController extends Controller
                         'password' => $validated['is_private'] ? Hash::make($validated['password']) : null,
                     ]);
 
-                    $page->personalQuote()->create([
-                        'page_id' => $page->id,
-                        'quote' => "Share Something special for loved one"
-                    ]);
+                    // Create related data
+                    $page->personalQuote()->create(['page_id' => $page->id, 'quote' => "Share Something special for loved one"]);
+                    $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
+                    $page->obituaries()->create(['tagline' => "Enter a memorable tagline here.", 'content' => "Add a heartfelt message.", 'page_id' => $page->id]);
 
-                    $page->gallery()->create([
-                        'gallery_name' => "Gallery",
-                        'user_id' => $validated['user_id']
-                    ]);
+                    $timeline = $page->timeline()->create(['tagline' => "Your Timeline Goes Here", 'page_id' => $page->id]);
+                    $timeline->events()->create(['timeline_id' => $timeline->id, 'event_date' => now(), 'title' => "New Event", 'description' => "Event description", 'location' => "Event location"]);
 
-                    $page->obituaries()->create([
-                        'tagline' => "Enter a memorable tagline here.",
-                        'content' => "Add a heartfelt message about your loved one.",
-                        'page_id' => $page->id,
-                    ]);
+                    $page->socialMediaData()->create(['page_id' => $page->id, 'content' => "This page is a forever tribute."]);
+                    $favourite = $page->favourites()->create(['page_id' => $page->id, 'tagline' => "A place to remember favourite things"]);
+                    $favourite->favouriteEvents()->create(['favourite_id' => $favourite->id, 'title' => "Default Title", 'description' => "Default Description"]);
 
-                    $timeline = $page->timeline()->create([
-                        'tagline' => "Your Timeline Goes Here",
-                        'page_id' => $page->id
-                    ]);
+                    $page->contributions()->create(['page_id' => $page->id, 'tagline' => "This is a place to celebrate the life."]);
 
-                    $timeline->events()->create([
-                        'timeline_id' => $timeline->id,
-                        'event_date' => now(),
-                        'title' => "New Event",
-                        'description' => "Event description",
-                        'location' => "Event location"
-                    ]);
-
-                    $page->socialMediaData()->create([
-                        'page_id' => $page->id,
-                        'content' => "This page is a forever tribute to. Please spread the page so others can contribute and reminisce."
-                    ]);
-
-                    $favourite = $page->favourites()->create([
-                        'page_id' => $page->id,
-                        'tagline' => "A place to remember John's favourite things",
-                    ]);
-
-                    $favourite->favouriteEvents()->create([
-                        'favourite_id' => $favourite->id,
-                        'title' => "Default Title",
-                        'description' => "Default Description"
-                    ]);
-
-                    $page->contributions()->create([
-                        'page_id' => $page->id,
-                        'tagline' => "This is a place to celebrate the life of and their impact on all of us. Please post respectfully."
-                    ]);
+                    return $page; // Return the newly created page
                 });
             } else {
                 $page->update([
@@ -117,7 +81,6 @@ class PageController extends Controller
             ], 500);
         }
     }
-
 
     /**
      * Update personal information for the user's page.

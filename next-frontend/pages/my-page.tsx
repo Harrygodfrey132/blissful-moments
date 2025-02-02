@@ -18,12 +18,12 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Configuration modal state
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Register page modal state
   const [loading, setLoading] = useState(true);
-  const [hasPage, setHasPage] = useState(false); // Track if user already has a page
+  const [hasPage, setHasPage] = useState(false);
   const { pageData, setPageId, setPageData } = usePageContext();
   const { data: session, status } = useSession();
-  const fetchCalledRef = useRef(false); // Guard for preventing multiple fetch calls
+  const fetchCalledRef = useRef(false);
 
-  const router = useRouter();  // Hook to monitor route changes
+  const router = useRouter();
 
   const openModal = (modalType: "config" | "register") => {
     if (modalType === "config") setIsModalOpen(true);

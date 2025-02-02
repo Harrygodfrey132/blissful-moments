@@ -7,7 +7,7 @@ import { usePageContext } from "../context/PageContext";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useDebounce } from "use-debounce"; // Use use-debounce hook
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // Import eye icons
+import { AiFillEye, AiFillEyeInvisible, AiOutlineClose } from "react-icons/ai"; // Import eye icons
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,7 +27,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { data: session, status } = useSession();
-  const { setPageId, setPageData } = usePageContext();
+  const { pageData, setPageId, setPageData } = usePageContext();
   const token = session?.user?.accessToken;
 
   useEffect(() => {
@@ -41,8 +41,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       resetForm();
+      if (pageData?.name) {
+        setPageName(pageData.name);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, pageData]);
 
   const resetForm = () => {
     setPageName("");
@@ -79,51 +82,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleBack = () => setStep(1);
-
-  const handleSave = async () => {
-    setBackendErrors({});
-    setErrors({});
-    const formErrors = validateForm();
-
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-    }
-
-    setLoading(true);
-    const data = {
-      name: pageName,
-      is_private: selectedOption === "private",
-      password: selectedOption === "private" ? password : null,
-      user_id: session?.user?.id,
-    };
-
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.savePageSettings}`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setPageId(response.data.page.id);
-      setPageData(response.data.page_data);
-      toast.success(response.data.message);
-      onClose();
-    } catch (err: any) {
-      if (err.response?.data?.errors) {
-        setBackendErrors(err.response.data.errors);
-      } else {
-        toast.error("Error saving page settings", err);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Debounced version of checkDomainAvailability
   const [debouncedPageName] = useDebounce(pageName, 500); // 500ms debounce
 
@@ -169,6 +127,50 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       checkDomainAvailability();
     }
   }, [debouncedPageName, checkDomainAvailability]);
+
+  const handleSave = async () => {
+    setErrors({}); // Reset errors before validation
+    setBackendErrors({});
+
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors); // Update errors state
+      return;
+    }
+
+    setLoading(true);
+    const data = {
+      name: pageName,
+      is_private: selectedOption === "private",
+      password: selectedOption === "private" ? password : null,
+      user_id: session?.user?.id,
+    };
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.savePageSettings}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPageId(response.data.page.id);
+      setPageData(response.data.page_data);
+      toast.success(response.data.message);
+      onClose();
+    } catch (err: any) {
+      if (err.response?.data?.errors) {
+        setBackendErrors(err.response.data.errors);
+      } else {
+        toast.error("Error saving page settings");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -248,7 +250,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
-            <div className="flex justify-end mt-6">
+            <div className="flex justify-end mt-6 gap-4">
+              {pageData && (
+                <button className="bg-gray-200 px-6 py-2 rounded font-semibold "
+                  onClick={onClose}
+                >
+                  Close
+                </button>
+              )}
               <button
                 disabled={!pageName.trim()}
                 onClick={handleNext}
