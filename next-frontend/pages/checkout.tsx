@@ -179,6 +179,15 @@ const CheckoutPage = () => {
           >
             Complete Payment
           </button>
+          
+        {/* Footer section */}
+        <div className="mt-6 text-center text-sm text-gray-500">
+          By proceeding, you agree to our
+          <Link href={ROUTES.termsAndConditions} className="text-blue-500 hover:underline ml-1">
+            Terms and Conditions
+          </Link>
+          .
+        </div>
           <div className="flex justify-between mt-4">
             <div className="font-semibold">Secure payment</div>
             <div className="flex gap-2">
