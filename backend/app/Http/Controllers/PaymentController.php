@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\ConfigHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
@@ -47,18 +48,19 @@ class PaymentController extends Controller
             $planName = $request->plan_name;
             $planType = '12';
             $planAmount = $request->plan_amount;
+            $orderId = Crypt::decryptString($request->order_id);
 
             // Create a Checkout Session
             $session = Session::create([
-                'payment_method_types' => ['card'],
+                'payment_method_types' => ['card', 'apple_pay', 'google_pay'],
                 'line_items' => [
                     [
                         'price_data' => [
-                            'currency' => 'usd',
+                            'currency' => 'gbp',
                             'product_data' => [
                                 'name' => 'Page Registration',
                             ],
-                            'unit_amount' => $planAmount,
+                            'unit_amount' => $planAmount * 100,
                         ],
                         'quantity' => 1,
                     ],
@@ -67,10 +69,11 @@ class PaymentController extends Controller
                 'success_url' => env('FRONTEND_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => env('FRONTEND_URL') . '/cancel',
                 'metadata' => [
-                    'customer_id' => $customerId,  // Add customer ID
-                    'plan_type' => $planType,     // Add plan type (e.g. 'monthly', 'quarterly')
-                    'plan_name' => $planName,     // Add plan type (e.g. 'monthly', 'quarterly')
-                    'plan_amount' => $planAmount,  // Add plan amount (in cents)
+                    'customer_id' => $customerId,
+                    'plan_type' => $planType,
+                    'plan_name' => $planName,
+                    'plan_amount' => $planAmount,
+                    'order_id' => $orderId
                 ],
             ]);
 

@@ -3,28 +3,33 @@
 namespace App\Mail;
 
 use App\Helper\ConfigHelper;
+use App\Models\EmailLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class SubscriptionReminderSecond extends Mailable implements ShouldQueue
+class OrderFailedEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    protected $subscription;
-    protected $template;
+    protected $user;
+    protected $order;
+    protected $emailTemplate;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($subscription, $template)
+    public function __construct($user, $order, $emailTemplate)
     {
-        $this->subscription = $subscription;
-        $this->template = $template;
+        $this->user = $user;
+        $this->order = $order;
+        $this->emailTemplate = $emailTemplate;
     }
+
 
     /**
      * Get the message envelope.
@@ -32,7 +37,7 @@ class SubscriptionReminderSecond extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->template->subject,
+            subject: $this->emailTemplate->subject,
         );
     }
 
@@ -66,12 +71,11 @@ class SubscriptionReminderSecond extends Mailable implements ShouldQueue
         $footerLogoBase64 = 'data:image/png;base64,' . $footerLogoData;
 
         // Replace placeholders with Base64 image data
-        $body = $this->template->body;
+        $body = $this->emailTemplate->body;
 
         $replacements = [
-            '{name}' => $this->subscription->user->name,
-            '{renewal_url}' => env('FRONTEND_URL'),
-            '{second_reminder_email}' => ConfigHelper::getConfig('conf_plan_expire_reminder_2') ?? 15,
+            '{name}' => $this->user->name,
+            '{order_id}' => $this->order->order_id,
             '{frontend_url}' => env('FRONTEND_URL'),
             '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),
             '{instagram_link}' => ConfigHelper::getConfig('conf_instagram_link'),
@@ -88,6 +92,20 @@ class SubscriptionReminderSecond extends Mailable implements ShouldQueue
 
         foreach ($replacements as $placeholder => $value) {
             $body = str_replace($placeholder, $value, $body);
+        }
+
+        try {
+            // Save the email log to the database
+            EmailLog::create([
+                'subject' => $this->emailTemplate->subject,
+                'recipient_name' => $this->user->name,
+                'recipient_email' => $this->user->email,
+                'email_body' => $body,
+                'sent_at' => now(),
+            ]);
+        } catch (\Throwable $th) {
+            // Log any error while saving the data to the database
+            Log::error('Error sending order email: ' . $th->getMessage());
         }
 
         return new Content(

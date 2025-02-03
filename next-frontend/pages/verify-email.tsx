@@ -44,7 +44,8 @@ const VerifyEmailPage = () => {
       {/* Loader Overlay */}
       {loading && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-75"></div>
+          <span className="loader w-20 h-20 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
+          <span className="ml-2 text-white font-semibold text-lg">Loading...</span>
         </div>
       )}
 

@@ -95,6 +95,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Order Management
     Route::get('/orders', [OrderController::class, 'getUserOrders']);
+    Route::post('/orders/create', [OrderController::class, 'createUserOrder']);
+    Route::post('/getOrderDetails', [OrderController::class, 'getOrderDetails']);
 
     // Favourite Management
     Route::prefix('favourite')->group(function () {

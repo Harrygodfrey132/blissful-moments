@@ -17,6 +17,7 @@ class Template extends Model
     public const ACCOUNT_VERIFICATION_EMAIL = "account_verification_email";
     public const PASSWORD_RESET_EMAIL = "password_reset_email";
     public const ORDER_CONFIRMATION_EMAIL = "order_confirmation";
+    public const ORDER_FAILED_EMAIL = "order_failed";
     public const EDIT_PAGE_ACCCESS_EMAIL = 'request_accepted_with_link_email';
     public const PLAN_EXPIRY_EMAIL = "plan_expiry_email";
     public const CONTRIBUTION_REQUEST_EMAIL = "contribution_request_email";

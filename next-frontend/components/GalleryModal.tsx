@@ -50,6 +50,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
         toast.success('Images uploaded successfully!');
         setPageData(response.data.page_data);
         onRequestClose();
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error uploading images:", error);

@@ -22,7 +22,7 @@ export default function TopBanner() {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<CroppedAreaPixels | null>(null);
-
+  
   // Add a loading state to avoid flickering
   const [loadingBackgroundImage, setLoadingBackgroundImage] = useState(true);
 
@@ -67,7 +67,8 @@ export default function TopBanner() {
   const handleImageCrop = async () => {
     if (selectedImage && croppedArea && cropperImage) {
       try {
-        const croppedImage = await getCroppedImg(cropperImage, croppedArea);
+        setZoom(1);
+        const croppedImage = await getCroppedImg(cropperImage, croppedArea , zoom);
         const formData = new FormData();
         formData.append("background_image", croppedImage);
 

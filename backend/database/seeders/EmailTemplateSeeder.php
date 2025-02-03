@@ -2049,102 +2049,428 @@ class EmailTemplateSeeder extends Seeder
             'name' => 'subscription_first_reminder',
             'type' => 1,
             'subject' => 'Reminder: Your Subscription is Expiring in {first_reminder_email} Days',
-            'body' => '<!DOCTYPE html>
-            <html>
-            <head>
-                <style>
-                    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
-                    .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-                    .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
-                    .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
-                    .email-content { padding: 20px 30px; }
-                    .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
-                    .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
-                    .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
-                    .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
-                    .email-footer a { color: #4cafeb; text-decoration: underline; }
-                </style>
-            </head>
-            <body>
-                <table class="email-container">
-                    <tr>
-                        <td class="email-hero">
-                            <h1>Subscription Expiry Reminder</h1>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="email-content">
-                            <p>Hi {name},</p>
-                            <p>Your subscription is set to expire in 30 days. Donot miss out on continuing your services with us!</p>
-                            <p>We encourage you to renew your plan before your subscription ends to avoid any interruptions.</p>
-                            <p>Click the button below to renew your subscription:</p>
-                            <a href="{renewal_url}" class="cta-button">Renew Now</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="email-footer">
-                            <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
-                        </td>
-                    </tr>
-                </table>
-            </body>
-            </html>',
-            'replacements' => "
+            'body' => '
+                <!DOCTYPE html>
+                <html>
+        
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Subscription Expiry Reminder</title>
+                </head>
+        
+                <body>
+                    <table dir="ltr" style="font-family: Arial, sans-serif; color: #333; line-height: 26px;" width="100%"
+                        cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5">
+                        <tbody>
+                            <!-- Header -->
+                            <tr>
+                                <td style="background: #0b4a6f; padding: 30px 0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="background: #0b4a6f;">
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 10px 15px;">
+                                                    <a href="{frontend_url}"
+                                                        style="align-items: center; display: flex; text-decoration: none;">
+                                                        <img style="width: 70px; vertical-align: middle;" src="{logo_path}"
+                                                            alt="Blissful Moments Logo">
+                                                        <span
+                                                            style="font-weight: 600;font-size: 22px;color:#0b4a6f;margin-left: 10px;">
+                                                            The Blissful Moments
+                                                        </span>
+                                                    </a>
+                                                </td>
+        
+                                                <td style="text-align: right; padding: 10px 40px;">
+                                                    <a href="{facebook_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{facebook_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Facebook">
+                                                    </a>
+                                                    <a href="{twitter_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{twitter_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Twitter">
+                                                    </a>
+                                                    <a href="{instagram_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{instagram_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Instagram">
+                                                    </a>
+                                                    <a href="{youtube_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{youtube_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="YouTube">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+        
+                            <!-- Body -->
+                            <tr>
+                                <td>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 22px 0;">
+                                                    <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
+                                                        Subscription Expiry Reminder
+                                                    </h2>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 30px 40px;">
+                                                    <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">
+                                                        Hi {name},
+                                                    </h3>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        Your subscription is set to expire in <strong>{first_reminder_email}</strong> days.
+                                                    </p>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        Don\'t miss out on continuing your services with us! Renew your plan before your subscription ends to avoid any interruptions.
+                                                    </p>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        Click the button below to renew your subscription:
+                                                    </p>
+                                                    <a href="{renewal_url}" style="display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px;">Renew Now</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+        
+                            <!-- Footer -->
+                            <tr>
+                                <td>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: rgba(0,0,0,0.04); text-align: center; position: relative;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 30px 0; font-size: 20px; color: #000;">
+                                                    Need more help? <br>
+                                                    <a href="{frontend_url}" style="color:#0b4a6f;">We’re here, ready to talk</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 0px 20px 30px; font-size: 13px; color: #999;">
+                                                    © {current_year}, Blissful Moments. All Rights Reserved.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="{frontend_url}"
+                                                        style="display: block; position: absolute; right: 0; bottom: 10px;">
+                                                        <img style="width: 70px;" src="{footer_logo}" alt="Blissful Moments Logo">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            ',
+            'replacements' => json_encode([
                 '{name}' => 'User Name',
-                '{renewal_url}' => 'https://example.com/renew',
-                '{first_reminder_email} => Set this from configuration settings
-            ",
+                '{first_reminder_email}' => 'Days remaining for subscription expiry',
+            ]),
         ]);
+
 
         Template::create([
             'id' => 15,
             'name' => 'subscription_second_reminder',
             'type' => 1,
             'subject' => 'Reminder: Your Subscription is Expiring in {second_reminder_email} Days',
-            'body' => '<!DOCTYPE html>
-            <html>
-            <head>
-                <style>
-                    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; }
-                    .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-                    .email-hero { background-color: #202020; text-align: center; color: white; padding: 20px 10px; }
-                    .email-hero h1 { font-size: 24px; margin: 0; font-weight: bold; }
-                    .email-content { padding: 20px 30px; }
-                    .email-content h2 { font-size: 20px; margin: 0 0 10px; color: #333; }
-                    .email-content p { margin: 0 0 15px; line-height: 1.6; color: #333; }
-                    .cta-button { display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
-                    .email-footer { background-color: #474747; text-align: center; padding: 15px; font-size: 14px; color: #888; }
-                    .email-footer a { color: #4cafeb; text-decoration: underline; }
-                </style>
-            </head>
-            <body>
-                <table class="email-container">
-                    <tr>
-                        <td class="email-hero">
-                            <h1>Subscription Expiry Reminder</h1>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="email-content">
-                            <p>Hi {name},</p>
-                            <p>Your subscription is set to expire in just 15 days! It is important to renew it soon to avoid any service interruptions.</p>
-                            <p>Donot worry—renewing is quick and easy. Click below to renew your subscription:</p>
-                            <a href="{renewal_url}" class="cta-button">Renew Now</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="email-footer">
-                            <p>&copy; 2024 Blissful Moments. All rights reserved.</p>
-                        </td>
-                    </tr>
-                </table>
-            </body>
-            </html>',
-            'replacements' => "
+            'body' => '
+                <!DOCTYPE html>
+                <html>
+        
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Subscription Expiry Reminder</title>
+                </head>
+        
+                <body>
+                    <table dir="ltr" style="font-family: Arial, sans-serif; color: #333; line-height: 26px;" width="100%"
+                        cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5">
+                        <tbody>
+                            <!-- Header -->
+                            <tr>
+                                <td style="background: #0b4a6f; padding: 30px 0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="background: #0b4a6f;">
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 10px 15px;">
+                                                    <a href="{frontend_url}"
+                                                        style="align-items: center; display: flex; text-decoration: none;">
+                                                        <img style="width: 70px; vertical-align: middle;" src="{logo_path}"
+                                                            alt="Blissful Moments Logo">
+                                                        <span
+                                                            style="font-weight: 600;font-size: 22px;color:#0b4a6f;margin-left: 10px;">
+                                                            The Blissful Moments
+                                                        </span>
+                                                    </a>
+                                                </td>
+        
+                                                <td style="text-align: right; padding: 10px 40px;">
+                                                    <a href="{facebook_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{facebook_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Facebook">
+                                                    </a>
+                                                    <a href="{twitter_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{twitter_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Twitter">
+                                                    </a>
+                                                    <a href="{instagram_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{instagram_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Instagram">
+                                                    </a>
+                                                    <a href="{youtube_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{youtube_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="YouTube">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+        
+                            <!-- Body -->
+                            <tr>
+                                <td>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 22px 0;">
+                                                    <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
+                                                        Subscription Expiry Reminder
+                                                    </h2>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 30px 40px;">
+                                                    <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">
+                                                        Hi {name},
+                                                    </h3>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        Your subscription is set to expire in <strong>{second_reminder_email}</strong> days!
+                                                    </p>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        It is important to renew it soon to avoid any service interruptions.
+                                                    </p>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        Don\'t worry—renewing is quick and easy. Click below to renew your subscription:
+                                                    </p>
+                                                    <a href="{renewal_url}" style="display: inline-block; background-color: #4cafeb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-top: 20px;">Renew Now</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+        
+                            <!-- Footer -->
+                            <tr>
+                                <td>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: rgba(0,0,0,0.04); text-align: center; position: relative;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 30px 0; font-size: 20px; color: #000;">
+                                                    Need more help? <br>
+                                                    <a href="{frontend_url}" style="color:#0b4a6f;">We’re here, ready to talk</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 0px 20px 30px; font-size: 13px; color: #999;">
+                                                    © {current_year}, Blissful Moments. All Rights Reserved.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="{frontend_url}"
+                                                        style="display: block; position: absolute; right: 0; bottom: 10px;">
+                                                        <img style="width: 70px;" src="{footer_logo}" alt="Blissful Moments Logo">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+        
+                </html>
+            ',
+            'replacements' => json_encode([
                 '{name}' => 'User Name',
+                '{second_reminder_email}' => 'Days remaining for subscription expiry',
                 '{renewal_url}' => 'https://example.com/renew',
-                '{second_reminder_email} => Set this from configuration settings
-            ",
+            ]),
+        ]);
+
+        Template::create([
+            'id' => 16,
+            'name' => 'order_failed',
+            'type' => 1,
+            'subject' => 'Order Failed - Blissful Moments',
+            'body' => '
+                <!DOCTYPE html>
+                <html>
+        
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Order Failed - Blissful Moments</title>
+                </head>
+        
+                <body>
+                    <table dir="ltr" style="font-family: Arial, sans-serif; color: #333; line-height: 26px;" width="100%"
+                        cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5">
+                        <tbody>
+                            <!-- Header -->
+                            <tr>
+                                <td style="background: #0b4a6f; padding: 30px 0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="background: #0b4a6f;">
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 10px 15px;">
+                                                    <a href="{frontend_url}"
+                                                        style="align-items: center; display: flex; text-decoration: none;">
+                                                        <img style="width: 70px; vertical-align: middle;" src="{logo_path}"
+                                                            alt="Blissful Moments Logo">
+                                                        <span
+                                                            style="font-weight: 600;font-size: 22px;color:#0b4a6f;margin-left: 10px;">
+                                                            Blissful Moments
+                                                        </span>
+                                                    </a>
+                                                </td>
+        
+                                                <td style="text-align: right; padding: 10px 40px;">
+                                                    <a href="{facebook_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{facebook_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Facebook">
+                                                    </a>
+                                                    <a href="{twitter_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{twitter_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Twitter">
+                                                    </a>
+                                                    <a href="{instagram_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{instagram_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Instagram">
+                                                    </a>
+                                                    <a href="{youtube_link}" style="text-decoration: none;" target="_blank">
+                                                        <img src="{youtube_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="YouTube">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+        
+                            <!-- Body -->
+                            <tr>
+                                <td>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 22px 0;">
+                                                    <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
+                                                        Order Failed
+                                                    </h2>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 30px 40px;">
+                                                    <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">
+                                                        Hi {name},
+                                                    </h3>
+                                                    <p style="font-size: 16px; color: #000;">
+                                                        We are sorry, but your recent order could not be processed due to a
+                                                        payment issue. Please check the details below and try again:
+                                                    </p>
+                                                    <ul style="font-size: 16px; color: #000; list-style-type: none; padding: 0;">
+                                                        <li>Order ID: {order_id}</li>
+                                                        <li>Payment Status: Failed</li>
+                                                    </ul>
+                                                    <p style="font-size: 16px; color: #000; margin-top: 20px;">
+                                                        If you have any questions or need assistance, feel free to contact us.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+        
+                            <!-- Footer -->
+                            <tr>
+                                <td>
+                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
+                                        style="background: rgba(0,0,0,0.04); text-align: center; position: relative;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 30px 0; font-size: 20px; color: #000;">
+                                                    Need more help? <br>
+                                                    <a href="{frontend_url}" style="color:#0b4a6f;">Contact Us</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 0px 20px 30px; font-size: 13px; color: #999;">
+                                                    © {current_year}, Blissful Moments. All Rights Reserved.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="{frontend_url}"
+                                                        style="display: block; position: absolute; right: 0; bottom: 10px;">
+                                                        <img style="width: 70px;" src="{footer_logo}" alt="Blissful Moments Logo">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+        
+                </html>
+            ',
+            'replacements' => json_encode([
+                '{name}' => 'Customer Name',
+                '{order_id}' => 'Order ID',
+                '{failure_reason}' => 'Reason for Payment Failure',
+            ]),
         ]);
     }
 }

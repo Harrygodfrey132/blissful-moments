@@ -15,4 +15,8 @@ class AppConstant
     public const SUBMITTED = 3;
     public const ACCEPTED_CHANGES = 4;
     public const DECLINED_CHANGES = 5;
+
+    public const PAYMENT_AWAITING = 0;
+    public const PAYMENT_PAID = 1;
+    public const PAYMENT_FAILED = 2;
 }

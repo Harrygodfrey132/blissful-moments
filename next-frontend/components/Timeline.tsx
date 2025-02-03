@@ -205,6 +205,30 @@ export default function Timeline() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 126 }, (_, i) => currentYear - i);
 
+  const handleTaglineInput = (e: React.FormEvent<HTMLSpanElement>) => {
+    const selection = window.getSelection();
+    const cursorPosition = selection?.getRangeAt(0).startOffset;
+
+    const newTagline = e.currentTarget.textContent || "";
+    setTagline(newTagline);
+
+    // Restore cursor position after state update
+    setTimeout(() => {
+      if (editableRef.current && cursorPosition !== undefined) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        const node = editableRef.current.firstChild;
+        if (node) {
+          range.setStart(node, Math.min(cursorPosition, node.textContent?.length || 0));
+          range.setEnd(node, Math.min(cursorPosition, node.textContent?.length || 0));
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+        }
+      }
+    }, 0);
+  };
+
+
   return (
     <div>
       <div className="md:flex gap-5 justify-between">
@@ -239,7 +263,7 @@ export default function Timeline() {
               contentEditable={isTimelineEnabled}
               suppressContentEditableWarning
               aria-label="Tagline"
-              onInput={(e) => setTagline(e.currentTarget.textContent || "")}
+              onInput={handleTaglineInput}
               onBlur={handleTaglineBlur}
             >
               {tagline}

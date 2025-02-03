@@ -11,9 +11,9 @@ export const API = {
   validateForgotPasswordOTP: "/verify-reset-otp",
   updateNewPassword: "/update-new-password",
   validatePasswordResetToken: "/validate-password-reset-token",
-  fetchReCaptchaKey:"/get-recaptcha-key",
-  submitRequestDemoForm:"/submit-request-demo",
-  requestAccountDelete:"/request-account-deletion",
+  fetchReCaptchaKey: "/get-recaptcha-key",
+  submitRequestDemoForm: "/submit-request-demo",
+  requestAccountDelete: "/request-account-deletion",
 
   // Page management
   savePageSettings: "/page/settings",
@@ -82,4 +82,9 @@ export const API = {
   verifyRequestAccessData: "/verify/request-access-data",
   submitUserChanges: "/submit/user-Changes",
   updateUserChanges: "/update/user-Changes",
+
+  // Checkout
+  createOrder: "/orders/create",
+  getOrderDetails: "/getOrderDetails",
+  createCheckoutSession: "/create-checkout-session",
 };

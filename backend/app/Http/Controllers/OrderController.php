@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\AppConstant;
 use App\Models\Order;
+use App\Models\Plan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class OrderController extends Controller
 {
@@ -20,10 +23,10 @@ class OrderController extends Controller
 
         // Return AJAX response if the request is AJAX
         if ($request->ajax()) {
-            return view('admin.orders.partials.order-table', compact('orders' , 'data' ));
+            return view('admin.orders.partials.order-table', compact('orders', 'data'));
         }
 
-        return view('admin.orders.index', compact('orders' , 'data' ));
+        return view('admin.orders.index', compact('orders', 'data'));
     }
 
     public function store(Request $request)
@@ -79,12 +82,97 @@ class OrderController extends Controller
     public function getUserOrders(Request $request)
     {
         $user = $request->user();
-        $orders = Order::where('user_id', $user->id)
-            ->paginate(10); // Set the number of items per page (e.g., 10)
+        $orders = Order::where('user_id', $user->id)->latest()->paginate(10); // Set the number of items per page (e.g., 10)
 
         // Return paginated data with metadata
         return response()->json([
             'order_data' => $orders
         ]);
+    }
+
+    public function createUserOrder(Request $request)
+    {
+        $user = $request->user();
+        $orderId = 'BM' . date('YmdHis') . rand(1000, 9999);
+        $plan = Plan::where('status', AppConstant::ACTIVE)->first();
+
+        // Ensure a plan exists
+        if (!$plan) {
+            return response()->json(['error' => 'No plan available'], 400);
+        }
+
+        // Check for an existing order with 'payment awaiting' status
+        $existingOrder = Order::where('user_id', $user->id)
+            ->where('stripe_payment_status', AppConstant::PAYMENT_AWAITING)
+            ->first();
+
+        // If an existing order is found and it's less than 24 hours old, return the same order ID
+        if ($existingOrder && $existingOrder->created_at > now()->subHours(24)) {
+            $encryptedOrderId = Crypt::encryptString($existingOrder->order_id);
+            return response()->json([
+                'success' => true,
+                'message' => 'Order already exists and is still awaiting payment',
+                'order_id' => $encryptedOrderId,
+            ]);
+        }
+
+        // If the existing order is older than 24 hours, update the payment status to 'failed'
+        if ($existingOrder) {
+            $existingOrder->update([
+                'stripe_payment_status' => AppConstant::PAYMENT_FAILED
+            ]);
+        }
+
+        // Create a new order
+        $order = Order::create([
+            'order_id' => $orderId,
+            'user_id' => $user->id,
+            'amount' => $plan->price,
+            'stripe_payment_intent' => "",
+            'stripe_payment_status' => AppConstant::PAYMENT_AWAITING,
+            'plan_type' => "annual",
+            'plan_name' => $plan->name,
+            'plan_amount' => $plan->price,
+            'order_total' => $plan->price, // Fixed issue
+            'order_tax' => 0,
+            'next_renewal_date' => now()->addYear(),
+        ]);
+
+        $encryptedOrderId = Crypt::encryptString($order->order_id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order created successfully',
+            'order_id' => $encryptedOrderId,
+        ]);
+    }
+
+
+    public function getOrderDetails(Request $request)
+    {
+        try {
+            $user = $request->user();
+            $encryptedOrderId = $request->get('order_id');
+
+            if (!$encryptedOrderId) {
+                return response()->json(['error' => 'Order ID is required'], 400);
+            }
+
+            $orderId = Crypt::decryptString($encryptedOrderId);
+
+            $order = Order::where('order_id', $orderId)
+                ->where('user_id', $user->id)
+                ->first();
+
+            if (!$order) {
+                return response()->json(['error' => 'Order not found or unauthorized'], 403);
+            }
+
+            $plans = Plan::where('status', AppConstant::ACTIVE)->get();
+
+            return response()->json(['order' => $order, 'plans' => $plans]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Invalid order ID'], 400);
+        }
     }
 }

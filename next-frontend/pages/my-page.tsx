@@ -100,6 +100,33 @@ export default function Home() {
     };
   }, [router]);
 
+  const handleCheckout = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.createOrder}`,
+        {
+          user_id: session?.user?.id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user?.accessToken}`
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        const orderId = response.data.order_id;
+        router.push(`${ROUTES.checkout}?order_id=${orderId}`);
+      } else {
+        toast.error("Failed to create order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
+
   return (
     <Layout noLayout={true}>
       <div
@@ -135,11 +162,11 @@ export default function Home() {
             </Link>
           </div>
 
-          {!pageData?.is_registered  && (
+          {!pageData?.is_registered && (
             // Center-aligned Register page button
             <div className="flex-grow flex bg-white justify-center">
               <button
-                onClick={() => openModal("register")}
+                onClick={handleCheckout}
                 className="bg-blue-light  text-white border-gray-300 border font-semibold flex gap-2 items-center text-sm px-2.5 group py-2 rounded-lg"
               >
                 Register page{" "}

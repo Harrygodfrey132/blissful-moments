@@ -71,7 +71,7 @@ class SubscriptionReminder extends Mailable implements ShouldQueue
         $replacements = [
             '{name}' => $this->subscription->user->name,
             '{renewal_url}' => env('FRONTEND_URL'),
-            '{first_reminder_email}' => ConfigHelper::getConfig('conf_plan_expire_reminder_1'),
+            '{first_reminder_email}' => ConfigHelper::getConfig('conf_plan_expire_reminder_1') ?? 30,
             '{frontend_url}' => env('FRONTEND_URL'),
             '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),
             '{instagram_link}' => ConfigHelper::getConfig('conf_instagram_link'),

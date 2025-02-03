@@ -100,9 +100,25 @@ const OrderPage = () => {
                                                                     <tr key={order.id}>
                                                                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-4">{order.order_id}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{order.plan_name}</td>
-                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${order.amount}</td>
+                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">£{order.amount}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{formatDate(order.created_at)}</td>
                                                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{formatDate(order.next_renewal_date)}</td>
+                                                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                            {order.stripe_payment_status === '0' ? (
+                                                                                <span className="inline-flex items-center px-4 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-md">
+                                                                                    Payment Awaiting
+                                                                                </span>
+                                                                            ) : order.stripe_payment_status === '1' ? (
+                                                                                <span className="inline-flex items-center px-4 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md">
+                                                                                    Paid
+                                                                                </span>
+                                                                            ) : order.stripe_payment_status === '2' ? (
+                                                                                <span className="inline-flex items-center px-4 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-md">
+                                                                                    Failed
+                                                                                </span>
+                                                                            ) : null}
+                                                                        </td>
+
                                                                     </tr>
                                                                 ))
                                                             )}

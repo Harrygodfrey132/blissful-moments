@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class TimelineController extends Controller
 {
+
     /**
      * Save or update timeline event details for the user's page.
      */
@@ -17,12 +18,17 @@ class TimelineController extends Controller
     {
         try {
             DB::beginTransaction();  // Start transaction
+
             $user = $request->user();
             $page = $user->page;
 
             // Extract timeline data from the request
             $timelineData = $request->input('timeline', []);
 
+            // If no 'timeline' is passed, fallback to just the tagline
+            if (!$timelineData) {
+                $timelineData = ['tagline' => $request->input('tagline')];
+            }
 
             // Check if the page already has a timeline
             $timeline = $page->timeline()->first();
@@ -44,7 +50,6 @@ class TimelineController extends Controller
 
             // Save events if provided
             if (isset($timelineData['events']) && is_array($timelineData['events'])) {
-
                 // Delete old events before creating new ones
                 $timeline->events()->delete();
 
@@ -74,6 +79,7 @@ class TimelineController extends Controller
             ]);
         }
     }
+
 
     public function deleteTimeline(Request $request)
     {

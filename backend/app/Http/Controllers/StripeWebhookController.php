@@ -21,6 +21,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class StripeWebhookController extends Controller
 {
+
     public function handleWebhook(Request $request)
     {
         // Set your Stripe secret key
@@ -30,8 +31,8 @@ class StripeWebhookController extends Controller
         $sig_header = $request->header('Stripe-Signature');
         $event = null;
 
-
         try {
+            // Verify the webhook signature
             $event = Webhook::constructEvent(
                 $request->getContent(),
                 $sig_header,
@@ -58,17 +59,23 @@ class StripeWebhookController extends Controller
                 $amount = $session->amount_total / 100; // Amount is in cents
                 $planType = $session->metadata->plan_type;
                 $planName = $session->metadata->plan_name;
+                $orderId = $session->metadata->order_id;
 
-                // Store the order in the database
-                $this->storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName);
+                // Update the existing order based on the session data
+                $this->updateOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName, $orderId);
+                break;
+
             case 'invoice.payment_failed':
                 $invoice = $event->data->object;
                 Log::warning('Invoice payment failed', ['invoice_id' => $invoice->id]);
+                $this->updateOrderPaymentStatus($invoice->metadata->order_id, 'failed');
                 break;
 
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object;
+                // Optionally, handle the case where a payment intent has succeeded
                 break;
+
             default:
                 Log::info('Unhandled Stripe event', ['event_type' => $event->type]);
         }
@@ -77,50 +84,89 @@ class StripeWebhookController extends Controller
         return response('Webhook received', 200);
     }
 
-    private function storeOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName)
+    private function updateOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName, $orderId)
     {
         try {
-            // Retrieve the user from the metadata customer_id
-            $user = User::where('id', $session->metadata->customer_id)->firstOrFail();
-            $orderId = 'BM' . date('YmdHis') . rand(1000, 9999);
-            // Store the order in the database
-            $order = Order::create([
-                'order_id' => $orderId,
-                'user_id' => $user->id,
-                'amount' => $amount,
+            // Retrieve the order from the database using the order_id
+            $order = Order::where('order_id', $orderId)->firstOrFail();
+            $user = $order->user;
+
+            // Update the order payment status and other details
+            $order->update([
                 'stripe_payment_intent' => $paymentIntent,
                 'stripe_payment_status' => $paymentStatus,
+                'amount' => $amount,
                 'plan_type' => $this->getPlanType($planType),
                 'plan_name' => $planName,
                 'plan_amount' => $amount,
                 'order_total' => $amount,
                 'order_tax' => 0,
-                'next_renewal_date' => $this->getNextRenewalDate($planType),
+                'created_at' => now(),
+                'next_renewal_date' => now()->addYear()
             ]);
 
-            $qrCode = $this->generatePageQrCode($user->page->slug);
+            // If payment is successful, generate a QR code and update the user's page
+            if ($paymentStatus === 'paid') {
+                $user->page->update([
+                    'is_registered' => true,
+                    'next_renewal_date' => $this->getNextRenewalDate($planType),
+                    'is_suspended' => false
+                ]);
 
-            // Update the user's page status to registered
-            $user->page->update([
-                'is_registered' => true,
-                'qr_code' => $qrCode,
-                'next_renewal_date' => $this->getNextRenewalDate($planType),
-            ]);
+                // Generate QR code for the user's page
+                $qrCode = $this->generatePageQrCode($user->page->slug);
 
-            $user->update([
-                'subscription_status' => AppConstant::ACTIVE
-            ]);
+                // Update the page with the QR code
+                $user->page->update([
+                    'qr_code' => $qrCode
+                ]);
 
-            $orderEmailTemplate = Template::where('name', Template::ORDER_CONFIRMATION_EMAIL)->first();
-            Mail::to($user->email)->send(new OrderConfirmationEmail($user, $order , $orderEmailTemplate));
+                // Update the user's subscription status to ACTIVE
+                $user->update([
+                    'subscription_status' => AppConstant::ACTIVE,
+                ]);
+
+                // Send an order confirmation email
+                $orderEmailTemplate = Template::where('name', Template::ORDER_CONFIRMATION_EMAIL)->first();
+                Mail::to($user->email)->send(new OrderConfirmationEmail($user, $order, $orderEmailTemplate));
+            } else {
+                // Send an order confirmation email
+                $orderEmailTemplate = Template::where('name', Template::ORDER_FAILED_EMAIL)->first();
+                Mail::to($user->email)->send(new OrderConfirmationEmail($user, $order, $orderEmailTemplate));
+                // If payment failed, mark the user as suspended
+                $user->update([
+                    'subscription_status' => AppConstant::IN_ACTIVE,
+                ]);
+            }
         } catch (\Throwable $th) {
-            Log::error("Error while saving Order Data", [
+            Log::error("Error while updating Order Data", [
                 'exception' => $th->getMessage(),
                 'session' => $session,
             ]);
         }
     }
 
+    private function updateOrderPaymentStatus($orderId, $status)
+    {
+        try {
+            $order = Order::where('order_id', $orderId)->firstOrFail();
+            $order->update([
+                'stripe_payment_status' => AppConstant::PAYMENT_FAILED,
+            ]);
+
+            // Optionally update the user's subscription status to 'suspended' if payment failed
+            if ($status === 'failed') {
+                $order->user->update([
+                    'subscription_status' => AppConstant::IN_ACTIVE,
+                ]);
+            }
+        } catch (\Throwable $th) {
+            Log::error("Error while updating Order Payment Status", [
+                'exception' => $th->getMessage(),
+                'order_id' => $orderId,
+            ]);
+        }
+    }
     private function getNextRenewalDate($planType)
     {
         $nextRenewalDate = Carbon::now();

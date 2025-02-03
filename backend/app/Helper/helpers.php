@@ -17,5 +17,5 @@ function formatDate($date)
 function formatPrice($price)
 {
     // Return the formatted date
-    return "$" . $price;
+    return "£" . $price;
 }

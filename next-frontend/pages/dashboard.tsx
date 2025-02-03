@@ -10,6 +10,8 @@ import { usePageContext } from '../context/PageContext';
 import Link from 'next/link';
 import { ROUTES } from '../utils/routes';
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const DashboardPage = () => {
   useAuthRedirect(true, true);
@@ -26,6 +28,7 @@ const DashboardPage = () => {
   const [isAccountSuspended, setIsAccountSuspended] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(IN_ACTIVE);
   const [formattedDate, setFormattedDate] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch user data on page load
@@ -108,9 +111,30 @@ const DashboardPage = () => {
     }
   };
 
-  const handleRenewPlan = () => {
-    // Redirect to renewal page (you can update the link to the correct route)
-    // window.location.href = ROUTES.renewPlan;
+  const handleRenewPlan = async() => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.createOrder}`,
+        {
+          user_id: session?.user?.id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user?.accessToken}`
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        const orderId = response.data.order_id;
+        router.push(`${ROUTES.checkout}?order_id=${orderId}`);
+      } else {
+        toast.error("Failed to create order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   return (

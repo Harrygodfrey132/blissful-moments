@@ -78,7 +78,7 @@
                                         {{ $order->created_at->format('m/d/Y H:i:s') }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                        ${{ $order->order_total }}
+                                        {{ formatPrice($order->order_total) }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                         {{ $order->next_renewal_date }}

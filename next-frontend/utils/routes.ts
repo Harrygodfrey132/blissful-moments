@@ -22,4 +22,5 @@ export const ROUTES = {
   resetPassword: "/update-new-password",
   viewPasswordPageOTP: "/verify-password-otp",
   termsAndConditions: "/terms-and-conditions",
+  checkout: "/checkout",
 };
