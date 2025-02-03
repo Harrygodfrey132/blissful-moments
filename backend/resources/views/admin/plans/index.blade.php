@@ -44,12 +44,11 @@
                                                 <div class="flex items-center">
                                                     <div>
                                                         <div class="font-medium text-gray-900">{{ $plan->name }}</div>
-                                                        <div class="mt-1 text-gray-500">{{ $plan->description }}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                {{ formatDate($plan->created_at) }}
+                                                {{ $plan->description }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                                 <div x-data="{ toggle: {{ $plan->status ? 'true' : 'false' }} }" class="flex items-center">
