@@ -1,21 +1,23 @@
+import { useEffect, useState, FormEvent } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import PageBg from '../public/img/request-demo-bg.jpg';
+import { toast } from 'react-toastify';
+import { API } from '../utils/api';
+
+declare global {
+  interface Window {
+    grecaptcha: any;
+  }
+}
 export const metadata = {
   title: 'Request Demo - Tidy',
   description: 'Page description',
 }
 
-import { useEffect, useState , FormEvent } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import ReCAPTCHA from 'react-google-recaptcha';
-import PageBg from '../public/img/request-demo-bg.jpg';
-import { toast } from 'react-toastify';
-import { API } from '../utils/api';
-
-const SITE_KEY = "your-site-key-here";
-
 export default function RequestDemo() {
+  const [siteKey, setSiteKey] = useState<string>('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [siteKey, setSiteKey] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   // Fetch reCAPTCHA key from backend on mount
@@ -24,16 +26,35 @@ export default function RequestDemo() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.fetchReCaptchaKey}`);
         const data = await response.json();
-        setSiteKey(data.site_key);
+        setSiteKey(data.site_key); // Set the key fetched from the backend
       } catch (error) {
         console.error("Failed to load reCAPTCHA key", error);
       }
     }
+
     fetchRecaptchaKey();
   }, []);
 
-  const handleCaptchaChange = (token: string | null) => {
-    setCaptchaToken(token);
+  // Dynamically load the reCAPTCHA v3 script only once
+  useEffect(() => {
+    if (siteKey) {
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+      script.async = true;
+      script.onload = () => {
+        // reCAPTCHA script loaded
+      };
+      document.body.appendChild(script);
+    }
+  }, [siteKey]);
+
+  const handleCaptcha = async () => {
+    if (window.grecaptcha && siteKey) {
+      const token = await window.grecaptcha.execute(siteKey, { action: 'submit' });
+      setCaptchaToken(token); // Save the token
+    } else {
+      setError('reCAPTCHA is not ready yet');
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -45,23 +66,26 @@ export default function RequestDemo() {
     }
 
     // Send form data & captcha token to the server
-    const formData =new FormData(e.target as HTMLFormElement);
+    const formData = new FormData(e.target as HTMLFormElement);
     formData.append("g-recaptcha-response", captchaToken);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.submitRequestDemoForm}`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${API.submitRequestDemoForm}`, {
+        method: "POST",
+        body: formData,
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (result.success) {
-      toast("Form submitted successfully!");
-    } else {
-      toast.error("reCAPTCHA verification failed. Try again.");
+      if (result.success) {
+        toast("Form submitted successfully!");
+      } else {
+        toast.error("reCAPTCHA verification failed. Try again.");
+      }
+    } catch (error) {
+      toast.error("Error submitting form. Please try again.");
     }
   };
-
   return (
     <>
       <div className='flex'>
@@ -106,9 +130,15 @@ export default function RequestDemo() {
                     </div>
                   </div>
 
-                  {/* reCAPTCHA */}
+                  {/* Trigger the reCAPTCHA on form submit */}
                   <div className="mt-4">
-                    <ReCAPTCHA sitekey={SITE_KEY} onChange={handleCaptchaChange} />
+                    <button
+                      type="button"
+                      className="invisible"
+                      onClick={handleCaptcha}
+                    >
+                      Verify reCAPTCHA
+                    </button>
                   </div>
 
                   <div className="mt-6">
@@ -137,5 +167,5 @@ export default function RequestDemo() {
         </div>
       </div>
     </>
-  )
+  );
 }
