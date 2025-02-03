@@ -50,8 +50,9 @@ function ImageCropperModal({ onSave }: ImageCropperModalProps) {
   const handleSave = async () => {
     if (image && croppedAreaPixels) {
       try {
+        setZoom(1);
         // Get the cropped image as a Blob
-        const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels);
+        const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels , zoom);
   
         // Convert Blob to File
         const file = new File([croppedImageBlob], "profile_picture.jpg", { type: "image/jpeg" });
