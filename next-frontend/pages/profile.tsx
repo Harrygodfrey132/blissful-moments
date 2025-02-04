@@ -383,16 +383,18 @@ const ProfilePage = () => {
                                     {open && (
                                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                                             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                                                <h2 className="text-red-600 text-lg font-bold">Are you sure?</h2>
-                                                <p className="text-gray-700 text-sm mt-2">
+                                                <h2 className="text-red-600 text-2xl text-center font-bold">Are you sure?</h2>
+                                                <p className="text-gray-700 text-sm mt-2 text-center">
                                                     This action is <span className="font-bold">irreversible</span>. Your account and all associated data will be permanently deleted.
                                                 </p>
-                                                <div className="mt-4 flex justify-end space-x-2">
+                                                <label className='mt-4 mb-1 text-center text-black text-sm block font-medium'>Enter Reason for deleting account</label>
+                                                <textarea className="border-gray-300 w-full rounded-md" name="reason" id="rejectReason"></textarea>
+                                                <div className="mt-4 flex justify-center gap-2 space-x-2">
                                                     <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" onClick={() => setOpen(false)}>
                                                         Cancel
                                                     </button>
                                                     <button type='button'
-                                                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                                        className="px-4 text-sm py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                                                         onClick={handleDelete}
                                                     >
                                                         Yes, Delete My Account

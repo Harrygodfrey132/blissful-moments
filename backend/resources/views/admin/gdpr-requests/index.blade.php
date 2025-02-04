@@ -111,17 +111,17 @@
     <div id="gdprModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 hidden">
         <!-- Modal Content -->
         <div class="flex items-center justify-center min-h-screen z-50">
-            <div class="bg-white p-6 rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+            <di class="bg-white p-6 rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
                 <!-- Modal header -->
-                <div class="flex justify-between items-center">
-                    <a href="javascript:void(0)" onclick="toggleGdprModal()">
+                <div class="relative">
+                    <a class="absolute right-0 top-1" href="javascript:void(0)" onclick="toggleGdprModal()">
                         <span class="cursor-pointer text-gray-500 hover:text-black" id="closeModal">✕</span>
                     </a>
                 </div>
 
                 <!-- Modal body -->
-                <div class="text-center my-2 mb-5">
-                    <div>
+                <div class="my-2 mb-5">
+                    <div class="space-y-2">
                         <div>
                             <p>
                                 <span class="font-semibold px-3">Name:</span>
@@ -145,19 +145,25 @@
                 </div>
 
                 <!-- Modal footer -->
-                <div class="flex items-center justify-end gap-2 mt-4">
+               
                     <form action="" method="POST" id="gdprModalForm">
                         @csrf
+                        <!-- <div class="w-full px-4">
+                        <label class="font-semibold">Comment</label>
                         <input type="hidden" name="status" value="">
-                        <textarea class="border-gray-300 rounded-md" name="reason" id="rejectReason" disabled></textarea>
+                        <textarea class="border-gray-300 w-full rounded-md" name="reason" id="rejectReason" disabled></textarea>
+                        </div> -->
+                      
+                        <div class="flex gap-4 mt-4 justify-end">
                         <a href="javascript:void(0)" onclick="acceptHandler()"
                             class="py-2 px-3 text-sm font-medium text-green-500 bg-green-100 rounded border border-green-200 hover:bg-green-100 focus:ring-4 focus:outline-none focus:ring-primary-300 "
                             id="cancelDelete">Accept</a>
                         <a href="javascript:void(0)" onclick="rejectHandler()"
                             class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300"
                             id="confirmDelete">Reject</a>
+                            </div>
                     </form>
-                </div>
+                
             </div>
         </div>
     </div>
