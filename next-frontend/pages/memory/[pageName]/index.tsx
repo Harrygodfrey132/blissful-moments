@@ -12,7 +12,6 @@ const PageView: React.FC<PageViewProps> = ({ pageData }) => {
   const { pageName } = router.query; // Use the dynamic segment to fetch pageName from URL
 
   if (!pageName) return <div>Loading...</div>;
-
   return (
     <Layout noLayout>
         {/* Pass the entire pageData to MyPageView */}
@@ -41,10 +40,10 @@ export const getServerSideProps = async (context: any) => {
     }
 
     return {
-      props: { pageData }, // Pass the fetched data as a prop
+      props: { pageData },
     };
   } catch (error) {
     console.error(error);
-    return { notFound: true }; // Show 404 page if there's an error fetching data
+    return { notFound: true };
   }
 };

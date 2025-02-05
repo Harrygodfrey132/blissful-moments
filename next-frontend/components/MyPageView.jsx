@@ -30,6 +30,7 @@ const MyPageView = ({ pageData }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
   const audioRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     personalQuote: false,
     gallery: false,
@@ -74,7 +75,7 @@ const MyPageView = ({ pageData }) => {
       const isVerified = localStorage.getItem("isPasswordVerified") === "true";
       setIsPasswordVerified(isVerified);
       setModalPasswordOpen(!isVerified && pageData?.is_private);
-      setIsLoaded(true); // Set isLoaded to true after checking
+      setIsLoaded(true);
     }
   }, [pageData]);
 
@@ -283,12 +284,12 @@ const MyPageView = ({ pageData }) => {
               </div>
             </div>
             <div className="border text-lg font-playfair p-2 bg-[#f8f8f8] relative text-blue-light-900 h-11 border-gray-300">
-            <span class="material-icons-outlined absolute top-2.5 left-4 text-blue-light-900">location_on</span>
-            <div className="pl-10 text-lg">{pageData.location}</div>
+              <span className="material-icons-outlined absolute top-2.5 left-4 text-blue-light-900">
+                location_on
+              </span>
+              <div className="pl-10 text-lg">{pageData.address}</div>
+            </div>
           </div>
-          </div>
-        
-        
         </div>
       </section>
       {/* Tab Component */}
@@ -439,7 +440,7 @@ const MyPageView = ({ pageData }) => {
         </div>
       )}
       {/* Password Modal */}
-      {isModalPasswordOpen && (
+      {isModalPasswordOpen == 1 && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xl bg-white/30">
           <div className="bg-white m-4 rounded-lg shadow-lg p-8 max-w-md w-full relative">
             {/* Modal Content */}
@@ -449,7 +450,7 @@ const MyPageView = ({ pageData }) => {
             <form className="space-y-4" onSubmit={verifyPasswordHandler}>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"} // Toggle input type based on showPassword state
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

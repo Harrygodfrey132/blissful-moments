@@ -1,79 +1,77 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ROUTES } from "./utils/routes";
+import { ROUTES } from "./utils/routes"; // Import your routes object
 
 export async function middleware(req) {
-  const { pathname, searchParams } = req.nextUrl;
+  const { pathname } = req.nextUrl;
+
+  // Get the session token from cookies
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   const redirectTo = (path) => NextResponse.redirect(new URL(path, req.url));
 
+  // If no token exists, handle unauthenticated access
   if (!token) {
-    // Restrict unauthenticated users from protected pages
+    // Restrict access to these pages for unauthenticated users
     if (
-      [
-        ROUTES.Dashboard,
-        ROUTES.myPage,
-        ROUTES.Orders,
-        ROUTES.updatePassword,
-        ROUTES.contributionRequests,
-        ROUTES.accessRequests,
-        ROUTES.viewSubmittedData,
-        ROUTES.Verify_Email,
-        ROUTES.checkout,
-      ].some((route) => pathname.startsWith(route))
+      pathname.startsWith(ROUTES.Dashboard) ||
+      pathname.startsWith(ROUTES.myPage) ||
+      pathname.startsWith(ROUTES.Orders) ||
+      pathname.startsWith(ROUTES.updatePassword) ||
+      pathname.startsWith(ROUTES.contributionRequests) ||
+      pathname.startsWith(ROUTES.accessRequests) ||
+      pathname.startsWith(ROUTES.viewSubmittedData) ||
+      pathname.startsWith(ROUTES.Verify_Email) ||
+      pathname.startsWith(ROUTES.checkout)
     ) {
-      return redirectTo(ROUTES.Login);
+      return redirectTo(ROUTES.Login); // Redirect unauthenticated users to the login page
     }
+    return NextResponse.next(); // Allow access to other public pages
+  }
 
+  // Token is present, check its validity
+  const currentTime = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+  if (token.exp && currentTime > token.exp) {
+    return redirectTo(ROUTES.Login); // Token expired, redirect to login
+  }
+
+  // Token is valid, extract user state
+  const isVerified = token?.isVerified;
+
+  // If user is not verified
+  if (!isVerified) {
+    // Restrict access to verified user-only pages
+    if (
+      pathname.startsWith(ROUTES.Dashboard) ||
+      pathname.startsWith(ROUTES.myPage) ||
+      pathname.startsWith(ROUTES.Orders) ||
+      pathname.startsWith(ROUTES.updatePassword) ||
+      pathname.startsWith(ROUTES.contributionRequests) ||
+      pathname.startsWith(ROUTES.accessRequests) ||
+      pathname.startsWith(ROUTES.viewSubmittedData) ||
+      pathname.startsWith(ROUTES.checkout)
+    ) {
+      return redirectTo(ROUTES.Verify_Email);
+    }
     return NextResponse.next();
   }
 
-  // Check if token is expired
-  const currentTime = Math.floor(Date.now() / 1000);
-  if (token.exp && currentTime > token.exp) {
-    return redirectTo(ROUTES.Login);
-  }
-
-  const { isVerified, isSuspended } = token;
-
-  // Restrict suspended users to only Dashboard, Checkout, and Profile
-  if (isSuspended) {
-    if (
-      ![ROUTES.Dashboard, ROUTES.checkout, ROUTES.myPage].includes(pathname)
-    ) {
-      return redirectTo(ROUTES.Dashboard);
-    }
-  }
-
-  if (!isVerified && pathname !== ROUTES.Verify_Email) {
-    return redirectTo(ROUTES.Verify_Email);
-  }
-
-  // Prevent verified users from accessing verify-email page
+  // If user is verified, prevent them from accessing verify-email page
   if (pathname === ROUTES.Verify_Email) {
-    return redirectTo(ROUTES.Dashboard);
+    return redirectTo(ROUTES.Dashboard); // Redirect verified users to the dashboard
   }
 
-  // Prevent logged-in users from accessing login page
+  // If user is already logged in, prevent access to login page
   if (pathname === ROUTES.Login) {
     return redirectTo(ROUTES.Dashboard);
   }
 
-  // Ensure users can access verify-password page only with a token
+  // Ensure that users can only access the verify password page after sending OTP
   if (pathname === ROUTES.viewPasswordPageOTP) {
     const emailToken = searchParams.get("token");
     if (!emailToken) {
       return redirectTo(ROUTES.Login);
     }
-  }
-
-  // Handle 404 and 500 errors with custom error pages
-  if (pathname.startsWith("/404")) {
-    return redirectTo(ROUTES.NotFound);
-  }
-  if (pathname.startsWith("/500")) {
-    return redirectTo(ROUTES.ServerError);
   }
 
   return NextResponse.next();
