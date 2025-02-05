@@ -310,16 +310,17 @@ class PageController extends Controller
     public function show($pageName)
     {
         $currentUrl =  $pageName;
-        while ($redirect = UrlRedirect::where('original_url', $currentUrl)->first()) {
-            $currentUrl = $redirect->custom_url;
-        }
+
+        // while ($redirect = UrlRedirect::where('original_url', $currentUrl)->first()) {
+        //     $currentUrl = $redirect->custom_url;
+        // }
         // Fetch page data from the database based on the page name
         $page = Page::where('slug', $currentUrl)->activeNotSuspended()->first();
 
         // If the page is found, return the data
         if ($page) {
             return response()->json([
-                'page_data' => $page->refresh(),
+                'page_data' => $page,
             ]);
         }
 
