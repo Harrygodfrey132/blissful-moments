@@ -28,7 +28,7 @@ type PageData = {
 };
 
 export default function Timeline() {
-  const [isTimelineEnabled, setIsTimelineEnabled] = useState(true);
+  const [isTimelineEnabled, setIsTimelineEnabled] = useState(false);
   const [tagline, setTagline] = useState<string>("");
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const editableRef = useRef<HTMLSpanElement>(null);
@@ -55,6 +55,7 @@ export default function Timeline() {
     if (pageData?.timeline) {
       setTagline(pageData?.timeline.tagline || defaultTagline);
       setTimelineEvents(pageData?.timeline.events || defaultEvents);
+      setIsTimelineEnabled(pageData?.timeline.status || false);
     } else {
       setTagline(defaultTagline);
       setTimelineEvents(defaultEvents);

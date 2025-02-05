@@ -311,9 +311,9 @@ class PageController extends Controller
     {
         $currentUrl =  $pageName;
 
-        // while ($redirect = UrlRedirect::where('original_url', $currentUrl)->first()) {
-        //     $currentUrl = $redirect->custom_url;
-        // }
+        while ($redirect = UrlRedirect::where('original_url', $currentUrl)->first()) {
+            $currentUrl = $redirect->custom_url;
+        }
         // Fetch page data from the database based on the page name
         $page = Page::where('slug', $currentUrl)->activeNotSuspended()->first();
 
