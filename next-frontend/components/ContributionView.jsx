@@ -126,7 +126,7 @@ const ContributionView = ({ contributionData, userId }) => {
   return (
     <div className="mb-20 mt-20">
       <div className="flex items-center justify-between">
-        <div className="text-blue-light-900 font-playfair md:text-2xl text-xl border-b-4 border-blue-light-800 font-400 inline-block">
+        <div className="text-blue-light-900 font-playfair md:text-4xl text-3xl border-b-4 border-blue-light-800 font-400 inline-block">
           Contributions
         </div>
         {isContributionsEnabled && (
@@ -208,8 +208,8 @@ const ContributionView = ({ contributionData, userId }) => {
         )}
       </div>
 
-      <h1 className="md:text-xl relative text-xl font-playfair font-medium mb-6 mt-6">
-        <div className="border bg-[#f8f8f8] font-playfair w-full md:text-xl text-base text-blue-light-900 p-4 border-gray-300 ">
+      <h1 className="md:text-3xl relative text-3xl font-playfair font-medium mb-6 mt-6">
+        <div className="border bg-[#f8f8f8] font-playfair w-full text-left text-blue-light-900 p-4 border-gray-300 ">
           {tagline}
         </div>
         <Image
@@ -226,7 +226,7 @@ const ContributionView = ({ contributionData, userId }) => {
           {contributions.map((contribution, index) => (
             <div
               key={index}
-              className="relative mb-4 break-inside-avoid p-2 border h-auto border-gray-300 bg-[#f8f8f8] shadow-md"
+              className="relative mb-4 break-inside-avoid text-lg text-left p-2 border h-auto border-gray-300 bg-[#f8f8f8] shadow-md"
             >
               <p className="border-dashed border-gray-300 bg-[#f8f8f8] font-playfair text-blue-light-900 p-3">
                 {contribution.message}

@@ -230,7 +230,7 @@ const MyPageView = ({ pageData }) => {
         }}
       ></header>
       {/* Personal Info Section */}
-      <section className="flex flex-col md:flex-row px-4 md:px-20 personal-info">
+      <section className="flex flex-col md:flex-row px-4 container mx-auto px-4 !max-w-6xl personal-info">
         <div className="mt-[-50px] mx-auto md:mx-0 profile-thumb">
           <div className="relative bg-[#EAEAEA] p-2 w-[330px] h-[300px]">
             <img
@@ -241,28 +241,28 @@ const MyPageView = ({ pageData }) => {
           </div>
         </div>
         <div className="flex-1">
-          <div className="space-y-4 md:p-4 p-0">
-            <h1 className="text-xl md:text-3xl font-playfair justify-center md:justify-start flex flex-wrap gap-2 font-medium mb-4 md:mt-0 mt-5">
-              <div className="border bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
+          <div className="space-y-4 md:pt-4 md:pb-4 md:pr-0 md:pl-4 p-0">
+            <h1 className="text-3xl md:text-5xl font-playfair justify-center md:justify-start flex flex-wrap gap-4 font-medium mb-6 md:mt-0 mt-10">
+              <div className="border bg-[#f8f8f8] text-blue-light-900 md:pt-10 pt-6 p-4 border-gray-300">
                 {pageData.first_name}
               </div>
-              <div className="border bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
+              <div className="border md:pt-10 pt-6 bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
                 {pageData.middle_name}
               </div>
-              <div className="border bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
+              <div className="border md:pt-10 pt-6 bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
                 {pageData.last_name}
               </div>
             </h1>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start items-center">
+            <div className="flex flex-wrap gap-4 font-playfair justify-center md:justify-start items-center">
               {/* Date of Birth */}
               <div className="flex gap-2">
-                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-20">
+                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[107px]">
                   {formatDate(pageData.date_of_birth).month}
                 </div>
-                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[121px]">
+                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[132px]">
                   {formatDate(pageData.date_of_birth).day}
                 </div>
-                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-20">
+                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[107px]">
                   {formatDate(pageData.date_of_birth).year}
                 </div>
               </div>
@@ -271,21 +271,24 @@ const MyPageView = ({ pageData }) => {
               </div>
               {/* Death Date */}
               <div className="flex gap-2">
-                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-20">
+                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[107px]">
                   {formatDate(pageData.death_date).month}
                 </div>
-                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[121px]">
+                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[132px]">
                   {formatDate(pageData.death_date).day}
                 </div>
-                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-20">
+                <div className="p-2 border bg-[#f8f8f8] text-center md:text-left font-playfair !leading-8 text-lg h-12 border-gray-300 text-blue-light-900 font-medium w-[107px]">
                   {formatDate(pageData.death_date).year}
                 </div>
               </div>
             </div>
+            <div className="border text-lg font-playfair p-2 bg-[#f8f8f8] relative text-blue-light-900 h-11 border-gray-300">
+            <span class="material-icons-outlined absolute top-2.5 left-4 text-blue-light-900">location_on</span>
+            <div className="pl-10 text-lg">{pageData.location}</div>
           </div>
-          <div className="border bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300">
-            {pageData.location}
           </div>
+        
+        
         </div>
       </section>
       {/* Tab Component */}

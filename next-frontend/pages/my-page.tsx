@@ -35,6 +35,7 @@ export default function Home() {
     else setIsRegisterModalOpen(false);
   };
 
+
   useEffect(() => {
     const fetchUserPage = async () => {
       if (fetchCalledRef.current || status === "loading" || !session?.user?.accessToken) {
