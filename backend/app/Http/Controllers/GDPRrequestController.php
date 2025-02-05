@@ -19,7 +19,7 @@ class GDPRrequestController extends Controller
          'end_date' => $request->input('end_date', ''),
       ];
 
-      $requests = GDPRRequest::searchFilter($data)->with('user')->paginate(10);
+      $requests = GDPRRequest::searchFilter($data)->with('user')->latest()->paginate(10);
 
       // Return AJAX response if the request is AJAX
       if ($request->ajax()) {
@@ -63,10 +63,15 @@ class GDPRrequestController extends Controller
    public function requestAccountDeletion(Request $request)
    {
       try {
+         $request->validate([
+            'reason' => "required"
+         ]);
+
          $user = $request->user();
 
          GDPRRequest::create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'comments' => $request->reason
          ]);
 
          return response()->json([

@@ -1,10 +1,45 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ROUTES } from '../utils/routes'
+import axios from 'axios';
+import { API } from '../utils/api';
+
+// Define Plan Type
+type Plan = {
+  id: number;
+  name: string;
+  price: string;
+  description: string;
+  features: string[]; // assuming features is a JSON string
+  slug: string;
+};
 
 export default function PricingTables() {
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchPlanListing = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.fetchAllPlans}`);
+      setPlans(response.data.plans);
+      console.log(response.data.plans);
+      
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching plans:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlanListing();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
@@ -12,50 +47,49 @@ export default function PricingTables() {
       <div id="pricing-tables" className="max-w-sm mx-auto grid gap-8 lg:grid-cols-3 lg:gap-6 items-start lg:max-w-none pt-4">
 
         {/* Pricing table 1 */}
-        <div className="relative flex flex-col h-full px-6 py-5 bg-white shadow-lg" data-aos="fade-up">
-          <div className="mb-4 pb-4 border-b border-slate-200">
-            <div className="text-lg font-semibold text-slate-800 mb-1">Individual</div>
-            <div className="inline-flex items-baseline mb-3">
-              <span className="h3 font-medium text-slate-500">£</span>
-              <span className="h2 leading-7 font-playfair-display text-slate-800">199</span>
+        <div>
+          {plans.map((plan) => (
+            <div
+              key={plan.id}
+              className="relative flex flex-col h-full px-6 py-5 bg-white shadow-lg w-full"
+              data-aos="fade-up"
+            >
+              <div className="mb-4 pb-4 border-b border-slate-200">
+                <div className="text-lg font-semibold text-slate-800 mb-1">{plan.name}</div>
+                <div className="inline-flex items-baseline mb-3">
+                  <span className="h3 font-medium text-slate-500">£</span>
+                  <span className="h2 leading-7 font-playfair-display text-slate-800">{plan.price}</span>
+                </div>
+                <div className="text-slate-500">{plan.description}</div>
+              </div>
+              <div className="font-medium mb-3">Features include:</div>
+              <ul className="text-slate-500 space-y-3 grow mb-6">
+                {plan.features.map((feature: string, index: number) => (
+                  <li key={index} className="flex items-center">
+                    <svg
+                      className="w-3 h-3 fill-current text-emerald-500 mr-3 shrink-0"
+                      viewBox="0 0 12 12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
+                    </svg>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="p-3 rounded bg-slate-50">
+                <Link
+                  className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group"
+                  href={`/checkout/${plan.slug}`}
+                >
+                  Buy Now{" "}
+                  <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                    -&gt;
+                  </span>
+                </Link>
+              </div>
             </div>
-            <div className="text-slate-500">and then only £3 monthly after the first year. Designed for a loved one. </div>
-          </div>
-          <div className="font-medium mb-3">Features include:</div>
-          <ul className="text-slate-500 space-y-3 grow mb-6">
-            <li className="flex items-center">
-              <svg className="w-3 h-3 fill-current text-emerald-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-              </svg>
-              <span>Handmade QR code plaque</span>
-            </li>
-            <li className="flex items-center">
-              <svg className="w-3 h-3 fill-current text-emerald-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-              </svg>
-              <span>1 year free webpage hosting</span>
-            </li>
-            <li className="flex items-center">
-              <svg className="w-3 h-3 fill-current text-emerald-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-              </svg>
-              <span>Custom URL redirect</span>
-            </li>
-            <li className="flex items-center">
-              <svg className="w-3 h-3 fill-current text-emerald-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
-              </svg>
-              <span>Customised webpage</span>
-            </li>
-          </ul>
-          <div className="p-3 rounded bg-slate-50">
-            <Link className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href={ROUTES.Register}>
-              Buy Now <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
-            </Link>
-            {/* <a className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group" href="https://buy.stripe.com/5kAeXy0sY9Wed7a000">
-          Buy Now <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
-          </a> */}
-          </div>
+          ))}
         </div>
 
         {/* Pricing table 2 */}

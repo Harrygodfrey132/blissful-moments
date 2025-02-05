@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\AppConstant;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -91,5 +92,11 @@ class Page extends Model
     public function contributions()
     {
         return $this->hasOne(Contribution::class);
+    }
+
+    public function scopeActiveNotSuspended($query)
+    {
+        return $query->where('is_registered', AppConstant::ACTIVE)
+            ->where('is_suspended', AppConstant::IN_ACTIVE);
     }
 }

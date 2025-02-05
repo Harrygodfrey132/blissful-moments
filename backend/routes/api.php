@@ -18,6 +18,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PersonalQuoteController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\UserController;
@@ -41,7 +42,7 @@ Route::post('/validate-password-reset-token', [AuthController::class, 'validateP
 Route::post('/update-new-password', [AuthController::class, 'updateNewPassword']);
 Route::get('/get-recaptcha-key', [ConfigurationController::class, 'fetchReCaptchaKey']);
 Route::post('/rsubmit-request-demo', [ContactController::class, 'requestDemo']);
-
+Route::get('/plans/listing', [PlanController::class, 'plansListing']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {

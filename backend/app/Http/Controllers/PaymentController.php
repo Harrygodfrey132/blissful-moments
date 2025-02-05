@@ -52,7 +52,7 @@ class PaymentController extends Controller
 
             // Create a Checkout Session
             $session = Session::create([
-                'payment_method_types' => ['card', 'apple_pay', 'google_pay'],
+                'payment_method_types' => ['card'],
                 'line_items' => [
                     [
                         'price_data' => [

@@ -181,4 +181,14 @@ class UserController extends Controller
             return back()->with('error', 'Unable to reset password!' . $th->getMessage());
         }
     }
+
+    public function showUserPage(User $user)
+    {
+        $page = $user->page->activeNotSuspended()->first();
+        if (!$page) {
+            return back()->with('error', 'Page is not registered or suspended');
+        }
+
+        return view('admin.users.partials.page_show', compact('page'));
+    }
 }

@@ -17,7 +17,12 @@ class Plan extends Model
         'description',
         'price',
         'billing_cycle',
-        'status'
+        'status',
+        'features'
+    ];
+
+    protected $casts = [
+        'features' => 'array',
     ];
 
     /**
@@ -34,10 +39,6 @@ class Plan extends Model
         ];
     }
 
-    public function features(): HasMany
-    {
-        return $this->hasMany(PlanFeature::class);
-    }
 
     public function scopePlansSearchFilter(Builder $query, $data)
     {

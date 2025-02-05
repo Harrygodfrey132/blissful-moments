@@ -91,7 +91,7 @@ const useVerifyEmail = () => {
 
       if (axiosError.response?.status === 401) {
         toast.error("Invalid OTP or unauthorized request.");
-        router.push(ROUTES.Login);
+        return;
       } else {
         toast.error(
           axiosError.response?.data?.message ||

@@ -74,7 +74,7 @@ class AuthController extends Controller
         // Generate a random 4-digit OTP
         $otpValue = random_int(1000, 9999);
 
-        // Define OTP expiration (e.g., 5 minutes from now)
+        // Define OTP expiration (e.g., 10 minutes from now)
         $expiry_time = (int)(ConfigHelper::getConfig('conf_otp_expiration_time') ?? 10);
         $expiresAt = now()->addMinutes($expiry_time);
 
@@ -93,10 +93,10 @@ class AuthController extends Controller
     private function sendEmailNotifications($user, $otp)
     {
         try {
-            $welcomeTemplate = Template::where('name' , Template::WELCOME_EMAIL )->first();
+            $welcomeTemplate = Template::where('name', Template::WELCOME_EMAIL)->first();
             Mail::to($user->email)->send(new WelcomeEmail($user, $welcomeTemplate));
-            $accountVerificationEmail = Template::where('name' , Template::ACCOUNT_VERIFICATION_EMAIL )->first();
-            Mail::to($user->email)->send(new AccountVerificationEmail($user, $accountVerificationEmail , $otp));
+            $accountVerificationEmail = Template::where('name', Template::ACCOUNT_VERIFICATION_EMAIL)->first();
+            Mail::to($user->email)->send(new AccountVerificationEmail($user, $accountVerificationEmail, $otp));
         } catch (\Throwable $th) {
             Log::error('Error sending email notifications', ['error' => $th]);
         }
@@ -131,7 +131,7 @@ class AuthController extends Controller
     public function validateOTP(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required',
+            'email' => 'required|email',
             'code' => 'required'
         ]);
 
@@ -142,23 +142,25 @@ class AuthController extends Controller
         if (!$otp) {
             return response()->json(['status' => false, 'message' => 'Invalid OTP'], 401);
         }
+        $expiredTime = (int)ConfigHelper::getConfig('conf_otp_expiration_time') ?? 10;
+        // Check if OTP is expired
+        if ($otp->created_at->addMinutes($expiredTime) < now()) { // Assuming OTP expires in 10 minutes
+            $otp->delete();
+            return response()->json(['status' => false, 'message' => 'OTP has expired.'], 401);
+        }
 
-        // if (!$otp->isValid()) {
-        //     return response()->json(['status' => false, 'message' => 'OTP is expired or already used.'], 401);
-
-        //     return ['status' => false, 'message' => 'OTP is expired or already used.'];
-        // }
-
-        // Mark OTP as used
-        $otp->update(['is_used' => true]);
+        // Mark OTP as used and delete it
         $otp->user->email_verified_at = now();
         $otp->user->save();
+        $otp->delete();
+
         return response()->json([
             'status' => true,
             'message' => 'OTP verified successfully.',
             'isVerified' => $otp->user->is_verified
         ]);
     }
+
 
     public function logout(Request $request)
     {
@@ -293,6 +295,4 @@ class AuthController extends Controller
             'message' => 'Password updated successfully.',
         ], 200);
     }
-
-
 }

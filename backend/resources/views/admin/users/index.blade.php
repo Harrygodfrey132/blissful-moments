@@ -122,10 +122,13 @@
                                                         </a>
 
                                                         <!-- Page View Icon -->
-                                                        <a href="{{ route('user.page.view', $user) }}"
-                                                            class="text-blue-500 w-6hover:text-blue-700" title="View Page">
-                                                            <x-icon-page class="w-5 h-5" />
-                                                        </a>
+                                                        @if ($user->page)
+                                                            <a href="{{ route('users.page.view', $user) }}"
+                                                                class="text-blue-500 w-6hover:text-blue-700"
+                                                                title="View Page">
+                                                                <x-icon-page class="w-5 h-5" />
+                                                            </a>
+                                                        @endif
 
                                                         <!-- Page Password Reset Icon -->
                                                         <button
@@ -154,5 +157,4 @@
             </div>
         </div>
     </div>
-
 @endsection

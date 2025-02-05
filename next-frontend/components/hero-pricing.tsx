@@ -1,6 +1,6 @@
 import PricingTables from './pricing-tables';
 
-export default function HeroPricing() {  
+export default function HeroPricing() {
   return (
     <section className="relative">
 

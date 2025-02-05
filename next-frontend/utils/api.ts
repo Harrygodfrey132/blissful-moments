@@ -87,4 +87,8 @@ export const API = {
   createOrder: "/orders/create",
   getOrderDetails: "/getOrderDetails",
   createCheckoutSession: "/create-checkout-session",
+
+  // Plans Listing
+
+  fetchAllPlans: "/plans/listing",
 };

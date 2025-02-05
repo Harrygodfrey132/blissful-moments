@@ -23,4 +23,5 @@ export const ROUTES = {
   viewPasswordPageOTP: "/verify-password-otp",
   termsAndConditions: "/terms-and-conditions",
   checkout: "/checkout",
+  NotFound:"/page-not-found"
 };

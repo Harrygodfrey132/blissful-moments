@@ -39,6 +39,8 @@ Route::prefix('admin')->group(function () {
             Route::post('/multi-delete', [UserController::class, 'multiDelete'])->name('multiDelete');
             Route::get('/{user}/page/password/edit', [UserController::class, 'editPagePassword'])->name('page.password.edit');
             Route::post('/{user}/page/password/update', [UserController::class, 'updateUserPagePassword'])->name('page.password.reset');
+            Route::get('/{user}/page/view', [UserController::class, 'showUserPage'])->name('page.view');
+        
         });
 
         Route::prefix('plans')->name('plans.')->group(function () {
@@ -90,7 +92,6 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::post('/user/update-details', [UserDetailController::class, 'update']);
-        Route::get('/user/{page}/page/view', [PageController::class, 'showUserPage'])->name('user.page.view');
     });
 });
 Route::get('/orderdetails', function () {

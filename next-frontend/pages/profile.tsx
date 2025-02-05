@@ -26,6 +26,7 @@ const ProfilePage = () => {
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
+    const [reason, setReason] = useState("");
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -156,22 +157,32 @@ const ProfilePage = () => {
     };
 
     const handleDelete = async () => {
-        const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}${API.requestAccountDelete}`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        if (response.status == 200) {
-            toast.success("Request has been submitted successfully! Please wait for 24-48 hours.")
-            setOpen(false);
+        if (!reason?.trim()) {
+            toast.error("Please provide a reason for account deletion");
             return;
         }
-        toast.error("Something went wrong. Please try again later!");
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}${API.requestAccountDelete}`,
+                { reason },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                toast.success("Request has been submitted successfully! Please wait for 24-48 hours.");
+                setOpen(false);
+            } else {
+                toast.error("Something went wrong. Please try again later!");
+            }
+        } catch (error) {
+            toast.error("An error occurred. Please try again.");
+            console.error("Delete request error:", error);
+        }
     };
     return (
         <div>
@@ -383,13 +394,16 @@ const ProfilePage = () => {
                                     {open && (
                                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                                             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                                                <h2 className="text-red-600 text-2xl text-center font-bold">Are you sure?</h2>
-                                                <p className="text-gray-700 text-sm mt-2 text-center">
+                                                <h2 className="text-red-600 text-2xl  font-bold">Are you sure?</h2>
+                                                <p className="text-gray-700 text-sm mt-2 ">
                                                     This action is <span className="font-bold">irreversible</span>. Your account and all associated data will be permanently deleted.
                                                 </p>
-                                                <label className='mt-4 mb-1 text-center text-black text-sm block font-medium'>Enter Reason for deleting account</label>
-                                                <textarea className="border-gray-300 w-full rounded-md" name="reason" id="rejectReason"></textarea>
-                                                <div className="mt-4 flex justify-center gap-2 space-x-2">
+                                                <label className='mt-4 mb-1  text-black text-sm block font-medium'>Enter Reason for deleting account
+                                                    <sup className='text-red-500 font-extrabold text-md'>* required</sup>
+                                                </label>
+                                                <textarea className="border-gray-300 w-full rounded-md" name="reason" required id="rejectReason" onChange={(e) => setReason(e.target.value)}
+                                                    value={reason}></textarea>
+                                                <div className="mt-4 flex justify-end gap-2 space-x-2">
                                                     <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" onClick={() => setOpen(false)}>
                                                         Cancel
                                                     </button>

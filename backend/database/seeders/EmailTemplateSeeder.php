@@ -2472,5 +2472,6 @@ class EmailTemplateSeeder extends Seeder
                 '{failure_reason}' => 'Reason for Payment Failure',
             ]),
         ]);
+        
     }
 }

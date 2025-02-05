@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\AppConstant;
 use App\Models\Plan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PlanController extends Controller
 {
@@ -37,6 +39,8 @@ class PlanController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'features' => 'required|array|min:1',
+            'features.*' => 'required|string|max:255',
         ]);
 
         // Create a new plan using the validated data
@@ -45,6 +49,7 @@ class PlanController extends Controller
             'description' => $validated['description'] ?? null,
             'billing_cycle' => 12,
             'price' => $validated['price'],
+            'features' => $validated['features']
         ]);
 
         if ($request->ajax()) {
@@ -64,18 +69,29 @@ class PlanController extends Controller
 
     public function update(Request $request, Plan $plan)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'billing_cycle' => 'required|integer|in:30,180,365',
-            'price' => 'required|numeric|min:0',
-        ]);
+        try {
+            // Validate the incoming data
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                // 'billing_cycle' => 'required|integer|in:30,180,365',
+                'price' => 'required|numeric|min:0',
+                'features' => 'required|array|min:1',
+                'features.*' => 'required|string|max:255',
+            ]);
+            // Update the plan
+            $plan->update($validated);
 
-        if (!$plan->update($validated)) {
-            return back()->with('error', 'Unable to update record');
+            return back()->with('success', 'Record updated successfully!');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Plan update failed: ' . $e->getMessage());
+
+            return back()->with('error', 'Something went wrong! Please try again.');
         }
-        return back()->with('success', 'Record updated successfully!');
     }
+
+
 
     public function delete(Plan $plan)
     {
@@ -119,5 +135,16 @@ class PlanController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to update status.'], 500);
         }
+    }
+
+    /**
+     * Frontend Plans Listing
+     */
+
+    public function plansListing()
+    {
+        $plans = Plan::where('status', AppConstant::ACTIVE)->get();
+
+        return response()->json(['plans' => $plans]);
     }
 }

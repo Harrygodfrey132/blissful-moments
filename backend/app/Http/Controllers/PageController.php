@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\AppConstant;
 use App\Models\Page;
+use App\Models\UrlRedirect;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,19 +48,36 @@ class PageController extends Controller
                     $page->personalQuote()->create(['page_id' => $page->id, 'quote' => "Share Something special for loved one"]);
                     $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
                     $page->obituaries()->create(['tagline' => "Enter a memorable tagline here.", 'content' => "Add a heartfelt message.", 'page_id' => $page->id]);
-
-                    $timeline = $page->timeline()->create(['tagline' => "Your Timeline Goes Here", 'page_id' => $page->id]);
-                    $timeline->events()->create(['timeline_id' => $timeline->id, 'event_date' => now(), 'title' => "New Event", 'description' => "Event description", 'location' => "Event location"]);
-
                     $page->socialMediaData()->create(['page_id' => $page->id, 'content' => "This page is a forever tribute."]);
-                    $favourite = $page->favourites()->create(['page_id' => $page->id, 'tagline' => "A place to remember favourite things"]);
-                    $favourite->favouriteEvents()->create(['favourite_id' => $favourite->id, 'title' => "Default Title", 'description' => "Default Description"]);
 
-                    $page->contributions()->create(['page_id' => $page->id, 'tagline' => "This is a place to celebrate the life."]);
+                    $timeline = $page->timeline()->create(['tagline' => "Your Timeline Goes Here", 'page_id' => $page->id, 'status' => AppConstant::IN_ACTIVE]);
+                    $timeline->events()->create(['timeline_id' => $timeline->id, 'event_date' => now(), 'title' => "New Event", 'description' => "Event description", 'location' => "Event location"]);
+                    $favourite = $page->favourites()->create(['page_id' => $page->id, 'tagline' => "A place to remember favourite things", 'status' => AppConstant::IN_ACTIVE]);
+                    $favourite->favouriteEvents()->create(['favourite_id' => $favourite->id, 'title' => "Default Title", 'description' => "Default Description"]);
+                    $page->contributions()->create(['page_id' => $page->id, 'tagline' => "This is a place to celebrate the life.", 'status' => AppConstant::IN_ACTIVE]);
 
                     return $page; // Return the newly created page
                 });
             } else {
+                // Store the old URL before updating the page name
+                if ($page->slug && $page->slug !== $validated['name']) {
+                    // Find the last redirect for this page
+                    $lastRedirect = UrlRedirect::where('original_url',  $page->slug)->first();
+
+                    if ($lastRedirect) {
+                        // If there's an existing redirect, update the chain
+                        UrlRedirect::create([
+                            'original_url' => $lastRedirect->original_url,
+                            'custom_url' =>  $validated['name'],  // This will chain the old URL to the new one
+                        ]);
+                    } else {
+                        // Otherwise, create the first redirect link
+                        UrlRedirect::create([
+                            'original_url' =>  $page->slug,
+                            'custom_url' =>  $validated['name'],
+                        ]);
+                    }
+                }
                 $page->update([
                     'name' => $validated['name'],
                     'is_private' => $validated['is_private'],
@@ -177,7 +196,9 @@ class PageController extends Controller
             return response()->json(['error' => 'Domain is required.'], 400);
         }
 
-        $isAvailable = !Page::where('name', $name)->exists();
+        $isPageAvailable = !Page::where('name', $name)->exists();
+        $isRedirectAvailable = !UrlRedirect::where('custom_url', $name)->exists();
+        $isAvailable = $isPageAvailable && $isRedirectAvailable;
 
         return response()->json([
             'isAvailable' => $isAvailable,
@@ -288,8 +309,12 @@ class PageController extends Controller
 
     public function show($pageName)
     {
+        $currentUrl =  $pageName;
+        while ($redirect = UrlRedirect::where('original_url', $currentUrl)->first()) {
+            $currentUrl = $redirect->custom_url;
+        }
         // Fetch page data from the database based on the page name
-        $page = Page::where('slug', $pageName)->first();
+        $page = Page::where('slug', $currentUrl)->activeNotSuspended()->first();
 
         // If the page is found, return the data
         if ($page) {
@@ -309,8 +334,7 @@ class PageController extends Controller
             'page_id' => 'required|',
         ]);
 
-        $page = Page::where('id', $request->page_id)->first();
-
+        $page = Page::where('id', $request->page_id)->activeNotSuspended()->first();
         if (Hash::check($request->password, $page->password)) {
             return response()->json([
                 'success' => true,

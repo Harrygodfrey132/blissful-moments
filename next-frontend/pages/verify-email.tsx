@@ -2,16 +2,18 @@ import { useState, useEffect } from "react";
 import VerifyEmailForm from "../components/VerifyEmailForm";
 import { useAuthContext } from "../context/AuthProvider";
 import Image from "next/image";
+import useVerifyEmail from "../hooks/useVerifyEmail";
 
 const VerifyEmailPage = () => {
   const [loading, setLoading] = useState(true);
   const { user, loading: userLoading } = useAuthContext();
+  const { isSubmitting } = useVerifyEmail();
 
   useEffect(() => {
-    if (!userLoading) {
+    if (!userLoading && !isSubmitting) {
       setLoading(false);
     }
-  }, [user, userLoading]);
+  }, [userLoading, isSubmitting]);
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-900 bg-opacity-50">
@@ -43,8 +45,8 @@ const VerifyEmailPage = () => {
 
       {/* Loader Overlay */}
       {loading && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <span className="loader w-20 h-20 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-[100]">
+          <span className="w-20 h-20 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
           <span className="ml-2 text-white font-semibold text-lg">Loading...</span>
         </div>
       )}
