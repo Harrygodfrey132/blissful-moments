@@ -172,7 +172,7 @@ class UserController extends Controller
                 'password' => 'required|min:8|confirmed',
             ]);
 
-            $user->page->update([
+            $user->update([
                 'password' => Hash::make($request->password),
             ]);
 
@@ -189,6 +189,6 @@ class UserController extends Controller
             return back()->with('error', 'Page is not registered or suspended');
         }
 
-        return view('admin.users.partials.page_show', compact('page'));
+        return back()->with('redirect_url', env('FRONTEND_URL') . '/memory/' . $page->name);
     }
 }

@@ -36,6 +36,7 @@ class PageController extends Controller
             $page = Page::where('user_id', $validated['user_id'])->first();
 
             if (!$page) {
+                // Create new page
                 $page = DB::transaction(function () use ($validated) {
                     $page = Page::create([
                         'user_id' => $validated['user_id'],
@@ -49,35 +50,31 @@ class PageController extends Controller
                     $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
                     $page->obituaries()->create(['tagline' => "Enter a memorable tagline here.", 'content' => "Add a heartfelt message.", 'page_id' => $page->id]);
                     $page->socialMediaData()->create(['page_id' => $page->id, 'content' => "This page is a forever tribute."]);
-
                     $timeline = $page->timeline()->create(['tagline' => "Your Timeline Goes Here", 'page_id' => $page->id, 'status' => AppConstant::IN_ACTIVE]);
                     $timeline->events()->create(['timeline_id' => $timeline->id, 'event_date' => now(), 'title' => "New Event", 'description' => "Event description", 'location' => "Event location"]);
                     $favourite = $page->favourites()->create(['page_id' => $page->id, 'tagline' => "A place to remember favourite things", 'status' => AppConstant::IN_ACTIVE]);
                     $favourite->favouriteEvents()->create(['favourite_id' => $favourite->id, 'title' => "Default Title", 'description' => "Default Description"]);
                     $page->contributions()->create(['page_id' => $page->id, 'tagline' => "This is a place to celebrate the life.", 'status' => AppConstant::IN_ACTIVE]);
 
-                    return $page; // Return the newly created page
+                    return $page;
                 });
             } else {
-                // Store the old URL before updating the page name
+                // If name is changing, store the old URL for redirection
                 if ($page->slug && $page->slug !== $validated['name']) {
-                    // Find the last redirect for this page
-                    $lastRedirect = UrlRedirect::where('original_url',  $page->slug)->first();
+                    // Find the last custom URL (latest page name)
+                    $lastRedirect = UrlRedirect::where('custom_url', $page->slug)->orderByDesc('id')->first();
 
-                    if ($lastRedirect) {
-                        // If there's an existing redirect, update the chain
-                        UrlRedirect::create([
-                            'original_url' => $lastRedirect->original_url,
-                            'custom_url' =>  $validated['name'],  // This will chain the old URL to the new one
-                        ]);
-                    } else {
-                        // Otherwise, create the first redirect link
-                        UrlRedirect::create([
-                            'original_url' =>  $page->slug,
-                            'custom_url' =>  $validated['name'],
-                        ]);
-                    }
+                    // If a redirect exists, chain it; otherwise, create a new redirect
+                    $originalUrl = $lastRedirect ? $lastRedirect->original_url : $page->slug;
+
+                    // Create the redirect chain
+                    UrlRedirect::create([
+                        'original_url' => $originalUrl, // Always chain from the last known original
+                        'custom_url' => $validated['name'], // Point to the latest page name
+                    ]);
                 }
+
+                // Update page with new name
                 $page->update([
                     'name' => $validated['name'],
                     'is_private' => $validated['is_private'],
@@ -87,7 +84,7 @@ class PageController extends Controller
 
             return response()->json([
                 'message' => 'Record updated successfully.',
-                'page' => $page,
+                'page' => $page->refresh(),
             ], 200);
         } catch (\Throwable $th) {
             Log::error('Error creating/updating page', [
@@ -100,6 +97,7 @@ class PageController extends Controller
             ], 500);
         }
     }
+
 
     /**
      * Update personal information for the user's page.
@@ -309,24 +307,25 @@ class PageController extends Controller
 
     public function show($pageName)
     {
-        $currentUrl =  $pageName;
+        $currentUrl = $pageName;
 
-        while ($redirect = UrlRedirect::where('original_url', $currentUrl)->first()) {
-            $currentUrl = $redirect->custom_url;
+        $redirect = UrlRedirect::where('custom_url', $currentUrl)
+            ->first();
+        if ($redirect) {
+            $currentUrl = $redirect->original_url;
         }
-        // Fetch page data from the database based on the page name
+        // Fetch page data from the database based on the resolved page name
         $page = Page::where('slug', $currentUrl)->activeNotSuspended()->first();
 
-        // If the page is found, return the data
         if ($page) {
             return response()->json([
                 'page_data' => $page,
             ]);
         }
 
-        // If the page is not found, return a 404 error
         return response()->json(['error' => 'Page not found'], 404);
     }
+
 
     public function verifyPassword(Request $request)
     {
