@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
 use App\Models\Plan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -146,5 +147,16 @@ class PlanController extends Controller
         $plans = Plan::where('status', AppConstant::ACTIVE)->get();
 
         return response()->json(['plans' => $plans]);
+    }
+
+    public function toggleSuspend(User $user)
+    {
+        $user->page->is_suspended = !$user->page->is_suspended;
+        $user->page->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $user->is_suspended ? 'User suspended successfully' : 'User unsuspended successfully'
+        ]);
     }
 }

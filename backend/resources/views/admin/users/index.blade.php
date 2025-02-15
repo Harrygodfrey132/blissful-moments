@@ -87,7 +87,7 @@
                                                 <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                                     <div class="flex items-center">
                                                         <span
-                                                            class="inline-flex items-center rounded-md  px-2 py-1 text-xs font-medium  ring-1 ring-inset 
+                                                            class="inline-flex items-center rounded-md  px-2 py-1 text-xs font-medium  ring-1 ring-inset
                                                     {{ $user->is_verified ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-yellow-50 text-yellow-700 ring-yellow-600/20' }}
                                                     ">{{ $user->is_verified ? 'Verified' : 'Pending' }}</span>
                                                         </p>
@@ -96,10 +96,30 @@
                                                 <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
                                                     <div class="flex items-center">
                                                         <span
-                                                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset 
-                                                            {{ $user->page && $user->page->is_registered ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-yellow-50 text-yellow-700 ring-yellow-600/20' }}">
-                                                            {{ $user->page && $user->page->is_registered ? 'Active' : 'Pending' }}
+                                                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset
+                                                        @if ($user->page) @if ($user->page->is_registered && !$user->page->is_suspended)
+                                                                bg-green-50 text-green-700 ring-green-600/20
+                                                            @elseif (!$user->page->is_registered)
+                                                                bg-yellow-50 text-yellow-700 ring-yellow-600/20
+                                                            @elseif ($user->page->is_registered && $user->page->is_suspended)
+                                                                bg-red-50 text-red-700 ring-red-600/20 @endif
+                                                            @else
+                                                            bg-gray-50 text-gray-700 ring-gray-600/20
+                                                        @endif">
+
+                                                            @if ($user->page)
+                                                                @if ($user->page->is_registered && !$user->page->is_suspended)
+                                                                    Active
+                                                                @elseif (!$user->page->is_registered)
+                                                                    Pending
+                                                                @elseif ($user->page->is_registered && $user->page->is_suspended)
+                                                                    Expired
+                                                                @endif
+                                                            @else
+                                                                No Page
+                                                            @endif
                                                         </span>
+
                                                     </div>
                                                 </td>
                                                 <td
@@ -113,8 +133,7 @@
                                                         </a>
 
                                                         <!-- Delete Icon -->
-                                                        <a href="javascript:void(0);"
-                                                            data-userId="{{ encrypt($user->id) }}"
+                                                        <a href="javascript:void(0);" data-userId="{{ encrypt($user->id) }}"
                                                             onclick="deleteModalHandler(this)"
                                                             data-url="{{ route('users.destroy', $user) }}"
                                                             class="text-red-500 hover:text-red-700">
@@ -138,6 +157,21 @@
                                                             class="text-gray-600 hover:text-black {{ $user->page ? 'cursor-pointer' : 'cursor-not-allowed' }}">
                                                             <x-icon-lock class="w-5 h-5" />
                                                         </button>
+                                                        @if ($user->page && $user->page->is_registered && !$user->page->is_suspended)
+                                                            <!-- Suspend/Unsuspend Button -->
+                                                            <button title="Suspend Account"
+                                                                @click.prevent="toggleSuspend('{{ route('plans.update.toggleSuspend', $user->id) }}', {{ $user->is_suspended ? 'false' : 'true' }})">
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    class="w-5 h-5 text-red-600 hover:text-black"
+                                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                    stroke-width="2" stroke-linecap="round"
+                                                                    stroke-linejoin="round">
+                                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                                    <line x1="4.93" y1="4.93" x2="19.07"
+                                                                        y2="19.07"></line>
+                                                                </svg>
+                                                            </button>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -158,3 +192,31 @@
         </div>
     </div>
 @endsection
+<script>
+    function toggleSuspend(url, currentState) {
+        if (!confirm(`Are you sure you want to ${currentState === 'true' ? 'suspend' : 'unsuspend'} this user?`)) {
+            return;
+        }
+
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    suspend: currentState === 'true'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload(); // Reload page to reflect changes
+                } else {
+                    alert('Something went wrong!');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>

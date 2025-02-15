@@ -47,7 +47,7 @@
             class="p-2  mr-4 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring">
             <x-icon-store />
         </a>
-        <div class="items-center hidden space-x-3 md:flex">
+        {{-- <div class="items-center hidden space-x-3 md:flex">
             <!-- Notification Button -->
             <div class="relative" x-data="{ isOpen: false }" x-cloak>
                 <!-- red dot -->
@@ -82,7 +82,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <button class="relative inline-flex items-center p-2  rounded" @click="panel = !panel"
             @click.away="panel = false">
             <span class="sr-only">User Menu</span>

@@ -40,7 +40,6 @@ Route::prefix('admin')->group(function () {
             Route::get('/{user}/page/password/edit', [UserController::class, 'editPagePassword'])->name('page.password.edit');
             Route::post('/{user}/page/password/update', [UserController::class, 'updateUserPagePassword'])->name('page.password.reset');
             Route::get('/{user}/page/view', [UserController::class, 'showUserPage'])->name('page.view');
-        
         });
 
         Route::prefix('plans')->name('plans.')->group(function () {
@@ -51,6 +50,7 @@ Route::prefix('admin')->group(function () {
             Route::put('/{plan}/update', [PlanController::class, 'update'])->name('update');
             Route::delete('/{plan}/delete', [PlanController::class, 'delete'])->name('destroy');
             Route::post('/{plan}/status', [PlanController::class, 'updateStatus'])->name('update.status');
+            Route::post('/{user}/toggle/suspend/status', [PlanController::class, 'toggleSuspend'])->name('update.toggleSuspend');
         });
 
         Route::prefix('gdpr')->name('gdpr.')->group(function () {
