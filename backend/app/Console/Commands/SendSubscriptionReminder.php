@@ -62,7 +62,7 @@ class SendSubscriptionReminder extends Command
         // Suspend expired subscriptions
         $expiredSubscriptions = Page::where('next_renewal_date', '<', $today)->get();
         foreach ($expiredSubscriptions as $subscription) {
-            $subscription->update(['is_suspended' => true]);
+            $subscription->update(['is_suspended' => true , 'expired_at' => now()]);
             $subscription->user->update(['subscription_status' => AppConstant::EXPIRED]);
         }
 

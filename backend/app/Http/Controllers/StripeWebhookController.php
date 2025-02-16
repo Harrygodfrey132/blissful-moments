@@ -110,7 +110,8 @@ class StripeWebhookController extends Controller
                 $user->page->update([
                     'is_registered' => true,
                     'next_renewal_date' => $this->getNextRenewalDate($planType),
-                    'is_suspended' => false
+                    'is_suspended' => false,
+                    'expired_at' => null
                 ]);
 
                 // Generate QR code for the user's page

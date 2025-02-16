@@ -27,7 +27,8 @@ class Page extends Model
         'background_music',
         'is_registered',
         'is_suspended',
-        'next_renewal_date'
+        'next_renewal_date',
+        'expired_at'
     ];
 
     protected $with = [
