@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
+    Route::get('/dashboard/data', [DashboardController::class, 'dashboardData'])->name('dashboard.data');
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::get('/profile/password', [ProfileController::class, 'passwordEdit'])->name('profile.password.edit');
