@@ -39,7 +39,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             let chart;
             function fetchChartData(months) {
-                fetch(`/admin/  dashboard/data?months=${months}`)
+                fetch(`/admin/dashboard/data?months=${months}`)
                     .then(response => response.json())
                     .then(data => {
                         updateChart(data);
