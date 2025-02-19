@@ -158,10 +158,10 @@ const DashboardPage = () => {
       {/* Subscription Plan */}
       <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <FaRegCreditCard className="text-blue-500 text-xl" />
+          <FaRegCreditCard className="text-blue-500 text-2xl" />
           Subscription Plan
         </h2>
-        <p className="text-sm text-gray-500">Yearly</p>
+        <span className="text-xs text-white mt-2 inline-block rounded bg-gray-600 shadow-sm py-0.5 px-2">Yearly</span>
 
         {/* Subscription Status */}
         <div className="mt-4 flex items-center gap-2">
@@ -198,7 +198,7 @@ const DashboardPage = () => {
       {/* Public URL */}
       <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <GlobeAltIcon className="text-purple-500 w-10 text-xl" />
+          <GlobeAltIcon className="text-purple-500 w-10 text-2xl" />
           Public URL
         </h2>
         <div className="mt-4 flex items-center gap-4">
@@ -223,7 +223,7 @@ const DashboardPage = () => {
       {/* QR Code */}
       <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200 flex flex-col items-center">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <MdOutlineQrCodeScanner className="text-green-500 text-xl" />
+          <MdOutlineQrCodeScanner className="text-green-500 w-10 text-2xl" />
           QR Code
         </h2>
         <p className="text-sm text-gray-500">Scan to access your page</p>
