@@ -34,7 +34,7 @@ export default function Sidebar() {
   const isActive = (path: string) => router.pathname === path;
 
   return (
-    <aside className="bg-white w-full md:w-[17rem] h-screen shadow-md flex flex-col justify-between">
+    <aside className="bg-white rounded w-full md:w-[17rem] h-screen shadow-sm flex flex-col justify-between">
       {/* Show loading spinner when loading state is true */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
@@ -50,7 +50,7 @@ export default function Sidebar() {
             alt="Profile"
             width={50}
             height={50}
-            className="rounded-full border-2 border-blue-500 object-cover"
+            className="rounded-full w-10 h-10 border-2 border-blue-500 object-cover"
           />
           <div className="ml-4">
             <h3 className="text-lg font-semibold text-gray-800">{session?.user?.name}</h3>
@@ -63,11 +63,11 @@ export default function Sidebar() {
         </div>
 
         <nav className="mt-6">
-          <ul className="space-y-2 px-2">
+          <ul className="space-y-2 px-4">
             <li>
               <Link
                 href={ROUTES.Dashboard}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/dashboard") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
                 <span className="material-icons-outlined">dashboard</span>
@@ -78,7 +78,7 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.Orders}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/orders") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
                 <span className="material-icons-outlined">shopping_cart</span>
@@ -89,7 +89,7 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.myPage}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/my-page") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
                 <span className="material-icons-outlined">pages</span>
@@ -100,7 +100,7 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.updatePassword}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/update-password") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/update-password") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
                 <span className="material-icons-outlined">password</span>
@@ -111,7 +111,7 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.contributionRequests}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/contribution-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/contribution-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
                 <span className="material-icons-outlined">bolt</span>
@@ -121,7 +121,7 @@ export default function Sidebar() {
             <li>
               <Link
                 href={ROUTES.accessRequests}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
                 <span className="material-icons-outlined">key</span>
@@ -131,10 +131,10 @@ export default function Sidebar() {
           </ul>
         </nav>
           {/* Bottom Section (Logout Link) */}
-        <div className="p-6 bg-white border-t shadow-sm mt-2">
+        <div className="p-6 bg-white border-t mt-2">
           <button
             onClick={() => signOut()}
-            className="flex items-center w-full px-4 py-1 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition"
+            className="flex items-center w-full px-4 py-1 text-sm font-medium text-red-600 rounded hover:bg-red-50 transition"
           >
             <span className="material-icons-outlined">logout</span>
             <span className="ml-3">Logout</span>
