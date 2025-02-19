@@ -29,17 +29,16 @@
                     <!-- Remove button (disabled if only 1 feature exists) -->
                     <button type="button" @click="if (features.length > 1) features.splice(index, 1)"
                         class="disabled:opacity-50" :disabled="features.length === 1">
-                        <x-icon-delete class="text-red-500 w-6 h-6" />
+                        <x-icon-delete class="text-red-500 w-5 h-5" />
+                    </button>
+                     <!-- Add button -->
+                    <button type="button" @click="features.push('')" title="Add New"
+                        class="p-1 rounded-md px-2 hover:bg-green-100 transition">
+                        <x-icon-create class="w-5 h-5 text-green-500" />
                     </button>
                 </div>
             </template>
-
-            <!-- Add button -->
-            <button type="button" @click="features.push('')" title="Add New"
-                class="mt-2 p-1 text-white rounded-md px-2">
-                <x-icon-create class="w-6 h-6 text-green-500" />
-            </button>
-
+           
             <x-input-error :messages="$errors->get('features')" class="mt-2" />
         </div>
 
@@ -51,7 +50,7 @@
             <x-input-error :messages="$errors->get('price')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4 absolute right-0 left-0 m-auto bottom-10 w-[400px]">
+        <div class="flex items-center justify-end mt-4 m-auto bottom-10">
             <x-primary-button>
                 {{ __('Save') }}
             </x-primary-button>
