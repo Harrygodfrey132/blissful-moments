@@ -19,13 +19,15 @@ type TimelineEvent = {
 
 type PageData = {
   tagline: string;
-  timeline: {
+  timeline?: {
     tagline: string;
+    status: boolean;
     events: TimelineEvent[];
   };
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 };
+
 
 export default function Timeline() {
   const [isTimelineEnabled, setIsTimelineEnabled] = useState(false);
@@ -37,7 +39,7 @@ export default function Timeline() {
   const token = session?.user?.accessToken;
   const { pageData, setPageData } = usePageContext();
 
-  const defaultTagline = "Your Timeline Goes Here";
+  const defaultTagline = "A place to remember {First Name}'s milestones";
   const defaultEvents: TimelineEvent[] = [
     {
       id: 0,
@@ -53,14 +55,15 @@ export default function Timeline() {
 
   useEffect(() => {
     if (pageData?.timeline) {
-      setTagline(pageData?.timeline.tagline || defaultTagline);
-      setTimelineEvents(pageData?.timeline.events || defaultEvents);
-      setIsTimelineEnabled(pageData?.timeline.status || false);
+      setTagline(pageData.timeline.tagline || defaultTagline);
+      setTimelineEvents(pageData.timeline.events || defaultEvents);
+      setIsTimelineEnabled(pageData.timeline.status ?? false); // Ensure status is retrieved
     } else {
       setTagline(defaultTagline);
       setTimelineEvents(defaultEvents);
     }
   }, [pageData]);
+
 
   // Function to extract day, month, and year from event_date
   const getDateParts = (event_date: string) => {
@@ -154,7 +157,7 @@ export default function Timeline() {
     }
   };
 
-  const saveData = async (data: PageData | { tagline: string }) => {
+  const saveData = async (data: PageData) => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.saveTimeline}`,
@@ -169,7 +172,13 @@ export default function Timeline() {
 
       if (response.status === 200) {
         toast.success("Timeline Data Saved Successfully");
-        setPageData(response.data.page_data);
+        setPageData((prevData: PageData) => ({
+          ...prevData,
+          timeline: {
+            ...prevData?.timeline,
+            ...response.data.page_data.timeline,
+          },
+        }));
       } else {
         toast.error("Error saving data");
       }
@@ -178,9 +187,37 @@ export default function Timeline() {
     }
   };
 
+
+
   const handleTaglineBlur = () => {
-    saveData({ tagline });
+    saveData({
+      tagline,
+      timeline: {
+        tagline,
+        status: isTimelineEnabled, // Default or existing value
+        events: timelineEvents || [], // Default to empty array
+      },
+      created_at: new Date().toISOString(), // Provide a default timestamp
+      updated_at: new Date().toISOString(),
+    });
   };
+
+
+  const handleToggleTimeline = () => {
+    const newStatus = !isTimelineEnabled;
+    setIsTimelineEnabled(newStatus);
+
+    // Save the updated status
+    saveData({
+      tagline,
+      timeline: {
+        tagline,
+        status: newStatus,
+        events: timelineEvents, // Ensure events are retained
+      },
+    });
+  };
+
 
   const saveTimeline = () => {
     const payload: PageData = {
@@ -196,12 +233,14 @@ export default function Timeline() {
           description: event.description || "No description",
           location: event.location || "Unknown location",
         })),
+        status: isTimelineEnabled,  // Include the status field
       },
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
     saveData(payload);
   };
+
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 126 }, (_, i) => currentYear - i);
@@ -241,7 +280,7 @@ export default function Timeline() {
                 type="checkbox"
                 id="toggle-timeline"
                 checked={isTimelineEnabled}
-                onChange={() => setIsTimelineEnabled(!isTimelineEnabled)}
+                onChange={handleToggleTimeline}
                 className="toggle-checkbox absolute block  md:w-8 md:h-8 h-6 w-6 rounded-full bg-gray-100 border-4 appearance-none cursor-pointer transition-all duration-200 ease-in-out"
               />
               <label
@@ -261,7 +300,7 @@ export default function Timeline() {
               ref={editableRef}
               className={`border border-dashed font-playfair bg-[#f8f8f8] text-blue-light-900 p-4 border-gray-300 focus:outline-none focus:border-gray-500 ${isTimelineEnabled ? "" : "text-gray-500 cursor-not-allowed"
                 }`}
-              contentEditable={isTimelineEnabled}
+              contentEditable={isTimelineEnabled ? "true" : "false"}
               suppressContentEditableWarning
               aria-label="Tagline"
               onInput={handleTaglineInput}
@@ -269,6 +308,7 @@ export default function Timeline() {
             >
               {tagline}
             </span>
+
           </h1>
         </div>
       </div>
@@ -382,8 +422,6 @@ export default function Timeline() {
               </div>
             );
           })}
-
-
 
           {/* Buttons for Adding Event and Saving Timeline */}
           <div className="flex items-center gap-3 font-playfair align-middle mt-4">

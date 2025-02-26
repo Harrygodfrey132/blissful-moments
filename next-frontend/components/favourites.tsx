@@ -15,7 +15,7 @@ type FavouriteEvent = {
 };
 
 const Favourites = () => {
-  const defaultTagline = "A place to remember John's favourite things";
+  const defaultTagline = "A place to remember {First Name}'s favourite things";
   const defaultFavourites: FavouriteEvent[] = [
     { title: "Default Title", description: "Default Description" },
   ];

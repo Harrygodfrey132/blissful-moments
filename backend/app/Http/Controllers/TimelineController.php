@@ -27,7 +27,7 @@ class TimelineController extends Controller
 
             // If no 'timeline' is passed, fallback to just the tagline
             if (!$timelineData) {
-                $timelineData = ['tagline' => $request->input('tagline')];
+                $timelineData = ['tagline' => $request->input('tagline') , 'status' => $request->input('status')];
             }
 
             // Check if the page already has a timeline
@@ -38,6 +38,7 @@ class TimelineController extends Controller
                 $timeline = Timeline::create([
                     'page_id' => $page->id,
                     'tagline' => $timelineData['tagline'] ?? null,
+                    'status' => $timelineData['status'] ?? true,
                 ]);
             }
 
@@ -45,6 +46,7 @@ class TimelineController extends Controller
             if (isset($timelineData['tagline'])) {
                 $timeline->update([
                     'tagline' => $timelineData['tagline'],
+                    'status' => $timelineData['status'],
                 ]);
             }
 

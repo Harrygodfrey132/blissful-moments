@@ -33,7 +33,7 @@ const Contributions = () => {
     });
 
     const [tagline, setTagline] = useState(
-        "This is a place to celebrate the life of and their impact on all of us. Please post respectfully."
+        "This is a place to celebrate the life of {First Name} and their impact on all of us. Please post respectfully."
     );
 
     // Popover reference to handle outside clicks

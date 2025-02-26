@@ -70,7 +70,7 @@ class PageController extends Controller
                     ]);
 
                     $timeline = $page->timeline()->create([
-                        'tagline' => "Your Timeline Goes Here",
+                        'tagline' => "A place to remember " . $page->first_name . "'s milestones",
                         'page_id' => $page->id,
                         'status' => AppConstant::IN_ACTIVE
                     ]);
@@ -85,7 +85,7 @@ class PageController extends Controller
 
                     $favourite = $page->favourites()->create([
                         'page_id' => $page->id,
-                        'tagline' => "A place to remember " . $page->first_name . "'s milestones",
+                        'tagline' => "A place to remember " . $page->first_name . "'s favourite things",
                         'status' => AppConstant::IN_ACTIVE
                     ]);
 
@@ -205,6 +205,10 @@ class PageController extends Controller
                 ]);
 
                 $page->favourites()->update([
+                    'tagline' => "A place to remember $firstName's milestones"
+                ]);
+
+                $page->timeline()->update([
                     'tagline' => "A place to remember $firstName's milestones"
                 ]);
 

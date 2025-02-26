@@ -16,7 +16,7 @@ const SocialMedia: React.FC = () => {
   );
   const [content, setContent] = useState(
     pageData?.social_media_data?.content ||
-    "This page is a forever tribute to . Please spread the page so others can contribute and reminisce"
+    "This page is a forever tribute to {First Name} . Please spread the page so others can contribute and reminisce"
   );
 
   useEffect(() => {
