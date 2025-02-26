@@ -115,7 +115,7 @@ export default function StyledTabs({ pageData }) {
                 Share the page?
                 <button
                   onClick={handleCopyLink}
-                  className={`md:text-lg ml-3 text-lg font-playfair border border-gray-300 font-medium px-4 py-1.5 rounded-lg transition-all duration-300 ease-in-out ${
+                  className={`md:text-lg ml-3 text-lg font-playfair border border-gray-300 font-medium px-4 py-1.5 rounded-lg ${
                     isPageLinkCopied
                       ? "bg-blue-light-900 text-white"
                       : "bg-[#F3EAEACC] text-blue-light-900"
@@ -337,7 +337,7 @@ export default function StyledTabs({ pageData }) {
             </h1>
             <button
               onClick={handleCopyLink}
-              className={`px-4 py-2.5 text-white text-left font-playfair mb-10 transition-all duration-300 ease-in-out
+              className={`px-4 py-2.5 text-white text-2xl text-left font-playfair mb-10
               ${
                 isPageLinkCopied ? "bg-blue-light-900" : "add-button"
               } rounded-lg`}

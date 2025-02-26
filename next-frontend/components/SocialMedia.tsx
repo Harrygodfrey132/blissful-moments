@@ -152,8 +152,8 @@ const SocialMedia: React.FC = () => {
 
       <button
         onClick={handleCopyLink}
-        className={`px-4 py-2.5 text-white font-playfair mb-32 transition-all duration-300 ease-in-out
-              ${isPageLinkCopied ? "bg-blue-light-900" : "add-button"
+        className={`min-w-[100px] px-4 py-2.5 text-white text-2xl font-playfair mb-32
+              ${isPageLinkCopied ? "bg-blue-light-900 " : "add-button"
           } rounded-lg`}
       >
         {isPageLinkCopied ? "Copied!" : "Copy Link"}
