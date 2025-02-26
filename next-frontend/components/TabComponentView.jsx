@@ -163,7 +163,7 @@ export default function StyledTabs({ pageData }) {
                   {displayedFolders.map((group, index) => (
                     <div key={index} className="mt-6">
                       {group.folderName && (
-                        <div className="font-playfair text-xl font-medium">
+                        <div className="font-playfair text-xl font-medium text-left">
                           {group.folderName}
                         </div>
                       )}

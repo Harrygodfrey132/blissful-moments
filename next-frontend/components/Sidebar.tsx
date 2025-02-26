@@ -34,7 +34,7 @@ export default function Sidebar() {
   const isActive = (path: string) => router.pathname === path;
 
   return (
-    <aside className="bg-white rounded w-full md:w-[17rem] h-screen shadow-sm flex flex-col justify-between">
+    <aside className="bg-white rounded w-full md:w-[17rem] md:h-screen h-full shadow-sm flex flex-col justify-between">
       {/* Show loading spinner when loading state is true */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">

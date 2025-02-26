@@ -124,7 +124,7 @@ const ContributionView = ({ contributionData, userId }) => {
   };
 
   return (
-    <div className="mb-20 mt-20">
+    <div className="mb-20 mt-20 vu-contribution">
       <div className="flex items-center justify-between">
         <div className="text-blue-light-900 font-playfair md:text-4xl text-3xl border-b-4 border-blue-light-800 font-400 inline-block">
           Contributions

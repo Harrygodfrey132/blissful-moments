@@ -9,7 +9,7 @@ interface ObituaryEditProps {
 
 const ObituaryEdit: React.FC<ObituaryEditProps> = ({ setObituary }) => {
   const [isObituaryEnabled, setIsObituaryEnabled] = useState(true);
-  const [tagline, setTagline] = useState<string>("Enter a memorable tagline here.");
+  const [tagline, setTagline] = useState<string>("A special memory for a special person.");
   const [content, setContent] = useState<string>("Add a heartfelt message about your loved one.");
   const taglineRef = useRef<HTMLDivElement>(null);
 

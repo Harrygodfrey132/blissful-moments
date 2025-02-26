@@ -36,7 +36,7 @@ export default function StyledTabs() {
       <TabNavigation tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Tab Content */}
-      <div className="mt-6 p-4 md:p-0 w-full max-w-6xl space-y-12">
+      <div className="mt-6 p-4 xl:p-0 w-full max-w-6xl space-y-12">
         {/* Personal Quote */}
         <div ref={tab1Ref}>
           <PersonalQuote />

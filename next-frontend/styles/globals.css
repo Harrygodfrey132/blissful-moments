@@ -1,10 +1,35 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .select-width{
   width:6.7rem;
+}
+
+@media screen and (min-width: 375px) and (max-width: 667px) {
+  .text-3xl{
+    font-size: 24px !important;
+  }
+
+}
+
+
+@media screen and (min-width: 1024px) and (max-width: 1366px) {
+
+  .tabs-wrapper{
+    padding-left: 163px !important;
+  }
+  .select-width{
+    width:4.7rem;
+  }
+  .w-\[132px\] {
+    width: 123px;
+}
+
+.w-\[107px\]{
+  width: 75px;
+}
+
 }
 
 .popover-container {
@@ -142,10 +167,22 @@
 
 
 /* Mobile responsive styles */
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
+  .md\:text-4xl{
+    font-size: 28px !important;
+  }
   .tabs-wrapper {
     flex-wrap: nowrap;  /* Ensures all tabs stay in a single line */
   }
+
+  .vu-contribution .popover-arrow {
+    right: 8%;
+}
+
+  .vu-contribution .popover-container {
+    left: 0px;
+    width: 300px;
+}
 
   .popover-container {
     left: 175px;

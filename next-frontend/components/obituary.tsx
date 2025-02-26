@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Obituary = () => {
   const [isObituaryEnabled, setIsObituaryEnabled] = useState(true);
-  const [tagline, setTagline] = useState<string>("Enter a memorable tagline here.");
+  const [tagline, setTagline] = useState<string>("A special memory for a special person.");
   const [content, setContent] = useState<string>("Add a heartfelt message about your loved one.");
   const { data: session } = useSession();
   const token = session?.user?.accessToken;
@@ -16,7 +16,7 @@ const Obituary = () => {
 
   useEffect(() => {
     if (pageData?.obituaries) {
-      setTagline(pageData.obituaries?.tagline || "Enter a memorable tagline here.");
+      setTagline(pageData.obituaries?.tagline || "A special memory for a special person.");
       setContent(pageData.obituaries?.content || "Add a heartfelt message about your loved one.");
       setIsObituaryEnabled(!!pageData.obituaries?.status);
     }

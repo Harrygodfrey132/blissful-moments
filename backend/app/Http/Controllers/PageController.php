@@ -48,7 +48,7 @@ class PageController extends Controller
                     // Create related data
                     $page->personalQuote()->create(['page_id' => $page->id, 'quote' => "Share Something special for loved one"]);
                     $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
-                    $page->obituaries()->create(['tagline' => "Enter a memorable tagline here.", 'content' => "Add a heartfelt message.", 'page_id' => $page->id]);
+                    $page->obituaries()->create(['tagline' => "A special memory for a special person.", 'content' => "Add a heartfelt message.", 'page_id' => $page->id]);
                     $page->socialMediaData()->create(['page_id' => $page->id, 'content' => "This page is a forever tribute."]);
                     $timeline = $page->timeline()->create(['tagline' => "Your Timeline Goes Here", 'page_id' => $page->id, 'status' => AppConstant::IN_ACTIVE]);
                     $timeline->events()->create(['timeline_id' => $timeline->id, 'event_date' => now(), 'title' => "New Event", 'description' => "Event description", 'location' => "Event location"]);
