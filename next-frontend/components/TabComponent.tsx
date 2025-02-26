@@ -5,9 +5,9 @@ import PersonalQuote from "../components/PersonalQuote";
 import Gallery from "../components/Gallery";
 import Obituary from "../components/obituary";
 import Timeline from "../components/Timeline";
-import SocialMedia from "../components/SocialMedia"; 
-import Favourites from "../components/favourites"; 
-import Contributions from "../components/contributions"; 
+import SocialMedia from "../components/SocialMedia";
+import Favourites from "../components/favourites";
+import Contributions from "../components/contributions";
 
 export default function StyledTabs() {
   const tab1Ref = useRef<HTMLDivElement>(null);
@@ -57,19 +57,19 @@ export default function StyledTabs() {
           <Timeline />
         </div>
 
-       {/* Contribution */}
-       <div ref={tab5Ref}>
+        {/* Contribution */}
+        <div ref={tab5Ref}>
           <Contributions />
         </div>
 
-          {/* Favourites */}
-          <div ref={tab6Ref}>
+        {/* Favourites */}
+        <div ref={tab6Ref}>
           <Favourites />
         </div>
 
-        
-          {/* Social Media */}
-          <div ref={tab7Ref}>
+
+        {/* Social Media */}
+        <div ref={tab7Ref}>
           <SocialMedia />
         </div>
 

@@ -43,18 +43,65 @@ class PageController extends Controller
                         'name' => $validated['name'],
                         'is_private' => $validated['is_private'],
                         'password' => $validated['is_private'] ? Hash::make($validated['password']) : null,
+                        'first_name' => "First Name"
                     ]);
 
                     // Create related data
-                    $page->personalQuote()->create(['page_id' => $page->id, 'quote' => "Share Something special for loved one"]);
-                    $page->gallery()->create(['gallery_name' => "Gallery", 'user_id' => $validated['user_id']]);
-                    $page->obituaries()->create(['tagline' => "A special memory for a special person.", 'content' => "Add a heartfelt message.", 'page_id' => $page->id]);
-                    $page->socialMediaData()->create(['page_id' => $page->id, 'content' => "This page is a forever tribute."]);
-                    $timeline = $page->timeline()->create(['tagline' => "Your Timeline Goes Here", 'page_id' => $page->id, 'status' => AppConstant::IN_ACTIVE]);
-                    $timeline->events()->create(['timeline_id' => $timeline->id, 'event_date' => now(), 'title' => "New Event", 'description' => "Event description", 'location' => "Event location"]);
-                    $favourite = $page->favourites()->create(['page_id' => $page->id, 'tagline' => "A place to remember favourite things", 'status' => AppConstant::IN_ACTIVE]);
-                    $favourite->favouriteEvents()->create(['favourite_id' => $favourite->id, 'title' => "Default Title", 'description' => "Default Description"]);
-                    $page->contributions()->create(['page_id' => $page->id, 'tagline' => "This is a place to celebrate the life.", 'status' => AppConstant::IN_ACTIVE]);
+                    $page->personalQuote()->create([
+                        'page_id' => $page->id,
+                        'quote' => "Share something special for your loved one."
+                    ]);
+
+                    $page->gallery()->create([
+                        'gallery_name' => "Gallery",
+                        'user_id' => $validated['user_id']
+                    ]);
+
+                    $page->obituaries()->create([
+                        'tagline' => "A special memory for a special person.",
+                        'content' => "Add a heartfelt message.",
+                        'page_id' => $page->id
+                    ]);
+
+                    $page->socialMediaData()->create([
+                        'page_id' => $page->id,
+                        'content' => "This page is a lasting tribute to " . $page->first_name .
+                            ". Please share it so others can contribute and reminisce."
+                    ]);
+
+                    $timeline = $page->timeline()->create([
+                        'tagline' => "Your Timeline Goes Here",
+                        'page_id' => $page->id,
+                        'status' => AppConstant::IN_ACTIVE
+                    ]);
+
+                    $timeline->events()->create([
+                        'timeline_id' => $timeline->id,
+                        'event_date' => now(),
+                        'title' => "New Event",
+                        'description' => "Event description",
+                        'location' => "Event location"
+                    ]);
+
+                    $favourite = $page->favourites()->create([
+                        'page_id' => $page->id,
+                        'tagline' => "A place to remember " . $page->first_name . "'s milestones",
+                        'status' => AppConstant::IN_ACTIVE
+                    ]);
+
+                    $favourite->favouriteEvents()->create([
+                        'favourite_id' => $favourite->id,
+                        'title' => "Default Title",
+                        'description' => "Default Description"
+                    ]);
+
+                    $page->contributions()->create([
+                        'page_id' => $page->id,
+                        'tagline' => "This is a place to celebrate the life of " . $page->first_name .
+                            " and their impact on all of us. I remind you to post respectfully.",
+                        'status' => AppConstant::IN_ACTIVE
+                    ]);
+
 
                     return $page;
                 });
@@ -119,6 +166,9 @@ class PageController extends Controller
                 'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096',
             ]);
 
+            // Check if first name is changing
+            $isFirstNameUpdated = isset($validated['firstName']) && $validated['firstName'] !== $page->first_name;
+
             // Collect the data to be updated
             $updateData = [];
 
@@ -133,7 +183,6 @@ class PageController extends Controller
             ];
 
             foreach ($fieldsMap as $requestField => $modelField) {
-                // If the field is set in the validated data, assign it (check if it's an empty string)
                 if (array_key_exists($requestField, $validated)) {
                     $updateData[$modelField] = $validated[$requestField] === '' ? '' : $validated[$requestField];
                 }
@@ -144,10 +193,26 @@ class PageController extends Controller
                 $updateData['profile_picture'] = $this->handleProfilePictureUpload($request);
             }
 
-            // Update page information with the data that has changed
+            // Update page information
             $page->update($updateData);
 
-            // Return response with updated data
+            // If the first name is updated, update related content
+            if ($isFirstNameUpdated) {
+                $firstName = $validated['firstName'];
+
+                $page->socialMediaData()->update([
+                    'content' => "This page is a lasting tribute to $firstName. Please share it so others can contribute and reminisce."
+                ]);
+
+                $page->favourites()->update([
+                    'tagline' => "A place to remember $firstName's milestones"
+                ]);
+
+                $page->contributions()->update([
+                    'tagline' => "This is a place to celebrate the life of $firstName and their impact on all of us. I remind you to post respectfully."
+                ]);
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Personal information updated successfully.',
@@ -161,6 +226,7 @@ class PageController extends Controller
             ]);
         }
     }
+
 
     // Helper method for handling profile picture upload
     private function handleProfilePictureUpload(Request $request)

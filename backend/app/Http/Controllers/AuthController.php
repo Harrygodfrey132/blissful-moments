@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\UserDetail;
 use App\Notifications\AccountVerificationNotification;
 use App\Notifications\WelcomeEmailNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -75,7 +76,13 @@ class AuthController extends Controller
         $otpValue = random_int(1000, 9999);
 
         // Define OTP expiration (e.g., 10 minutes from now)
-        $expiry_time = (int)(ConfigHelper::getConfig('conf_otp_expiration_time') ?? 10);
+        $expiry_time = (int) ConfigHelper::getConfig('conf_otp_expiration_time');
+
+        // If the value is null, 0, or any falsy value, default to 10
+        if (!$expiry_time) {
+            $expiry_time = 10;
+        }
+
         $expiresAt = now()->addMinutes($expiry_time);
 
         // Store the OTP in the database
@@ -83,7 +90,6 @@ class AuthController extends Controller
             'user_id' => $userId,
             'email' => $email,
             'otp' => $otpValue,
-            // 'otp' => "1111",
             'expires_at' => $expiresAt,
         ]);
 
@@ -142,9 +148,12 @@ class AuthController extends Controller
         if (!$otp) {
             return response()->json(['status' => false, 'message' => 'Invalid OTP'], 401);
         }
-        $expiredTime = (int)ConfigHelper::getConfig('conf_otp_expiration_time') ?? 10;
-        // Check if OTP is expired
-        if ($otp->created_at->addMinutes($expiredTime) < now()) { // Assuming OTP expires in 10 minutes
+
+        $expiresAt = Carbon::parse($otp->expires_at);
+        $currentTime = now();
+
+
+        if ($expiresAt->lt($currentTime)) {
             $otp->delete();
             return response()->json(['status' => false, 'message' => 'OTP has expired.'], 401);
         }
