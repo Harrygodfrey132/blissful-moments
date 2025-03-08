@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ROUTES } from "../utils/routes";
 import { useEffect, useState } from "react";
+import { IoIosArrowBack } from "react-icons/io";
 import axios from "axios";
 import { API } from "../utils/api";
 import { useSession } from "next-auth/react";
@@ -116,58 +117,233 @@ const CheckoutPage = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="max-w-6xl mx-auto mt-32 mb-12">
-      <h1 className="px-6 py-2 text-2xl font-bold">Checkout</h1>
+    <div className="max-w-6xl mx-auto mt-28 mb-12">
+      <a href="" className="px-6 py-2 flex gap-1 items-center text-blue-600"><IoIosArrowBack />Back </a>
+
+      <h1 className="px-6 py-2 text-xl font-bold">Checkout</h1>
+
       <div className="bg-gray-50 p-6 rounded flex flex-col lg:flex-row gap-6">
         <div className="w-full lg:w-2/3 bg-white p-6 rounded shadow">
-          <h2 className="text-lg font-bold mb-5">Your Cart</h2>
-          {plans.map((plan) => (
-            <label
-              key={plan.id}
-              className={`border border-gray-300 p-4 mb-4 flex justify-between items-center rounded-lg cursor-pointer ${selectedPlan === plan.id ? "border-blue-500 bg-blue-100" : ""
-                }`}
-            >
-              <input
-                type="radio"
-                name="plan"
-                value={plan.id}
-                className="hidden"
-                onChange={() => setSelectedPlan(plan.id)}
-              />
+          <section aria-labelledby="shipping-heading" className="mt-3">
 
-              <img src="img/logo-black.png" alt="logo" className="w-12 h-12" />
 
-              <div className="flex-1 ml-4">
-                <p className="font-semibold">{plan.name}</p>
-                <div className="text-blue-600 font-medium">1 Year</div>
+            <div className="border p-4 rounded shadow-sm mb-5">
+              <div className="flex justify-between items-center border-b pb-2">
+                <h2 className="text-lg font-semibold">Billing Information</h2>
+                <button className="text-blue-600 hover:underline">Edit</button>
               </div>
+              <div className="mt-3 text-gray-700">
+                <p className="font-medium">Monu Agnihotri</p>
+                <p>House no 390/1 Sector 28A Chandigarh, Near govt school, Chandigarh, Chandigarh 160101, India</p>
+                <p>390/1 Chandigarh</p>
+              </div>
+            </div>
 
-              <p className="text-lg font-bold">£{plan.price}</p>
-            </label>
-          ))}
-          <div className="text-gray-500 font-medium">Renews on {getNextYearDate()}</div>
-          <div className="flex justify-end py-4">
-            {isProcessing ? (
+            <div className="billing-info">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Billing Information
+              </h2>
+              <div className="mt-4 grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-4">
+                <div>
+                  <label htmlFor="first-name" className="block text-sm/6 font-medium text-gray-700">
+                    First name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="first-name"
+                      name="first-name"
+                      type="text"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="last-name" className="block text-sm/6 font-medium text-gray-700">
+                    Last name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="last-name"
+                      name="last-name"
+                      type="text"
+                      autoComplete="family-name"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label htmlFor="company" className="block text-sm/6 font-medium text-gray-700">
+                    Company
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label htmlFor="address" className="block text-sm/6 font-medium text-gray-700">
+                    Address
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="address"
+                      name="address"
+                      type="text"
+                      autoComplete="street-address"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label htmlFor="apartment" className="block text-sm/6 font-medium text-gray-700">
+                    Apartment, suite, etc.
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="apartment"
+                      name="apartment"
+                      type="text"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="city" className="block text-sm/6 font-medium text-gray-700">
+                    City
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="city"
+                      name="city"
+                      type="text"
+                      autoComplete="address-level2"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="country" className="block text-sm/6 font-medium text-gray-700">
+                    Country
+                  </label>
+                  <div className="mt-2 grid grid-cols-1">
+                    <select
+                      id="country"
+                      name="country"
+                      autoComplete="country-name"
+                      className="col-start-1 row-start-1 w-full appearance-none bg-white py-2 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 sm:text-sm/6"
+                    >
+                      <option>United States</option>
+                      <option>Canada</option>
+                      <option>Mexico</option>
+                    </select>
+
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="region" className="block text-sm/6 font-medium text-gray-700">
+                    State / Province
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="region"
+                      name="region"
+                      type="text"
+                      autoComplete="address-level1"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="postal-code" className="block text-sm/6 font-medium text-gray-700">
+                    Postal code
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="postal-code"
+                      name="postal-code"
+                      type="text"
+                      autoComplete="postal-code"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label htmlFor="phone" className="block text-sm/6 font-medium text-gray-700">
+                    Phone
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="text"
+                      autoComplete="tel"
+                      className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+                <div className="w-full mt-4">
+                  <button
+                    type="submit"
+                    className="rounded border border-transparent bg-blue-500 px-6 py-2 text-sm font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div className="w-full lg:w-2/4 bg-white shadow rounded h-fit p-6">
+          <h3 className="text-lg font-bold mb-2">Order Summary</h3>
+          <div className="mb-4 border-t border-gray-300 pt-4">
+            {plans.map((plan) => (
+              <label
+                key={plan.id}
+                className={`border border-gray-300 p-4 mb-4 flex justify-between items-center rounded-lg cursor-pointer ${selectedPlan === plan.id ? "border-blue-500 bg-blue-100" : ""
+                  }`}
+              >
+                <input
+                  type="radio"
+                  name="plan"
+                  value={plan.id}
+                  className="hidden"
+                  onChange={() => setSelectedPlan(plan.id)}
+                />
+
+                <img src="img/logo-black.png" alt="logo" className="w-12 h-12" />
+
+                <div className="flex-1 ml-4">
+                  <p className="font-semibold">{plan.name}</p>
+                  <div className="text-blue-600 font-medium">1 Year</div>
+                </div>
+
+                <p className="text-lg font-bold">£{plan.price}</p>
+              </label>
+            ))}
+            <div className="text-gray-500 text-sm font-medium">Renews on {getNextYearDate()}</div>
+            <div className="flex justify-end py-4">
+            {isProcessing && (
               <div className="flex items-center">
                 <span className="loader w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
                 <span className="ml-2 text-gray-500">Redirecting...</span>
               </div>
-            ) : (
-              <button
-                onClick={handleCancel}
-                className="text-red-500 font-semibold underline cursor-pointer"
-              >
-                Cancel
-              </button>
             )}
-          </div>
-
-
-        </div>
-
-        <div className="w-full lg:w-2/4 bg-gray-100 p-6 rounded shadow">
-          <h3 className="text-lg font-bold mb-2">Order Summary</h3>
-          <div className="mb-4 border-t border-gray-300 pt-4">
+            </div>
             <p className="flex justify-between">
               <span className="font-semibold">Subtotal:</span>
               <span className="font-bold">£{selectedPlanPrice.toFixed(2)}</span>
@@ -175,19 +351,19 @@ const CheckoutPage = () => {
           </div>
           <button
             onClick={handleCheckout}
-            className="block mt-8 bg-blue-600 text-white text-center py-2.5 rounded w-full hover:bg-blue-700 transition"
+            className="block mt-8 bg-blue-500 text-white text-center py-2.5 rounded w-full transition"
           >
             Complete Payment
           </button>
-          
-        {/* Footer section */}
-        <div className="mt-6 text-center text-sm text-gray-500">
-          By proceeding, you agree to our
-          <Link href={ROUTES.termsAndConditions} className="text-blue-500 hover:underline ml-1">
-            Terms and Conditions
-          </Link>
-          .
-        </div>
+
+          {/* Footer section */}
+          <div className="mt-6 text-center text-sm text-gray-500">
+            By proceeding, you agree to our
+            <Link href={ROUTES.termsAndConditions} className="text-blue-500 hover:underline ml-1">
+              Terms and Conditions
+            </Link>
+            .
+          </div>
           <div className="flex justify-between mt-4">
             <div className="font-semibold">Secure payment</div>
             <div className="flex gap-2">

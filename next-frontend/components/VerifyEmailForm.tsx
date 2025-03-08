@@ -55,6 +55,16 @@ const VerifyEmailForm = () => {
                         {isSubmitting ? "Verifying..." : "Verify Account"}
                     </button>
                 </form>
+
+                  
+                {/* Resend code  */}             
+                <div className="text-center">
+                    <a href="#" className="underline text-sm text-black">
+                        Resend Code
+                    </a>
+                </div>
+         
+               
                 <div className="mt-6 text-center">
                     <p className="text-sm text-gray-500">
                         Want to <span
