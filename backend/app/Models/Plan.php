@@ -15,10 +15,9 @@ class Plan extends Model
         'name',
         'slug',
         'description',
-        'price',
-        'billing_cycle',
         'status',
-        'features'
+        'features',
+        'stripe_product_id'
     ];
 
     protected $casts = [
@@ -39,6 +38,10 @@ class Plan extends Model
         ];
     }
 
+    public function planVariations()
+    {
+        return $this->hasMany(PlanVariation::class);
+    }
 
     public function scopePlansSearchFilter(Builder $query, $data)
     {

@@ -35,6 +35,7 @@
     "react-modal": "^3.16.3",
     "react-otp-input": "^3.1.1",
     "react-paginate": "^8.2.0",
+    "react-select": "^5.10.1",
     "react-toastify": "^10.0.6",
     "slate": "^0.112.0",
     "slate-history": "^0.110.3",
@@ -42,7 +43,8 @@
     "sonner": "^1.7.0",
     "styled-jsx": "^5.1.6",
     "use-debounce": "^10.0.4",
-    "validator": "^13.12.0"
+    "validator": "^13.12.0",
+    "world-countries": "^5.1.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

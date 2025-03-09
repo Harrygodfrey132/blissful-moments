@@ -66,6 +66,22 @@
                                 </p>
                             </div>
                         </a>
+                        <!-- Free Trial Settings Tile -->
+                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
+                            href="{{ route('configuration.freetrial.settings') }}">
+                            <svg class="w-10 h-10 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
+                            </svg>
+                            <div>
+                                <p class="text-lg font-semibold text-gray-800">Free Trial Settings</p>
+                                <p class="text-sm text-gray-600">
+                                    Configure free trial duration and user eligibility rules.
+                                </p>
+                            </div>
+                        </a>
+
 
                     </div>
                 </div>

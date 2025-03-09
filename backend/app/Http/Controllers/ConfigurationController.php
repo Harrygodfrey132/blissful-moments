@@ -39,6 +39,11 @@ class ConfigurationController extends Controller
         return view('admin.configuration.social_media_settings');
     }
 
+    public function freeTrialSettings()
+    {
+        return view('admin.configuration.free_trial_settings');
+    }
+
 
     public function store(Request $request)
     {

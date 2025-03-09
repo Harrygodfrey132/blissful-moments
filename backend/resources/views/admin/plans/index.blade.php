@@ -25,6 +25,9 @@
                                             Description</th>
                                         <th scope="col"
                                             class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Features</th>
+                                        <th scope="col"
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Status</th>
                                         <th scope="col"
                                             class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -51,6 +54,18 @@
                                                 {{ $plan->description }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                                                @php
+                                                    $features = is_array($plan->features)
+                                                        ? $plan->features
+                                                        : json_decode($plan->features, true);
+                                                @endphp
+
+                                                @foreach ($features as $feature)
+                                                    <div>• {{ $feature }}</div>
+                                                @endforeach
+                                            </td>
+
+                                            <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                                 <div x-data="{ toggle: {{ $plan->status ? 'true' : 'false' }} }" class="flex items-center">
                                                     <button @click="toggle = !toggle;  updateStatusHandler(toggle)"
                                                         data-url="{{ route('plans.update.status', $plan->id) }}"
@@ -69,8 +84,14 @@
                                                 </div>
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                                {{ formatPrice($plan->price) }}
+                                                @foreach ($plan->planVariations as $variation)
+                                                    <div>
+                                                        <span class="font-medium">{{ $variation->duration }} Months:</span>
+                                                        {{ formatPrice($variation->price) }}
+                                                    </div>
+                                                @endforeach
                                             </td>
+
                                             <td
                                                 class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                                                 <div class="flex gap-3">

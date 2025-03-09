@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
+use App\Helper\ConfigHelper;
 use App\Models\Plan;
+use App\Models\PlanVariation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Stripe\Price;
+use Stripe\Product;
+use Stripe\Stripe;
 
 class PlanController extends Controller
 {
@@ -39,29 +44,59 @@ class PlanController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
             'features' => 'required|array|min:1',
             'features.*' => 'required|string|max:255',
+            'variations' => 'required|array',
+            'variations.*.price' => 'required|numeric|min:0',
         ]);
 
-        // Create a new plan using the validated data
-        Plan::create([
+        // Set Stripe API Key
+        Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
+
+        // Create Stripe Product
+        $stripeProduct = Product::create([
             'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'billing_cycle' => 12,
-            'price' => $validated['price'],
-            'features' => $validated['features']
         ]);
 
+        // Create a new Plan in Database
+        $plan = Plan::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'features' => json_encode($validated['features']), // Store features as JSON
+            'stripe_product_id' => $stripeProduct->id, // Store Stripe Product ID
+        ]);
+
+        // Loop through each duration and store it in Stripe & Database
+        foreach ($validated['variations'] as $duration => $variation) {
+            // Create a Stripe Price for this plan duration
+            $stripePrice = Price::create([
+                'unit_amount' => $variation['price'] * 100, // Convert to cents
+                'currency' => 'gbp',
+                'recurring' => ['interval' => 'month', 'interval_count' => $duration],
+                'product' => $stripeProduct->id,
+            ]);
+
+            // Store Plan Variation in Database
+            PlanVariation::create([
+                'plan_id' => $plan->id,
+                'duration' => $duration, // e.g., 1, 3, 6, 12 months
+                'price' => $variation['price'],
+                'stripe_price_id' => $stripePrice->id, // Store Stripe Price ID
+            ]);
+        }
+
+        // Return response
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Record created successfully!',
+                'message' => 'Plan created successfully!',
             ]);
         }
-        // Redirect back or to a different page with a success message
+
         return to_route('plans.index')->with('success', 'Plan created successfully.');
     }
+
 
     public function edit(Plan $plan)
     {

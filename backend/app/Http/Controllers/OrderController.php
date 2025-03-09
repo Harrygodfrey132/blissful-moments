@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
+use App\Helper\ConfigHelper;
 use App\Models\Order;
 use App\Models\Plan;
 use Carbon\Carbon;
@@ -94,12 +95,6 @@ class OrderController extends Controller
     {
         $user = $request->user();
         $orderId = 'BM' . date('YmdHis') . rand(1000, 9999);
-        $plan = Plan::where('status', AppConstant::ACTIVE)->first();
-
-        // Ensure a plan exists
-        if (!$plan) {
-            return response()->json(['error' => 'No plan available'], 400);
-        }
 
         // Check for an existing order with 'payment awaiting' status
         $existingOrder = Order::where('user_id', $user->id)
@@ -122,24 +117,23 @@ class OrderController extends Controller
                 'stripe_payment_status' => AppConstant::PAYMENT_FAILED
             ]);
         }
-
+        $freeTrialMonths = (int)ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
         // Create a new order
         $order = Order::create([
             'order_id' => $orderId,
             'user_id' => $user->id,
-            'amount' => $plan->price,
+            'amount' => 0,
             'stripe_payment_intent' => "",
             'stripe_payment_status' => AppConstant::PAYMENT_AWAITING,
             'plan_type' => "annual",
-            'plan_name' => $plan->name,
-            'plan_amount' => $plan->price,
-            'order_total' => $plan->price, // Fixed issue
+            'plan_name' => "Free Trial",
+            'plan_amount' => 0,
+            'order_total' => 0, // Fixed issue
             'order_tax' => 0,
-            'next_renewal_date' => now()->addYear(),
+            'next_renewal_date' => now()->addMonths($freeTrialMonths),
         ]);
 
         $encryptedOrderId = Crypt::encryptString($order->order_id);
-
         return response()->json([
             'success' => true,
             'message' => 'Order created successfully',
@@ -168,9 +162,7 @@ class OrderController extends Controller
                 return response()->json(['error' => 'Order not found or unauthorized'], 403);
             }
 
-            $plans = Plan::where('status', AppConstant::ACTIVE)->get();
-
-            return response()->json(['order' => $order, 'plans' => $plans]);
+            return response()->json(['order' => $order]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Invalid order ID'], 400);
         }

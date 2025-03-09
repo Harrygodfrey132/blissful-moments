@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\AppConstant;
 use App\Helper\ConfigHelper;
+use App\Models\Plan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use Stripe\Customer;
 
 class PaymentController extends Controller
 {
@@ -38,46 +42,79 @@ class PaymentController extends Controller
 
     public function createCheckoutSession(Request $request)
     {
-        // Set your Stripe Secret Key
-        Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
-
         try {
-            $customerId = $request->customer_id;
+            // Set your Stripe Secret Key
+            Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
-            // Plan details (replace with dynamic values based on your application)
-            $planName = $request->plan_name;
-            $planType = '12';
-            $planAmount = $request->plan_amount;
+            // Convert free trial months to days
+            $freeTrialMonths = (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
+            $freeTrialDays = $freeTrialMonths * 30;
+
+            // Get the active plan and its 1-month variation
+            $plan = Plan::where('status', AppConstant::ACTIVE)->firstOrFail();
+            $planVariation = $plan->planVariations()->where('duration', 1)->firstOrFail();
+
+            // Fetch user
+            $customerId = $request->customer_id;
+            $user = User::findOrFail($customerId);
+
+            // Create or retrieve Stripe customer
+            if (!$user->stripe_customer_id) {
+                $billingDetails = $request->billing_details ?? [];
+                $customer = Customer::create([
+                    'email' => $user->email,
+                    'name' => ($billingDetails['first_name'] ?? '') . ' ' . ($billingDetails['last_name'] ?? ''),
+                    'phone' => $billingDetails['phone'] ?? '',
+                    'address' => [
+                        'line1' => $billingDetails['address'] ?? '',
+                        'line2' => $billingDetails['apartment'] ?? '',
+                        'city' => $billingDetails['city'] ?? '',
+                        'state' => $billingDetails['region'] ?? '',
+                        'postal_code' => $billingDetails['postal_code'] ?? '',
+                        'country' => $billingDetails['country'] ?? '',
+                    ],
+                ]);
+
+                $user->update(['stripe_customer_id' => $customer->id]);
+            } else {
+                $customer = Customer::retrieve($user->stripe_customer_id);
+            }
+
+            // Decrypt Order ID
             $orderId = Crypt::decryptString($request->order_id);
 
-            // Create a Checkout Session
+            // Create Stripe Checkout Session
             $session = Session::create([
                 'payment_method_types' => ['card'],
+                'mode' => 'subscription',
+                'customer' => $customer->id,
                 'line_items' => [
                     [
-                        'price_data' => [
-                            'currency' => 'gbp',
-                            'product_data' => [
-                                'name' => 'Page Registration',
-                            ],
-                            'unit_amount' => $planAmount * 100,
-                        ],
+                        'price' => $planVariation->stripe_price_id,
                         'quantity' => 1,
                     ],
                 ],
-                'mode' => 'payment',
+                'subscription_data' => [
+                    'trial_period_days' => $freeTrialDays,
+                ],
+                'payment_intent_data' => [
+                    'setup_future_usage' => 'off_session', // Required for recurring payments
+                ],
                 'success_url' => env('FRONTEND_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => env('FRONTEND_URL') . '/cancel',
                 'metadata' => [
                     'customer_id' => $customerId,
-                    'plan_type' => $planType,
-                    'plan_name' => $planName,
-                    'plan_amount' => $planAmount,
+                    'plan_type' => $planVariation->duration,
+                    'plan_name' => $plan->name,
+                    'plan_amount' => $planVariation->price,
                     'order_id' => $orderId
                 ],
             ]);
 
-            return response()->json(['sessionId' => $session->id, 'stripePublicKey' => ConfigHelper::getConfig('conf_stripe_public_key')]);
+            return response()->json([
+                'sessionId' => $session->id,
+                'stripePublicKey' => ConfigHelper::getConfig('conf_stripe_public_key')
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

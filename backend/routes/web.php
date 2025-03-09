@@ -67,6 +67,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/general-settings', [ConfigurationController::class, 'generalSettings'])->name('general.settings');
             Route::get('/plugin-settings', [ConfigurationController::class, 'thirdPartySettings'])->name('plugins.settings');
             Route::get('/social-media-settings', [ConfigurationController::class, 'socialmediaSettings'])->name('socialmedia.settings');
+            Route::get('/free-trial-settings', [ConfigurationController::class, 'freeTrialSettings'])->name('freetrial.settings');
             Route::post('/store', [ConfigurationController::class, 'store'])->name('store');
         });
 

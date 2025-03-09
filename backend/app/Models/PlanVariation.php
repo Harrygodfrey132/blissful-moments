@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PlanVariation extends Model
 {
-    protected $fillable = ['plan_id', 'duration', 'billing_cycle', 'price'];
+    protected $fillable = ['plan_id', 'duration', 'price' , 'stripe_price_id'];
 
     public function plan()
     {

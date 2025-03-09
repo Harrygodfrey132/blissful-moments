@@ -36,7 +36,8 @@ class User extends Authenticatable
         'status',
         'subscription_status',
         'password',
-        'gallerFolders'
+        'galleryFolders',
+        'stripe_customer_id'
     ];
 
     protected $with = [
