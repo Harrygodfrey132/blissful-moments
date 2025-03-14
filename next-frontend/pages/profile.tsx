@@ -158,7 +158,7 @@ const ProfilePage = () => {
 
     const handleDelete = async () => {
         if (!reason?.trim()) {
-            toast.error("Please provide a reason for account deletion");
+            toast.error("Please provide a reason for account deactivation");
             return;
         }
 
@@ -387,7 +387,7 @@ const ProfilePage = () => {
                                         onClick={() => setOpen(true)}
                                         className="text-red-500 underline text-sm font-medium"
                                     >
-                                        Delete Account
+                                        Deactivate Account
                                     </Link>
 
 
@@ -398,7 +398,7 @@ const ProfilePage = () => {
                                                 <p className="text-gray-700 text-sm mt-2 ">
                                                     This action is <span className="font-bold">irreversible</span>. Your account and all associated data will be permanently deleted.
                                                 </p>
-                                                <label className='mt-4 mb-1  text-black text-sm block font-medium'>Enter Reason for deleting account
+                                                <label className='mt-4 mb-1  text-black text-sm block font-medium'>Enter Reason for deactivating account
                                                     <sup className='text-red-500 font-extrabold text-md'>* required</sup>
                                                 </label>
                                                 <textarea className="border-gray-300 w-full rounded-md" name="reason" required id="rejectReason" onChange={(e) => setReason(e.target.value)}
@@ -411,7 +411,7 @@ const ProfilePage = () => {
                                                         className="px-4 text-sm py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                                                         onClick={handleDelete}
                                                     >
-                                                        Yes, Delete My Account
+                                                        Yes, Deactivte My Account
                                                     </button>
                                                 </div>
                                             </div>
