@@ -96,11 +96,13 @@ class AuthController extends Controller
         return $otpValue;
     }
 
-    private function sendEmailNotifications($user, $otp)
+    private function sendEmailNotifications($user, $otp, $sendWelcomeEmail = true)
     {
         try {
-            $welcomeTemplate = Template::where('name', Template::WELCOME_EMAIL)->first();
-            Mail::to($user->email)->send(new WelcomeEmail($user, $welcomeTemplate));
+            if ($sendWelcomeEmail) {
+                $welcomeTemplate = Template::where('name', Template::WELCOME_EMAIL)->first();
+                Mail::to($user->email)->send(new WelcomeEmail($user, $welcomeTemplate));
+            }
             $accountVerificationEmail = Template::where('name', Template::ACCOUNT_VERIFICATION_EMAIL)->first();
             Mail::to($user->email)->send(new AccountVerificationEmail($user, $accountVerificationEmail, $otp));
         } catch (\Throwable $th) {
@@ -143,6 +145,7 @@ class AuthController extends Controller
 
         $otp = OTP::where('email', $validated['email'])
             ->where('otp', $validated['code'])
+            ->with('user')
             ->first();
 
         if (!$otp) {
@@ -303,5 +306,37 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'Password updated successfully.',
         ], 200);
+    }
+
+    public function resendOTP(Request $request)
+    {
+        try {
+            // Validate request input
+            $request->validate([
+                'email' => 'required|email|exists:users,email',
+            ]);
+
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json(['message' => 'User not found.'], 404);
+            }
+            OTP::where('user_id', $user->id)->delete();
+            $otpValue = $this->generateOTP($user->email , $user->id);
+            $this->sendEmailNotifications($user, $otpValue, false);
+            return response()->json([
+                'message' => 'Code sent successfully',
+                'user' => $user,
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong while resending OTP.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

@@ -2,6 +2,7 @@ export const API = {
   Registration: "/register",
   Login: "/login",
   VerifyEmail: "/verify-email",
+  resendCode: "/resend-OTP",
   CheckVerification: "/user/validation-status/",
   Logout: "/logout",
   getUser: "/user",

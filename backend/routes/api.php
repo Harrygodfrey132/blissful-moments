@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/user', [AuthController::class, 'getUser']);
     Route::post('/verify-email', [AuthController::class, 'validateOTP']);
+    Route::post('/resend-OTP', [AuthController::class, 'resendOTP']);
     Route::post('/user/validation-status', [UserController::class, 'checkValidation']);
     Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
     Route::post('/update-password', [UserController::class, 'updatePassword'])->middleware('auth');
