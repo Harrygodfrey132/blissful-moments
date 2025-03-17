@@ -13,6 +13,7 @@ use App\Notifications\VisitorRequestStatusNotification;
 use App\Notifications\VisitorSubmissionRequestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ContributionRequestController extends Controller
@@ -41,26 +42,31 @@ class ContributionRequestController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'contribution_id' => 'required',
-            'user_id' => 'required',
+            'contribution_id' => 'required|exists:contributions,id',
+            'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'fullName' => 'required|string|max:255',
             'email' => 'required|email',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // Max 5MB
         ]);
 
-        // If validation fails, return a JSON response with error details
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors()
-            ], 422); // HTTP status code 422 for validation error
+            ], 422);
         }
 
-        // Get the validated data
         $validatedData = $validator->validated();
 
-        // Create the contribution request using $validatedData
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('contributions', 'public');
+            $fileUrl = url(Storage::url($imagePath));
+        }
+        // Create the contribution request
         $contributionRequest = ContributionRequest::create([
             'contribution_id' => $validatedData['contribution_id'],
             'user_id' => $validatedData['user_id'],
@@ -68,6 +74,7 @@ class ContributionRequestController extends Controller
             'description' => $validatedData['description'],
             'full_name' => $validatedData['fullName'],
             'email' => $validatedData['email'],
+            'image' =>  $fileUrl ?? "",
             'status' => ContributionRequest::PENDING,
         ]);
 
@@ -77,14 +84,12 @@ class ContributionRequestController extends Controller
         Mail::to($contributionRequest->user->email)->send(new UserContributionRequest($contributionRequest, $userTemplate));
         Mail::to($contributionRequest->email)->send(new VisitorContributionRequest($contributionRequest, $visitorTemplate));
 
-        // Return a success response with the created data
         return response()->json([
             'status' => 'success',
             'message' => 'Contribution request submitted successfully.',
             'data' => $contributionRequest
         ], 200);
     }
-
 
     // Accept a contribution request
     public function updateStatus(Request $request)
@@ -105,8 +110,8 @@ class ContributionRequestController extends Controller
                 'contribution_id' => $contributionRequest->contribution_id,
                 'name' => $contributionRequest->name,
                 'description' => $contributionRequest->description,
+                'image' => $contributionRequest->image,
             ]);
-
         } else {
         }
         $template = Template::find(Template::REQUEST_STATUS_UPDATE_EMAIL);

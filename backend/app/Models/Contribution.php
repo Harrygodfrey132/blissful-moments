@@ -10,7 +10,7 @@ class Contribution extends Model
     protected $fillable = [
         'page_id',
         'tagline',
-        'status'
+        'status',
     ];
 
 

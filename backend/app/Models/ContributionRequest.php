@@ -18,7 +18,8 @@ class ContributionRequest extends Model
         'name',
         'description',
         'status',
-        'email'
+        'email',
+        'image'
     ];
 
     public function user(): BelongsTo

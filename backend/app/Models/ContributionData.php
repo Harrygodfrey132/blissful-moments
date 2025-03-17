@@ -9,7 +9,8 @@ class ContributionData extends Model
     protected $fillable = [
         'contribution_id',
         'name',
-        'description'
+        'description',
+        'image'
     ];
 
     public function favourites()

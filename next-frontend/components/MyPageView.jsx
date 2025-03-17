@@ -295,7 +295,7 @@ const MyPageView = ({ pageData }) => {
       {/* Tab Component */}
       <TabComponentView pageData={pageData} />
       {/* Floating Button */}
-      <div className="fixed bottom-6 right-6 z-40">
+      {/* <div className="fixed bottom-6 right-6 z-40">
         <button
           className="bg-[#7497ac] text-white p-2.5 rounded-full shadow flex items-center gap-2 transition"
           onClick={togglePanel}
@@ -303,7 +303,7 @@ const MyPageView = ({ pageData }) => {
           <MdSettings size={24} />
           Page Settings
         </button>
-      </div>
+      </div> */}
       {/* Sliding Panel */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${

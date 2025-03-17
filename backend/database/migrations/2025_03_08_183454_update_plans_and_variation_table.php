@@ -15,9 +15,33 @@ return new class extends Migration
             $table->string('stripe_product_id')->nullable()->after('name');
         });
 
+
+        if (!Schema::hasTable('plan_variations')) {
+            Schema::create('plan_variations', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('plan_id');
+                $table->integer('duration');
+                $table->decimal('price', 10, 2);
+                $table->string('stripe_price_id')->nullable();
+                $table->timestamps();
+            });
+        }
         Schema::table('plan_variations', function (Blueprint $table) {
-            $table->string('stripe_price_id')->nullable()->after('plan_id');
-            $table->dropColumn('billing_cycle');
+            if (!Schema::hasColumn('plan_variations', 'plan_id')) {
+                $table->unsignedBigInteger('plan_id')->after('id');
+            }
+
+            if (!Schema::hasColumn('plan_variations', 'duration')) {
+                $table->integer('duration')->after('plan_id');
+            }
+
+            if (!Schema::hasColumn('plan_variations', 'price')) {
+                $table->decimal('price', 10, 2)->after('duration');
+            }
+
+            if (!Schema::hasColumn('plan_variations', 'stripe_price_id')) {
+                $table->string('stripe_price_id')->nullable()->after('price');
+            }
         });
     }
 
@@ -31,7 +55,21 @@ return new class extends Migration
         });
 
         Schema::table('plan_variations', function (Blueprint $table) {
-            $table->dropColumn('stripe_price_id');
+            if (Schema::hasColumn('plan_variations', 'stripe_price_id')) {
+                $table->dropColumn('stripe_price_id');
+            }
+
+            if (Schema::hasColumn('plan_variations', 'price')) {
+                $table->dropColumn('price');
+            }
+
+            if (Schema::hasColumn('plan_variations', 'duration')) {
+                $table->dropColumn('duration');
+            }
+
+            if (Schema::hasColumn('plan_variations', 'plan_id')) {
+                $table->dropColumn('plan_id');
+            }
         });
     }
 };
