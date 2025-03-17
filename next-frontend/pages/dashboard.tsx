@@ -32,6 +32,7 @@ const DashboardPage = () => {
   const [isAccountSuspended, setIsAccountSuspended] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(IN_ACTIVE);
   const [formattedDate, setFormattedDate] = useState('');
+  const [isCancelSubscriptionModalOpen, setCancelSubscriptionModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -84,6 +85,39 @@ const DashboardPage = () => {
     }
   }, [session?.user?.isSuspended]);
 
+  const handleCancelClick = () => {
+    setCancelSubscriptionModalOpen(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${API.cancelSubscription}`,
+        { userId: session?.user.id },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.accessToken}`, // Ensure authentication
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Subscription canceled successfully!");
+        setTimeout(() => {
+          signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}` });
+        }, 2000);
+      } else {
+        toast.error("Failed to cancel subscription.");
+      }
+    } catch (error: any) {
+      console.error("Error canceling subscription:", error);
+      alert(error.response?.data?.message || "An error occurred.");
+    } finally {
+      setCancelSubscriptionModalOpen(false);
+    }
+  };
+
   const handleCopy = async () => {
     if (typeof window === 'undefined' || !publicUrl) {
       console.warn('Copy failed: publicUrl or window is not available');
@@ -115,7 +149,7 @@ const DashboardPage = () => {
     }
   };
 
-  const handleRenewPlan = async() => {
+  const handleRenewPlan = async () => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${API.createOrder}`,
@@ -146,118 +180,121 @@ const DashboardPage = () => {
       <Sidebar />
 
       <main className="flex-1 px-6 overflow-x-auto">
-  <header className="mb-6 md:mt-0 mt-4">
-    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-      <MdDashboard className="text-blue-600 text-2xl" />
-      Dashboard
-    </h1>
-  </header>
+        <header className="mb-6 md:mt-0 mt-4">
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <MdDashboard className="text-blue-600 text-2xl" />
+            Dashboard
+          </h1>
+        </header>
 
-  {pageData?.is_registered ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-      {/* Subscription Plan */}
-      <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <FaRegCreditCard className="text-blue-500 text-2xl" />
-          Subscription Plan
-        </h2>
-        <span className="text-xs text-white mt-2 inline-block rounded bg-gray-600 shadow-sm py-0.5 px-2">Yearly</span>
+        {pageData?.is_registered ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+            {/* Subscription Plan */}
+            <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <FaRegCreditCard className="text-blue-500 text-2xl" />
+                Subscription Plan
+              </h2>
+              <span className="text-xs text-white mt-2 inline-block rounded bg-gray-600 shadow-sm py-0.5 px-2">Monthly</span>
 
-        {/* Subscription Status */}
-        <div className="mt-4 flex items-center gap-2">
-          {subscriptionStatus === ACTIVE && (
-            <>
-              <CheckCircleIcon className="w-4 h-4 text-green-500" />
-              <p className="text-green-700 font-medium">Active</p>
-            </>
-          )}
-          {subscriptionStatus === EXPIRING_SOON && (
-            <>
-              <ExclamationTriangleIcon className="w-4 h-4 text-yellow-500" />
-              <p className="text-yellow-700 font-medium">Expiring Soon</p>
-            </>
-          )}
-          {subscriptionStatus === EXPIRED && (
-            <>
-              <XCircleIcon className="w-4 h-4 text-red-500" />
-              <p className="text-red-700 font-medium">Expired</p>
-            </>
-          )}
-          {subscriptionStatus === IN_ACTIVE && (
-            <>
-              <MinusCircleIcon className="w-4 h-4 text-gray-500" />
-              <p className="text-gray-700 font-medium">Inactive</p>
-            </>
-          )}
-        </div>
-        <p className="text-yellow-600 mt-2 text-sm font-semibold">
-          Expires on <span className="underline">{formattedDate}</span>
-        </p>
-      </div>
+              {/* Subscription Status */}
+              <div className="mt-4 flex items-center gap-2">
+                {subscriptionStatus === ACTIVE && (
+                  <>
+                    <CheckCircleIcon className="w-4 h-4 text-green-500" />
+                    <p className="text-green-700 font-medium">Active</p>
+                  </>
+                )}
+                {subscriptionStatus === EXPIRING_SOON && (
+                  <>
+                    <ExclamationTriangleIcon className="w-4 h-4 text-yellow-500" />
+                    <p className="text-yellow-700 font-medium">Expiring Soon</p>
+                  </>
+                )}
+                {subscriptionStatus === EXPIRED && (
+                  <>
+                    <XCircleIcon className="w-4 h-4 text-red-500" />
+                    <p className="text-red-700 font-medium">Expired</p>
+                  </>
+                )}
+                {subscriptionStatus === IN_ACTIVE && (
+                  <>
+                    <MinusCircleIcon className="w-4 h-4 text-gray-500" />
+                    <p className="text-gray-700 font-medium">Inactive</p>
+                  </>
+                )}
+              </div>
+              <p className="text-yellow-600 mt-2 text-sm font-semibold">
+                Expires on <span className="underline">{formattedDate}</span>
+              </p>
+              {!isAccountSuspended && (<button onClick={handleCancelClick} className="text-red-600 mt-2 text-sm font-semibold underline">
+                Cancel Subscription
+              </button>)}
+            </div>
 
-      {/* Public URL */}
-      <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <GlobeAltIcon className="text-purple-500 w-10 text-2xl" />
-          Public URL
-        </h2>
-        <div className="mt-4 flex items-center gap-4">
-          <a
-            href={publicUrl}
-            className="text-blue-700 underline hover:text-blue-900 break-all text-sm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {publicUrl}
-          </a>
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition"
-          >
-            <ClipboardDocumentIcon className="w-4 h-4" aria-hidden="true" />
-            {copied ? "Copied!" : "Copy"}
-          </button>
-        </div>
-      </div>
+            {/* Public URL */}
+            <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <GlobeAltIcon className="text-purple-500 w-10 text-2xl" />
+                Public URL
+              </h2>
+              <div className="mt-4 flex items-center gap-4">
+                <a
+                  href={publicUrl}
+                  className="text-blue-700 underline hover:text-blue-900 break-all text-sm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {publicUrl}
+                </a>
+                <button
+                  onClick={handleCopy}
+                  className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition"
+                >
+                  <ClipboardDocumentIcon className="w-4 h-4" aria-hidden="true" />
+                  {copied ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
 
-      {/* QR Code */}
-      <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200 flex flex-col items-center">
-        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <MdOutlineQrCodeScanner className="text-green-500 w-10 text-2xl" />
-          QR Code
-        </h2>
-        <p className="text-sm text-gray-500">Scan to access your page</p>
-        <MdOutlineQrCodeScanner className="text-6xl text-green-600 mt-4" />
-        <a
-          href={pageData?.qr_code}
-          target="blank"
-          download={"qr-code"}
-          className="text-sm text-blue-700 underline hover:text-blue-900 mt-4"
-        >
-          Download QR Code
-        </a>
-      </div>
-    </div>
-  ) : (
-    <div className="text-center mt-10 bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
-        Welcome to <span className="text-blue-600">Blissful Moments</span>
-      </h1>
-      <p className="text-gray-700 text-lg">
-        A sanctuary where cherished memories are beautifully celebrated, lovingly shared, and preserved forever.
-      </p>
-      <p className="text-gray-500 text-sm mt-4 italic">
-        "Every memory has a story; let yours inspire and be remembered."
-      </p>
-      <div className="mt-6">
-        <Link href={ROUTES.myPage} className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 transition">
-          Create Your Memory Journey
-        </Link>
-      </div>
-    </div>
-  )}
-  
-</main>
+            {/* QR Code */}
+            <div className="bg-white p-6 rounded shadow-sm transition-transform hover:scale-[1.02] border border-gray-200 flex flex-col items-center">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <MdOutlineQrCodeScanner className="text-green-500 w-10 text-2xl" />
+                QR Code
+              </h2>
+              <p className="text-sm text-gray-500">Scan to access your page</p>
+              <MdOutlineQrCodeScanner className="text-6xl text-green-600 mt-4" />
+              <a
+                href={pageData?.qr_code}
+                target="blank"
+                download={"qr-code"}
+                className="text-sm text-blue-700 underline hover:text-blue-900 mt-4"
+              >
+                Download QR Code
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center mt-10 bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg shadow-lg">
+            <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
+              Welcome to <span className="text-blue-600">Blissful Moments</span>
+            </h1>
+            <p className="text-gray-700 text-lg">
+              A sanctuary where cherished memories are beautifully celebrated, lovingly shared, and preserved forever.
+            </p>
+            <p className="text-gray-500 text-sm mt-4 italic">
+              "Every memory has a story; let yours inspire and be remembered."
+            </p>
+            <div className="mt-6">
+              <Link href={ROUTES.myPage} className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 transition">
+                Create Your Memory Journey
+              </Link>
+            </div>
+          </div>
+        )}
+
+      </main>
 
 
 
@@ -274,13 +311,39 @@ const DashboardPage = () => {
               >
                 Renew Plan
               </button>
-              </div>
-              <div className='text-center'>
+            </div>
+            <div className='text-center'>
               <button
                 onClick={() => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}` })}
                 className="px-6 py-2 text-sm font-medium text-blue-900 underline font-medium  transition"
               >
                 Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Subscription Cancel Modal */}
+      {isCancelSubscriptionModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg font-semibold">Confirm Cancellation</h2>
+            <p className="text-sm text-gray-600 mt-2">
+              Are you sure you want to cancel your subscription? This action cannot be undone.
+            </p>
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded"
+                onClick={() => setCancelSubscriptionModalOpen(false)}
+              >
+                No, Keep it
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded"
+                onClick={handleConfirmCancel}
+              >
+                Yes, Cancel
               </button>
             </div>
           </div>

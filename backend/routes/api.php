@@ -20,6 +20,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PersonalQuoteController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -132,4 +133,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Account Deletion Request
     Route::post('/request-account-deletion', [GDPRrequestController::class, 'requestAccountDeletion']);
+
+    // Subscription Routes
+    Route::post('/cancel-subscription', [SubscriptionController::class, 'cancel']);
+
+
 });

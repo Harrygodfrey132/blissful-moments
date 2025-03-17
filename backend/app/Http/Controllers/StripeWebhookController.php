@@ -53,6 +53,9 @@ class StripeWebhookController extends Controller
             case 'checkout.session.completed':
                 $session = $event->data->object;
 
+                $subscriptionId = $session->subscription ?? null;
+                $customerId = $session->customer ?? null;
+
                 // Extract the payment details from the session
                 $paymentIntent = $session->payment_intent;
                 $paymentStatus = $session->payment_status;
@@ -60,6 +63,15 @@ class StripeWebhookController extends Controller
                 $planType = $session->metadata->plan_type;
                 $planName = $session->metadata->plan_name;
                 $orderId = $session->metadata->order_id;
+
+                if ($subscriptionId && $customerId) {
+                    // Find user by Stripe customer ID
+                    $user = User::where('stripe_customer_id', $customerId)->first();
+
+                    if ($user) {
+                        $user->update(['stripe_subscription_id' => $subscriptionId]);
+                    }
+                }
 
                 // Update the existing order based on the session data
                 $this->updateOrder($session, $paymentIntent, $paymentStatus, $amount, $planType, $planName, $orderId);

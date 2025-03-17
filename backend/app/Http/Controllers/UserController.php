@@ -191,4 +191,5 @@ class UserController extends Controller
 
         return back()->with('redirect_url', env('FRONTEND_URL') . '/memory/' . $page->name);
     }
+
 }

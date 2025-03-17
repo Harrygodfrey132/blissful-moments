@@ -16,7 +16,7 @@ const ContributionView = ({ contributionData, userId }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSecondFormOpen, setIsSecondFormOpen] = useState(false);
   const [tagline, setTagline] = useState(contributionData?.tagline);
-
+  const [selectedImages, setSelectedImages] = useState([]);
   const popoverRef = useRef(null);
 
   useEffect(() => {
@@ -50,18 +50,18 @@ const ContributionView = ({ contributionData, userId }) => {
     };
   }, []);
 
-  const sendApiRequest = async (endpoint, payload) => {
+  const sendApiRequest = async (endpoint, payload, isMultipart = false) => {
     try {
+      const headers = isMultipart
+        ? { "Content-Type": "multipart/form-data" }
+        : { "Content-Type": "application/json" };
+  
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
         payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { headers }
       );
-
+  
       if (response.status === 200) {
         toast.success("Contribution request submitted successfully.");
         return response.data;
@@ -86,6 +86,27 @@ const ContributionView = ({ contributionData, userId }) => {
     }));
   };
 
+  const handleImageUpload = (e) => {
+    const maxFiles = 20;
+    const maxSizeMB = 25;
+    const files = Array.from(e.target.files);
+
+    if (files.length > maxFiles) {
+      toast.warning(`You can upload up to ${maxFiles} images only.`);
+      return;
+    }
+
+    const validFiles = files.filter(
+      (file) => file.size <= maxSizeMB * 1024 * 1024
+    );
+
+    if (validFiles.length < files.length) {
+      toast.warning(`Some files exceeded ${maxSizeMB}MB and were not added.`);
+    }
+
+    setSelectedImages(validFiles);
+  };
+
   const handleFirstFormSubmit = () => {
     if (formInputs.name && formInputs.message) {
       setIsFormOpen(false);
@@ -100,21 +121,27 @@ const ContributionView = ({ contributionData, userId }) => {
   const handleFinalSubmit = async () => {
     if (additionalFormInputs.fullName && additionalFormInputs.email) {
       try {
-        const newContribution = { ...formInputs };
-
-        setContributions((prev) => [...prev, newContribution]);
+        const formData = new FormData();
+        formData.append("name", formInputs.name);
+        formData.append("description", formInputs.message);
+        formData.append("fullName", additionalFormInputs.fullName);
+        formData.append("email", additionalFormInputs.email);
+        formData.append("contribution_id", contributionData.id);
+        formData.append("user_id", userId);
+  
+        // Append images to FormData
+        selectedImages.forEach((file, index) => {
+          formData.append(`images[${index}]`, file);
+        });
+  
+        // Send API request with FormData
+        await sendApiRequest(`${API.storeUserContributionData}`, formData, true);
+  
+        setContributions((prev) => [...prev, formInputs]);
         setFormInputs({ name: "", message: "" });
         setAdditionalFormInputs({ fullName: "", email: "" });
+        setSelectedImages([]); // Clear selected images
         setIsSecondFormOpen(false);
-
-        await sendApiRequest(`${API.storeUserContributionData}`, {
-          name: newContribution.name,
-          description: newContribution.message,
-          fullName: additionalFormInputs.fullName,
-          email: additionalFormInputs.email,
-          contribution_id: contributionData.id,
-          user_id: userId,
-        });
       } catch {
         setContributions((prev) => prev.slice(0, -1));
       }
@@ -122,6 +149,7 @@ const ContributionView = ({ contributionData, userId }) => {
       toast.warning("Please provide your full name and email.");
     }
   };
+  
 
   return (
     <div className="mb-20 mt-20 vu-contribution">
@@ -160,6 +188,20 @@ const ContributionView = ({ contributionData, userId }) => {
                   className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
                   rows={6}
                 />
+
+                <input
+                  type="file"
+                  id="images"
+                  name="images"
+                  accept="image/*"
+                  multiple
+                  className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                  onChange={handleImageUpload}
+                />
+                <p className="text-sm text-gray-500 mb-2">
+                  Max 20 images, each up to 25MB.
+                </p>
+
                 <button
                   type="button"
                   onClick={handleFirstFormSubmit}
@@ -231,8 +273,7 @@ const ContributionView = ({ contributionData, userId }) => {
               <p className="border-dashed border-gray-300 bg-[#f8f8f8] font-playfair text-blue-light-900 p-3">
                 {contribution.message}
                 <div className="text-blue-light-900 font-medium py-3">
-                { "- " + contribution.name}
-
+                  {"- " + contribution.name}
                 </div>
               </p>
               {/* <h3 className="border-dashed border-gray-300 bg-[#f8f8f8] font-semibold font-playfair text-blue-light-900 p-3">

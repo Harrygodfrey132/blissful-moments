@@ -15,6 +15,7 @@ export const API = {
   fetchReCaptchaKey: "/get-recaptcha-key",
   submitRequestDemoForm: "/submit-request-demo",
   requestAccountDelete: "/request-account-deletion",
+  cancelSubscription:"/cancel-subscription",
 
   // Page management
   savePageSettings: "/page/settings",
