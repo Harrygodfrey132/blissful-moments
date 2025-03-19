@@ -5,6 +5,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import ContributionView from "./ContributionView";
+import GalleryImageUploadView from "./GalleryImageUploadView";
 
 export default function StyledTabs({ pageData }) {
   const [isPageLinkCopied, setIsPageLinkCopied] = useState(false);
@@ -31,15 +32,18 @@ export default function StyledTabs({ pageData }) {
   const [isFavouritesVisible] = useState(pageData.favourites?.status == 1);
   const [isGalleryVisible] = useState(pageData.gallery?.status == 1);
   const [isTimelineVisible] = useState(pageData.timeline?.status == 1);
+  const [isContributionVisible] = useState(pageData.contributions?.status == 1);
   const [isSocialMediaVisible] = useState(
     pageData.social_media_data?.status == 1
   );
+  console.log(pageData);
+
   const tabs = [
     { label: "Personal Quote", ref: tab1Ref, visible: isPersonalQuoteVisible },
     { label: "Gallery", ref: tab2Ref, visible: isGalleryVisible },
     { label: "Obituary", ref: tab3Ref, visible: isObituaryVisible },
     { label: "Timeline", ref: tab4Ref, visible: isTimelineVisible },
-    { label: "Contributions", ref: tab5Ref, visible: true },
+    { label: "Contributions", ref: tab5Ref, visible: isContributionVisible },
     { label: "Favourites", ref: tab6Ref, visible: isFavouritesVisible },
     { label: "Social Media", ref: tab7Ref, visible: isSocialMediaVisible },
   ];
@@ -92,13 +96,35 @@ export default function StyledTabs({ pageData }) {
             <div className="mx-auto !max-w-4xl px-4 md:py-6 py-0">
               <div className="flex items-center justify-between relative">
                 {/* Left Icon */}
-                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" className="text-blue-light-900 absolute top-2 left-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M4.58341 17.3211C3.55316 16.2274 3 15 3 13.0103C3 9.51086 5.45651 6.37366 9.03059 4.82318L9.92328 6.20079C6.58804 8.00539 5.93618 10.346 5.67564 11.822C6.21263 11.5443 6.91558 11.4466 7.60471 11.5105C9.40908 11.6778 10.8312 13.159 10.8312 15C10.8312 16.933 9.26416 18.5 7.33116 18.5C6.2581 18.5 5.23196 18.0095 4.58341 17.3211ZM14.5834 17.3211C13.5532 16.2274 13 15 13 13.0103C13 9.51086 15.4565 6.37366 19.0306 4.82318L19.9233 6.20079C16.588 8.00539 15.9362 10.346 15.6756 11.822C16.2126 11.5443 16.9156 11.4466 17.6047 11.5105C19.4091 11.6778 20.8312 13.159 20.8312 15C20.8312 16.933 19.2642 18.5 17.3312 18.5C16.2581 18.5 15.232 18.0095 14.5834 17.3211Z"></path></svg>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 24 24"
+                  className="text-blue-light-900 absolute top-2 left-1"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M4.58341 17.3211C3.55316 16.2274 3 15 3 13.0103C3 9.51086 5.45651 6.37366 9.03059 4.82318L9.92328 6.20079C6.58804 8.00539 5.93618 10.346 5.67564 11.822C6.21263 11.5443 6.91558 11.4466 7.60471 11.5105C9.40908 11.6778 10.8312 13.159 10.8312 15C10.8312 16.933 9.26416 18.5 7.33116 18.5C6.2581 18.5 5.23196 18.0095 4.58341 17.3211ZM14.5834 17.3211C13.5532 16.2274 13 15 13 13.0103C13 9.51086 15.4565 6.37366 19.0306 4.82318L19.9233 6.20079C16.588 8.00539 15.9362 10.346 15.6756 11.822C16.2126 11.5443 16.9156 11.4466 17.6047 11.5105C19.4091 11.6778 20.8312 13.159 20.8312 15C20.8312 16.933 19.2642 18.5 17.3312 18.5C16.2581 18.5 15.232 18.0095 14.5834 17.3211Z"></path>
+                </svg>
                 {/* Content */}
                 <div className="text-center m-1 text-blue-900 px-6 py-5 md:text-4xl text-3xl  font-playfair font-medium">
                   {pageData.personal_quote?.quote}
                 </div>
                 {/* Right Icon */}
-                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" className="text-blue-light-900 absolute top-2 right-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M19.4167 6.67891C20.4469 7.77257 21.0001 9 21.0001 10.9897C21.0001 14.4891 18.5436 17.6263 14.9695 19.1768L14.0768 17.7992C17.4121 15.9946 18.0639 13.6539 18.3245 12.178C17.7875 12.4557 17.0845 12.5533 16.3954 12.4895C14.591 12.3222 13.1689 10.8409 13.1689 9C13.1689 7.067 14.7359 5.5 16.6689 5.5C17.742 5.5 18.7681 5.99045 19.4167 6.67891ZM9.41669 6.67891C10.4469 7.77257 11.0001 9 11.0001 10.9897C11.0001 14.4891 8.54359 17.6263 4.96951 19.1768L4.07682 17.7992C7.41206 15.9946 8.06392 13.6539 8.32447 12.178C7.78747 12.4557 7.08452 12.5533 6.39539 12.4895C4.59102 12.3222 3.16895 10.8409 3.16895 9C3.16895 7.067 4.73595 5.5 6.66895 5.5C7.742 5.5 8.76814 5.99045 9.41669 6.67891Z"></path></svg>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 24 24"
+                  className="text-blue-light-900 absolute top-2 right-1"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M19.4167 6.67891C20.4469 7.77257 21.0001 9 21.0001 10.9897C21.0001 14.4891 18.5436 17.6263 14.9695 19.1768L14.0768 17.7992C17.4121 15.9946 18.0639 13.6539 18.3245 12.178C17.7875 12.4557 17.0845 12.5533 16.3954 12.4895C14.591 12.3222 13.1689 10.8409 13.1689 9C13.1689 7.067 14.7359 5.5 16.6689 5.5C17.742 5.5 18.7681 5.99045 19.4167 6.67891ZM9.41669 6.67891C10.4469 7.77257 11.0001 9 11.0001 10.9897C11.0001 14.4891 8.54359 17.6263 4.96951 19.1768L4.07682 17.7992C7.41206 15.9946 8.06392 13.6539 8.32447 12.178C7.78747 12.4557 7.08452 12.5533 6.39539 12.4895C4.59102 12.3222 3.16895 10.8409 3.16895 9C3.16895 7.067 4.73595 5.5 6.66895 5.5C7.742 5.5 8.76814 5.99045 9.41669 6.67891Z"></path>
+                </svg>
               </div>
             </div>
           </div>
@@ -111,18 +137,21 @@ export default function StyledTabs({ pageData }) {
               <div className="text-blue-light-900 font-playfair md:text-4xl text-3xl  border-b-4 border-blue-light-800 font-400 inline-block">
                 {pageData.gallery?.gallery_name}
               </div>
-              <div className="text-blue-light-900 text-lg font-normal font-playfair">
-                Share the page?
-                <button
-                  onClick={handleCopyLink}
-                  className={`md:text-lg ml-3 text-lg font-playfair border border-gray-300 font-medium px-4 py-1.5 rounded-lg ${
-                    isPageLinkCopied
-                      ? "bg-blue-light-900 text-white"
-                      : "bg-[#F3EAEACC] text-blue-light-900"
-                  }`}
-                >
-                  {isPageLinkCopied ? "Copied!" : "Copy Link"}
-                </button>
+              <div className="flex gap-3 items-center">
+                <GalleryImageUploadView folders={pageData.gallery?.folders}/>
+                <div className="text-blue-light-900 text-lg font-normal font-playfair">
+                  Share the page?
+                  <button
+                    onClick={handleCopyLink}
+                    className={`md:text-lg ml-3 text-lg font-playfair border border-gray-300 font-medium px-4 py-1.5 rounded-lg ${
+                      isPageLinkCopied
+                        ? "bg-blue-light-900 text-white"
+                        : "bg-[#F3EAEACC] text-blue-light-900"
+                    }`}
+                  >
+                    {isPageLinkCopied ? "Copied!" : "Copy Link"}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -281,12 +310,14 @@ export default function StyledTabs({ pageData }) {
           </div>
         )}
         {/* Contribution */}
-        <div ref={tab5Ref}>
-          <ContributionView
-            contributionData={pageData?.contributions}
-            userId={pageData?.user_id}
-          />
-        </div>
+        {isContributionVisible && (
+          <div ref={tab5Ref}>
+            <ContributionView
+              contributionData={pageData?.contributions}
+              userId={pageData?.user_id}
+            />
+          </div>
+        )}
         {/* Favourites */}
         {isFavouritesVisible && (
           <div ref={tab6Ref}>

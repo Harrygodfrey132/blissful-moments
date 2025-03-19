@@ -5,6 +5,7 @@ import { usePageContext } from "../context/PageContext";
 import { API } from "../utils/api";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 // Define a type for contributions
 type Contribution = {
@@ -400,6 +401,11 @@ const Contributions = () => {
 
               {/* Editable Contribution Block */}
               <div className="flex flex-col space-y-4">
+                <Image
+                src={contribution.image}
+                height={300}
+                width={300}
+                alt="Contribution Image" />
                 <p
                   className="border border-dashed w-full text-lg bg-[#f8f8f8] font-playfair text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
                   contentEditable={isContributionsEnabled}

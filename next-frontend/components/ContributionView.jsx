@@ -25,6 +25,7 @@ const ContributionView = ({ contributionData, userId }) => {
         contributionData?.contribution_data.map((data) => ({
           name: data.name,
           message: data.description,
+          image: data.image,
         }))
       );
     } else {
@@ -32,6 +33,7 @@ const ContributionView = ({ contributionData, userId }) => {
         contributionData?.contribution_data.map((data) => ({
           name: data.name,
           message: data.description,
+          image: data.image,
         }))
       );
     }
