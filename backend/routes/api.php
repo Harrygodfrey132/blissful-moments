@@ -124,6 +124,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
     });
 
+    // Gallery Request Controller
+    Route::prefix('gallery-requests')->group(function () {
+        Route::get('/listing', [GalleryUploadRequestController::class, 'index']);
+        Route::post('/approve-upload/{id}', [GalleryUploadRequestController::class, 'approveUpload']);
+        Route::post('/decline-upload/{id}', [GalleryUploadRequestController::class, 'declineUpload']);
+    });
+
     // Access Request Controller
     Route::get('/all-access-requests', [AccessRequestController::class, 'index']);
     Route::post('/update/access-requests', [AccessRequestController::class, 'updateStatus']);
