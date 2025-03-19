@@ -23,7 +23,7 @@
                         </a>
 
                         <!-- Email Settings Tile -->
-                        <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
+                        {{-- <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
                             href="{{ route('configuration.email.settings') }}">
                             <x-icon-email-icon class="w-10 h-10 text-blue-500" />
                             <div>
@@ -32,7 +32,7 @@
                                     Set email sender name, admin name, and admin email address.
                                 </p>
                             </div>
-                        </a>
+                        </a> --}}
                         <!-- SMTP Settings Tile -->
                         <a class="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md transition-transform hover:scale-105 hover:shadow-lg"
                             href="{{ route('configuration.smtp.settings') }}">

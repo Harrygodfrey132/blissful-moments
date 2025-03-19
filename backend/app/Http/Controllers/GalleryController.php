@@ -51,6 +51,20 @@ class GalleryController extends Controller
             return response()->json(['success' => false, 'message' => 'No images found in the request.'], 422);
         }
 
+        // Get current image count in the gallery
+        $currentImageCount = GalleryImage::where('gallery_id', $validated['gallery_id'])->count();
+        $newImagesCount = count($request->file('images'));
+        $totalImages = $currentImageCount + $newImagesCount;
+
+        // Check if the new uploads exceed the limit
+        if ($totalImages > 100) {
+            $excess = $totalImages - 100;
+            return response()->json([
+                'success' => false,
+                'message' => "You can store a maximum of 100 images in a single gallery. Please remove $excess images from your selection or delete existing ones.",
+            ], 422);
+        }
+
         try {
             DB::beginTransaction();
 
@@ -92,9 +106,6 @@ class GalleryController extends Controller
             ]);
         }
     }
-
-
-
 
     /**
      * Save or update gallery folder for the user's page.

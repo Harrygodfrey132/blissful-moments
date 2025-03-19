@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\AccessRequestController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigurationController;
@@ -12,6 +10,7 @@ use App\Http\Controllers\ContributionRequestController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\GalleryUploadRequestController;
 use App\Http\Controllers\GDPRrequestController;
 use App\Http\Controllers\ObituaryController;
 use App\Http\Controllers\OrderController;
@@ -32,7 +31,6 @@ Route::post('/create-checkout-session', [PaymentController::class, 'createChecko
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 Route::get('/countries', [CountryController::class, 'fetchCountries']);
 Route::get('/memory/{pageName}', [PageController::class, 'show']);
-Route::post('/storeUserContributionData', [ContributionRequestController::class, 'store']);
 Route::post('/verify-password', [PageController::class, 'verifyPassword']);
 Route::post('/request-access', [AccessRequestController::class, 'store']);
 Route::post('/verify/request-access-data', [AccessRequestController::class, 'verifyData']);
@@ -44,6 +42,8 @@ Route::post('/update-new-password', [AuthController::class, 'updateNewPassword']
 Route::get('/get-recaptcha-key', [ConfigurationController::class, 'fetchReCaptchaKey']);
 Route::post('/rsubmit-request-demo', [ContactController::class, 'requestDemo']);
 Route::get('/plans/listing', [PlanController::class, 'plansListing']);
+Route::post('/storeUserContributionData', [ContributionRequestController::class, 'store']);
+Route::post('/send-image-upload-request', [GalleryUploadRequestController::class, 'store']);
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {

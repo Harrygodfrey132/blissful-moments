@@ -91,6 +91,6 @@ export const API = {
   createCheckoutSession: "/create-checkout-session",
 
   // Plans Listing
-
   fetchAllPlans: "/plans/listing",
+  sendImageUploadRequest : "/send-image-upload-request"
 };

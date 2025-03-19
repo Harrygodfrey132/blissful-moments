@@ -126,9 +126,4 @@ class ContributionController extends Controller
         return response()->json(['message' => 'Contribution deleted successfully'], 200);
     }
 
-
-    public function storeUserRequest(Request $request)
-    {
-
-    }
 }
