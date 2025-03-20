@@ -12,6 +12,7 @@ use App\Notifications\UserContributionRequestNotification;
 use App\Notifications\VisitorRequestStatusNotification;
 use App\Notifications\VisitorSubmissionRequestNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -79,8 +80,8 @@ class ContributionRequestController extends Controller
         ]);
 
         // Send Emails to user and visitor
-        $userTemplate = Template::find(Template::CONTRIBUTION_REQUEST_EMAIL);
-        $visitorTemplate = Template::find(Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL);
+        $userTemplate = Template::where('name', Template::CONTRIBUTION_REQUEST_EMAIL)->first();
+        $visitorTemplate = Template::where('name', Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL)->first();
         Mail::to($contributionRequest->user->email)->send(new UserContributionRequest($contributionRequest, $userTemplate));
         Mail::to($contributionRequest->email)->send(new VisitorContributionRequest($contributionRequest, $visitorTemplate));
 

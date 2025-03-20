@@ -12,13 +12,14 @@
         "blade-ui-kit/blade-icons": "^1.7",
         "cviebrock/eloquent-sluggable": "^11.0",
         "diglactic/laravel-breadcrumbs": "^9.0",
+        "intervention/image": "^2.3",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
+        "laravel/telescope": "^5.6",
         "laravel/tinker": "^2.9",
         "php-flasher/flasher-laravel": "^2.1",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "stripe/stripe-php": "^16.4",
-        "intervention/image": "^2.3"
+        "stripe/stripe-php": "^16.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

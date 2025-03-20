@@ -11,6 +11,7 @@ class GalleryImageRequest extends Model
         'user_id',
         'name',
         'email',
+        'folder',
         'images',
         'status'
     ];

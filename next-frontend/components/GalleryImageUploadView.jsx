@@ -50,6 +50,12 @@ const GalleryImageUploadView = ({ pageData }) => {
       toast.warning("Please select at least one image to upload.");
       return;
     }
+
+    if (!selectedFolder && !newFolder.trim()) {
+      toast.warning("Please select a folder or create a new one.");
+      return;
+    }
+
     setIsFormOpen(false);
     setTimeout(() => {
       setIsSecondFormOpen(true);
@@ -108,8 +114,6 @@ const GalleryImageUploadView = ({ pageData }) => {
       setSelectedFolder("");
       setNewFolder("");
       setIsSecondFormOpen(false);
-
-      toast.success("Images uploaded successfully.");
     } catch {
       toast.error("Upload failed.");
     }

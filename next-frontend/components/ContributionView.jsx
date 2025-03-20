@@ -18,7 +18,7 @@ const ContributionView = ({ contributionData, userId }) => {
   const [tagline, setTagline] = useState(contributionData?.tagline);
   const [selectedImage, setSelectedImage] = useState(null);
   const popoverRef = useRef(null);
-
+  const [modalStep, setModalStep] = useState(0); // 0 = closed, 1 = form, 2 = details
   useEffect(() => {
     if (Array.isArray(contributionData)) {
       setContributions(
@@ -106,7 +106,8 @@ const ContributionView = ({ contributionData, userId }) => {
 
   const handleFirstFormSubmit = () => {
     if (formInputs.name && formInputs.message) {
-      setIsFormOpen(false);
+      setModalStep(2);
+      // setIsFormOpen(false);
       setTimeout(() => {
         setIsSecondFormOpen(true);
       }, 10);
@@ -144,6 +145,8 @@ const ContributionView = ({ contributionData, userId }) => {
         setAdditionalFormInputs({ fullName: "", email: "" });
         setSelectedImage(null); // Clear the selected image
         setIsSecondFormOpen(false);
+        setModalStep(0);
+
       } catch (error) {
         toast.error("Failed to submit contribution.");
       }
@@ -161,87 +164,105 @@ const ContributionView = ({ contributionData, userId }) => {
         {isContributionsEnabled && (
           <div className="relative" ref={popoverRef}>
             <button
-              onClick={() => setIsFormOpen(true)}
+              onClick={() => setModalStep(1)}
               className="text-white add-button px-6 py-2.5 font-playfair"
             >
               Add Contribution
             </button>
 
-            {isFormOpen && (
-              <div className="popover-container popover-contribution border border-gray-300 transition-all">
-                <div className="popover-arrow"></div>
-                <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
-                  Create a Contribution
-                </h2>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Insert Name or Connection"
-                  value={formInputs.name}
-                  onChange={(e) => handleInputChange(e, setFormInputs)}
-                  className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-                />
-                <textarea
-                  name="message"
-                  placeholder="Write your message"
-                  value={formInputs.message}
-                  onChange={(e) => handleInputChange(e, setFormInputs)}
-                  className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-                  rows={6}
-                />
-
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept="image/*"
-                  className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-                  onChange={handleImageUpload}
-                />
-                <p className="text-sm text-gray-500 mb-2">Max up to 5MB.</p>
-
-                <button
-                  type="button"
-                  onClick={handleFirstFormSubmit}
-                  className="text-white add-button px-4 py-2.5"
-                >
-                  Next
-                </button>
-              </div>
-            )}
-
-            {isSecondFormOpen && (
+            {modalStep > 0 && (
               <div className="popover-container border border-gray-300 transition-all">
-                <div className="popover-arrow"></div>
-                <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
-                  Provide Your Details
-                </h2>
-                <input
-                  type="text"
-                  name="fullName"
-                  placeholder="Full Name"
-                  value={additionalFormInputs.fullName}
-                  onChange={(e) =>
-                    handleInputChange(e, setAdditionalFormInputs)
-                  }
-                  className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={additionalFormInputs.email}
-                  onChange={(e) =>
-                    handleInputChange(e, setAdditionalFormInputs)
-                  }
-                  className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
-                />
-                <button
-                  onClick={handleFinalSubmit}
-                  className="text-white add-button px-4 py-2.5"
-                >
-                  Submit
-                </button>
+                {modalStep === 1 && (
+                  <>
+                    <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
+                      Create a Contribution
+                    </h2>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Insert Name or Connection"
+                      value={formInputs.name}
+                      onChange={(e) => handleInputChange(e, setFormInputs)}
+                      className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                    />
+                    <textarea
+                      name="message"
+                      placeholder="Write your message"
+                      value={formInputs.message}
+                      onChange={(e) => handleInputChange(e, setFormInputs)}
+                      className="w-full mb-4 p-2 text-base resize-none font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                      rows={6}
+                    />
+                    <div className="mb-4">
+                      <label
+                        htmlFor="image"
+                        className="cursor-pointer text-blue-500 text-base underline block"
+                      >
+                        {selectedImage
+                          ? `Selected: ${selectedImage.name}`
+                          : "Choose Image"}
+                      </label>
+                      <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageUpload}
+                      />
+                      <span className="text-gray-500 text-sm">Max size upto 5MB</span>
+                    </div>
+
+                    <button
+                      onClick={handleFirstFormSubmit}
+                      className="text-white add-button px-4 py-2.5"
+                    >
+                      Next
+                    </button>
+                  </>
+                )}
+
+                {modalStep === 2 && (
+                  <>
+                    <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
+                      Provide Your Details
+                    </h2>
+                    <input
+                      type="text"
+                      name="fullName"
+                      placeholder="Full Name"
+                      value={additionalFormInputs.fullName}
+                      onChange={(e) =>
+                        handleInputChange(e, setAdditionalFormInputs)
+                      }
+                      className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email Address"
+                      value={additionalFormInputs.email}
+                      onChange={(e) =>
+                        handleInputChange(e, setAdditionalFormInputs)
+                      }
+                      className="w-full mb-4 p-2 text-base font-playfair border-dashed border-gray-300 placeholder:text-blue-light-900"
+                    />
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => setModalStep(1)}
+                        className="text-gray-500 underline text-base"
+                      >
+                        Back
+                      </button>
+                      <button
+                        onClick={handleFinalSubmit}
+                        className="text-white add-button px-4 py-2.5"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -281,9 +302,9 @@ const ContributionView = ({ contributionData, userId }) => {
               )}
               <p className="border-dashed border-gray-300 bg-[#f8f8f8] font-playfair text-blue-light-900 p-3">
                 {contribution.message}
-                <div className="text-blue-light-900 font-medium py-3">
+                <span className="block text-blue-light-900 font-medium py-3">
                   {"- " + contribution.name}
-                </div>
+                </span>
               </p>
             </div>
           ))}

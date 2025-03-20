@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command(SendSubscriptionReminder::class)->dailyAt('00:00');
+Schedule::command('telescope:prune')->daily();

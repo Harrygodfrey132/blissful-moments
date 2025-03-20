@@ -137,8 +137,8 @@ const Contributions = () => {
 
   // Handle image selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImage(e.target.files[0]); // ✅ Store selected file
     }
   };
 
@@ -323,7 +323,6 @@ const Contributions = () => {
 
                 <input
                   name="image"
-                  value={formInputs.message}
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
@@ -336,7 +335,7 @@ const Contributions = () => {
                   >
                     Add Contribution
                   </button>
-                  <img src="img/dove.svg" alt="Dove icon"></img>
+                  <Image src="/img/dove.svg" alt="Dove" width={50} height={50} />
                 </div>
               </div>
             )}
