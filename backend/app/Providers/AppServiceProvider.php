@@ -43,16 +43,16 @@ class AppServiceProvider extends ServiceProvider
             'conf_mail_from_address',
             'conf_mailgun_domain',
             'conf_mail_from_name'
-        ])->pluck('conf_value', 'conf_key');
+        ])->pluck('conf_value', 'conf_key')->toArray();
 
         // Override mail config dynamically
-        Config::set('mail.mailers.smtp.host', $smtpSettings['conf_mail_host'] ?? env('MAIL_HOST'));
-        Config::set('mail.mailers.smtp.port', (int) $smtpSettings['conf_mail_port'] ?? env('MAIL_PORT'));
-        Config::set('mail.mailers.smtp.username', $smtpSettings['conf_mail_username'] ?? env('MAIL_USERNAME'));
-        Config::set('mail.mailers.smtp.password', $smtpSettings['conf_mail_password'] ?? env('MAIL_PASSWORD'));
-        Config::set('mail.mailers.smtp.encryption', $smtpSettings['conf_mail_encryption'] ?? env('MAIL_ENCRYPTION'));
-        Config::set('mail.from.address', $smtpSettings['conf_mail_from_address'] ?? env('MAIL_FROM_ADDRESS'));
-        Config::set('mail.from.name', $smtpSettings['conf_mail_from_name'] ?? env('MAIL_FROM_NAME'));
+        Config::set('mail.mailers.smtp.host', $smtpSettings['conf_mail_host'] ?? env('MAIL_HOST', 'default_host'));
+        Config::set('mail.mailers.smtp.port', isset($smtpSettings['conf_mail_port']) ? (int) $smtpSettings['conf_mail_port'] : env('MAIL_PORT', 587));
+        Config::set('mail.mailers.smtp.username', $smtpSettings['conf_mail_username'] ?? env('MAIL_USERNAME', 'default_user'));
+        Config::set('mail.mailers.smtp.password', $smtpSettings['conf_mail_password'] ?? env('MAIL_PASSWORD', 'default_pass'));
+        Config::set('mail.mailers.smtp.encryption', $smtpSettings['conf_mail_encryption'] ?? env('MAIL_ENCRYPTION', 'tls'));
+        Config::set('mail.from.address', $smtpSettings['conf_mail_from_address'] ?? env('MAIL_FROM_ADDRESS', 'noreply@example.com'));
+        Config::set('mail.from.name', $smtpSettings['conf_mail_from_name'] ?? env('MAIL_FROM_NAME', 'Example App'));
 
 
 
