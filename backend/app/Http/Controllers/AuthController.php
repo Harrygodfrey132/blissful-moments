@@ -89,8 +89,7 @@ class AuthController extends Controller
         OTP::create([
             'user_id' => $userId,
             'email' => $email,
-            // 'otp' => $otpValue,
-            'otp' => 1111,
+            'otp' => $otpValue,
             'expires_at' => $expiresAt,
         ]);
 

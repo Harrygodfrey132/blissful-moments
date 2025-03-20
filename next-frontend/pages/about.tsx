@@ -4,7 +4,7 @@ export const metadata = {
 }
 
 import Hero from '../components/hero-about'
-import Content from '../components/about-content'
+import Content from '../components/AboutContent'
 import Team from '../components/team'
 
 export default function About() {

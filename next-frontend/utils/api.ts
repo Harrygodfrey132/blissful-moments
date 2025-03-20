@@ -79,7 +79,6 @@ export const API = {
 
   // Request Access
   requestAccess: "/request-access",
-  getAccessRequests: "/all-access-requests",
   updateAccessRequestStatus: "/update/access-requests",
   verifyRequestAccessData: "/verify/request-access-data",
   submitUserChanges: "/submit/user-Changes",
@@ -92,5 +91,9 @@ export const API = {
 
   // Plans Listing
   fetchAllPlans: "/plans/listing",
-  sendImageUploadRequest : "/send-image-upload-request"
+
+  sendImageUploadRequest : "/send-image-upload-request",
+  getGalleryRequests: "/gallery-requests/listing",
+  updateGalleryRequestStatus: "/gallery-requests/update/status",
+
 };

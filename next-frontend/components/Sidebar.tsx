@@ -120,12 +120,12 @@ export default function Sidebar() {
             </li>
             <li>
               <Link
-                href={ROUTES.accessRequests}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/access-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                href={ROUTES.galleryRequests}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded transition ${isActive("/gallery-requests") ? "bg-blue-100 text-blue-600" : "text-gray-700 hover:bg-gray-100"
                   }`}
               >
-                <span className="material-icons-outlined">key</span>
-                <span className="ml-3">Access Requests</span>
+                <span className="material-icons-outlined">image</span>
+                <span className="ml-3">Gallery Requests</span>
               </Link>
             </li>
           </ul>

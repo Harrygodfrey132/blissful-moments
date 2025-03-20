@@ -1,4 +1,4 @@
-import Accordion from '../components/utils/accordion'
+import Accordion from './utils/accordion'
 
 const faqItems = [
   {

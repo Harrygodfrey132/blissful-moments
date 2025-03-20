@@ -17,6 +17,7 @@ export const ROUTES = {
   updatePassword: "/update-password",
   contributionRequests: "/contribution-requests",
   accessRequests: "/access-requests",
+ galleryRequests: "/gallery-requests",
   submissionSuccessful: "/submission-successful",
   viewSubmittedData: "/memory/view",
   resetPassword: "/update-new-password",

@@ -32,9 +32,6 @@ Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentI
 Route::get('/countries', [CountryController::class, 'fetchCountries']);
 Route::get('/memory/{pageName}', [PageController::class, 'show']);
 Route::post('/verify-password', [PageController::class, 'verifyPassword']);
-Route::post('/request-access', [AccessRequestController::class, 'store']);
-Route::post('/verify/request-access-data', [AccessRequestController::class, 'verifyData']);
-Route::post('/submit/user-Changes', [AccessRequestController::class, 'submitUserChanges']);
 Route::post('/send-reset-otp', [AuthController::class, 'sendPasswordResetOTP']);
 Route::post('/verify-reset-otp', [AuthController::class, 'validateResetPasswordOTP']);
 Route::post('/validate-password-reset-token', [AuthController::class, 'validatePasswordResetToken']);
@@ -127,16 +124,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Gallery Request Controller
     Route::prefix('gallery-requests')->group(function () {
         Route::get('/listing', [GalleryUploadRequestController::class, 'index']);
+        Route::post('/update/status', [GalleryUploadRequestController::class, 'updateStatus']);
         Route::post('/approve-upload/{id}', [GalleryUploadRequestController::class, 'approveUpload']);
         Route::post('/decline-upload/{id}', [GalleryUploadRequestController::class, 'declineUpload']);
     });
 
     // Access Request Controller
-    Route::get('/all-access-requests', [AccessRequestController::class, 'index']);
-    Route::post('/update/access-requests', [AccessRequestController::class, 'updateStatus']);
     Route::post('/update-data', [ContributionController::class, 'updateContributionData']);
     Route::delete('/delete/{id}', [ContributionController::class, 'destroy']);
-    Route::post('/update/user-Changes', [AccessRequestController::class, 'updateUserChanges']);
 
     // Account Deletion Request
     Route::post('/request-account-deletion', [GDPRrequestController::class, 'requestAccountDeletion']);

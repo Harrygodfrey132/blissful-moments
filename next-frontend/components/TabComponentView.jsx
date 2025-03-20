@@ -36,7 +36,6 @@ export default function StyledTabs({ pageData }) {
   const [isSocialMediaVisible] = useState(
     pageData.social_media_data?.status == 1
   );
-  console.log(pageData);
 
   const tabs = [
     { label: "Personal Quote", ref: tab1Ref, visible: isPersonalQuoteVisible },
@@ -138,7 +137,7 @@ export default function StyledTabs({ pageData }) {
                 {pageData.gallery?.gallery_name}
               </div>
               <div className="flex gap-3 items-center">
-                <GalleryImageUploadView folders={pageData.gallery?.folders}/>
+                <GalleryImageUploadView pageData={pageData}/>
                 <div className="text-blue-light-900 text-lg font-normal font-playfair">
                   Share the page?
                   <button

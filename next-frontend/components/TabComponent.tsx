@@ -6,8 +6,8 @@ import Gallery from "../components/Gallery";
 import Obituary from "../components/obituary";
 import Timeline from "../components/Timeline";
 import SocialMedia from "../components/SocialMedia";
-import Favourites from "../components/favourites";
-import Contributions from "../components/contributions";
+import Favourites from "./Favourites";
+import Contributions from "./Contributions";
 
 export default function StyledTabs() {
   const tab1Ref = useRef<HTMLDivElement>(null);

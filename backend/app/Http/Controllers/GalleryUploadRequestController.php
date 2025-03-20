@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class GalleryUploadRequestController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $user = $request->user();
         $pendingUploads = GalleryImageRequest::where('user_id', $user->id)
@@ -29,6 +30,7 @@ class GalleryUploadRequestController extends Controller
 
         $validator = Validator::make($request->all(), [
             'page_id' => 'required',
+            'user_id' => 'required',
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'folder' => 'nullable|string|max:255',
@@ -50,6 +52,8 @@ class GalleryUploadRequestController extends Controller
         }
 
         $pendingUpload = GalleryImageRequest::create([
+            'page_id' => $request->page_id,
+            'user_id' => $request->user_id,
             'name' => $request->fullName,
             'email' => $request->email,
             'folder' => $request->name,
@@ -62,6 +66,19 @@ class GalleryUploadRequestController extends Controller
         ], 200);
     }
 
+    public function updateStatus(Request $request)
+    {
+        $id = $request->id;
+        $status = $request->status;
+
+        if ($status == AppConstant::ACCEPTED) {
+            $this->approveUpload($id);
+            return response()->json(['message' => 'Upload approved successfully.'], 200);
+        } else {
+            $this->declineUpload($id);
+            return response()->json(['message' => 'Upload declined successfully.'], 200);
+        }
+    }
 
     public function approveUpload($id)
     {
@@ -75,7 +92,11 @@ class GalleryUploadRequestController extends Controller
         $folder = GalleryFolder::where('page_id', $pendingUpload->page_id)->firstOrCreate(['name' => $pendingUpload->folder]);
 
         // Convert JSON images back to an array
-        $imagePaths = json_decode($pendingUpload->images, true);
+        $imagePaths = json_decode($pendingUpload->images, true) ?? [];
+
+        if (!is_array($imagePaths)) {
+            return response()->json(['error' => 'Invalid image data'], 400);
+        }
 
         // Move images to the actual table
         foreach ($imagePaths as $imagePath) {

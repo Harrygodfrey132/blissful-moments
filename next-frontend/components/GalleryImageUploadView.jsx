@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
 
-const GalleryImageUploadView = ({ folders }) => {
+const GalleryImageUploadView = ({ pageData }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSecondFormOpen, setIsSecondFormOpen] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -93,6 +93,8 @@ const GalleryImageUploadView = ({ folders }) => {
       formData.append("fullName", additionalFormInputs.fullName);
       formData.append("email", additionalFormInputs.email);
       formData.append("folder", newFolder || selectedFolder); // Use new folder if created
+      formData.append("page_id", pageData.id);
+      formData.append("user_id", pageData.user_id);
 
       selectedImages.forEach((file, index) => {
         formData.append(`images[${index}]`, file);
@@ -153,7 +155,7 @@ const GalleryImageUploadView = ({ folders }) => {
               className="w-full p-2 border border-gray-300 rounded"
             >
               <option value="">Select Folder</option>
-              {folders.map((folder) => (
+              {pageData.gallery?.folders.map((folder) => (
                 <option key={folder.id} value={folder.id}>
                   {folder.name}
                 </option>

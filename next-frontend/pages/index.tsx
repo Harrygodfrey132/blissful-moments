@@ -8,8 +8,8 @@ import Features from '../components/features-home';
 import FeaturesBlocks from '../components/features-blocks';
 import Features03 from '../components/features-home-03';
 import PricingSection from '../components/pricing';
-import Cta from '../components/cta';
-import FaQ from '../components/faqs'
+import Cta from '../components/Cta';
+import FaQ from '../components/Faqs'
 // import FeaturesBlocks from '@/components/features-blocks'
 // import Features from '@/components/features-home'
 
