@@ -18,7 +18,8 @@ class DashboardController extends Controller
             'users' => User::count(),
             'orders' => Order::count(),
             'last_month_orders' => Order::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count(),
-            'expired_subscriptions' => Page::where('is_registered', true)->where('is_suspended', true)->count()
+            'expired_subscriptions' => Page::where('is_registered', true)->where('is_suspended', true)->count(),
+            'latestOrders' => Order::latest()->take(10)->get()
         ];
         return view('dashboard', $data);
     }
@@ -44,7 +45,7 @@ class DashboardController extends Controller
             ->pluck('count', 'month');
 
         $expiredPages = Page::selectRaw('MONTH(expired_at) as month, COUNT(*) as count')
-            ->where('is_suspended' , true)
+            ->where('is_suspended', true)
             ->where('expired_at', '>=', now()->subMonths($months))
             ->groupBy('month')
             ->orderBy('month')

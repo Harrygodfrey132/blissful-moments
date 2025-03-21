@@ -229,7 +229,7 @@ function updateStatusHandler(status) {
 }
 
 //Custom Function to load Edit Form
-function commonData() {
+function setup() {
     return {
         panel: false,
         menu: true,

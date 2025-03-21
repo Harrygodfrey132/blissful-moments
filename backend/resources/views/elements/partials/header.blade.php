@@ -86,9 +86,8 @@
         <button class="relative inline-flex items-center p-2  rounded" @click="panel = !panel"
             @click.away="panel = false">
             <span class="sr-only">User Menu</span>
-            <span class="h-8 w-8 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden">
-                <img src="https://randomuser.me/api/portraits/men/68.jpg" alt="user profile photo"
-                    class="h-full w-full object-cover">
+            <span class="h-8 w-8 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden font-semibold py-1">
+                {{ __('A') }}
             </span>
 
         </button>

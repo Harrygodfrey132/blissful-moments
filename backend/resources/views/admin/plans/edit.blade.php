@@ -16,8 +16,7 @@
             <x-input-error :messages="$errors->get('description')" class="mt-2" />
         </div>
 
-        <div x-data='{ features: @json(old("features", is_array($plan->features) ? $plan->features : json_decode($plan->features, true) ?? [""])) }'
-            class="relative mt-2">
+        <div x-data='{ features: @json(old('features', is_array($plan->features) ? $plan->features : json_decode($plan->features, true) ?? [''])) }' class="relative mt-2">
             <x-input-label for="features" :value="__('Features')" required />
 
             <template x-for="(feature, index) in features" :key="index">
@@ -31,25 +30,30 @@
                         class="disabled:opacity-50" :disabled="features.length === 1">
                         <x-icon-delete class="text-red-500 w-5 h-5" />
                     </button>
-                     <!-- Add button -->
+                    <!-- Add button -->
                     <button type="button" @click="features.push('')" title="Add New"
                         class="p-1 rounded-md px-2 hover:bg-green-100 transition">
                         <x-icon-create class="w-5 h-5 text-green-500" />
                     </button>
                 </div>
             </template>
-           
             <x-input-error :messages="$errors->get('features')" class="mt-2" />
         </div>
 
 
-        <div class="relative">
-            <x-input-label for="price" :value="__('Price')" />
-            <x-text-input id="price" class="block mt-1 pl-4 w-full" type="text" name="price" :value="old('price') ?? $plan->price"
-                required autofocus autocomplete="price" />
-            <x-input-error :messages="$errors->get('price')" class="mt-2" />
-        </div>
-
+        <h3 class="text-lg font-semibold text-gray-700">Pricing Variations</h3>
+        @foreach ($plan->planVariations as $variation)
+            <div class="relative">
+                <x-input-label for="price_{{ $variation->duration }}_month" :value="$variation->duration . ' Month'" required />
+                <div class="flex items-center border border-gray-300 rounded-md shadow-sm overflow-hidden">
+                    <span class="px-3 bg-gray-100 text-gray-700 text-sm font-medium">£</span>
+                    <x-text-input id="price_{{ $variation->duration }}_month" class="block flex-1 w-full border-0 pl-2"
+                        type="number" name="variations[{{ $variation->duration }}][price]"
+                        value="{{ $variation->price }}" required step="0.01"
+                        min="1" />
+                </div>
+            </div>
+        @endforeach
         <div class="flex items-center justify-end mt-4 m-auto bottom-10">
             <x-primary-button>
                 {{ __('Save') }}

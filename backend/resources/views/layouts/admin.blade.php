@@ -31,8 +31,6 @@
     <div class="min-h-screen w-full">
     @include('elements.partials.header')
         <!-- Sidebar Include -->
-       
-
         <main id="content" class="p-4 ml-20">
             @yield('content')
             @if (request()->is('chats*'))
