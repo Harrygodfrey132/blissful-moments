@@ -1,27 +1,32 @@
 <tbody id="listingTable" class="divide-y divide-gray-200 bg-white">
-    @foreach ($plans as $plan)
+    @forelse ($plans as $plan)
         <tr>
-            <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm">
-                <input type="checkbox" class="rowCheckbox" data-index="0">
+            <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm cursor-pointer">
+                <input type="checkbox" class="rowCheckbox cursor-pointer" data-index="0">
             </td>
-            <td class="whitespace-nowrap py-5 pl-4 pr-3 text-sm">
+            <td class="whitespace-nowrap py-5 pr-3 text-sm">
                 <div class="flex items-center">
-                    <div class="h-11 w-11 flex-shrink-0">
-                        <img class="h-11 w-11 rounded-full"
-                            src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            alt="">
-                    </div>
-                    <div class="ml-4">
+                    <div>
                         <div class="font-medium text-gray-900">{{ $plan->name }}</div>
-                        <div class="mt-1 text-gray-500">{{ $plan->description }}</div>
                     </div>
                 </div>
             </td>
             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                {{ formatDate($plan->created_at) }}</td>
+                {{ $plan->description }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                @php
+                    $features = is_array($plan->features) ? $plan->features : json_decode($plan->features, true);
+                @endphp
+
+                @foreach ($features as $feature)
+                    <div>• {{ $feature }}</div>
+                @endforeach
+            </td>
+
             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                 <div x-data="{ toggle: {{ $plan->status ? 'true' : 'false' }} }" class="flex items-center">
-                    <button @click="toggle = !toggle;  updateStatusHandler(toggle)""
+                    <button @click="toggle = !toggle;  updateStatusHandler(toggle)"
                         data-url="{{ route('plans.update.status', $plan->id) }}"
                         :class="toggle ? 'bg-green-500' : 'bg-red-500'"
                         class="relative w-12 h-6 rounded-full z-10 transition-colors duration-300">
@@ -38,11 +43,18 @@
                 </div>
             </td>
             <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                {{ formatPrice($plan->price) }}</td>
+                @foreach ($plan->planVariations as $variation)
+                    <div>
+                        <span class="font-medium">{{ $variation->duration }} Months:</span>
+                        {{ formatPrice($variation->price) }}
+                    </div>
+                @endforeach
+            </td>
+
             <td class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
                 <div class="flex gap-3">
                     <a href="javascript:void(0);"
-                        @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan->slug) }}')"
+                        @click.prevent="actionType = 'Edit'; loadEditForm('{{ route('plans.edit', $plan) }}')"
                         class="text-black">
                         <x-icon-edit />
                     </a>
@@ -55,5 +67,11 @@
                 </div>
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="6" class="text-center py-4 text-gray-500">
+                No records found
+            </td>
+        </tr>
+    @endforelse
 </tbody>
