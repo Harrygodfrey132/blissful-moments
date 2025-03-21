@@ -110,15 +110,74 @@ class PlanController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                // 'billing_cycle' => 'required|integer|in:30,180,365',
-                'price' => 'required|numeric|min:0',
                 'features' => 'required|array|min:1',
                 'features.*' => 'required|string|max:255',
+                'variations' => 'required|array',
+                'variations.*.price' => 'required|numeric|min:0',
             ]);
-            // Update the plan
-            $plan->update($validated);
 
-            return back()->with('success', 'Record updated successfully!');
+            // Set Stripe API Key
+            Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
+
+            // Fetch the Stripe Product and update it
+            $stripeProduct = Product::retrieve($plan->stripe_product_id);
+            $stripeProduct->name = $validated['name'];
+            $stripeProduct->description = $validated['description'] ?? null;
+            $stripeProduct->save();
+
+            // Update the plan in the database
+            $plan->update([
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
+                'features' => json_encode($validated['features']), // Update features as JSON
+            ]);
+
+            // Loop through each variation (duration & price)
+            foreach ($validated['variations'] as $duration => $variation) {
+                // Check if the variation already exists
+                $existingVariation = PlanVariation::where('plan_id', $plan->id)
+                    ->where('duration', $duration)
+                    ->first();
+
+                if ($existingVariation) {
+                    // Deactivate the old Stripe Price (Stripe doesn't allow price updates)
+                    $stripePrice = Price::retrieve($existingVariation->stripe_price_id);
+                    $stripePrice->active = false;
+                    $stripePrice->save();
+
+                    // Create a new Stripe Price
+                    $newStripePrice = Price::create([
+                        'unit_amount' => $variation['price'] * 100, // Convert to cents
+                        'currency' => 'gbp',
+                        'recurring' => ['interval' => 'month', 'interval_count' => $duration],
+                        'product' => $stripeProduct->id,
+                    ]);
+
+                    // Update the existing plan variation in the database
+                    $existingVariation->update([
+                        'price' => $variation['price'],
+                        'stripe_price_id' => $newStripePrice->id, // Store new Stripe Price ID
+                    ]);
+                } else {
+                    // Create a new Stripe Price for a new variation
+                    $newStripePrice = Price::create([
+                        'unit_amount' => $variation['price'] * 100,
+                        'currency' => 'gbp',
+                        'recurring' => ['interval' => 'month', 'interval_count' => $duration],
+                        'product' => $stripeProduct->id,
+                    ]);
+
+                    // Store new variation in the database
+                    PlanVariation::create([
+                        'plan_id' => $plan->id,
+                        'duration' => $duration,
+                        'price' => $variation['price'],
+                        'stripe_price_id' => $newStripePrice->id,
+                    ]);
+                }
+            }
+
+            return back()->with('success', 'Plan updated successfully!');
         } catch (\Exception $e) {
             // Log the error for debugging
             Log::error('Plan update failed: ' . $e->getMessage());
@@ -126,8 +185,6 @@ class PlanController extends Controller
             return back()->with('error', 'Something went wrong! Please try again.');
         }
     }
-
-
 
     public function delete(Plan $plan)
     {
