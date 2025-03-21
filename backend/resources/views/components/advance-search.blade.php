@@ -11,7 +11,7 @@
 </div>
 <div class="sm:flex sm:items-center justify-end">
     <div class="mt-4 sm:ml-16 sm:mt-0 md:flex gap-4">
-        <form id="formSearch" method="GET" action="{{ $route }}">
+        <form id="formSearch" class="mb-0" method="GET" action="{{ $route }}">
             <div class="relative md:w-[400px]">
                 <!-- Blade Component: Icon Search -->
                 <x-icon-search />

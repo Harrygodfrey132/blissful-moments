@@ -1,24 +1,25 @@
-<aside x-data="{ menu: false }" class="fixed left-0 top-0 z-50 flex flex-col w-20 h-screen bg-[#575757] overflow-hidden"
-    :class="menu ? 'w-64' : 'w-20'">
+<aside id="sidebar" x-data="{ menu: false }" class="fixed shadow-lg scrollbar overflow-y-auto left-0 top-0 z-10 flex flex-col w-20 h-screen bg-white overflow-hidden hidden lg:flex"
+:class="menu ? 'w-64' : 'w-20'">
     <!-- Hamburger Menu -->
-    <div class="flex items-center justify-between h-16 px-4 pl-[26px] bg-[#575757]">
-        <button @click="menu = !menu" class="text-white focus:outline-none">
+    <div class="flex items-center justify-between h-16 px-4 pl-[26px] bg-white">
+    <button id="toggleSidebar"  @click="menu = !menu" class="text-black focus:outline-none">
             <svg style="width:25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
         <img x-show="menu" class="w-12 transition-opacity duration-300" src="{{ asset('img/logo.png') }}"
-            alt="Logo">
+        alt="Logo">
     </div>
 
     <!-- Sidebar Content -->
-    <nav class="flex-grow flex flex-col px-4 justify-between bg-[#575757] overflow-y-auto">
+    <nav class="flex-grow flex flex-col px-4 justify-between bg-white overflow-y-auto">
         <div class="flex flex-col mt-8 space-y-4">
             <!-- Dashboard -->
             <a href="{{ route('dashboard') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('dashboard') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('dashboard') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-dashboard />
                 <span class="ml-2 text-sm" x-show="menu">Dashboard</span>
@@ -30,8 +31,8 @@
 
             <!-- Users -->
             <a href="{{ route('users.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('users.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('users.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-users />
                 <span class="ml-2 text-sm" x-show="menu">Users</span>
@@ -43,8 +44,8 @@
 
             <!-- Plans -->
             <a href="{{ route('plans.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('plans.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('plans.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-plan />
                 <span class="ml-2 text-sm" x-show="menu">Plans</span>
@@ -56,8 +57,8 @@
 
             <!-- Orders -->
             <a href="{{ route('orders.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('orders.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('orders.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-order />
                 <span class="ml-2 text-sm" x-show="menu">Orders</span>
@@ -69,8 +70,8 @@
 
             <!-- Manage CMS -->
             <a href="{{ route('cms.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('cms.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('cms.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-cms />
                 <span class="ml-2 text-sm" x-show="menu">Manage CMS</span>
@@ -82,8 +83,8 @@
 
             <!-- GDPR -->
             <a href="{{ route('gdpr.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('gdpr.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('gdpr.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-user />
                 <span class="ml-2 text-sm" x-show="menu">GDPR Requests</span>
@@ -92,9 +93,11 @@
                     GDPR Requests
                 </span>
             </a>
+
+            <!-- Configurations -->
             <a href="{{ route('configuration.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('configuration.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('configuration.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <svg style="width:25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -108,9 +111,10 @@
                 </span>
             </a>
 
+            <!-- Email Logs -->
             <a href="{{ route('email.logs.index') }}"
-                class="relative flex items-center py-2 px-2 {{ request()->routeIs('email.*') ? 'text-black bg-white rounded' : 'text-white hover:bg-gray-600' }}"
-                :class="{ 'justify-start': menu, 'justify-center': !menu }" x-data="{ tooltip: false }"
+                class="relative flex items-center py-2 px-2 {{ request()->routeIs('email.*') ? 'text-white bg-[#144d3e] rounded' : 'text-black hover:bg-gray-100' }}"
+                :class="menu ? 'justify-start' : 'justify-center'" x-data="{ tooltip: false }"
                 @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-sent-emails />
                 <span class="ml-2 text-sm" x-show="menu">Email Logs</span>
@@ -119,14 +123,13 @@
                     Email Logs
                 </span>
             </a>
-
         </div>
 
         <!-- Logout -->
         <form action="{{ route('logout') }}" method="POST" class="mt-auto">
             @csrf
             <button type="submit"
-                class="relative flex items-center px-2 py-3 text-white w-full border-t border-gray-700 hover:bg-gray-600"
+                class="relative flex items-center px-2 py-3 text-black w-full border-t border-gray-300 hover:bg-gray-100"
                 x-data="{ tooltip: false }" @mouseenter="tooltip = true" @mouseleave="tooltip = false">
                 <x-icon-logout />
                 <span class="ml-2 text-sm" x-show="menu">Logout</span>
