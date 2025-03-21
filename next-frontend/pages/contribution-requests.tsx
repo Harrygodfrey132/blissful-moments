@@ -174,13 +174,15 @@ const ContributionRequestsPage = () => {
                                         contributionRequest.created_at
                                       )}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    <td className="whitespace-nowrap px-3 py-4 text-base text-gray-500">
+                                      <span className="border inline-block p-2 rounded">
                                       <FaEye
                                         className="text-blue-500 cursor-pointer"
                                         onClick={() =>
                                           handleViewDetails(contributionRequest)
                                         }
                                       />
+                                      </span>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm">
                                       <span
@@ -245,34 +247,44 @@ const ContributionRequestsPage = () => {
       </div>
 
       {isModalOpen && currentContribution && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full">
-            <h2 className="text-lg font-semibold mb-4">Contribution Details</h2>
-            <p>
-              <strong>Name:</strong> {currentContribution.name}
-            </p>
-            <p>
-              <strong>Description:</strong> {currentContribution.description}
-            </p>
-            {currentContribution.image && (
-              <Image
-                src={currentContribution.image}
-                alt="Contribution Image"
-                width={300}
-                height={200}
-                className="rounded-lg shadow-md"
-              />
-            )}
-            <div className="mt-4 text-right">
-              <button
-                onClick={closeModal}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+       <div className="bg-white rounded shadow-xl p-6 max-w-2xl w-full">
+         <h2 className="text-xl font-semibold border-b pb-3 mb-5">Contribution Details</h2>
+     
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+           <div className="space-y-4">
+             <p className="text-gray-700">
+               <strong className="text-gray-900">Name:</strong> {currentContribution.name}
+             </p>
+             <p className="text-gray-700">
+               <strong className="text-gray-900">Description:</strong> {currentContribution.description}
+             </p>
+           </div>
+     
+           {currentContribution.image && (
+             <div className="flex justify-center">
+               <Image
+                 src={currentContribution.image}
+                 alt="Contribution Image"
+                 width={300}
+                 height={200}
+                 className="rounded-lg shadow-md"
+               />
+             </div>
+           )}
+         </div>
+     
+         <div className="mt-6 text-right border-t pt-4">
+           <button
+             onClick={closeModal}
+             className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-lg transition"
+           >
+             Close
+           </button>
+         </div>
+       </div>
+     </div>
+     
       )}
     </div>
   );
