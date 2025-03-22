@@ -25,6 +25,10 @@ class Plan extends Model
         'features' => 'array',
     ];
 
+    protected $with = [
+        'planVariations'
+    ];
+
     /**
      * Return the sluggable configuration array for this model.
      *

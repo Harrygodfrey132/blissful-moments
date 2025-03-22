@@ -63,8 +63,8 @@ class PlanController extends Controller
         $plan = Plan::create([
             'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'features' => json_encode($validated['features']), // Store features as JSON
-            'stripe_product_id' => $stripeProduct->id, // Store Stripe Product ID
+            'features' => json_encode($validated['features']),
+            'stripe_product_id' => $stripeProduct->id,
         ]);
 
         // Loop through each duration and store it in Stripe & Database
