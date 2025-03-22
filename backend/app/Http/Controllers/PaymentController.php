@@ -97,9 +97,6 @@ class PaymentController extends Controller
                 'subscription_data' => [
                     'trial_period_days' => $freeTrialDays,
                 ],
-                'payment_intent_data' => [
-                    'setup_future_usage' => 'off_session', // Required for recurring payments
-                ],
                 'success_url' => env('FRONTEND_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => env('FRONTEND_URL') . '/cancel',
                 'metadata' => [

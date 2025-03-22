@@ -58,7 +58,7 @@ export default function PricingTables() {
         <div>
           {plans.map((plan) => {
             // Extract the 1-month plan variation
-            const oneMonthPlan = plan.plan_variations.find(variation => variation.duration === '1');
+            const oneMonthPlan = plan.plan_variations.find(variation => variation.duration == '1');
 
             return (
               <div
