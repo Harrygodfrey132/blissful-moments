@@ -16,8 +16,6 @@ export default function StyledTabs({ pageData }) {
     const year = format(formattedDate, "yyyy"); // Year (yyyy)
     return { day, month, year };
   };
-  console.log(pageData);
-  
   const tab1Ref = useRef(null);
   const tab2Ref = useRef(null);
   const tab3Ref = useRef(null);

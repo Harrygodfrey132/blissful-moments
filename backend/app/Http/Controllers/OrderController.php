@@ -94,7 +94,7 @@ class OrderController extends Controller
     public function createUserOrder(Request $request)
     {
         $user = $request->user();
-        $orderId = 'BM' . date('YmdHis') . rand(1000, 9999);
+        $orderId = generateUniqueOrderId();
 
         // Check for an existing order with 'payment awaiting' status
         $existingOrder = Order::where('user_id', $user->id)
@@ -117,20 +117,27 @@ class OrderController extends Controller
                 'stripe_payment_status' => AppConstant::PAYMENT_FAILED
             ]);
         }
-        $freeTrialMonths = (int)ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
+
+        $isTrialAvailable = !$user->is_free_trial_availed;
+        $freeTrialMonths = (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
+        $renewalMonths =  $isTrialAvailable ? $freeTrialMonths : 0;
+
+        // Get the active plan and its 1-month variation
+        $plan = Plan::where('status', AppConstant::ACTIVE)->firstOrFail();
+        $planVariation = $plan->planVariations()->where('duration', 1)->firstOrFail();
         // Create a new order
         $order = Order::create([
             'order_id' => $orderId,
             'user_id' => $user->id,
-            'amount' => 0,
+            'amount' => $isTrialAvailable ? 0.00  : $planVariation->price,
             'stripe_payment_intent' => "",
             'stripe_payment_status' => AppConstant::PAYMENT_AWAITING,
-            'plan_type' => "annual",
-            'plan_name' => "Free Trial",
-            'plan_amount' => 0,
-            'order_total' => 0, // Fixed issue
-            'order_tax' => 0,
-            'next_renewal_date' => now()->addMonths($freeTrialMonths),
+            'plan_type' => $isTrialAvailable ? "Free Trial" : "Monthly",
+            'plan_name' => $isTrialAvailable ? "Free Trial" : $plan->name,
+            'plan_amount' =>  $isTrialAvailable ? 0.00  : $planVariation->price,
+            'order_total' =>  $isTrialAvailable ? 0.00  : $planVariation->price, // Fixed issue
+            'order_tax' => 0.00,
+            'next_renewal_date' => now()->addMonths($renewalMonths),
         ]);
 
         $encryptedOrderId = Crypt::encryptString($order->order_id);

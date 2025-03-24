@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
 import Select from "react-select";
 import countries from "world-countries";
+import Image from "next/image";
 
 interface BillingDetails {
   first_name: string;
@@ -32,7 +33,7 @@ const CheckoutPage = () => {
   const router = useRouter();
   const { order_id } = router.query;
   const { data: session } = useSession();
-  const [order, setOrder] = useState<{ id: string; next_renewal_date: Date; price: number } | null>(null);
+  const [order, setOrder] = useState<{ id: string; plan_name: string, next_renewal_date: Date; amount: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fetchedOrderId, setFetchedOrderId] = useState<string | null>(null);
@@ -220,10 +221,10 @@ const CheckoutPage = () => {
               <input type="radio" name="plan" value="" className="hidden" />
               <img src="img/logo-black.png" alt="logo" className="w-12 h-12" />
               <div className="flex-1 ml-4">
-                <p className="font-semibold">Free Trial</p>
+                <p className="font-semibold">{order?.plan_name}</p>
                 <div className="text-blue-600 font-medium">3 Months</div>
               </div>
-              <p className="text-lg font-bold">£0.00</p>
+              <p className="text-lg font-bold">£{order?.amount}</p>
             </label>
             <div className="text-gray-500 text-sm font-medium">Renews on {getNextRenewalDate()}</div>
             <div className="flex justify-end py-4">
@@ -236,7 +237,7 @@ const CheckoutPage = () => {
             </div>
             <p className="flex justify-between">
               <span className="font-semibold">Subtotal:</span>
-              <span className="font-bold">£0.00</span>
+              <span className="font-bold">£{order?.amount}</span>
             </p>
           </div>
           <button onClick={handleCheckout} className="block mt-8 bg-blue-500 text-white text-center py-2.5 rounded w-full transition">
@@ -250,8 +251,12 @@ const CheckoutPage = () => {
             </Link>
             .
           </div>
-          <div className="flex justify-between mt-4">
-            <div className="font-semibold">Secure payment</div>
+          <div className="font-semibold mt-6">Secure payment</div>
+          <div className="flex gap-2 mt-4">
+            {/* Visa */}
+            <Image src={"/img/visa.png"} alt="Visa" width={50} height={50} />
+            {/* MasterCard */}
+            <Image src={"/img/mastercard.png"} alt="MasterCard" width={50} height={50} />
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ return [
         'http://blissful-moments.app.local:3000',
         'http://localhost',
         'http://localhost:3000',
-        'http://127.0.0.1:8001',
+        'http://127.0.0.1:8005',
         'http://admin.theblissfulmoments.com',
         'https://staging.theblissfulmoments.com',
         'https://theblissfulmoments.com',

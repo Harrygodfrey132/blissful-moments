@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Order;
+use Illuminate\Support\Facades\DB;
+
 function formatDate($date)
 {
     // Check if the input is a valid DateTime object
@@ -18,4 +21,18 @@ function formatPrice($price)
 {
     // Return the formatted date
     return "£" . $price;
+}
+
+function generateUniqueOrderId()
+{
+    $prefix = 'BM';
+
+    do {
+        $randomNumber = mt_rand(100000, 999999);
+        $orderId = $prefix . $randomNumber;
+
+        $exists = DB::table('orders')->where('order_id', $orderId)->exists();
+    } while ($exists); // Repeat if the order ID already exists
+
+    return $orderId;
 }
