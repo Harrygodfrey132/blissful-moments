@@ -34,11 +34,12 @@ class User extends Authenticatable
         'role_id',
         'email',
         'status',
+        'is_free_trial_availed',
         'subscription_status',
         'password',
         'galleryFolders',
         'stripe_customer_id',
-        'stripe_subscription_id'
+        'stripe_subscription_id',
     ];
 
     protected $with = [

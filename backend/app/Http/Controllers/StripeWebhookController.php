@@ -63,13 +63,14 @@ class StripeWebhookController extends Controller
                 $planType = $session->metadata->plan_type;
                 $planName = $session->metadata->plan_name;
                 $orderId = $session->metadata->order_id;
+                $freeTrial = $session->metadata->is_trial;
 
                 if ($subscriptionId && $customerId) {
                     // Find user by Stripe customer ID
                     $user = User::where('stripe_customer_id', $customerId)->first();
 
                     if ($user) {
-                        $user->update(['stripe_subscription_id' => $subscriptionId]);
+                        $user->update(['stripe_subscription_id' => $subscriptionId , 'is_free_trial_availed' => true]);
                     }
                 }
 

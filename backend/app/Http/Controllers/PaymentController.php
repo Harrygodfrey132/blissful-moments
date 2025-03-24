@@ -46,17 +46,18 @@ class PaymentController extends Controller
             // Set your Stripe Secret Key
             Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
-            // Convert free trial months to days
+            // Fetch user
+            $customerId = $request->customer_id;
+            $user = User::findOrFail($customerId);
+
+            // Check if the user already availed the free trial
+            $isTrialAvailable = !$user->is_free_trial_availed;
             $freeTrialMonths = (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
-            $freeTrialDays = $freeTrialMonths * 30;
+            $freeTrialDays = $isTrialAvailable ? ($freeTrialMonths * 30) : 0; // Apply trial only if not availed
 
             // Get the active plan and its 1-month variation
             $plan = Plan::where('status', AppConstant::ACTIVE)->firstOrFail();
             $planVariation = $plan->planVariations()->where('duration', 1)->firstOrFail();
-
-            // Fetch user
-            $customerId = $request->customer_id;
-            $user = User::findOrFail($customerId);
 
             // Create or retrieve Stripe customer
             if (!$user->stripe_customer_id) {
@@ -84,7 +85,7 @@ class PaymentController extends Controller
             $orderId = Crypt::decryptString($request->order_id);
 
             // Create Stripe Checkout Session
-            $session = Session::create([
+            $sessionData = [
                 'payment_method_types' => ['card'],
                 'mode' => 'subscription',
                 'customer' => $customer->id,
@@ -94,9 +95,6 @@ class PaymentController extends Controller
                         'quantity' => 1,
                     ],
                 ],
-                'subscription_data' => [
-                    'trial_period_days' => $freeTrialDays,
-                ],
                 'success_url' => env('FRONTEND_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => env('FRONTEND_URL') . '/cancel',
                 'metadata' => [
@@ -104,9 +102,20 @@ class PaymentController extends Controller
                     'plan_type' => $planVariation->duration,
                     'plan_name' => $plan->name,
                     'plan_amount' => $planVariation->price,
-                    'order_id' => $orderId
+                    'order_id' => $orderId,
+                    'is_trial' => $isTrialAvailable ? 'yes' : 'no'
                 ],
-            ]);
+            ];
+
+            // Add free trial if not availed
+            if ($isTrialAvailable) {
+                $sessionData['subscription_data'] = [
+                    'trial_period_days' => $freeTrialDays,
+                ];
+            }
+
+            $session = Session::create($sessionData);
+
 
             return response()->json([
                 'sessionId' => $session->id,
