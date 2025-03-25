@@ -196,6 +196,13 @@
   left: 0 !important;
 }
 
+.addimage-memory{
+  left: 175px !important;
+}
+body .addimage-memory .arrow-memory{
+  right: 60% !important;
+}
+
 .popover-contribution  .popover-arrow{
   right: 0 !important;
 }

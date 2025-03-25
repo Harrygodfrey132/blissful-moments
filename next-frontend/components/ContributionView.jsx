@@ -13,12 +13,16 @@ const ContributionView = ({ contributionData, userId }) => {
     fullName: "",
     email: "",
   });
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isSecondFormOpen, setIsSecondFormOpen] = useState(false);
   const [tagline, setTagline] = useState(contributionData?.tagline);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // Popover steps: 0 = closed, 1 = first form, 2 = second form
+  const [modalStep, setModalStep] = useState(0);
+
+  // Ref to the popover container
   const popoverRef = useRef(null);
-  const [modalStep, setModalStep] = useState(0); // 0 = closed, 1 = form, 2 = details
+
+  // Load existing contributions
   useEffect(() => {
     if (Array.isArray(contributionData)) {
       setContributions(
@@ -39,19 +43,41 @@ const ContributionView = ({ contributionData, userId }) => {
     }
   }, [contributionData]);
 
+  // Only attach outside-click listener if the popover is open
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setIsFormOpen(false);
-        setIsSecondFormOpen(false);
+    if (modalStep === 0) return; // popover closed => do nothing
+
+    function handleClickOutside(event) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target)
+      ) {
+        setModalStep(0); // close popover
       }
-    };
+    }
+
     document.addEventListener("click", handleClickOutside);
+
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, []);
+  }, [modalStep]);
 
+  // Toggle the popover on "Add Contribution" button click
+  const togglePopover = (e) => {
+    // Stop button click from counting as outside
+    e.stopPropagation();
+
+    // If closed (0), open step 1
+    if (modalStep === 0) {
+      setModalStep(1);
+    } else {
+      // If already open, close it
+      setModalStep(0);
+    }
+  };
+
+  // Helper for sending API requests
   const sendApiRequest = async (endpoint, payload, isMultipart = false) => {
     try {
       const headers = isMultipart
@@ -79,18 +105,19 @@ const ContributionView = ({ contributionData, userId }) => {
     }
   };
 
+  // Generic handler for input changes
   const handleInputChange = (e, setState) => {
     const { name, value } = e.target;
-
     setState((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  // Handle image upload
   const handleImageUpload = (e) => {
     const maxSizeMB = 5;
-    const file = e.target.files[0]; // Get the first file
+    const file = e.target.files[0]; // single file
 
     if (file) {
       if (file.size > maxSizeMB * 1024 * 1024) {
@@ -99,23 +126,20 @@ const ContributionView = ({ contributionData, userId }) => {
         setSelectedImage(file);
       }
     }
-
-    // Clear the input field to allow re-uploading the same image
+    // Clear the input field
     e.target.value = "";
   };
 
+  // First form submit => go to step 2 if valid
   const handleFirstFormSubmit = () => {
     if (formInputs.name && formInputs.message) {
       setModalStep(2);
-      // setIsFormOpen(false);
-      setTimeout(() => {
-        setIsSecondFormOpen(true);
-      }, 10);
     } else {
       toast.warning("Please fill out both the name and message fields.");
     }
   };
 
+  // Final submit => send to API
   const handleFinalSubmit = async () => {
     if (additionalFormInputs.fullName && additionalFormInputs.email) {
       try {
@@ -127,26 +151,28 @@ const ContributionView = ({ contributionData, userId }) => {
         formData.append("contribution_id", contributionData.id);
         formData.append("user_id", userId);
 
-        // Append the single selected image
+        // Append image if selected
         if (selectedImage) {
           formData.append("image", selectedImage);
         }
 
-        // Send API request with FormData
-        await sendApiRequest(
-          `${API.storeUserContributionData}`,
-          formData,
-          true
-        );
+        await sendApiRequest(`${API.storeUserContributionData}`, formData, true);
 
-        // Reset form after successful submission
-        setContributions((prev) => [...prev, formInputs]);
+        // Optimistic UI update
+        setContributions((prev) => [
+          ...prev,
+          {
+            name: formInputs.name,
+            message: formInputs.message,
+            image: selectedImage ? URL.createObjectURL(selectedImage) : "",
+          },
+        ]);
+
+        // Reset form
         setFormInputs({ name: "", message: "" });
         setAdditionalFormInputs({ fullName: "", email: "" });
-        setSelectedImage(null); // Clear the selected image
-        setIsSecondFormOpen(false);
-        setModalStep(0);
-
+        setSelectedImage(null);
+        setModalStep(0); // close popover
       } catch (error) {
         toast.error("Failed to submit contribution.");
       }
@@ -162,16 +188,25 @@ const ContributionView = ({ contributionData, userId }) => {
           Contributions
         </div>
         {isContributionsEnabled && (
-          <div className="relative" ref={popoverRef}>
+          <div className="relative">
+            {/* Toggle popover on button click */}
             <button
-              onClick={() => setModalStep(1)}
+              onClick={togglePopover}
               className="text-white add-button px-6 py-2.5 font-playfair"
             >
               Add Contribution
             </button>
 
+            {/* Popover (only render if modalStep > 0) */}
             {modalStep > 0 && (
-              <div className="popover-container border border-gray-300 transition-all">
+              <div
+                ref={popoverRef}
+                // Stop clicks inside from closing the popover
+                onClick={(e) => e.stopPropagation()}
+                className="popover-container border border-gray-300 transition-all"
+              >
+                <div className="popover-arrow arrow-memory"></div>
+                {/* Step 1 */}
                 {modalStep === 1 && (
                   <>
                     <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
@@ -210,9 +245,10 @@ const ContributionView = ({ contributionData, userId }) => {
                         className="hidden"
                         onChange={handleImageUpload}
                       />
-                      <span className="text-gray-500 text-sm">Max size upto 5MB</span>
+                      <span className="text-gray-500 text-sm">
+                        Max size up to 5MB
+                      </span>
                     </div>
-
                     <button
                       onClick={handleFirstFormSubmit}
                       className="text-white add-button px-4 py-2.5"
@@ -222,6 +258,7 @@ const ContributionView = ({ contributionData, userId }) => {
                   </>
                 )}
 
+                {/* Step 2 */}
                 {modalStep === 2 && (
                   <>
                     <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
