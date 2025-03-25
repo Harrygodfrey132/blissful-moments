@@ -15,6 +15,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDetailController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -95,6 +96,16 @@ Route::prefix('admin')->group(function () {
         Route::post('/user/update-details', [UserDetailController::class, 'update']);
     });
 });
+
+Route::fallback(function (Request $request) {
+    $path = $request->path();
+    // Check if it's an API request
+    if ($request->expectsJson()) {
+        return response()->json(['error' => 'Not Found'], 404);
+    }
+    return back()->with('error', "Page doesn't exist");
+});
+
 Route::get('/orderdetails', function () {
     return view('pages/order-details');
 });
