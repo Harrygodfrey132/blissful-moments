@@ -157,14 +157,16 @@
     }
 </style>
 <script>
-    function showNotification(notificationId, message = 'Record has been updated successfully!') {
+    function showNotification(notificationId, message = "Record has been updated successfully!") {
         const notification = document.getElementById(notificationId);
-        const textMessage = document.getElementById('textMessage');
+        const messageContainer = notification.querySelector(".text-gray-500"); // Select correct paragraph
+
         if (notification) {
-            notification.classList.remove('hidden');
-            notification.classList.add('opacity-100');
-            textMessage.innerHTML = message;
-            // Automatically hide after 5 seconds
+            messageContainer.innerHTML = message; // Update message
+            notification.classList.remove("hidden", "opacity-0");
+            notification.classList.add("opacity-100");
+
+            // Hide after 5 seconds
             setTimeout(() => {
                 hideNotification(notificationId);
             }, 5000);
@@ -174,12 +176,11 @@
     function hideNotification(notificationId) {
         const notification = document.getElementById(notificationId);
         if (notification) {
-            notification.classList.remove('opacity-100');
-            notification.classList.add('opacity-0');
+            notification.classList.remove("opacity-100");
+            notification.classList.add("opacity-0");
 
-            // Hide completely after transition duration
             setTimeout(() => {
-                notification.classList.add('hidden');
+                notification.classList.add("hidden");
             }, 300);
         }
     }

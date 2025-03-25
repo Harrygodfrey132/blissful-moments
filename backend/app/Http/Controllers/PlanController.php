@@ -50,51 +50,69 @@ class PlanController extends Controller
             'variations.*.price' => 'required|numeric|min:0',
         ]);
 
+        $stripeSecretKey = ConfigHelper::getConfig('conf_stripe_secret_key');
+
+        // Check if Stripe is configured
+        if (empty($stripeSecretKey)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Stripe is not configured. Please configure Stripe first.'
+            ], 400);
+        }
+
         // Set Stripe API Key
-        Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
+        Stripe::setApiKey($stripeSecretKey);
 
         // Create Stripe Product
-        $stripeProduct = Product::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-        ]);
-
-        // Create a new Plan in Database
-        $plan = Plan::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'features' => json_encode($validated['features']),
-            'stripe_product_id' => $stripeProduct->id,
-        ]);
-
-        // Loop through each duration and store it in Stripe & Database
-        foreach ($validated['variations'] as $duration => $variation) {
-            // Create a Stripe Price for this plan duration
-            $stripePrice = Price::create([
-                'unit_amount' => $variation['price'] * 100, // Convert to cents
-                'currency' => 'gbp',
-                'recurring' => ['interval' => 'month', 'interval_count' => $duration],
-                'product' => $stripeProduct->id,
+        try {
+            // Create Stripe Product
+            $stripeProduct = Product::create([
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
             ]);
 
-            // Store Plan Variation in Database
-            PlanVariation::create([
-                'plan_id' => $plan->id,
-                'duration' => $duration, // e.g., 1, 3, 6, 12 months
-                'price' => $variation['price'],
-                'stripe_price_id' => $stripePrice->id, // Store Stripe Price ID
+            // Create a new Plan in Database
+            $plan = Plan::create([
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
+                'features' => json_encode($validated['features']),
+                'stripe_product_id' => $stripeProduct->id,
             ]);
-        }
 
-        // Return response
-        if ($request->ajax()) {
+            // Loop through each duration and store it in Stripe & Database
+            foreach ($validated['variations'] as $duration => $variation) {
+                // Create a Stripe Price for this plan duration
+                $stripePrice = Price::create([
+                    'unit_amount' => $variation['price'] * 100, // Convert to cents
+                    'currency' => 'gbp',
+                    'recurring' => ['interval' => 'month', 'interval_count' => $duration],
+                    'product' => $stripeProduct->id,
+                ]);
+
+                // Store Plan Variation in Database
+                PlanVariation::create([
+                    'plan_id' => $plan->id,
+                    'duration' => $duration, // e.g., 1, 3, 6, 12 months
+                    'price' => $variation['price'],
+                    'stripe_price_id' => $stripePrice->id, // Store Stripe Price ID
+                ]);
+            }
+
+            // Return response
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Plan created successfully!',
+                ]);
+            }
+            return to_route('plans.index')->with('success', 'Plan created successfully.');
+        } catch (\Exception $e) {
             return response()->json([
-                'success' => true,
-                'message' => 'Plan created successfully!',
-            ]);
+                'success' => false,
+                'message' => 'An error occurred while creating the plan.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        return to_route('plans.index')->with('success', 'Plan created successfully.');
     }
 
 

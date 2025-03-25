@@ -297,14 +297,12 @@ function setup() {
                 );
         },
         submitFormHandler(formId) {
-            const csrfToken = document.querySelector(
-                'meta[name="csrf-token"]'
-            ).content;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             const form = document.getElementById(formId);
             const url = form.getAttribute("data-url");
             const formData = new FormData(form);
             this.errors = {};
-            // Send the form data using Fetch API (AJAX)
+
             fetch(form.action, {
                 method: "POST",
                 body: formData,
@@ -314,27 +312,33 @@ function setup() {
                     "X-CSRF-TOKEN": csrfToken,
                 },
             })
-                .then((response) => response.json()) // Assuming the response is JSON
-                .then((data) => {
+                .then(async (response) => {
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        // If response is not OK, handle validation errors or backend error messages
+                        if (data.errors) {
+                            this.errors = data.errors; // Store validation errors
+                            showNotification("errorNotification", "Validation errors occurred.");
+                        } else {
+                            showNotification("errorNotification", data.message || "An error occurred.");
+                        }
+                        return;
+                    }
+
                     if (data.success) {
-                        showNotification("successNotification");
+                        showNotification("successNotification", data.message || "Record updated successfully!");
                         this.openPanel = false;
                         this.refreshListing(url);
                     } else {
-                        // Handle validation errors or other issues
-                        showNotification(
-                            "errorNotification",
-                            "Error updating user!"
-                        );
+                        showNotification("errorNotification", "Error updating record!");
                     }
                 })
                 .catch((error) => {
                     console.error("Error submitting the form:", error);
-                    showNotification(
-                        "errorNotification",
-                        "An error occurred. Please try again."
-                    );
+                    showNotification("errorNotification", "A network error occurred. Please try again.");
                 });
-        },
+        }
+
     };
 }
