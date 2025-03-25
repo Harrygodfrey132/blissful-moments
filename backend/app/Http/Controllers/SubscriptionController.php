@@ -31,7 +31,7 @@ class SubscriptionController extends Controller
             $user->update([
                 'subscription_status' => AppConstant::IN_ACTIVE,
             ]);
-            $user->page->is_suspended = AppConstant::IN_ACTIVE;
+            $user->page->is_suspended = AppConstant::ACTIVE;
             $user->page->save();
             return response()->json(['success' => true, 'message' => 'Subscription canceled successfully']);
         } catch (\Exception $e) {

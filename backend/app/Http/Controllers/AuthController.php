@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\EmailSent;
+use App\Helper\AppConstant;
 use App\Helper\ConfigHelper;
 use App\Mail\AccountVerificationEmail;
 use App\Mail\PasswordResetEmail;
@@ -36,19 +37,36 @@ class AuthController extends Controller
             ]);
 
             $name = $data['firstName'] . ' ' . $data['lastName'];
+            $existingUser = User::withTrashed()->where('email', $data['email'])->first();
+            if ($existingUser) {
+                if ($existingUser->trashed()) {
+                    $existingUser->restore();
+                    $existingUser->update([
+                        'password' => bcrypt($data['password']),
+                        'name' => $name,
+                        'subscription_status' => AppConstant::IN_ACTIVE,
+                    ]);
+                }
+                if ($existingUser->page) {
+                    $existingUser->page->delete();
+                }
+                $user = $existingUser;
+            } else {
+                // Create a new user if no soft-deleted user exists
+                $user = User::create([
+                    'name' => $name,
+                    'email' => $data['email'],
+                    'password' => bcrypt($data['password']),
+                    'role_id' => User::USER
+                ]);
 
-            $user = User::create([
-                'name' => $name,
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'role_id' => User::USER
-            ]);
+                UserDetail::create([
+                    'user_id' => $user->id,
+                    'first_name' => $data['firstName'],
+                    'last_name' => $data['lastName']
+                ]);
+            }
 
-            UserDetail::create([
-                'user_id' => $user->id,
-                'first_name' => $data['firstName'],
-                'last_name' => $data['lastName']
-            ]);
 
             // Generate a token
             $token = $user->createToken($user->name);
@@ -321,7 +339,7 @@ class AuthController extends Controller
                 return response()->json(['message' => 'User not found.'], 404);
             }
             OTP::where('user_id', $user->id)->delete();
-            $otpValue = $this->generateOTP($user->email , $user->id);
+            $otpValue = $this->generateOTP($user->email, $user->id);
             $this->sendEmailNotifications($user, $otpValue, false);
             return response()->json([
                 'message' => 'Code sent successfully',
