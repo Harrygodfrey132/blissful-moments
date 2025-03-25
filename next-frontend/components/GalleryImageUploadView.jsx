@@ -16,6 +16,8 @@ const GalleryImageUploadView = ({ pageData }) => {
 
   const fileInputRef = useRef(null);
 
+  const allowedExtensions = ["jpg", "jpeg", "png", "webp", "heic"];
+
   // Handle image selection with validation
   const handleImageUpload = (e) => {
     const maxFiles = 10;
@@ -27,13 +29,20 @@ const GalleryImageUploadView = ({ pageData }) => {
       return;
     }
 
-    const validFiles = files.filter(
-      (file) => file.size <= maxSizeMB * 1024 * 1024
-    );
+    const validFiles = files.filter((file) => {
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      const isValidExtension = allowedExtensions.includes(fileExtension);
+      const isValidSize = file.size <= maxSizeMB * 1024 * 1024;
 
-    if (validFiles.length < files.length) {
-      toast.warning(`Some files exceeded ${maxSizeMB}MB and were not added.`);
-    }
+      if (!isValidExtension) {
+        toast.warning(`${file.name} is not a supported image format.`);
+      }
+      if (!isValidSize) {
+        toast.warning(`${file.name} exceeds ${maxSizeMB}MB and was not added.`);
+      }
+
+      return isValidExtension && isValidSize;
+    });
 
     setSelectedImages(validFiles);
   };

@@ -34,7 +34,7 @@ class GalleryUploadRequestController extends Controller
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'folder' => 'nullable|string|max:255',
-            'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg,heic|max:5120',
+            'images.*' => 'required|mimes:jpeg,png,jpg,heic|max:5120',
         ]);
 
         if ($validator->fails()) {
