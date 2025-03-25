@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API } from "../utils/api";
@@ -6,9 +6,11 @@ import { API } from "../utils/api";
 const GalleryImageUploadView = ({ pageData }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSecondFormOpen, setIsSecondFormOpen] = useState(false);
+
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [newFolder, setNewFolder] = useState("");
+
   const [additionalFormInputs, setAdditionalFormInputs] = useState({
     fullName: "",
     email: "",
@@ -16,9 +18,64 @@ const GalleryImageUploadView = ({ pageData }) => {
 
   const fileInputRef = useRef(null);
 
+  // ** Step 1 popover ref **
+  const firstFormRef = useRef(null);
+
+  // ** Step 2 popover ref **
+  const secondFormRef = useRef(null);
+
+  // Only attach outside-click listener when either popover is open
+  useEffect(() => {
+    // If both forms are closed, no need to attach the listener
+    if (!isFormOpen && !isSecondFormOpen) return;
+
+    function handleClickOutside(event) {
+      // If Step 1 popover is open and the click is outside => close it
+      if (
+        isFormOpen &&
+        firstFormRef.current &&
+        !firstFormRef.current.contains(event.target)
+      ) {
+        setIsFormOpen(false);
+      }
+
+      // If Step 2 popover is open and the click is outside => close it
+      if (
+        isSecondFormOpen &&
+        secondFormRef.current &&
+        !secondFormRef.current.contains(event.target)
+      ) {
+        setIsSecondFormOpen(false);
+      }
+    }
+
+    // Use "click" to avoid scroll issues
+    document.addEventListener("click", handleClickOutside);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isFormOpen, isSecondFormOpen]);
+
+  // Allowed file types
   const allowedExtensions = ["jpg", "jpeg", "png", "webp", "heic"];
 
-  // Handle image selection with validation
+  // Toggle the first form popover
+  const toggleFirstForm = (e) => {
+    // Stop the button click from being considered outside
+    e.stopPropagation();
+
+    // Close second form if open
+    if (isSecondFormOpen) {
+      setIsSecondFormOpen(false);
+    }
+
+    // Toggle the first form
+    setIsFormOpen((prev) => !prev);
+  };
+
+  // Handle image upload
   const handleImageUpload = (e) => {
     const maxFiles = 10;
     const maxSizeMB = 5;
@@ -47,13 +104,13 @@ const GalleryImageUploadView = ({ pageData }) => {
     setSelectedImages(validFiles);
   };
 
-  // Generic input handler for user details
+  // Handle text input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAdditionalFormInputs((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Move to user details step
+  // Submit first form
   const handleFirstFormSubmit = () => {
     if (selectedImages.length === 0) {
       toast.warning("Please select at least one image to upload.");
@@ -65,13 +122,16 @@ const GalleryImageUploadView = ({ pageData }) => {
       return;
     }
 
+    // Close first form
     setIsFormOpen(false);
+
+    // Slight delay, then open second form
     setTimeout(() => {
       setIsSecondFormOpen(true);
-    }, 10);
+    }, 50);
   };
 
-  // Send API request
+  // Helper to send requests
   const sendApiRequest = async (endpoint, payload, isMultipart = false) => {
     try {
       const headers = isMultipart
@@ -96,7 +156,7 @@ const GalleryImageUploadView = ({ pageData }) => {
     }
   };
 
-  // Final submission with folder selection & user details
+  // Final submit (second form)
   const handleFinalSubmit = async () => {
     if (!additionalFormInputs.fullName || !additionalFormInputs.email) {
       toast.warning("Please provide your full name and email.");
@@ -107,7 +167,7 @@ const GalleryImageUploadView = ({ pageData }) => {
       const formData = new FormData();
       formData.append("fullName", additionalFormInputs.fullName);
       formData.append("email", additionalFormInputs.email);
-      formData.append("folder", newFolder || selectedFolder); // Use new folder if created
+      formData.append("folder", newFolder || selectedFolder);
       formData.append("page_id", pageData.id);
       formData.append("user_id", pageData.user_id);
 
@@ -130,9 +190,9 @@ const GalleryImageUploadView = ({ pageData }) => {
 
   return (
     <div className="relative">
-      {/* Open Upload Form */}
+      {/* Button that toggles Step 1 form */}
       <button
-        onClick={() => setIsFormOpen(true)}
+        onClick={toggleFirstForm}
         className="text-white add-button px-6 py-2.5 font-playfair"
       >
         Add Images
@@ -140,8 +200,13 @@ const GalleryImageUploadView = ({ pageData }) => {
 
       {/* Step 1: Image Upload & Folder Selection */}
       {isFormOpen && (
-        <div className="popover-container popover-contribution border border-gray-300 transition-all">
-          <div className="popover-arrow"></div>
+        <div
+          ref={firstFormRef}
+          // Stop clicks inside from closing popover
+          onClick={(e) => e.stopPropagation()}
+          className="popover-container addimage-memory popover-contribution border border-gray-300 transition-all"
+        >
+          <div className="popover-arrow arrow-memory"></div>
           <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
             Upload Your Memories
           </h2>
@@ -199,7 +264,12 @@ const GalleryImageUploadView = ({ pageData }) => {
 
       {/* Step 2: User Details Form */}
       {isSecondFormOpen && (
-        <div className="popover-container border border-gray-300 transition-all">
+        <div
+          ref={secondFormRef}
+          // Stop clicks inside from closing popover
+          onClick={(e) => e.stopPropagation()}
+          className="popover-container border border-gray-300 transition-all"
+        >
           <div className="popover-arrow"></div>
           <h2 className="border-b-2 font-playfair border-blue-light-900 font-medium mb-4 text-center text-lg">
             Provide Your Details

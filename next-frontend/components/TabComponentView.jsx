@@ -131,27 +131,35 @@ export default function StyledTabs({ pageData }) {
         {isGalleryVisible && (
           <div ref={tab2Ref}>
             {/* Gallery Header */}
-            <div className="flex justify-between mt-6 md:mt-0">
-              <div className="text-blue-light-900 font-playfair md:text-4xl text-3xl  border-b-4 border-blue-light-800 font-400 inline-block">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full mt-6">
+              <div className="text-left w-fit text-blue-light-900 font-playfair md:text-4xl text-3xl border-b-4 border-blue-light-800 font-400 mb-4 md:mb-0">
                 {pageData.gallery?.gallery_name}
               </div>
-              <div className="flex gap-3 items-center">
-                <GalleryImageUploadView pageData={pageData}/>
-                <div className="text-blue-light-900 text-lg font-normal font-playfair">
-                  Share the page?
+              <div className="flex  md:flex-row gap-3 items-start md:items-center">
+                {/* Add Images Button */}
+                <div className="flex">
+                  <GalleryImageUploadView pageData={pageData} />
+                </div>
+
+                {/* Share the page section */}
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-light-900 text-lg font-normal font-playfair">
+                    Share the page?
+                  </span>
                   <button
                     onClick={handleCopyLink}
-                    className={`md:text-lg ml-3 text-lg font-playfair border border-gray-300 font-medium px-4 py-1.5 rounded-lg ${
-                      isPageLinkCopied
+                    className={`md:text-lg text-lg font-playfair border border-gray-300 font-medium px-4 py-1.5 rounded-lg ${isPageLinkCopied
                         ? "bg-blue-light-900 text-white"
                         : "bg-[#F3EAEACC] text-blue-light-900"
-                    }`}
+                      }`}
                   >
                     {isPageLinkCopied ? "Copied!" : "Copy Link"}
                   </button>
                 </div>
               </div>
             </div>
+
+
 
             {/* Gallery Content */}
             {(() => {
@@ -349,7 +357,7 @@ export default function StyledTabs({ pageData }) {
         {/* Social Media */}
         {isSocialMediaVisible && (
           <div className="text-left" ref={tab7Ref}>
-            <div className="text-blue-light-900 md:w-[224px] w-[245px] font-playfair text-left md:text-3xl text-3xl mt-5 md:mt-0 border-b-4 border-blue-light-800 font-400 ">
+            <div className="text-blue-light-900 w-fit font-playfair text-left md:text-3xl text-3xl mt-5 md:mt-0 border-b-4 border-blue-light-800 font-400 ">
               Social Media link
             </div>
             <h1 className="md:text-3xl relative text-xl flex gap-4 font-medium mb-6 mt-6">
@@ -367,9 +375,8 @@ export default function StyledTabs({ pageData }) {
             <button
               onClick={handleCopyLink}
               className={`px-4 py-2.5 text-white text-2xl text-left font-playfair mb-10
-              ${
-                isPageLinkCopied ? "bg-blue-light-900" : "add-button"
-              } rounded-lg`}
+              ${isPageLinkCopied ? "bg-blue-light-900" : "add-button"
+                } rounded-lg`}
             >
               {isPageLinkCopied ? "Copied!" : "Copy Link"}
             </button>

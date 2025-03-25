@@ -41,3 +41,9 @@
 body{
     font-family: "Raleway", sans-serif;
 }
+/* Mobile-specific styles */
+@media (max-width: 1020px) {
+    #content{
+      margin-left: 0 !important;
+    }
+  }
