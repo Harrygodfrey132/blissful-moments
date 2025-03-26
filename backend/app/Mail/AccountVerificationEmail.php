@@ -45,29 +45,6 @@ class AccountVerificationEmail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        // Path to the logo and social media images
-        $logoPath = public_path('img/logo-black.png');
-        $facebookLogoPath = public_path('img/facebook.png');
-        $instagramLogoPath = public_path('img/instagram.png');
-        $twitterLogoPath = public_path('img/twitter.png');
-        $youtubeLogoPath = public_path('img/youtube.png');
-        $footerLogoPath = public_path('img/black-transparent.png');
-
-        // Convert images to Base64
-        $logoData = base64_encode(file_get_contents($logoPath));
-        $facebookLogoData = base64_encode(file_get_contents($facebookLogoPath));
-        $instagramLogoData = base64_encode(file_get_contents($instagramLogoPath));
-        $twitterLogoData = base64_encode(file_get_contents($twitterLogoPath));
-        $youtubeLogoData = base64_encode(file_get_contents($youtubeLogoPath));
-        $footerLogoData = base64_encode(file_get_contents($footerLogoPath));
-
-        // Prepare the Base64 data with appropriate MIME types
-        $logoBase64 = 'data:image/png;base64,' . $logoData;
-        $facebookLogoBase64 = 'data:image/png;base64,' . $facebookLogoData;
-        $instagramLogoBase64 = 'data:image/png;base64,' . $instagramLogoData;
-        $twitterLogoBase64 = 'data:image/png;base64,' . $twitterLogoData;
-        $youtubeLogoBase64 = 'data:image/png;base64,' . $youtubeLogoData;
-        $footerLogoBase64 = 'data:image/png;base64,' . $footerLogoData;
 
         // Replace placeholders with Base64 image data
         $body = $this->template->body;
@@ -81,12 +58,12 @@ class AccountVerificationEmail extends Mailable implements ShouldQueue
             '{instagram_link}' => ConfigHelper::getConfig('conf_instagram_link'),
             '{twitter_link}' => ConfigHelper::getConfig('conf_twitter_link'),
             '{youtube_link}' => ConfigHelper::getConfig('conf_youtube_link'),
-            '{logo_path}' => $logoBase64,
-            '{facebook_logo}' => $facebookLogoBase64,
-            '{instagram_logo}' => $instagramLogoBase64,
-            '{twitter_logo}' => $twitterLogoBase64,
-            '{youtube_logo}' => $youtubeLogoBase64,
-            '{footer_logo}' => $footerLogoBase64,
+            '{logo_path}' => asset('img/logo-black.png'),
+            '{facebook_logo}' => asset('img/facebook.png'),
+            '{instagram_logo}' => asset('img/instagram.png'),
+            '{twitter_logo}' => asset('img/twitter.png'),
+            '{youtube_logo}' => asset('img/youtube.png'),
+            '{footer_logo}' => asset('img/black-transparent.png'),
             '{current_year}' => now('Y'),
         ];
         foreach ($replacements as $placeholder => $value) {

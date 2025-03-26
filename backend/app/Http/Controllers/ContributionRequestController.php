@@ -80,7 +80,7 @@ class ContributionRequestController extends Controller
         ]);
 
         // Send Emails to user and visitor
-        $userTemplate = Template::where('name', Template::CONTRIBUTION_REQUEST_EMAIL)->first();
+        $userTemplate = Template::where('name', Template::NEW_CONTRIBUTION_REQUEST_EMAIL)->first();
         $visitorTemplate = Template::where('name', Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL)->first();
         Mail::to($contributionRequest->user->email)->send(new UserContributionRequest($contributionRequest, $userTemplate));
         Mail::to($contributionRequest->email)->send(new VisitorContributionRequest($contributionRequest, $visitorTemplate));
