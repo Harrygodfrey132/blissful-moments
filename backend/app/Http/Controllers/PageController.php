@@ -114,11 +114,13 @@ class PageController extends Controller
                     // Determine the original page name
                     $originalPageName = $lastRedirect ? $lastRedirect->old_page_name : $page->slug;
 
-                    // Insert new redirection
-                    UrlRedirect::create([
-                        'old_page_name' => $originalPageName, // Always refer to the last known original
-                        'new_page_name' => $validated['name'], // The new name becomes the latest one
-                    ]);
+                    // Insert new redirection **only if it's a real change**
+                    if ($originalPageName !== $validated['name']) {
+                        UrlRedirect::create([
+                            'old_page_name' => $originalPageName, // Always refer to the last known original
+                            'new_page_name' => $validated['name'], // The new name becomes the latest one
+                        ]);
+                    }
                 }
 
                 // Update the page with new name
@@ -126,12 +128,6 @@ class PageController extends Controller
                     'name' => $validated['name'],
                     'is_private' => $validated['is_private'],
                     'password' => $validated['is_private'] ? Hash::make($validated['password']) : $page->password,
-                ]);
-
-                // Ensure the new page name exists in UrlRedirect for future redirects
-                UrlRedirect::firstOrCreate([
-                    'old_page_name' => $validated['name'],
-                    'new_page_name' => $validated['name'], // Self-referencing to mark it as the latest
                 ]);
             }
 
@@ -401,23 +397,6 @@ class PageController extends Controller
                 break;
             }
 
-            // Check if this is a self-loop
-            if ($redirect->old_page_name === $redirect->new_page_name) {
-                // Check if another valid redirection exists (abc -> efg)
-                $validRedirect = UrlRedirect::where('old_page_name', $redirect->old_page_name)
-                    ->where('new_page_name', '!=', $redirect->old_page_name)
-                    ->first();
-
-                if ($validRedirect) {
-                    // Delete the self-loop entry (abc -> abc)
-                    $redirect->delete();
-                    continue; // Restart loop to follow valid redirection
-                }
-
-                // If no valid redirection exists, stop
-                break;
-            }
-
             // Move to the next redirected page
             $pageName = $redirect->new_page_name;
         }
@@ -438,6 +417,7 @@ class PageController extends Controller
 
         return response()->json(['error' => 'Page not found'], 404);
     }
+
 
 
     public function verifyPassword(Request $request)
