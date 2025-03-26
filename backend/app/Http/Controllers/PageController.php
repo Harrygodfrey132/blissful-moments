@@ -383,21 +383,52 @@ class PageController extends Controller
 
     public function show($pageName)
     {
-        $currentPage = $pageName;
+        $originalPage = $pageName;
+        $visitedPages = [];
 
-        // Resolve any redirections iteratively
         while (true) {
-            $redirect = UrlRedirect::where('old_page_name', $currentPage)->first();
-
-            if (!$redirect) {
-                break; // No further redirect, exit loop
+            // Prevent infinite loops
+            if (in_array($pageName, $visitedPages)) {
+                break;
             }
 
-            $currentPage = $redirect->new_page_name;
+            $visitedPages[] = $pageName;
+
+            // Find a redirect
+            $redirect = UrlRedirect::where('old_page_name', $pageName)->first();
+
+            if (!$redirect) {
+                break;
+            }
+
+            // Check if this is a self-loop
+            if ($redirect->old_page_name === $redirect->new_page_name) {
+                // Check if another valid redirection exists (abc -> efg)
+                $validRedirect = UrlRedirect::where('old_page_name', $redirect->old_page_name)
+                    ->where('new_page_name', '!=', $redirect->old_page_name)
+                    ->first();
+
+                if ($validRedirect) {
+                    // Delete the self-loop entry (abc -> abc)
+                    $redirect->delete();
+                    continue; // Restart loop to follow valid redirection
+                }
+
+                // If no valid redirection exists, stop
+                break;
+            }
+
+            // Move to the next redirected page
+            $pageName = $redirect->new_page_name;
         }
 
-        // Fetch the resolved page data
-        $page = Page::where('slug', $currentPage)->activeNotSuspended()->first();
+        // Try fetching the resolved page
+        $page = Page::where('slug', $pageName)->activeNotSuspended()->first();
+
+        if (!$page) {
+            // If no page is found after redirection, check the original page name
+            $page = Page::where('slug', $originalPage)->activeNotSuspended()->first();
+        }
 
         if ($page) {
             return response()->json([
@@ -407,7 +438,6 @@ class PageController extends Controller
 
         return response()->json(['error' => 'Page not found'], 404);
     }
-
 
 
     public function verifyPassword(Request $request)
