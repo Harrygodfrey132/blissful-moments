@@ -234,7 +234,7 @@ const GalleryImageUploadView = ({ pageData }) => {
             >
               <option value="">Select Folder</option>
               {pageData.gallery?.folders.map((folder) => (
-                <option key={folder.id} value={folder.id}>
+                <option key={folder.id} value={folder.name}>
                   {folder.name}
                 </option>
               ))}

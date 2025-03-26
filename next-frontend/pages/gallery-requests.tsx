@@ -215,13 +215,13 @@ const GalleryRequestPage = () => {
                                     </td>
 
                                     <td className="flex items-center gap-2 whitespace-nowrap px-3 py-4 text-base text-gray-500">
-                                    <span className="border inline-block px-4 py-1.5 rounded">
-                                      <FaEye
-                                        className="text-blue-500 cursor-pointer"
-                                        onClick={() =>
-                                          handleViewDetails(GalleryRequest)
-                                        }
-                                      />
+                                      <span className="border inline-block px-4 py-1.5 rounded">
+                                        <FaEye
+                                          className="text-blue-500 cursor-pointer"
+                                          onClick={() =>
+                                            handleViewDetails(GalleryRequest)
+                                          }
+                                        />
                                       </span>
                                       {GalleryRequest.status === 0 && (
                                         <>
@@ -277,55 +277,57 @@ const GalleryRequestPage = () => {
       </div>
 
       {isModalOpen && currentGalleryRequest && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded shadow-xl p-6 max-w-2xl w-full">
-        <h2 className="text-xl font-semibold mb-5 border-b pb-3">
-          Access Section Details
-        </h2>
-    
-        <div className="flex flex-col md:flex-row gap-6">
-          
-          <div className="space-y-4 w-full md:w-1/2">
-            <p className="text-gray-700">
-              <strong className="text-gray-900">Name:</strong> {currentGalleryRequest.name}
-            </p>
-            <p className="text-gray-700">
-              <strong className="text-gray-900">Email:</strong> {currentGalleryRequest.email}
-            </p>
-            <p className="text-gray-700">
-              <strong className="text-gray-900">Folder:</strong> {currentGalleryRequest.folder}
-            </p>
-          </div>
-    
-          <div className="w-full md:w-1/2 space-y-2">
-            <p className="text-gray-900 font-medium mb-2">Images to be uploaded:</p>
-            <div className="grid grid-cols-2 gap-4">
-              {JSON.parse(currentGalleryRequest.images || "[]").map(
-                (imageUrl: string, index: number) => (
-                  <img
-                    key={index}
-                    src={imageUrl}
-                    alt={`Uploaded Image ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg border border-gray-300 shadow-sm"
-                  />
-                )
-              )}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded shadow-xl p-6 max-w-2xl w-full">
+            <h2 className="text-xl font-semibold mb-5 border-b pb-3">
+              Access Section Details
+            </h2>
+
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="space-y-4 w-full md:w-1/2">
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Name:</strong>{" "}
+                  {currentGalleryRequest.name}
+                </p>
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Email:</strong>{" "}
+                  {currentGalleryRequest.email}
+                </p>
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Folder:</strong>{" "}
+                  {currentGalleryRequest.folder}
+                </p>
+              </div>
+
+              <div className="w-full md:w-1/2 space-y-2">
+                <p className="text-gray-900 font-medium mb-2">
+                  Images to be uploaded:
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  {JSON.parse(currentGalleryRequest.images || "[]").map(
+                    (imageUrl: string, index: number) => (
+                      <img
+                        key={index}
+                        src={imageUrl}
+                        alt={`Uploaded Image ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg border border-gray-300 shadow-sm"
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 text-right border-t pt-4">
+              <button
+                onClick={closeModal}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-lg transition"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
-    
-        <div className="mt-6 text-right border-t pt-4">
-          <button
-            onClick={closeModal}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-lg transition"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-    
-     
       )}
     </div>
   );
