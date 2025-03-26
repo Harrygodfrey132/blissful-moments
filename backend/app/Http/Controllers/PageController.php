@@ -106,26 +106,32 @@ class PageController extends Controller
                     return $page;
                 });
             } else {
-                // If name is changing, store the old URL for redirection
+
                 if ($page->slug && $page->slug !== $validated['name']) {
-                    // Find the last custom URL (latest page name)
-                    $lastRedirect = UrlRedirect::where('custom_url', $page->slug)->orderByDesc('id')->first();
+                    // Find the last redirect for this page
+                    $lastRedirect = UrlRedirect::where('new_page_name', $page->slug)->orderByDesc('id')->first();
 
-                    // If a redirect exists, chain it; otherwise, create a new redirect
-                    $originalUrl = $lastRedirect ? $lastRedirect->original_url : $page->slug;
+                    // Determine the original page name
+                    $originalPageName = $lastRedirect ? $lastRedirect->old_page_name : $page->slug;
 
-                    // Create the redirect chain
+                    // Insert new redirection
                     UrlRedirect::create([
-                        'original_url' => $originalUrl, // Always chain from the last known original
-                        'custom_url' => $validated['name'], // Point to the latest page name
+                        'old_page_name' => $originalPageName, // Always refer to the last known original
+                        'new_page_name' => $validated['name'], // The new name becomes the latest one
                     ]);
                 }
 
-                // Update page with new name
+                // Update the page with new name
                 $page->update([
                     'name' => $validated['name'],
                     'is_private' => $validated['is_private'],
                     'password' => $validated['is_private'] ? Hash::make($validated['password']) : $page->password,
+                ]);
+
+                // Ensure the new page name exists in UrlRedirect for future redirects
+                UrlRedirect::firstOrCreate([
+                    'old_page_name' => $validated['name'],
+                    'new_page_name' => $validated['name'], // Self-referencing to mark it as the latest
                 ]);
             }
 
@@ -377,15 +383,21 @@ class PageController extends Controller
 
     public function show($pageName)
     {
-        $currentUrl = $pageName;
+        $currentPage = $pageName;
 
-        $redirect = UrlRedirect::where('custom_url', $currentUrl)
-            ->first();
-        if ($redirect) {
-            $currentUrl = $redirect->original_url;
+        // Resolve any redirections iteratively
+        while (true) {
+            $redirect = UrlRedirect::where('old_page_name', $currentPage)->first();
+
+            if (!$redirect) {
+                break; // No further redirect, exit loop
+            }
+
+            $currentPage = $redirect->new_page_name;
         }
-        // Fetch page data from the database based on the resolved page name
-        $page = Page::where('slug', $currentUrl)->activeNotSuspended()->first();
+
+        // Fetch the resolved page data
+        $page = Page::where('slug', $currentPage)->activeNotSuspended()->first();
 
         if ($page) {
             return response()->json([
@@ -395,6 +407,7 @@ class PageController extends Controller
 
         return response()->json(['error' => 'Page not found'], 404);
     }
+
 
 
     public function verifyPassword(Request $request)

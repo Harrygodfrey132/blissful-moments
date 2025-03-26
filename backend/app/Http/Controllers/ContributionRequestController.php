@@ -115,7 +115,7 @@ class ContributionRequestController extends Controller
             ]);
         } else {
         }
-        $template = Template::find(Template::REQUEST_STATUS_UPDATE_EMAIL);
+        $template = Template::find('name',Template::REQUEST_STATUS_UPDATE_EMAIL)->first();
         Mail::to($contributionRequest->email)->send(new VisitorRequestStatusEmail($contributionRequest, $template));
         // Return a JSON response
         return response()->json([
