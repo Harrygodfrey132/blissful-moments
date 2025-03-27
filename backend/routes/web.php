@@ -82,7 +82,7 @@ Route::prefix('admin')->group(function () {
             });
             Route::get('/email-templates', [TemplateController::class, 'email_templates'])->name('emails.index');
             Route::get('/email-templates/{template}/edit', [TemplateController::class, 'edit'])->name('emails.edit');
-            Route::get('/email-templates/{template}/update', [TemplateController::class, 'update'])->name('emails.update');
+            Route::put('/email-templates/{template}/update', [TemplateController::class, 'update'])->name('emails.update');
         });
 
         Route::prefix('email-logs')->group(function () {
