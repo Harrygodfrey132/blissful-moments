@@ -31,14 +31,17 @@ class TemplateController extends Controller
     public function update(Request $request, Template $template)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
             'subject' => 'required|string|max:255',
             'body' => 'required',
-            'slug' => 'required|unique:templates,slug,' . $template->id,
         ]);
 
         $template->update($request->all());
-
-        return to_route('templates.index')->with('success', 'Template updated successfully.');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Template updated successfully!',
+            ]);
+        }
+        return to_route('cms.emails.index')->with('success', 'Template updated successfully.');
     }
 }
