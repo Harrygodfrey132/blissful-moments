@@ -45,7 +45,7 @@
         </form>
     </div>
     <!-- Include TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/{{ Config::get('conf_tinymce_key') }}/tinymce/7/tinymce.min.js"
+    <script src="https://cdn.tiny.cloud/1/{{ Config::getConfig('conf_tinymce_key') }}/tinymce/7/tinymce.min.js"
         referrerpolicy="origin">
     </script>
     <script>
