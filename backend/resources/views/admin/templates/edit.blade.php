@@ -44,11 +44,10 @@
             </div>
         </form>
     </div>
-
     <!-- Include TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/rafk2qf4xae4547sztpei8geik63epn18ydksc3sotpiy6sp/tinymce/7/tinymce.min.js"
-        referrerpolicy="origin"></script>
-
+    <script src="https://cdn.tiny.cloud/1/{{ Config::get('conf_tinymce_key') }}/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin">
+    </script>
     <script>
         // Wait for DOM content to load
         document.addEventListener('DOMContentLoaded', () => {
