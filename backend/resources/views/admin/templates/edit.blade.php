@@ -12,8 +12,7 @@
             </a>
         </div>
 
-        <form id="userEditForm" action="{{ route('cms.emails.update', $template) }}" method="POST"
-            @submit.prevent="submitFormHandler('userEditForm')">
+        <form id="userEditForm" action="{{ route('cms.emails.update', $template) }}" method="POST">
             @csrf
             @method('PUT')
 

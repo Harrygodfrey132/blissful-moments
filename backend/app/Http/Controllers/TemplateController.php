@@ -35,13 +35,18 @@ class TemplateController extends Controller
             'body' => 'required',
         ]);
 
-        $template->update($request->all());
+        $template->update([
+            'subject' => $request->subject,
+            'body' => $request->body,
+        ]);
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Template updated successfully!',
             ]);
         }
-        return to_route('cms.emails.index')->with('success', 'Template updated successfully.');
+
+        return back()->with('success', 'Template updated successfully.');
     }
 }
