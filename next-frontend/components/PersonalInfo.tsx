@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { format, parse, isValid } from "date-fns";
 import { useSession } from "next-auth/react";
 import { usePageContext } from "../context/PageContext";
 import ImageCropperModal from "../components/ImageCropperModal";
@@ -65,15 +64,15 @@ export default function PersonalInfo() {
   const days = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
 
   const parseAndFormatDate = (dateString: string): DateState | null => {
-    const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-    if (!isValid(parsedDate)) {
+    const parsedDate = new Date(dateString); // ✅ Works in all versions
+    if (isNaN(parsedDate.getTime())) {
       toast.error(`Invalid date format: ${dateString}`);
       return null;
     }
     return {
-      day: format(parsedDate, "d"),
-      month: format(parsedDate, "MMMM"),
-      year: format(parsedDate, "yyyy"),
+      day: parsedDate.getDate().toString(),
+      month: parsedDate.toLocaleString("en-US", { month: "long" }),
+      year: parsedDate.getFullYear().toString(),
     };
   };
 
