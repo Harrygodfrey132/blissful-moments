@@ -92,7 +92,7 @@ export default function StyledTabs({ pageData }) {
         {isPersonalQuoteVisible && (
           <div ref={tab1Ref}>
             <div className="mx-auto !max-w-4xl px-4 md:py-6 py-0">
-              <div className="flex items-center justify-between relative">
+              <div className="items-center relative">
                 {/* Left Icon */}
                 <svg
                   stroke="currentColor"

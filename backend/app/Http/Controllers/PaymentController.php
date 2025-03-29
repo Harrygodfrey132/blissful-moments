@@ -43,25 +43,31 @@ class PaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         try {
-            // Set your Stripe Secret Key
+            // Set Stripe Secret Key
             Stripe::setApiKey(ConfigHelper::getConfig('conf_stripe_secret_key'));
 
             // Fetch user
             $customerId = $request->customer_id;
             $user = User::findOrFail($customerId);
 
+            // Ensure billing details is an array
+            $billingDetails = is_array($request->billing_details) ? $request->billing_details : [];
+
             // Check if the user already availed the free trial
             $isTrialAvailable = !$user->is_free_trial_availed;
-            $freeTrialMonths = (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
-            $freeTrialDays = $isTrialAvailable ? ($freeTrialMonths * 30) : 0; // Apply trial only if not availed
+            $freeTrialDays = $isTrialAvailable ? (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 30 : 0;
 
-            // Get the active plan and its 1-month variation
+            // Get active plan and its 1-month variation
             $plan = Plan::where('status', AppConstant::ACTIVE)->firstOrFail();
-            $planVariation = $plan->planVariations()->where('duration', 1)->firstOrFail();
+            $planVariation = $plan->planVariations()->where('duration', 1)->first();
+
+            // Ensure plan variation exists and has a valid Stripe price ID
+            if (!$planVariation || !$planVariation->stripe_price_id) {
+                return response()->json(['error' => 'Invalid plan selected.'], 400);
+            }
 
             // Create or retrieve Stripe customer
             if (!$user->stripe_customer_id) {
-                $billingDetails = $request->billing_details ?? [];
                 $customer = Customer::create([
                     'email' => $user->email,
                     'name' => ($billingDetails['first_name'] ?? '') . ' ' . ($billingDetails['last_name'] ?? ''),
@@ -75,7 +81,6 @@ class PaymentController extends Controller
                         'country' => $billingDetails['country'] ?? '',
                     ],
                 ]);
-
                 $user->update(['stripe_customer_id' => $customer->id]);
             } else {
                 $customer = Customer::retrieve($user->stripe_customer_id);
@@ -84,7 +89,7 @@ class PaymentController extends Controller
             // Decrypt Order ID
             $orderId = Crypt::decryptString($request->order_id);
 
-            // Create Stripe Checkout Session
+            // Build Checkout Session Data
             $sessionData = [
                 'payment_method_types' => ['card'],
                 'mode' => 'subscription',
@@ -103,19 +108,19 @@ class PaymentController extends Controller
                     'plan_name' => $plan->name,
                     'plan_amount' => $planVariation->price,
                     'order_id' => $orderId,
-                    'is_trial' => $isTrialAvailable ? 'yes' : 'no'
+                    'is_trial' => $isTrialAvailable ? 'true' : 'false',
                 ],
             ];
 
-            // Add free trial if not availed
-            if ($isTrialAvailable) {
+            // Apply free trial only if available
+            if ($isTrialAvailable && $freeTrialDays > 0) {
                 $sessionData['subscription_data'] = [
                     'trial_period_days' => $freeTrialDays,
                 ];
             }
 
+            // Create Stripe Checkout Session
             $session = Session::create($sessionData);
-
 
             return response()->json([
                 'sessionId' => $session->id,

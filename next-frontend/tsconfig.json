@@ -1,32 +1,28 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2017",
     "lib": [
       "dom",
+      "dom.iterable",
       "esnext"
     ],
-    "jsx": "preserve",
-    "moduleResolution": "node",
-    "strict": true,
-    "esModuleInterop": true,
     "allowJs": true,
     "skipLibCheck": true,
+    "strict": false,
     "noEmit": true,
     "incremental": true,
     "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": [
-      "next",
-      "next-auth"
-    ]
+    "jsx": "preserve"
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "next-auth.d.ts" // Explicitly include the type definition
-, "components/RegisterPageModal.jsx", "pages/success.jsx", "components/Contributions.tsx", "components/MyPageView.jsx", "components/TabComponentView.jsx", "components/ContributionView.jsx"  ],
+    "**/*.tsx"
+  ],
   "exclude": [
     "node_modules"
   ]

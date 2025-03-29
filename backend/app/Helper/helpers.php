@@ -25,7 +25,7 @@ function formatPrice($price)
 
 function generateUniqueOrderId()
 {
-    $prefix = 'BM';
+    $prefix = 'ORD-';
 
     do {
         $randomNumber = mt_rand(100000, 999999);

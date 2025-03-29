@@ -22,166 +22,118 @@ class EmailTemplateSeeder extends Seeder
             'type' => 1,
             'subject' => 'Welcome to Blissful Moments',
             'body' => '
-                <!DOCTYPE html>
-                <html>
-
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>The Blissful Moments</title>
-                </head>
-
-                <body>
-                    <table dir="ltr" style="font-family: Arial, sans-serif; color: #333; line-height: 26px;" width="100%"
-                        cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5">
-                        <tbody>
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: #0b4a6f; padding: 30px 0;"></td>
-                            </tr>
-                            <tr>
-                                <td style="background: #0b4a6f;">
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 10px 15px; 10px 40px">
-                                                    <a href="{frontend_url}"
-                                                        style="align-items: center; display: flex; text-decoration: none;">
-                                                        <img style="width: 70px; vertical-align: middle;" src="{logo_path}"
-                                                            alt="Blissfull Logo">
-                                                        <span
-                                                            style="font-weight: 600;font-size: 22px;color:#0b4a6f;margin-left: 10px;">The
-                                                            Blissful Moments</span>
-                                                    </a>
-                                                </td>
-
-                                                <td style="text-align: right; padding: 10px 40px;">
-                                                    <a href="{facebook_link}"
-                                                        style="text-decoration: none;" target="_blank">
-                                                        <img src="{facebook_logo}" style="width: 25px; height: 25px; margin: 5px;"
-                                                            alt="Facebook">
-                                                    </a>
-                                                    <a href="{twitter_link}"
-                                                        style="text-decoration: none;" target="_blank">
-                                                        <img src="{twitter_logo}" style="width: 25px; height: 25px; margin: 5px;"
-                                                            alt="Twitter">
-                                                    </a>
-                                                    <a href="{instagram_link}"
-                                                        style="text-decoration: none;" target="_blank">
-                                                        <img src="{instagram_logo}" style="width: 25px; height: 25px; margin: 5px;"
-                                                            alt="Instagram">
-                                                    </a>
-                                                    <a href="{youtube_link}"
-                                                        style="text-decoration: none;" target="_blank">
-                                                        <img src="{youtube_logo}" style="width: 25px; height: 25px; margin: 5px;"
-                                                            alt="YouTube">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <!-- Body -->
-                            <tr>
-                                <td>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 22px 0;">
-                                                    <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
-                                                        {Subject_Line}
-                                                    </h2>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 30px 40px;">
-                                                    <h3
-                                                        style="font-size: 20px; margin: 0; font-weight: 600; color: #000; ">
-                                                        Hello {First_Name},
-                                                    </h3>
-                                                    <p style="font-size: 16px; color: #000;">
-                                                        Thank you for joining The Blissful Moments.
-                                                    </p>
-                                                    <p style="font-size: 16px; color: #000;">
-                                                        We’re excited to help you create and manage your memorial pages. Here’s what to
-                                                        do next:
-                                                    </p>
-                                                    <ol style="font-size: 16px; color: #000; padding-left: 20px;">
-                                                        <li>Customize your profile or memorial page settings.</li>
-                                                        <li>Explore our resources for tips on personalizing your memorial content.</li>
-                                                        <li>Reach out to our support team if you have any questions.</li>
-                                                    </ol>
-                                                    <p style="font-size: 16px; color: #000;">
-                                                        We’re grateful you’re here and look forward to providing you with a seamless
-                                                        memorial creation experience.
-                                                    </p>
-                                                    <p style="font-size: 16px; font-weight: bold; color: #0b4a6f; text-align: center;">
-                                                        Create password for your account:
-                                                    </p>
-                                                    <p style="text-align: center;">
-                                                        <a href="{Reset_Link}" style="background: #0b4a6f; color: #fff; padding: 10px 20px;
-                                                        text-decoration: none; font-size: 16px; border-radius: 5px;">
-                                                            Set Password
-                                                        </a>
-                                                    </p>
-                                                    <p style="font-size: 16px; color: #000;">Warm regards,</p>
-                                                    <p style="font-size: 16px; color: #000; font-weight: bold;">Harry Godfrey</p>
-                                                    <p style="font-size: 14px; color: #000;">Founder of The Blissful Moments Team</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <!-- Footer -->
-                            <tr>
-                                <td>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: rgba(0,0,0,0.04); text-align: center; position: relative;">
-
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 30px 0; font-size: 20px; color: #000;">
-                                                    Need more help? <br>
-                                                    <a href="{frontend_url}" style="color:#0b4a6f;">We’re here, ready to
-                                                        talk</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 0px 20px 30px; font-size: 13px; color: #999;">
-                                                    © {current_year}, Blissfull Moments. All Rights Reserved.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="{frontend_url}"
-                                                        style="    display: block;
-                                                    position: absolute;
-                                                    right: 0;
-                                                    bottom: 10px;">
-                                                        <img style="width: 70px;" src="{footer_logo}" alt="Blissfull Logo">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </body>
-                </html>
-            ',
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <title>Welcome Email</title>
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif; color: #333;">
+            <!-- Wrapper -->
+            <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#f5f5f5">
+                <tbody>
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: #0b4a6f; padding: 30px 0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #0b4a6f;">
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 15px;">
+                                            <a href="{frontend_url}" style="display: flex; align-items: center; text-decoration: none;">
+                                                <img src="{logo_path}" alt="Blissful Logo" style="width: 70px; vertical-align: middle;">
+                                                <span style="font-weight: 600; font-size: 22px; color: #0b4a6f; margin-left: 10px;">The Blissful Moments</span>
+                                            </a>
+                                        </td>
+                                        <td style="text-align: right; padding: 10px 40px;">
+                                            <a href="{facebook_link}" target="_blank" style="text-decoration: none;"><img src="{facebook_logo}" alt="Facebook" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                            <a href="{twitter_link}" target="_blank" style="text-decoration: none;"><img src="{twitter_logo}" alt="Twitter" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                            <a href="{instagram_link}" target="_blank" style="text-decoration: none;"><img src="{instagram_logo}" alt="Instagram" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                            <a href="{youtube_link}" target="_blank" style="text-decoration: none;"><img src="{youtube_logo}" alt="YouTube" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+        
+                    <!-- Body -->
+                    <tr>
+                        <td>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 22px 0;">
+                                            <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">{Subject_Line}</h2>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 30px 40px;">
+                                            <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">Hello {First_Name},</h3>
+                                            <p style="font-size: 16px; color: #000;">Thank you for joining The Blissful Moments.</p>
+                                            <p style="font-size: 16px; color: #000;">We’re excited to help you create and manage your memorial pages. Here’s what to do next:</p>
+                                            <ol style="font-size: 16px; color: #000; padding-left: 20px;">
+                                                <li>Customize your profile or memorial page settings.</li>
+                                                <li>Explore our resources for tips on personalizing your memorial content.</li>
+                                                <li>Reach out to our support team if you have any questions.</li>
+                                            </ol>
+                                            <p style="font-size: 16px; color: #000;">We’re grateful you’re here and look forward to providing you with a seamless memorial creation experience.</p>
+        
+                                            <!-- Call-to-Action Button -->
+                                            <p style="font-size: 16px; font-weight: bold; color: #0b4a6f; text-align: center;">Create a password for your account:</p>
+                                            <p style="text-align: center;">
+                                                <a href="{Reset_Link}" style="background: #0b4a6f; color: #fff; padding: 12px 25px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Set Password</a>
+                                            </p>
+        
+                                            <p style="font-size: 16px; color: #000;">Warm regards,</p>
+                                            <p style="font-size: 16px; color: #000; font-weight: bold;">Harry Godfrey</p>
+                                            <p style="font-size: 14px; color: #000;">Founder of The Blissful Moments Team</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+        
+                    <!-- Footer -->
+                    <tr>
+                        <td>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #eaeaea; text-align: center;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 30px 20px; font-size: 18px; color: #333;">
+                                            Need more help? <br>
+                                            <a href="{frontend_url}" style="color: #0b4a6f; text-decoration: none;">We’re here, ready to talk</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0px 20px 30px; font-size: 13px; color: #666;">
+                                            &copy; {current_year}, Blissful Moments. All Rights Reserved.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 20px 0;">
+                                            <a href="{frontend_url}">
+                                                <img src="{footer_logo}" alt="Blissful Logo" style="width: 70px;">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </body>
+        </html>
+        ',
             'replacements' => json_encode([
                 '{Subject_Line}' => 'Welcome to Blissful Moments',
                 '{First_Name}' => 'Recipient\'s Name',
@@ -189,145 +141,106 @@ class EmailTemplateSeeder extends Seeder
             ]),
         ]);
 
+
         Template::create([
             'id' => 2,
             'name' => 'account_verification_email',
             'type' => 1,
             'subject' => 'Verify Your Email - Blissful Moments',
             'body' => '
-                <!DOCTYPE html>
-                <html>
-
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Account Verification</title>
-                </head>
-
-                <body>
-                    <table dir="ltr" style="font-family: Arial, sans-serif; color: #333; line-height: 26px;" width="100%"
-                        cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5">
-                        <tbody>
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: #0b4a6f; padding: 30px 0;"></td>
-                            </tr>
-                            <tr>
-                                <td style="background: #0b4a6f;">
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 10px 15px;">
-                                                    <a href="{frontend_url}"
-                                                        style="align-items: center; display: flex; text-decoration: none;">
-                                                        <img style="width: 70px; vertical-align: middle;" src="{logo_path}"
-                                                            alt="Blissful Moments Logo">
-                                                        <span
-                                                            style="font-weight: 600;font-size: 22px;color:#0b4a6f;margin-left: 10px;">
-                                                            The Blissful Moments
-                                                        </span>
-                                                    </a>
-                                                </td>
-
-                                                <td style="text-align: right; padding: 10px 40px;">
-                                                    <a href="{facebook_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{facebook_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Facebook">
-                                                    </a>
-                                                    <a href="{twitter_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{twitter_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Twitter">
-                                                    </a>
-                                                    <a href="{instagram_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{instagram_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Instagram">
-                                                    </a>
-                                                    <a href="{youtube_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{youtube_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="YouTube">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <!-- Body -->
-                            <tr>
-                                <td>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 22px 0;">
-                                                    <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
-                                                        Account Verification
-                                                    </h2>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 30px 40px;">
-                                                    <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">
-                                                        Hello {user_name},
-                                                    </h3>
-                                                    <p style="font-size: 16px; color: #000;">
-                                                        Thank you for signing up with Blissful Moments! To complete your account setup, please use the OTP below to verify your email address:
-                                                    </p>
-                                                    <p style="font-size: 26px; font-weight: bold; color: #C3325F; text-align: center; letter-spacing: 5px;">
-                                                        {otp_code}
-                                                    </p>
-                                                    <p style="font-size: 14px; color: #555; margin-top: 10px; text-align: center;">
-                                                        This OTP is valid for {expiry_time} minutes. Please do not share it with anyone.
-                                                    </p>
-                                                    <p style="font-size: 16px; color: #000;">
-                                                        If you did not request this verification, please ignore this email or contact our support team for assistance.
-                                                    </p>
-                                                    <p style="font-size: 16px; color: #000;">Warm regards,</p>
-                                                    <p style="font-size: 16px; color: #000; font-weight: bold;">Harry Godfrey</p>
-                                                    <p style="font-size: 14px; color: #000;">Founder of The Blissful Moments Team</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <!-- Footer -->
-                            <tr>
-                                <td>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: rgba(0,0,0,0.04); text-align: center; position: relative;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 30px 0; font-size: 20px; color: #000;">
-                                                    Need more help? <br>
-                                                    <a href="{frontend_url}" style="color:#0b4a6f;">We’re here, ready to talk</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 0px 20px 30px; font-size: 13px; color: #999;">
-                                                    © {current_year}, Blissful Moments. All Rights Reserved.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="{frontend_url}"
-                                                        style="display: block; position: absolute; right: 0; bottom: 10px;">
-                                                        <img style="width: 70px;" src="{footer_logo}" alt="Blissful Moments Logo">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </body>
-                </html>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <title>Account Verification</title>
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif; color: #333;">
+            <!-- Wrapper -->
+            <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#f5f5f5">
+                <tbody>
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: #0b4a6f; padding: 30px 0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #0b4a6f;">
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 15px;">
+                                            <a href="{frontend_url}" style="display: flex; align-items: center; text-decoration: none;">
+                                                <img src="{logo_path}" alt="Blissful Logo" style="width: 70px; vertical-align: middle;">
+                                                <span style="font-weight: 600; font-size: 22px; color: #0b4a6f; margin-left: 10px;">The Blissful Moments</span>
+                                            </a>
+                                        </td>
+                                        <td style="text-align: right; padding: 10px 40px;">
+                                            <a href="{facebook_link}" target="_blank" style="text-decoration: none;"><img src="{facebook_logo}" alt="Facebook" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                            <a href="{twitter_link}" target="_blank" style="text-decoration: none;"><img src="{twitter_logo}" alt="Twitter" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                            <a href="{instagram_link}" target="_blank" style="text-decoration: none;"><img src="{instagram_logo}" alt="Instagram" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                            <a href="{youtube_link}" target="_blank" style="text-decoration: none;"><img src="{youtube_logo}" alt="YouTube" style="width: 25px; height: 25px; margin: 5px;"></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+        
+                    <!-- Body -->
+                    <tr>
+                        <td>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 22px 0;">
+                                            <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">Account Verification</h2>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 30px 40px;">
+                                            <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">Hello {user_name},</h3>
+                                            <p style="font-size: 16px; color: #000;">Thank you for signing up with Blissful Moments! To complete your account setup, please use the OTP below to verify your email address:</p>
+                                            <p style="font-size: 26px; font-weight: bold; color: #C3325F; text-align: center; letter-spacing: 5px;">{otp_code}</p>
+                                            <p style="font-size: 14px; color: #555; margin-top: 10px; text-align: center;">This OTP is valid for {expiry_time} minutes. Please do not share it with anyone.</p>
+                                            <p style="font-size: 16px; color: #000;">If you did not request this verification, please ignore this email or contact our support team for assistance.</p>
+                                            <p style="font-size: 16px; color: #000;">Warm regards,</p>
+                                            <p style="font-size: 16px; color: #000; font-weight: bold;">Harry Godfrey</p>
+                                            <p style="font-size: 14px; color: #000;">Founder of The Blissful Moments Team</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+        
+                    <!-- Footer -->
+                    <tr>
+                        <td>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #eaeaea; text-align: center;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 30px 20px; font-size: 18px; color: #333;">Need more help? <br><a href="{frontend_url}" style="color: #0b4a6f; text-decoration: none;">We’re here, ready to talk</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0px 20px 30px; font-size: 13px; color: #666;">&copy; {current_year}, Blissful Moments. All Rights Reserved.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 20px 0;">
+                                            <a href="{frontend_url}"><img src="{footer_logo}" alt="Blissful Logo" style="width: 70px;"></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </body>
+        </html>
             ',
             'replacements' => json_encode([
                 '{user_name}' => 'Recipient\'s Name',
@@ -335,7 +248,6 @@ class EmailTemplateSeeder extends Seeder
                 '{expiry_time}' => 'Expiration time in minutes',
             ]),
         ]);
-
 
         Template::create([
             'id' => 3,
@@ -2163,146 +2075,98 @@ class EmailTemplateSeeder extends Seeder
         ]);
 
         Template::create([
-            'id' => 16,
-            'name' => 'order_failed',
+            'id' => 17,
+            'name' => 'invoice_email',
             'type' => 1,
-            'subject' => 'Order Failed - Blissful Moments',
+            'subject' => 'Your Invoice from Blissful Moments',
             'body' => '
-                <!DOCTYPE html>
-                <html>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <title>Invoice Email</title>
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif; color: #333;">
+            <!-- Wrapper -->
+            <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#f5f5f5">
+                <tbody>
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: #0b4a6f; padding: 30px 0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #0b4a6f;">
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 15px;">
+                                            <a href="{frontend_url}" style="display: flex; align-items: center; text-decoration: none;">
+                                                <img src="{logo_path}" alt="Blissful Logo" style="width: 70px; vertical-align: middle;">
+                                                <span style="font-weight: 600; font-size: 22px; color: #0b4a6f; margin-left: 10px;">The Blissful Moments</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
         
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Order Failed - Blissful Moments</title>
-                </head>
+                    <!-- Body -->
+                    <tr>
+                        <td>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 22px 0;">
+                                            <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">Invoice Details</h2>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 30px 40px;">
+                                            <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">Hello {name},</h3>
+                                            <p style="font-size: 16px; color: #000;">Thank you for your purchase! Please find your invoice attached to this email.</p>
+                                            <p style="font-size: 16px; color: #000;">If you have any questions, feel free to contact our support team.</p>
+                                            <p style="font-size: 16px; color: #000;">Best regards,</p>
+                                            <p style="font-size: 16px; color: #000; font-weight: bold;">Blissful Moments Team</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
         
-                <body>
-                    <table dir="ltr" style="font-family: Arial, sans-serif; color: #333; line-height: 26px;" width="100%"
-                        cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5">
-                        <tbody>
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: #0b4a6f; padding: 30px 0;"></td>
-                            </tr>
-                            <tr>
-                                <td style="background: #0b4a6f;">
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 10px 15px;">
-                                                    <a href="{frontend_url}"
-                                                        style="align-items: center; display: flex; text-decoration: none;">
-                                                        <img style="width: 70px; vertical-align: middle;" src="{logo_path}"
-                                                            alt="Blissful Moments Logo">
-                                                        <span
-                                                            style="font-weight: 600;font-size: 22px;color:#0b4a6f;margin-left: 10px;">
-                                                            Blissful Moments
-                                                        </span>
-                                                    </a>
-                                                </td>
-        
-                                                <td style="text-align: right; padding: 10px 40px;">
-                                                    <a href="{facebook_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{facebook_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Facebook">
-                                                    </a>
-                                                    <a href="{twitter_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{twitter_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Twitter">
-                                                    </a>
-                                                    <a href="{instagram_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{instagram_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="Instagram">
-                                                    </a>
-                                                    <a href="{youtube_link}" style="text-decoration: none;" target="_blank">
-                                                        <img src="{youtube_logo}" style="width: 25px; height: 25px; margin: 5px;" alt="YouTube">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-        
-                            <!-- Body -->
-                            <tr>
-                                <td>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; text-align: center; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 22px 0;">
-                                                    <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
-                                                        Order Failed
-                                                    </h2>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: #fff; text-align: left; border-bottom: 1px solid #eee;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 30px 40px;">
-                                                    <h3 style="font-size: 20px; margin: 0; font-weight: 600; color: #000;">
-                                                        Hi {name},
-                                                    </h3>
-                                                    <p style="font-size: 16px; color: #000;">
-                                                        We are sorry, but your recent order could not be processed due to a
-                                                        payment issue. Please check the details below and try again:
-                                                    </p>
-                                                    <ul style="font-size: 16px; color: #000; list-style-type: none; padding: 0;">
-                                                        <li>Order ID: {order_id}</li>
-                                                        <li>Payment Status: Failed</li>
-                                                    </ul>
-                                                    <p style="font-size: 16px; color: #000; margin-top: 20px;">
-                                                        If you have any questions or need assistance, feel free to contact us.
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-        
-                            <!-- Footer -->
-                            <tr>
-                                <td>
-                                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center"
-                                        style="background: rgba(0,0,0,0.04); text-align: center; position: relative;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="padding: 30px 0; font-size: 20px; color: #000;">
-                                                    Need more help? <br>
-                                                    <a href="{frontend_url}" style="color:#0b4a6f;">Contact Us</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 0px 20px 30px; font-size: 13px; color: #999;">
-                                                    © {current_year}, Blissful Moments. All Rights Reserved.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="{frontend_url}"
-                                                        style="display: block; position: absolute; right: 0; bottom: 10px;">
-                                                        <img style="width: 70px;" src="{footer_logo}" alt="Blissful Moments Logo">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </body>
-        
-                </html>
+                    <!-- Footer -->
+                    <tr>
+                        <td>
+                            <table border="0" width="600" cellspacing="0" cellpadding="0" align="center" style="background: #eaeaea; text-align: center;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 30px 20px; font-size: 18px; color: #333;">
+                                            Need more help? <br>
+                                            <a href="{frontend_url}" style="color: #0b4a6f; text-decoration: none;">We’re here, ready to talk</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0px 20px 30px; font-size: 13px; color: #666;">
+                                            &copy; {current_year}, Blissful Moments. All Rights Reserved.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </body>
+        </html>
             ',
             'replacements' => json_encode([
                 '{name}' => 'Customer Name',
-                '{order_id}' => 'Order ID',
-                '{failure_reason}' => 'Reason for Payment Failure',
             ]),
         ]);
         

@@ -30,6 +30,7 @@ class Template extends Model
     public const SUBSCIPTION_FIRST_REMINDER = "subscription_first_reminder";
     public const SUBSCIPTION_SECOND_REMINDER = "subscription_second_reminder";
     public const SUBSCIPTION_FINAL_REMINDER = "subscription_final_reminder";
+    public const INVOICE_EMAIL = "invoice_email";
 
     protected $fillable = [
         'name',

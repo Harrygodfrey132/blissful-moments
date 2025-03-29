@@ -119,8 +119,8 @@ class OrderController extends Controller
         }
 
         $isTrialAvailable = !$user->is_free_trial_availed;
-        $freeTrialMonths = (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 3;
-        $renewalMonths =  $isTrialAvailable ? $freeTrialMonths : 0;
+        $freeTrialMonths = (int) ConfigHelper::getConfig('conf_free_trial_period') ?? 30;
+        $renewalDays =  $isTrialAvailable ? $freeTrialMonths : 0;
 
         // Get the active plan and its 1-month variation
         $plan = Plan::where('status', AppConstant::ACTIVE)->firstOrFail();
@@ -137,7 +137,7 @@ class OrderController extends Controller
             'plan_amount' =>  $isTrialAvailable ? 0.00  : $planVariation->price,
             'order_total' =>  $isTrialAvailable ? 0.00  : $planVariation->price, // Fixed issue
             'order_tax' => 0.00,
-            'next_renewal_date' => now()->addMonths($renewalMonths),
+            'next_renewal_date' => now()->addDays($renewalDays),
         ]);
 
         $encryptedOrderId = Crypt::encryptString($order->order_id);

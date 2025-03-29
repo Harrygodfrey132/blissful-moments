@@ -20,7 +20,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="free_trial_period">
-                        Free Trial Period (in months) <span class="text-red-500">*</span>
+                        Free Trial Period (in Days) <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <input type="number" name="conf_free_trial_period" id="free_trial_period"
