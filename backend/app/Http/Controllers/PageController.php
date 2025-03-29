@@ -267,7 +267,7 @@ class PageController extends Controller
         }
 
         $isPageAvailable = !Page::where('name', $name)->exists();
-        $isRedirectAvailable = !UrlRedirect::where('custom_url', $name)->exists();
+        $isRedirectAvailable = !UrlRedirect::where('new_page_name', $name)->exists();
         $isAvailable = $isPageAvailable && $isRedirectAvailable;
 
         return response()->json([
