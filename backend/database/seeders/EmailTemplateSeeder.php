@@ -733,9 +733,9 @@ class EmailTemplateSeeder extends Seeder
 
         Template::create([
             'id' => 7,
-            'name' => 'page_edit_request_email',
+            'name' => 'gallery_contribution_request_email',
             'type' => 1,
-            'subject' => 'You Have Received a Page Edit Request - Blissful Moments',
+            'subject' => 'You Have Received a Gallery Contribution Request - Blissful Moments',
             'body' => '
                 <!DOCTYPE html>
                 <html>
@@ -743,7 +743,7 @@ class EmailTemplateSeeder extends Seeder
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Page Edit Request</title>
+                    <title>Gallery Contribution Request</title>
                 </head>
 
                 <body>
@@ -801,7 +801,7 @@ class EmailTemplateSeeder extends Seeder
                                             <tr>
                                                 <td style="padding: 22px 0;">
                                                     <h2 style="font-size: 25px; margin: 0; font-weight: 600; color: #0b4a6f;">
-                                                        Page Edit Request
+                                                        Gallery Contribution Request
                                                     </h2>
                                                 </td>
                                             </tr>
@@ -816,25 +816,24 @@ class EmailTemplateSeeder extends Seeder
                                                         Hello {name},
                                                     </h3>
                                                     <p style="font-size: 16px; color: #000;">
-                                                        You’ve received a request to edit your page on Blissful Moments!
-                                                        A visitor has expressed interest in making changes to your page.
+                                                         A visitor has requested to contribute pictures to your page gallery on Blissful Moments!
                                                     </p>
-                                                    <div class="notification-details" style="margin-top: 20px;">
-                                                        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-                                                            <tr>
-                                                                <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Page Name</th>
-                                                                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{page_name}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Visitor Name</th>
-                                                                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{visitor_name}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Requested Changes</th>
-                                                                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{requested_changes}</td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
+                                            <div class="notification-details" style="margin-top: 20px;">
+                                                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                                                    <tr>
+                                                        <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Page Name</th>
+                                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{page_name}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Contributor Name</th>
+                                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{contributor_name}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Contributor Email</th>
+                                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{contributor_email}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                                     <p style="font-size: 16px; color: #000;">
                                                         Please log in to your account to review and approve or decline the request.
                                                     </p>
@@ -892,9 +891,9 @@ class EmailTemplateSeeder extends Seeder
             'replacements' => json_encode([
                 '{name}' => 'Recipient\'s Name',
                 '{page_name}' => 'Page Name',
-                '{visitor_name}' => 'Visitor\'s Name',
-                '{requested_changes}' => 'Description of the requested changes',
-                '{page_url}' => 'URL to the page where the edit request can be reviewed',
+                '{contributor_name}' => 'Contributor\'s Name',
+                '{contributor_email}' => 'Contributor\'s Email',
+                '{page_url}' => 'URL to review the contribution request',
             ]),
         ]);
 
@@ -2169,6 +2168,5 @@ class EmailTemplateSeeder extends Seeder
                 '{name}' => 'Customer Name',
             ]),
         ]);
-        
     }
 }

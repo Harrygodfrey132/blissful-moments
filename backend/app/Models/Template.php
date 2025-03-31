@@ -20,7 +20,7 @@ class Template extends Model
     public const ORDER_FAILED_EMAIL = "order_failed";
     public const EDIT_PAGE_ACCCESS_EMAIL = 'request_accepted_with_link_email';
     public const PLAN_EXPIRY_EMAIL = "plan_expiry_email";
-    public const PAGE_EDIT_REQUEST_EMAIL = "page_edit_request_email";
+    public const GALLERY_CONTRIBUTION_REQUEST_EMAIL = "gallery_contribution_request_email";
     public const PAGE_REGISTRATION_CONGRATULATIONS_EMAIL = "page_registration_congratulations_email";
     public const NEW_CONTRIBUTION_REQUEST_EMAIL = "new_contribution_request_email";
     public const REQUEST_SUBMISSION_CONFIRMATION_EMAIL = "request_submission_confirmation_email";

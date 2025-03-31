@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
+use App\Mail\UserContributionRequest;
+use App\Mail\VisitorContributionRequest;
 use App\Models\GalleryFolder;
 use App\Models\GalleryImage;
 use App\Models\GalleryImageRequest;
+use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -60,6 +64,11 @@ class GalleryUploadRequestController extends Controller
             'images' => json_encode($imagePaths), // Store paths as JSON
         ]);
 
+        // Send Emails to user and visitor
+        $userTemplate = Template::where('name', Template::GALLERY_CONTRIBUTION_REQUEST_EMAIL)->first();
+        $visitorTemplate = Template::where('name', Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL)->first();
+        Mail::to($pendingUpload->user->email)->send(new UserContributionRequest($pendingUpload, $userTemplate));
+        Mail::to($pendingUpload->email)->send(new VisitorContributionRequest($pendingUpload, $visitorTemplate));
         return response()->json([
             'message' => 'Images uploaded successfully, waiting for approval.',
             'pending_upload_id' => $pendingUpload->id,

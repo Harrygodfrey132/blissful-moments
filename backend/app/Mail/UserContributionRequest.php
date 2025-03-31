@@ -50,6 +50,7 @@ class UserContributionRequest extends Mailable implements ShouldQueue
             '{name}' => $this->contributionRequest->user->name,
             '{contributor_name}' => $this->contributionRequest->full_name,
             '{contributor_message}' => $this->contributionRequest->description,
+            '{page_name}' => $this->contributionRequest->page->name,
             '{manage_request_url}' => env('FRONTEND_URL'),
             '{frontend_url}' => env('FRONTEND_URL'),
             '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),

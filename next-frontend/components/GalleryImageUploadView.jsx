@@ -10,6 +10,7 @@ const GalleryImageUploadView = ({ pageData }) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [newFolder, setNewFolder] = useState("");
+  const [submitChanges, setSubmitChanges] = useState(false);
 
   const [additionalFormInputs, setAdditionalFormInputs] = useState({
     fullName: "",
@@ -146,6 +147,7 @@ const GalleryImageUploadView = ({ pageData }) => {
 
       if (response.status === 200) {
         toast.success("Images uploaded successfully.");
+        setSubmitChanges(false);
         return response.data;
       } else {
         throw new Error(response.statusText);
@@ -164,6 +166,7 @@ const GalleryImageUploadView = ({ pageData }) => {
     }
 
     try {
+      setSubmitChanges(true);
       const formData = new FormData();
       formData.append("fullName", additionalFormInputs.fullName);
       formData.append("email", additionalFormInputs.email);
@@ -184,6 +187,7 @@ const GalleryImageUploadView = ({ pageData }) => {
       setNewFolder("");
       setIsSecondFormOpen(false);
     } catch {
+      setSubmitChanges(false);
       toast.error("Upload failed.");
     }
   };
@@ -298,9 +302,10 @@ const GalleryImageUploadView = ({ pageData }) => {
           {/* Final Submit */}
           <button
             onClick={handleFinalSubmit}
-            className="text-white add-button px-4 py-2.5"
+            className={`text-white add-button px-4 py-2.5 ${submitChanges ? "cursor-not-allowed" : ""}`}
+            disabled={submitChanges}
           >
-            Submit
+           {submitChanges ? "Submitting..." : "Submit"}
           </button>
         </div>
       )}
