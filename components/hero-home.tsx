@@ -18,7 +18,9 @@ export default function HeroHome() {
 
             {/* Content */}
             <div className="text-center md:text-left md:min-w-[30rem]" data-aos="fade-right">
-              <h1 className="h1 font-playfair-display text-slate-100 mb-4">Create Digital Legacies</h1>
+                      <h1 className="h1 font-playfair-display text-slate-100 mb-3">
+            Start your memorial page at<span className='text-green-400'> no upfront cost</span>
+</h1>
               <p className="text-xl text-slate-400 mb-8">Our mission is to help families preserve their loved ones' memories through custom memorial web pages, accessible via QR codes on gravestones. Visitors can scan the code to view a dedicated, password-protected page, ensuring their legacy is safely shared and cherished for generations.</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <div>
