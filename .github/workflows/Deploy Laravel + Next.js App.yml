@@ -1,0 +1,59 @@
+name: Deploy Laravel + Next.js App
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no deployer@191.101.80.118 << 'EOF'
+            echo "Starting deployment script..."
+
+            echo "Pulling latest code from Git"
+            cd /var/www/html
+            git pull origin master
+
+            echo "Installing PHP dependencies (composer)"
+            cd backend
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "Running Laravel migrations"
+            php artisan migrate --force
+
+            echo "Caching Laravel config and routes"
+            php artisan config:cache
+            php artisan route:cache
+
+            echo "Building Laravel assets"
+            npm run build
+
+            echo "Installing Next.js dependencies"
+            cd ../next-frontend
+            npm install
+
+            echo "Building Next.js application"
+            npm run build
+
+            echo "Restarting PM2 processes (if any)"
+            pm2 restart all || echo "PM2 not found or no processes to restart"
+
+            echo "Restarting Supervisor processes"
+            sudo supervisorctl reread
+            sudo supervisorctl update
+            sudo supervisorctl restart all || echo "Supervisor not found or no processes to restart"
+
+            echo "✅ Deployment completed successfully!"
+          EOF
