@@ -6,28 +6,28 @@ const faqItems = [
     answer: "A custom memorial webpage is a beautiful tribute to your loved one, where family and friends can come together to share memories, photos, and stories."
   },
   {
-    question: " How does the QR code on the gravestone work?",
-    answer: "We provide a handcrafted, durable QR code that is placed on the gravestone. When visitors scan the code with their smartphone, they are directed to a secure webpage that commemorates the life of your loved one."
+    question: " What does public or private mean?",
+    answer: "A public page can be viewed by anyone with the link. A private page is password-protected, meaning only those with the password can access it — keeping your loved one’s tribute secure and personal."
   },
   {
-    question: "Is the webpage secure?",
-    answer: "Yes. Each memorial webpage is password-protected to ensure privacy and security. You control who has access to the page."
-  },
-  {
-    question: "Can I update or change the webpage after it's created?",
-    answer: "Absolutely. You can edit the webpage at any time by adding new content, such as photos or stories, to keep the memory alive."
-  },
-  {
-    question: "How long will the memorial webpage last?",
-    answer: "Our memorial web pages are designed to last indefinitely.The hosting that comes with purchase lasts one year, allowing you to fully try the product. As the pictures and text cost money to store on the page, we charge £3 a month past this point to keep the page running."
-  },
-  {
-    question: "What if visitors do not have a smartphone to scan the QR code?",
-    answer: "We also provide a direct website link that can be accessed on any device with an internet connection."
+    question: "What is a personal URL?",
+    answer: "Each memorial page comes with a customizable web address, such as yourlovedone.theblissfulmoments.com. This adds a personal touch and makes it easy to share with family and friends."
   },
   {
     question: "How do I get started?",
-    answer: "Getting started is simple! Contact us today, and we'll guide you through creating a lasting digital legacy for your loved one."
+    answer: "Getting started is simple — just sign up for an account and follow the guided steps to begin building your memorial page."
+  },
+  {
+    question: "Is the personal page free?",
+    answer: "Yes — you can use the service completely free for 45 days. After that, we charge a small monthly fee of £1.99 to help cover hosting and ongoing page maintenance."
+  },
+  {
+    question: "How do I share the page?",
+    answer: "Once your memorial is complete, just copy the personal URL and share it through social media, email, or text. Your dashboard also keeps you updated on any new contributions, photo uploads, or gallery requests."
+  },
+  {
+    question: "Can I cancel anytime?",
+    answer: "Yes, you can cancel during the free trial or anytime after. There’s no minimum commitment — we simply want you to experience a beautiful tribute at your own pace."
   },
 ];
 

@@ -23,6 +23,7 @@ const RegisterPage = () => {
         <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-6 text-center">
           Create an account
         </h2>
+        <p className="text-center text-gray-600 mb-6">Building an account is free and allows you to create your memorial page the way you want.</p>
 
         <div className="mt-10">
           <SignupForm />

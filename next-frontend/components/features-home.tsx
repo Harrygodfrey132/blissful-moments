@@ -28,7 +28,7 @@ export default function FeaturesHome() {
 
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12">
-            <h2 className="h2 font-playfair-display text-navy-500 mb-4">Built Exclusively For You</h2>
+            <h2 className="h2 font-playfair-display text-navy-500 mb-4">Here is what your page will look like</h2>
             <p className="text-xl text-gray-700">Each memorial page is fully customised to reflect your loved one's unique story, ensuring a personal and meaningful tribute that honors their life in a special way.</p>
           </div>
 
@@ -200,7 +200,7 @@ export default function FeaturesHome() {
                       src="https://www.pacdora.com/share?filter_url=psy7ud7afl"
                     ></iframe>
                   </div>
-                  <p className="mt-4 text-gray-700">We deliver straight to your door, including easy setup instructions, your personalised QR code, and a special note crafted just for you.</p>
+                  <p className="mt-4 text-gray-700">We also build custom QR code plaques, which can be ordered from our website that can be added to headstones. UK customers only.</p>
                 </Transition>
 
               </div>

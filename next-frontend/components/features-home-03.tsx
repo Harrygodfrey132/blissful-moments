@@ -15,7 +15,7 @@ export default function FeaturesHome03() {
 
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-            <h2 className="h2 font-playfair-display text-navy-600">Getting Started Takes 3 Easy Steps</h2>
+            <h2 className="h2 font-playfair-display text-navy-600">Setting up your memorial page is easy</h2>
           </div>
 
           {/* Section content */}
@@ -26,7 +26,7 @@ export default function FeaturesHome03() {
               <a className="relative block group mt-8 mb-4" href="#0">
                 <div className="absolute inset-0 pointer-events-none border-2 border-slate-500 opacity-20 translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition duration-300 ease-out -z-10" aria-hidden="true"></div>
                 <div className="overflow-hidden">
-                  <Image className="w-full aspect-square object-cover group-hover:scale-105 transition duration-700 ease-out" src={FeaturesImage01} width={342} height={342} alt="News 01" />
+                  <Image className="w-full aspect-square object-cover group-hover:scale-105 transition duration-700 ease-out" src={FeaturesImage02} width={342} height={342} alt="News 01" />
                 </div>
                 <div className="w-16 h-16 absolute bg-gradient-to-b from-gray-400 to-gray-500 rounded-full -top-8 left-8">
                   <svg className="w-16 h-16 fill-current" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -35,9 +35,9 @@ export default function FeaturesHome03() {
                 </div>
               </a>
               <h3 className="h4 font-playfair-display mb-2">
-                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Order a QR code/Webpage from us</a>
+                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Customise your memorial page</a>
               </h3>
-              <p className="text-lg text-slate-500">We will send your order in a beautifully crafted, handmade box, directly to your address. Inside, you will find a personalised plaque with your unique QR code and clear instructions.</p>
+              <p className="text-lg text-slate-500">We give a 45 day free trial to all new users. You can customise your memorial page to your liking.Add photos and memories to your page. <a href="/register" className="text-blue-600 hover:text-blue-800 font-medium">Register now</a> </p>
             </article>
 
             {/* 2nd article */}
@@ -45,7 +45,7 @@ export default function FeaturesHome03() {
               <a className="relative block group mt-8 mb-4" href="#0">
                 <div className="absolute inset-0 pointer-events-none border-2 border-slate-500 opacity-20 translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition duration-300 ease-out -z-10" aria-hidden="true"></div>
                 <div className="overflow-hidden">
-                  <Image className="w-full aspect-square object-cover group-hover:scale-105 transition duration-700 ease-out" src={FeaturesImage02} width={342} height={342} alt="News 02" />
+                  <Image className="w-full aspect-square object-cover group-hover:scale-105 transition duration-700 ease-out" src={FeaturesImage03} width={342} height={342} alt="News 02" />
                 </div>
                 <div className="w-16 h-16 absolute bg-gradient-to-b from-gray-400 to-gray-500 rounded-full -top-8 left-8">
                   <svg className="w-16 h-16 fill-current" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -54,9 +54,9 @@ export default function FeaturesHome03() {
                 </div>
               </a>
               <h3 className="h4 font-playfair-display mb-2">
-                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Customise Your Memorial Page</a>
+                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Share your memorial page</a>
               </h3>
-              <p className="text-lg text-slate-500">Once you open the app, you can easily customize your memorial page. Add important details, photos, and memories. Choose whether to make the page private or public—your legacy, your control.</p>
+              <p className="text-lg text-slate-500">Use the URL to share your memorial page with your loved ones. You can also share the page on social media so people can add their own memories.</p>
             </article>
 
             {/* 3rd article */}
@@ -73,9 +73,9 @@ export default function FeaturesHome03() {
                 </div>
               </a>
               <h3 className="h4 font-playfair-display mb-2">
-                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Create a digital legacy by sharing the page</a>
+                <a className="text-slate-800 hover:underline hover:decoration-blue-100" href="#0">Let your page blossom into a legacy</a>
               </h3>
-              <p className="text-lg text-slate-500">Create a dedicated, secure space for loved ones to contribute. Your personalised memorial page will preserve memories for future generations.</p>
+              <p className="text-lg text-slate-500">Let your page blossom into a legacy.  Create a dedicated, secure space for loved ones to contribute. Your personalised memorial page will preserve memories for future generations.</p>
             </article>
 
           </div>

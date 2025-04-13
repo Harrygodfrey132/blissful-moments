@@ -163,10 +163,10 @@ const Header = () => {
               )}
               <li className="ml-5">
                 <Link
-                  href={ROUTES.Request_Demo}
+                  href={ROUTES.Register}
                   className="font-semibold text-blue-600 py-2 px-4 flex items-center group"
                 >
-                  Request Demo
+                  Sign Up
                   <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
                     &rarr;
                   </span>
@@ -215,10 +215,10 @@ const Header = () => {
             </li>
             <li>
               <Link
-                href={ROUTES.Request_Demo}
+                href={ROUTES.Register}
                 className="font-semibold text-blue-600 group  py-2  flex items-center"
               >
-                Request Demo
+                Sign Up
                 <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
                   &rarr;
                 </span>

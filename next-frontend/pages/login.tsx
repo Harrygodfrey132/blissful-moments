@@ -74,6 +74,7 @@ const Login = () => {
           <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-6 text-center">
             Sign in to your account
           </h2>
+          <p className="text-center text-gray-600 mb-6">Welcome back! Please enter your details to sign in.</p>
 
           {serverError && <p className="text-red-500 text-sm text-center">{serverError}</p>}
 

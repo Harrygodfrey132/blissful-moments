@@ -21,7 +21,9 @@ export default function HeroHome() {
                       <h1 className="h1 font-playfair-display text-slate-100 mb-3">
             Start your memorial page at<span className='text-green-400'> no upfront cost.</span>
 </h1>
-              <p className="text-xl text-slate-400 mb-8">Our mission is to help families preserve their loved ones' memories through custom memorial web pages, accessible via QR codes on gravestones. Visitors can scan the code to view a dedicated, password-protected page, ensuring their legacy is safely shared and cherished for generations.</p>
+              <p className="text-base text-slate-400 mb-8">
+                Create a beautiful memorial page with our 45-day free trial. Share photos, collect stories from friends and family through our contribution section, and rest easy knowing our 24/7 support team is always here to help.
+              </p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <div>
                   <Link className="btn text-white bg-navy-400 hover:bg-navy-500 w-full group" href="/request-demo">
@@ -29,7 +31,7 @@ export default function HeroHome() {
                   </Link>
                 </div>
                 <div>
-                  <Link className="btn text-white bg-slate-700 hover:bg-slate-800 w-full" href="#pricing-tables">See Our Options</Link>
+                  <Link className="btn text-white bg-slate-700 hover:bg-slate-800 w-full" href="/register">Sign Up Now</Link>
                 </div>
               </div>
             </div>

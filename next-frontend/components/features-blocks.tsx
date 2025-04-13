@@ -44,8 +44,8 @@ export default function FeaturesBlocks() {
                 <use fill="#000" filter="url(#fb1-d)" xlinkHref="#fb1-e" />
                 <use fillOpacity=".64" fill="#E2EEFF" xlinkHref="#fb1-e" />
               </svg>
-              <h3 className="h4 font-playfair-display mb-2">Custom Memorial Web Page</h3>
-              <p className="text-lg text-slate-500">Each web page is uniquely designed to honor your loved one’s life. It includes personalized content such as photos, stories, and tributes, creating a lasting digital space where family and friends can remember and celebrate their legacy.</p>
+              <h3 className="h4 font-playfair-display mb-2">Photo Gallery</h3>
+              <p className="text-lg text-slate-500">A dedicated space to upload cherished photos — from milestones to quiet moments — creating a powerful visual tribute your family and friends can revisit anytime.</p>
             </div>
 
             {/* 2nd item */}
@@ -81,8 +81,8 @@ export default function FeaturesBlocks() {
                 </g>
                 <path d="M32.5 36a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" fillOpacity=".64" fill="#5091EE" />
               </svg>
-              <h3 className="h4 font-playfair-display mb-2">Personal URL page</h3>
-              <p className="text-lg text-slate-500">A unique web address for your loved one's memorial with their name, making it easy to share and access from anywhere.</p>
+              <h3 className="h4 font-playfair-display mb-2">Obituary & Life Story</h3>
+              <p className="text-lg text-slate-500">A dedicated section to share your loved one's life story, including their achievements, contributions, and the impact they had on others.</p>
             </div>
 
             {/* 3rd item */}
@@ -113,8 +113,8 @@ export default function FeaturesBlocks() {
                 <use fill="#000" filter="url(#fb3-c)" xlinkHref="#fb3-d" />
                 <use fill="url(#fb3-e)" xlinkHref="#fb3-d" />
               </svg>
-              <h3 className="h4 font-playfair-display mb-2">QR Code Plaque</h3>
-              <p className="text-lg text-slate-500">A durable plaque with a QR code that, when scanned, instantly directs visitors to your loved one’s memorial page, offering a convenient way to access their tribute from any mobile device.</p>
+              <h3 className="h4 font-playfair-display mb-2">Contributions from Family & Friends</h3>
+              <p className="text-lg text-slate-500"> Invite loved ones to leave comments, share stories, and upload photos — building a richer, collective memory that grows over time.</p>
             </div>
 
             {/* 4th item */}
@@ -145,8 +145,8 @@ export default function FeaturesBlocks() {
                 <use fill="#000" filter="url(#fb4-d)" xlinkHref="#fb4-e" />
                 <use fillOpacity=".64" fill="#E2EEFF" xlinkHref="#fb4-e" />
               </svg>
-              <h3 className="h4 font-playfair-display mb-2">Password Security</h3>
-              <p className="text-lg text-slate-500">Each memorial page is protected with a password, ensuring that only those with access can view and share your loved one’s memories, keeping their legacy safe and private.</p>
+              <h3 className="h4 font-playfair-display mb-2">Password Protection</h3>
+              <p className="text-lg text-slate-500">Each page is secured by a password, ensuring privacy and allowing only invited friends and family to view or contribute.</p>
             </div>
 
             {/* 5th item */}
@@ -178,7 +178,7 @@ export default function FeaturesBlocks() {
                 <use fill="url(#fb5-e)" xlinkHref="#fb5-d" />
               </svg>
               <h3 className="h4 font-playfair-display mb-2">Accessible on any device</h3>
-              <p className="text-lg text-slate-500">The memorial page is fully optimized to work seamlessly on smartphones, tablets, and computers, allowing family and friends to view it from any device, anywhere.</p>
+              <p className="text-lg text-slate-500">The memorial page is fully optimised to work seamlessly on smartphones, tablets, and computers, allowing family and friends to view it from any device, anywhere.</p>
             </div>
 
             {/* 6th item */}
@@ -209,8 +209,8 @@ export default function FeaturesBlocks() {
                 <use fill="#000" filter="url(#fb6-d)" xlinkHref="#fb6-e" />
                 <use fillOpacity=".64" fill="#E2EEFF" xlinkHref="#fb6-e" />
               </svg>
-              <h3 className="h4 font-playfair-display mb-2">10 year guarantee</h3>
-              <p className="text-lg text-slate-500">Our memorial QR code plaques come with a 10-year warranty, guaranteeing durability and long-lasting access to your loved one's digital tribute.</p>
+              <h3 className="h4 font-playfair-display mb-2">Personal Web Address</h3>
+              <p className="text-lg text-slate-500"> very memorial comes with a unique URL that’s easy to remember and share, so family near and far can access the tribute anytime.</p>
             </div>
 
           </div>
