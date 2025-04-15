@@ -13,7 +13,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Adding known hosts
-        run: ssh-keyscan -H 191.101.80.118 >> ~/.ssh/known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 191.101.80.118 >> ~/.ssh/known_hosts
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
