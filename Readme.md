@@ -1,4 +1,4 @@
-# The Blissful Moments
+# The Blissful Moments.
 
 ## Overview
 The Blissful Moments is a memorial website where individuals can share memories of their loved ones. The platform allows users to create personalized memorial pages, preserving and cherishing the legacy of those who have passed away.
