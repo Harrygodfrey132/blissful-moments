@@ -9,28 +9,28 @@ import "swiper/css/pagination";
 // Testimonials data - you can replace these with your own testimonials
 const testimonials = [
     {
-        name: "Isabel Heggie",
-        role: "Parent of iGCSE Student",
+        name: "Max Angel",
+        role: "- Son of Tim Angel",
         image: "/testimonials/avatar-1.png", // Update with your image path
-        quote: "The Degree Gap helped our son enormously with his iGCSE prep, particularly in Maths and Economics. He was patient, fun and engaging - just what we needed. Highly recommended."
+        quote: "I  think the website idea is great, and I think it's a great way to keep the memory of a loved one alive. We are overjoyed but the finished product."
     },
     {
-        name: "Nicolai Nissen",
-        role: "A-level student",
+        name: "Tim Foot",
+        role: "Grandson of John Foot",
         image: "/testimonials/avatar-2.png", // Update with your image path
-        quote: "Had troubles connecting with tutors until I met The Degree Gap, helped me understand the curriculum and theories in a way that stuck with me, also made each session feel calm and relaxing. Highly recommend"
+        quote: "It is great that people can add their own memeories to their page. I got to see my Grandad at all different stages of his life and that was special."
     },
     {
-        name: "Theresa McIntyre",
-        role: "Parent of GCSE student",
+        name: "Philip Haywood",
+        role: "Cousin of Barbara Haywood",
         image: "/testimonials/avatar-3.png", // Update with your image path
-        quote: "Harry and Joe were extremely helpful with a wealth of knowledge and contacts that helped my son to follow the right path."
+        quote: " I have loved building the page, building it has brought me immense joy as I could reflect on the life of Babra. I recommend it as a way to freflect but also to celebrate the life of a loved one."
     },
     {
-        name: "Alex Allenby",
-        role: "A-level student",
+        name: "Samantha Clark",
+        role: "Grand daughter of Jill Clark",
         image: "/testimonials/avatar-4.png", // Update with your image path
-        quote: "Can't recommend The Degree Gap highly enough. Quick and helpful responses from Harry. He immediately matched me with a very competent tutor."
+        quote: "The contribution section is a great way to build up memeories and add to the page. I have loved adding my own memories and seeing the page grow."
     }
 ];
 
