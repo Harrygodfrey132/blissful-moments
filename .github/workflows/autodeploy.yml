@@ -52,7 +52,7 @@ jobs:
             npm run build
 
             echo "Setting Permissions"
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S chmod -R 777 storage
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S chmod -R 777 storage || chmod -R 777 storage || echo "Unable to Reset Permission"
 
             echo "Installing Next.js dependencies"
             cd ../next-frontend
