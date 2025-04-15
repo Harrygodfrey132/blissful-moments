@@ -27,8 +27,14 @@ jobs:
           ssh -o StrictHostKeyChecking=no deployer@191.101.80.118 << 'EOF'
             echo "Starting deployment script..."
 
-            echo "Pulling latest code from Git"
+            echo "Changing Deployment Directory"
             cd /var/www/html
+
+            echo "Resetting any local changes"
+            git reset --hard HEAD
+            git clean -fd
+
+            echo "Pulling latest code from Git"
             git pull origin master
 
             echo "Installing PHP dependencies (composer)"
@@ -55,10 +61,8 @@ jobs:
             echo "Restarting PM2 processes (if any)"
             pm2 restart all || echo "PM2 not found or no processes to restart"
 
-            echo "Restarting Supervisor processes"
-            sudo supervisorctl reread
-            sudo supervisorctl update
-            sudo supervisorctl restart all || echo "Supervisor not found or no processes to restart"
+            echo "Restarting Queue"
+            sudo supervisorctl restart blissful-admin-worker: || echo "Supervisor restart failed"
 
             echo "✅ Deployment completed successfully!"
           EOF
