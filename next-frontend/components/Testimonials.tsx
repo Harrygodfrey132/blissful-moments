@@ -63,15 +63,15 @@ const swiperOptions = {
 
 export default function Testimonials() {
     return (
-        <section className="relative overflow-hidden py-16 bg-white">
+        <section className="relative overflow-hidden py-16 bg-blue-900">
             <div className="container mx-auto px-4">
                 <div className="flex flex-wrap items-end justify-between mb-12">
                     <div className="w-full lg:w-5/12">
-                        <span className="inline-block px-3 py-1 text-sm font-medium text-navy-600 bg-navy-100 rounded-full">
+                        <span className="inline-block px-3 py-1 text-sm font-medium text-white bg-blue-800 rounded-full">
                             Testimonials
                         </span>
-                        <h2 className="mt-4 text-3xl font-bold text-gray-900 font-playfair">
-                            Loved by <span className="text-navy-600">our customers</span>
+                        <h2 className="mt-4 text-3xl font-bold text-white font-playfair">
+                            Loved by <span className="text-blue-200">our customers</span>
                         </h2>
                     </div>
                     <div className="w-full lg:w-2/12 mt-8 lg:mt-0">
@@ -110,15 +110,15 @@ export default function Testimonials() {
                 </Swiper>
 
                 <div className="text-center mt-12">
-                    <p className="text-navy-600 font-medium font-playfair">
-                        Hundreds of happy customers <span className="text-gray-900">have trusted us.</span>
+                    <p className="text-blue-200 font-medium font-playfair">
+                        Hundreds of happy customers <span className="text-white">have trusted us.</span>
                     </p>
                     <Link
                         href="/pricing"
-                        className="inline-flex items-center px-6 py-3 mt-6 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-playfair"
+                        className="inline-flex items-center px-6 py-3 mt-6 text-base font-medium text-white bg-blue-900 rounded-lg hover:bg-blue-700 font-playfair"
                     >
-                        Book a call now!
-                    </Link>
+                       Start now!
+                    </Link> 
                 </div>
             </div>
         </section>
