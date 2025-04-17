@@ -110,12 +110,12 @@ export default function Testimonials() {
                 </Swiper>
 
                 <div className="text-center mt-12">
-                    <p className="text-blue-900 font-medium font-playfair">
-                        Hundreds of happy customers <span className="text-gray-900">have trusted us.</span>
+                    <p className="text-black font-medium font-playfair">
+                        Hundreds of happy customers <span className="text-black">have trusted us.</span>
                     </p>
                     <Link
                         href="/pricing"
-                        className="inline-flex items-center px-6 py-3 mt-6 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-playfair"
+                        className="inline-flex items-center px-6 py-3 mt-6 text-base font-medium text-white bg-blue-900 rounded-lg hover:bg-blue-950 font-playfair"
                     >
                        Start now!
                     </Link> 
