@@ -34,7 +34,6 @@ export default function PricingTables() {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${API.fetchAllPlans}`);
       setPlans(response.data.plans);
-      console.log(response.data.plans);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching plans:", error);
@@ -83,7 +82,16 @@ export default function PricingTables() {
                 </div>
                 <div className="font-medium mb-3">Features include:</div>
                 <ul className="text-slate-500 space-y-3 grow mb-6">
-                  {plan.features.map((feature: string, index: number) => (
+                  {(Array.isArray(plan.features)
+                    ? plan.features
+                    : (() => {
+                      try {
+                        return JSON.parse(plan.features ?? '[]');
+                      } catch (e) {
+                        return [];
+                      }
+                    })()
+                  ).map((feature: string, index: number) => (
                     <li key={index} className="flex items-center">
                       <svg
                         className="w-3 h-3 fill-current text-emerald-500 mr-3 shrink-0"
@@ -96,6 +104,7 @@ export default function PricingTables() {
                     </li>
                   ))}
                 </ul>
+
                 <div className="p-3 rounded bg-slate-50">
                   <Link
                     className="btn-sm text-white bg-blue-600 hover:bg-blue-700 w-full group"

@@ -75,7 +75,7 @@ class PlanController extends Controller
             $plan = Plan::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
-                'features' => json_encode($validated['features']),
+                'features' => $validated['features'],
                 'stripe_product_id' => $stripeProduct->id,
             ]);
 
