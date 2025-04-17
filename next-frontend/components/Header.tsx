@@ -162,15 +162,17 @@ const Header = () => {
                 </li>
               )}
               <li className="ml-5">
-                <Link
-                  href={ROUTES.Register}
-                  className="font-semibold text-blue-600 py-2 px-4 flex items-center group"
-                >
-                  Sign Up
-                  <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                    &rarr;
-                  </span>
-                </Link>
+                {!session && (
+                  <Link
+                    href={ROUTES.Register}
+                    className="font-semibold text-blue-600 py-2 px-4 flex items-center group"
+                  >
+                    Sign Up
+                    <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                      &rarr;
+                    </span>
+                  </Link>
+                )}
               </li>
             </ul>
           </nav>
@@ -214,15 +216,17 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link
-                href={ROUTES.Register}
-                className="font-semibold text-blue-600 group  py-2  flex items-center"
-              >
-                Sign Up
-                <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
-                  &rarr;
-                </span>
-              </Link>
+              {!session && (
+                <Link
+                  href={ROUTES.Register}
+                  className="font-semibold text-blue-600 group py-2 flex items-center"
+                >
+                  Sign Up
+                  <span className="tracking-normal text-light-blue-900 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">
+                    &rarr;
+                  </span>
+                </Link>
+              )}
             </li>
             {!session ? (
               <li>
