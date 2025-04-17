@@ -222,11 +222,11 @@ const CheckoutPage = () => {
               <img src="img/logo-black.png" alt="logo" className="w-12 h-12" />
               <div className="flex-1 ml-4">
                 <p className="font-semibold">{order?.plan_name}</p>
-                <div className="text-blue-600 font-medium">3 Months</div>
+                <div className="text-blue-600 font-medium">1 Month</div>
               </div>
               <p className="text-lg font-bold">£{order?.amount}</p>
             </label>
-            <div className="text-gray-500 text-sm font-medium">Renews on {getNextRenewalDate()}</div>
+            <div className="text-gray-500 text-sm font-medium">Renews on {getNextRenewalDate()} at £1.99/month</div>
             <div className="flex justify-end py-4">
               {isProcessing && (
                 <div className="flex items-center">
