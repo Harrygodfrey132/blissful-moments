@@ -33,6 +33,7 @@ Thumbs.db
 .env.test.local
 .env.production.local
 .env
+.env.production
 # Misc
 *.lock
 *.sublime-workspace
