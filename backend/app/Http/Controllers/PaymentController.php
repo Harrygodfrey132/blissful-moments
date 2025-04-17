@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
@@ -100,8 +101,8 @@ class PaymentController extends Controller
                         'quantity' => 1,
                     ],
                 ],
-                'success_url' => env('FRONTEND_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => env('FRONTEND_URL') . '/cancel',
+                'success_url' => config('app.frontend_url') . '/success?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => config('app.frontend_url') . '/cancel',
                 'metadata' => [
                     'customer_id' => $customerId,
                     'plan_type' => $planVariation->duration,
@@ -127,6 +128,7 @@ class PaymentController extends Controller
                 'stripePublicKey' => ConfigHelper::getConfig('conf_stripe_public_key')
             ]);
         } catch (\Exception $e) {
+            Log::info('Error while creating Session', [$e->getMessage()]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

@@ -130,4 +130,7 @@ return [
         'Config' => ConfigHelper::class,
     ])->toArray(),
 
+    'frontend_url' => env('FRONTEND_URL', 'https://theblissfulmoments.com'),
+
+
 ];
