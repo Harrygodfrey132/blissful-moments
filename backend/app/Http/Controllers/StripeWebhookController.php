@@ -119,6 +119,7 @@ class StripeWebhookController extends Controller
         if ($user) {
             $order = Order::create([
                 'user_id' => $user->id,
+                'order_id' => generateUniqueOrderId(),
                 'amount' => ($invoice->amount_paid ?? 0) / 100,
                 'stripe_payment_intent' => $invoice->payment_intent ?? null,
                 'stripe_payment_status' => 'succeeded',

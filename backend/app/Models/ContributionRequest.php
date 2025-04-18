@@ -22,7 +22,9 @@ class ContributionRequest extends Model
         'image'
     ];
 
-    public function user(): BelongsTo
+    protected $with = ['user'];
+
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

@@ -239,29 +239,27 @@ const Contributions = () => {
     setContributions(updatedContributions);
     // API call to update contribution on the backend
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${API.updateContributionData}`,
-        {
-          id: pageData.contributions.contribution_data[index]?.id,
-          [field]: value,
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${API.updateContributionData}`, {
+        id: pageData.contributions.contribution_data[index]?.id,
+        [field]: value,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
+      });
+    
+      if (response.data.success) {
         toast.success("Contribution updated successfully!");
       } else {
-        throw new Error("Failed to update contribution on the server");
+        toast.error(response.data.message || "Failed to update contribution.");
+        console.warn("Backend error:", response.data.error);
       }
     } catch (error) {
       console.error("Error updating contribution:", error);
-      toast.error("Failed to update contribution. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
+    
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLSpanElement>) => {
@@ -400,11 +398,13 @@ const Contributions = () => {
 
               {/* Editable Contribution Block */}
               <div className="flex flex-col space-y-4">
-                <Image
-                src={contribution.image}
-                height={300}
-                width={300}
-                alt="Contribution Image" />
+                {contribution.image && (
+                  <Image
+                  src={contribution.image}
+                  height={300}
+                  width={300}
+                  alt="Contribution Image" />
+                )}
                 <p
                   className="border border-dashed w-full text-lg bg-[#f8f8f8] font-playfair text-blue-light-900 p-3 border-gray-300 focus:outline-none focus:border-gray-500"
                   contentEditable={isContributionsEnabled}

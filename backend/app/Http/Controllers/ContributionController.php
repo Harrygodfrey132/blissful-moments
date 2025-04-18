@@ -41,6 +41,8 @@ class ContributionController extends Controller
             'image' => 'nullable',
         ]);
 
+        $fileUrl = '';
+
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('contributions', 'public');
             $fileUrl = url(Storage::url($imagePath));
@@ -66,7 +68,7 @@ class ContributionController extends Controller
                 'success' => false,
                 'message' => 'Failed to add contribution',
                 'error' => $e->getMessage(),
-            ]);
+            ], 422);
         }
     }
 
@@ -125,5 +127,4 @@ class ContributionController extends Controller
 
         return response()->json(['message' => 'Contribution deleted successfully'], 200);
     }
-
 }

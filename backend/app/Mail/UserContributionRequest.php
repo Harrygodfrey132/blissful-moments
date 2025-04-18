@@ -24,7 +24,7 @@ class UserContributionRequest extends Mailable implements ShouldQueue
      */
     public function __construct($contributionRequest, $template)
     {
-        $this->contributionRequest = $contributionRequest;
+        $this->contributionRequest = $contributionRequest->load('user');
         $this->template = $template;
     }
 
@@ -43,14 +43,18 @@ class UserContributionRequest extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        // Replace placeholders with Base64 image data
         $body = $this->template->body;
 
+        // Safe fallback values to avoid null errors
+        $userName = optional($this->contributionRequest->user)->name ?? 'User';
+        $userEmail = optional($this->contributionRequest->user)->email ?? 'unknown@example.com';
+        $pageName = optional($this->contributionRequest->page)->name ?? 'N/A';
+
         $replacements = [
-            '{name}' => $this->contributionRequest->user->name,
+            '{name}' => $userName,
             '{contributor_name}' => $this->contributionRequest->full_name,
             '{contributor_message}' => $this->contributionRequest->description,
-            '{page_name}' => $this->contributionRequest->page->name,
+            '{page_name}' => $pageName,
             '{manage_request_url}' => env('FRONTEND_URL'),
             '{frontend_url}' => env('FRONTEND_URL'),
             '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),
@@ -63,7 +67,7 @@ class UserContributionRequest extends Mailable implements ShouldQueue
             '{twitter_logo}' => asset('img/twitter.png'),
             '{youtube_logo}' => asset('img/youtube.png'),
             '{footer_logo}' => asset('img/black-transparent.png'),
-            '{current_year}' => now('Y'),
+            '{current_year}' => now()->year,
         ];
 
         foreach ($replacements as $placeholder => $value) {
@@ -71,24 +75,20 @@ class UserContributionRequest extends Mailable implements ShouldQueue
         }
 
         try {
-            // Save the email log to the database
             EmailLog::create([
                 'subject' => $this->template->subject,
-                'recipient_name' => $this->contributionRequest->user->name,
-                'recipient_email' => $this->contributionRequest->user->email,
+                'recipient_name' => $userName,
+                'recipient_email' => $userEmail,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);
         } catch (\Throwable $th) {
-            // Log any error while saving the data to the database
             Log::error('Error saving email log: ' . $th->getMessage());
         }
 
         return new Content(
             view: 'emails.render_view',
-            with: [
-                'body' => $body,
-            ]
+            with: ['body' => $body]
         );
     }
 
