@@ -12,19 +12,19 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class VisitorContributionRequest extends Mailable implements ShouldQueue
+class UserGalleryUploadRequest extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    protected $contributionRequest;
+    protected $galleryUploadRequest;
     protected $template;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($contributionRequest, $template)
+    public function __construct($galleryUploadRequest, $template)
     {
-        $this->contributionRequest = $contributionRequest;
+        $this->galleryUploadRequest = $galleryUploadRequest->load('user');
         $this->template = $template;
     }
 
@@ -34,7 +34,7 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->template->subject,
+            subject: 'User Gallery Upload Request',
         );
     }
 
@@ -43,12 +43,19 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-
-        // Replace placeholders with Base64 image data
         $body = $this->template->body;
 
+        // Safe fallback values to avoid null errors
+        $userName = optional($this->galleryUploadRequest->user)->name ?? 'User';
+        $userEmail = optional($this->galleryUploadRequest->user)->email ?? 'unknown@example.com';
+        $pageName = optional($this->galleryUploadRequest->page)->name ?? 'N/A';
+
         $replacements = [
-            '{name}' => $this->contributionRequest->full_name ?? $this->contributionRequest->name ,
+            '{name}' => $userName,
+            '{contributor_name}' => $this->galleryUploadRequest->name,
+            '{contributor_email}' => $this->galleryUploadRequest->email,
+            '{page_name}' => $pageName,
+            '{manage_request_url}' => env('FRONTEND_URL'),
             '{frontend_url}' => env('FRONTEND_URL'),
             '{facebook_link}' => ConfigHelper::getConfig('conf_facebook_link'),
             '{instagram_link}' => ConfigHelper::getConfig('conf_instagram_link'),
@@ -60,7 +67,7 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
             '{twitter_logo}' => asset('img/twitter.png'),
             '{youtube_logo}' => asset('img/youtube.png'),
             '{footer_logo}' => asset('img/black-transparent.png'),
-            '{current_year}' => now('Y'),
+            '{current_year}' => now()->year,
         ];
 
         foreach ($replacements as $placeholder => $value) {
@@ -68,24 +75,20 @@ class VisitorContributionRequest extends Mailable implements ShouldQueue
         }
 
         try {
-            // Save the email log to the database
             EmailLog::create([
                 'subject' => $this->template->subject,
-                'recipient_name' => $this->contributionRequest->full_name,
-                'recipient_email' => $this->contributionRequest->email,
+                'recipient_name' => $userName,
+                'recipient_email' => $userEmail,
                 'email_body' => $body,
                 'sent_at' => now(),
             ]);
         } catch (\Throwable $th) {
-            // Log any error while saving the data to the database
             Log::error('Error saving email log: ' . $th->getMessage());
         }
 
         return new Content(
             view: 'emails.render_view',
-            with: [
-                'body' => $body,
-            ]
+            with: ['body' => $body]
         );
     }
 

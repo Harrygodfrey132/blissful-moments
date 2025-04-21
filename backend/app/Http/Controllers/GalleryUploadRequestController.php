@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\AppConstant;
 use App\Mail\UserContributionRequest;
+use App\Mail\UserGalleryUploadRequest;
 use App\Mail\VisitorContributionRequest;
 use App\Models\GalleryFolder;
 use App\Models\GalleryImage;
@@ -67,7 +68,7 @@ class GalleryUploadRequestController extends Controller
         // Send Emails to user and visitor
         $userTemplate = Template::where('name', Template::GALLERY_CONTRIBUTION_REQUEST_EMAIL)->first();
         $visitorTemplate = Template::where('name', Template::REQUEST_SUBMISSION_CONFIRMATION_EMAIL)->first();
-        Mail::to($pendingUpload->user->email)->send(new UserContributionRequest($pendingUpload, $userTemplate));
+        Mail::to($pendingUpload->user->email)->send(new UserGalleryUploadRequest($pendingUpload, $userTemplate));
         Mail::to($pendingUpload->email)->send(new VisitorContributionRequest($pendingUpload, $visitorTemplate));
         return response()->json([
             'message' => 'Images uploaded successfully, waiting for approval.',

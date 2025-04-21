@@ -28,6 +28,7 @@ class UserContributionRequest extends Mailable implements ShouldQueue
         $this->template = $template;
     }
 
+
     /**
      * Get the message envelope.
      */

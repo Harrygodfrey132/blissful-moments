@@ -16,6 +16,11 @@ class GalleryImageRequest extends Model
         'status'
     ];
 
+    protected $with = [
+        'page',
+        'user'
+    ];
+
     protected $casts = [
         'images' => 'array', // Automatically convert JSON to array
     ];
